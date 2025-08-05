@@ -1,6 +1,6 @@
 <template>
-  <Navbar />
-  Menu
+    <Navbar />
+    Pas encore de streameurs
 </template>
 
 <script setup>
