@@ -13,23 +13,40 @@
         </template>
         <template #end>
             <div class="flex items-center gap-2">
-                <a v-ripple>
-                    <span v-html="svgIcons.Bell" />
-                </a>
-                <a v-ripple>
-                    <span v-html="svgIcons.Settings" />
-                </a>
-                <Button label="Inscription" />
+                <div class="flex items-center gap-2 mr-2">
+                    <router-link v-ripple :to="'/notifications'">
+                        <span v-html="svgIcons.Bell" />
+                    </router-link>
+                    <router-link v-ripple :to="'/parametres'">
+                        <span v-html="svgIcons.Settings" />
+                    </router-link>
+                </div>
+                <div class="mr-2">
+                    <div v-if="!user">
+                        <Button @click="twitchAuth" severity="help">
+                            <Twitch class="w-5 h-5 text-white" />
+                            <span class="text-white">Se connecter avec Twitch</span>
+                        </Button>
+                    </div>
+                    <div v-else class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
+                            <router-link :to="'/profil'" class="hover:underline">
+                                {{ user.user_metadata.nickname }}
+                            </router-link>
+                        </div>
+                        <a @click="logOut()" v-ripple>
+                            <span v-html="svgIcons.LogOut" />
+                        </a>
+                    </div>
+                </div>
             </div>
-            <!-- <a v-ripple>
-                <span v-html="svgIcons.LogOut"/>
-            </a> -->
         </template>
     </Menubar>
 </template>
 
 <script setup>
-const router = useRouter();
+import { Twitch } from 'lucide-vue-next';
 
 const svgIcons = {
     House: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
@@ -48,6 +65,44 @@ const items = ref([
         label: 'Streameurs',
         icon: 'UserSearch',
         route: '/streameurs'
-    }
+    },
+    {
+        label: 'Linktree',
+        icon: 'Bell',
+        route: '/'
+    },
 ]);
+
+const supabase = useSupabaseClient();
+const user = useSupabaseUser()
+const router = useRouter();
+
+async function twitchAuth() {
+    try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'twitch',
+            options: {
+                redirectTo: `https://vcvwxwhiltffzmojiinc.supabase.co/auth/v1/callback`,
+            },
+        });
+
+        if (error) {
+            return;
+        }
+        router.push('/');
+
+    } catch (err) {
+        console.error('Erreur lors de la connexion Twitch:', err);
+    }
+}
+
+async function logOut() {
+    try {
+        await supabase.auth.signOut();
+        router.push('/');
+    } catch (err) {
+        console.error('Erreur lors de la déconnexion:', err);
+    }
+}
+
 </script>

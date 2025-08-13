@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@primevue/nuxt-module'],
+  modules: ['@primevue/nuxt-module', '@nuxtjs/supabase'],
   primevue: {
     autoImport: true,
     options: {
@@ -20,9 +20,12 @@ export default defineNuxtConfig({
     }
   },
   css: ['~/assets/styles/main.css'],
-    vite: {
+  vite: {
     plugins: [
       tailwindcss(),
     ],
   },
+  supabase: {
+    redirect: false // empêche la redirection auto par défaut
+  }
 })
