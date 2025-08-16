@@ -1,5 +1,4 @@
 <template>
-    <Navbar />
     <div class="bg-surface-0 dark:bg-surface-950 px-6 py-8 md:px-12 lg:px-20">
         <div class="flex items-center flex-col lg:flex-row lg:justify-between">
             <div class="flex items-start flex-col md:flex-row gap-8">
@@ -48,7 +47,6 @@
 </template>
 
 <script setup>
-import Navbar from '@/composants/Navbar.vue';
 import { SquarePen, Settings } from 'lucide-vue-next';
 
 const user = useSupabaseUser()
