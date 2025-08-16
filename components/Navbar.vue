@@ -1,15 +1,9 @@
 <template>
     <Menubar :model="items">
         <template #start>
-            <p>StreamHub</p>
+            <h1 class="text-xl font-bold p-1.5 bg-purple-600 rounded">StreamHub</h1>
         </template>
-        <template #item="{ item, props }">
-            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-                <a v-ripple :href="href" v-bind="props.action" @click="navigate">
-                    <span v-if="svgIcons[item.icon]" v-html="svgIcons[item.icon]" />
-                    <span>{{ item.label }}</span>
-                </a>
-            </router-link>
+        <template #item>
         </template>
         <template #end>
             <div class="flex items-center gap-2">
@@ -43,6 +37,17 @@
             </div>
         </template>
     </Menubar>
+
+    <Menubar :model="items">
+        <template #item="{ item, props }">
+            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                    <span v-if="svgIcons[item.icon]" v-html="svgIcons[item.icon]" />
+                    <span>{{ item.label }}</span>
+                </a>
+            </router-link>
+        </template>
+    </Menubar>
 </template>
 
 <script setup>
@@ -55,6 +60,7 @@ const svgIcons = {
     LogOut: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>',
     Settings: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>',
 };
+
 const items = ref([
     {
         label: 'Accueil',
@@ -69,7 +75,7 @@ const items = ref([
     {
         label: 'Linktree',
         icon: 'Bell',
-        route: '/'
+        route: '/linktree'
     },
 ]);
 

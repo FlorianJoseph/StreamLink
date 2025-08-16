@@ -75,6 +75,4 @@ function translateBroadcasterType(type) {
             return 'Aucun'
     }
 }
-
-console.log(user.value);
 </script>
