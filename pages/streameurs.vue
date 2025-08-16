@@ -1,3 +1,3 @@
 <template>
-    Pas encore de streameurs
+    <StreamerCard />
 </template>
