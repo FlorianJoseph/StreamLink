@@ -1,5 +1,5 @@
 <template>
-    <Card class="w-[25rem] overflow-hidden" v-if="user">
+    <Card class="w-[25rem] overflow-hidden md:mx-12 lg:mx-20" v-if="user">
         <!-- Bannière -->
         <template #header>
             <div class="relative">
