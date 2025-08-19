@@ -1,13 +1,10 @@
 <template>
-    <div class="min-h-screen flex flex-col">
+    <div>
         <header>
             <Navbar />
         </header>
-        <main class="flex-1">
+        <main>
             <NuxtPage />
         </main>
-        <footer>
-            <Footer />
-        </footer>
     </div>
 </template>

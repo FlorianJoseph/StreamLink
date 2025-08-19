@@ -4,9 +4,9 @@
             <div class="flex flex-col items-center gap-4">
                 <div class="font-bold text-3xl leading-tight">
                     <span>Un seul outil, </span>
-                    <span>tous tes besoins</span>
+                    <span class="text-purple-600">tous tes besoins</span>
                 </div>
-                <div class="text-surface-500 dark:text-surface-400 leading-tight">
+                <div class="leading-tight">
                     Conçu pour les petits streamers qui veulent grandir sans se prendre la tête.
                 </div>
             </div>
