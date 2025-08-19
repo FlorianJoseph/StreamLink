@@ -13,10 +13,10 @@
                             Gère ta communauté, suis tes performances et trouve des moyens simples de grandir sur
                             Twitch.
                         </p>
-
-                        <div class="flex items-center gap-4 justify-center lg:justify-start">
-                            <Button label="Commencer" severity="help" />
-                            <Button label="Découvrir" severity="help" outlined />
+                        <div class="flex justify-center lg:justify-start">
+                            <Button size="large" severity="help" class="px-8 py-4 text-lg font-semibold">
+                                Créer mon StreamLink
+                            </Button>
                         </div>
                     </div>
                 </div>

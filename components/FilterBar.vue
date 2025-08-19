@@ -1,5 +1,5 @@
 <template>
-    <Card class="m-4 md:mx-12 lg:mx-20 mt-6">
+    <Card class="sticky mx-auto m-4">
         <template #title>
             <IconField>
                 <InputIcon>
@@ -16,7 +16,7 @@
                 </Button>
                 <div class="flex items-center gap-2">
                     <span class="text-sm text-gray-300">Trier par :</span>
-                    <Select v-model="selectedTri" :options="tri" showClear optionLabel="name" placeholder="Followers"
+                    <Select v-model="selectedTri" :options="tri" showClear optionLabel="name" placeholder="Plus récents"
                         class="w-full w-40 md:w-56" />
                 </div>
             </div>

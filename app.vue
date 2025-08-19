@@ -1,10 +1,5 @@
 <template>
-    <div>
-        <header>
-            <Navbar />
-        </header>
-        <main>
-            <NuxtPage />
-        </main>
-    </div>
+    <NuxtLayout>
+        <NuxtPage />
+    </NuxtLayout>
 </template>

@@ -1,5 +1,5 @@
 <template>
-    <Card class="w-[25rem] overflow-hidden md:mx-12 lg:mx-20" v-if="user">
+    <Card class="w-full max-w-[25rem] sm:max-w-[30rem] md:max-w-[35rem] lg:max-w-[40rem] xl:max-w-[45rem] mx-auto overflow-hidden" v-if="user">
         <!-- Bannière -->
         <template #header>
             <div class="relative">
@@ -50,8 +50,6 @@
             </div>
         </template>
     </Card>
-
-    <p v-else>Non connecté</p>
 </template>
 
 <script setup>
