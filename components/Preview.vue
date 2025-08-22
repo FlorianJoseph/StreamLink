@@ -1,11 +1,9 @@
 <template>
     <div class="flex flex-col gap-4">
         <div class="py-4">
-            <div class="flex flex-col text-center items-center h-24 justify-end">
-                <div class="font-bold text-4xl leading-tight">Aperçu</div>
-                <div class="text-xl leading-normal">
-                    Voici comment votre page apparaîtra à vos visiteurs
-                </div>
+            <div class="flex items-center flex-col h-12 justify-end">
+                <h1 class="text-3xl font-bold">Aperçu</h1>
+                <p class="text-center lg:text-left">Voici comment votre page apparaîtra à vos visiteurs</p>
             </div>
         </div>
 

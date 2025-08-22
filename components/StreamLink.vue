@@ -1,11 +1,12 @@
 <template>
     <div class="flex flex-col gap-4">
+
+        <!-- En-tête -->
         <div class="py-4">
-            <div class="flex flex-col items-center lg:items-start h-24 justify-end">
-                <div class="font-bold text-4xl leading-tight">Mon StreamLink</div>
-                <div class="text-xl leading-normal text-center lg:text-left">
-                    Créez votre page de liens personnalisée à partager avec votre audience
-                </div>
+            <div class="flex items-center flex-col lg:items-start h-12 justify-end">
+                <h1 class="text-3xl font-bold">Mon StreamLink</h1>
+                <p class="text-center lg:text-left">Créez votre page de liens personnalisée à partager avec votre
+                    audience</p>
             </div>
         </div>
 

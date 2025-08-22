@@ -1,5 +1,5 @@
 <template>
-    <Card class="sticky mx-auto m-4">
+    <Card>
         <template #title>
             <IconField>
                 <InputIcon>
