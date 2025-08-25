@@ -14,43 +14,20 @@
             </router-link>
         </template>
         <template #end>
-            <div class="flex items-center gap-2">
-                <div class="flex items-center">
-                    <Notifications />
-                    <router-link v-ripple :to="'/parametres'">
-                        <Button severity="contrast" variant="text" rounded
-                            v-tooltip.bottom="{ value: 'Paramètres', autoHide: false }">
+                <!-- <Notifications />
+                <router-link v-ripple :to="'/parametres'">
+                    <Button severity="contrast" variant="text" rounded
+                        v-tooltip.bottom="{ value: 'Paramètres', autoHide: false }">
                             <span v-html="svgIcons.Settings" />
                         </Button>
                     </router-link>
-                </div>
-                <div class="mr-2">
-                    <div v-if="!user">
-                        <Button @click="twitchAuth" severity="help">
-                            <Twitch class="w-5 h-5 text-white" />
-                            <span class="text-white">Se connecter avec Twitch</span>
-                        </Button>
-                    </div>
-                    <div v-else class="flex items-center gap-4">
-                        <div class="flex items-center gap-2">
-                            <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
-                            <router-link :to="'/profil'" class="hover:underline font-medium">
-                                {{ user.user_metadata.nickname }}
-                            </router-link>
-                        </div>
-                        <a @click="logOut()" v-ripple>
-                            <span v-html="svgIcons.LogOut" />
-                        </a>
-                    </div>
-                </div>
-            </div>
+                </div> -->
+                <ProfilePopover />
         </template>
     </Menubar>
 </template>
 
 <script setup>
-import { Twitch } from 'lucide-vue-next';
-
 const svgIcons = {
     UserSearch: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-search-icon lucide-user-search"><circle cx="10" cy="7" r="4"/><path d="M10.3 15H7a4 4 0 0 0-4 4v2"/><circle cx="17" cy="17" r="3"/><path d="m21 21-1.9-1.9"/></svg>',
     LogOut: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>',
@@ -70,36 +47,4 @@ const items = ref([
         route: '/streamlink'
     },
 ]);
-
-const supabase = useSupabaseClient();
-const user = useSupabaseUser()
-const router = useRouter();
-
-async function twitchAuth() {
-    try {
-        const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: 'twitch',
-            options: {
-                redirectTo: `https://vcvwxwhiltffzmojiinc.supabase.co/auth/v1/callback`,
-            },
-        });
-
-        if (error) {
-            return;
-        }
-        router.push('/');
-
-    } catch (err) {
-        console.error('Erreur lors de la connexion Twitch:', err);
-    }
-}
-
-async function logOut() {
-    try {
-        await supabase.auth.signOut();
-        router.push('/');
-    } catch (err) {
-        console.error('Erreur lors de la déconnexion:', err);
-    }
-}
 </script>

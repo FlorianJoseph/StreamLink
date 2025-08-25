@@ -25,7 +25,7 @@
                     <p class="m-4">
                         streamlink.com/{{ user.user_metadata.nickname }}
                     </p>
-                    <Files class="w-5 h-5 hover:text-blue-500 cursor-pointer" />
+                    <Files class="w-5 h-5 hover:text-blue-500 cursor-pointer transition-colors" />
                 </div>
             </template>
         </Card>
