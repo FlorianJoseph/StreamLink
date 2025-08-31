@@ -15,10 +15,18 @@
 
                 <!-- Bouton Suivre -->
                 <div class="absolute bottom-[-2rem] right-4">
-                    <Button class="whitespace-nowrap" severity="contrast">
-                        <Heart class="w-4 h-4" />
-                        <span>Suivre</span>
-                    </Button>
+                    <div class="flex gap-2">
+                        <Button class="whitespace-nowrap" severity="contrast">
+                            <Heart class="w-4 h-4" />
+                            <span>Suivre</span>
+                        </Button>
+                        <router-link :to="'/streamlink'" target="_blank">
+                            <Button class="whitespace-nowrap" severity="contrast">
+                                <span>StreamLink</span>
+                                <ExternalLink class="w-4 h-4" />
+                            </Button>
+                        </router-link>
+                    </div>
                 </div>
             </div>
         </template>
@@ -55,24 +63,6 @@
                         <div class="mt-1 text-sm font-semibold">546</div>
                     </div>
                 </div>
-            </div>
-        </template>
-
-        <!-- Boutons -->
-        <template #footer>
-            <div class="mt-6 md:mt-0 flex items-center">
-                <router-link class="mr-3" :to="''">
-                    <Button class="whitespace-nowrap" outlined severity="contrast">
-                        <SquarePen class="w-4 h-4" />
-                        <span>Modifier le profil</span>
-                    </Button>
-                </router-link>
-                <router-link :to="'/streamlink'" target="_blank">
-                    <Button class="whitespace-nowrap" severity="contrast">
-                        <span>StreamLink</span>
-                        <ExternalLink class="w-4 h-4" />
-                    </Button>
-                </router-link>
             </div>
         </template>
     </Card>

@@ -1,37 +1,26 @@
 <template>
-    <div class="py-4 mt-8">
-        <div class="flex items-center flex-col lg:items-start h-12 justify-end">
-            <h1 class="text-3xl font-bold">Mon Profil</h1>
-            <p class="text-center lg:text-left">Modifiez vos informations personnelles</p>
+    <div class="flex flex-col gap-4 mt-8 min-w-full">
+        <div class="py-4">
+            <div class="flex items-center flex-col lg:items-start h-12 justify-end">
+                <h1 class="text-3xl font-bold">Mon Profil</h1>
+                <p class="text-center lg:text-left">Modifiez vos informations personnelles</p>
+            </div>
         </div>
-    </div>
-    <div class="flex flex-col lg:flex-row lg:gap-24 gap-12 mt-8 mb-8">
-        <div class="flex-[2]">
+        <div class="flex flex-col gap-4 w-full">
             <ProfilCard />
-        </div>
-        <div class="flex-[1]">
             <Card>
-                <template #title>Préférences de collaborations</template>
+                <template #title class="text-center">Préférences de collaborations</template>
                 <template #content>
-                    <div class="card flex flex-wrap justify-center gap-4">
+                    <div class="card flex flex-wrap gap-4">
                         <div class="flex items-center gap-2">
                             <Checkbox v-model="pizza" inputId="ingredient1" name="pizza" value="Cheese" />
-                            <label for="ingredient1"> Cheese </label>
+                            <label for="ingredient1">Ouvert aux collaborations</label>
                         </div>
                         <div class="flex items-center gap-2">
                             <Checkbox v-model="pizza" inputId="ingredient2" name="pizza" value="Mushroom" />
-                            <label for="ingredient2"> Mushroom </label>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <Checkbox v-model="pizza" inputId="ingredient3" name="pizza" value="Pepper" />
-                            <label for="ingredient3"> Pepper </label>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <Checkbox v-model="pizza" inputId="ingredient4" name="pizza" value="Onion" />
-                            <label for="ingredient4"> Onion </label>
+                            <label for="ingredient2">Ouvert aux raids aléatoires</label>
                         </div>
                     </div>
-
                 </template>
             </Card>
         </div>

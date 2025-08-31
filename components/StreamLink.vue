@@ -30,6 +30,41 @@
             </template>
         </Card>
 
+        <!-- Nom et bio -->
+        <Card>
+            <template #title>
+                <div class="flex flex-col">
+                    <span class="text-lg font-semibold">Nom et biographie</span>
+                    <span class="text-sm text-gray-400 mt-1">
+                        Partagez votre nom et une courte biographie pour vous présenter à votre audience.
+                    </span>
+                </div>
+            </template>
+            <template #content>
+                <Button severity="contrast" @click="visible = true">
+                    <SquarePen class="w-5 h-5" />
+                    <span>Modifier le nom et la description</span>
+                </Button>
+                <Dialog v-model:visible="visible" modal header="Nom et biographie" :style="{ width: '25rem' }">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label for="username">Nom</label>
+                            <InputText id="username" v-model="username" />
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="bio">Biographie</label>
+                            <Textarea id="bio" v-model="bio" rows="5" cols="30" autoResize />
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <Button type="button" label="Annuler" severity="secondary"
+                                @click="visible = false"></Button>
+                            <Button type="button" label="Sauvegarder" @click="visible = false"></Button>
+                        </div>
+                    </div>
+                </Dialog>
+            </template>
+        </Card>
+
         <!-- Gérer les liens -->
         <Card>
             <template #title>
@@ -46,29 +81,7 @@
                         <Plus class="w-5 h-5" />
                         <span>Ajouter un lien</span>
                     </Button>
-                    <Button severity="contrast" @click="visible = true">
-                        <SquarePen class="w-5 h-5" />
-                        <span>Modifier la description</span>
-                    </Button>
                 </div>
-                <Dialog v-model:visible="visible" modal header="Nom et biographie" :style="{ width: '25rem' }">
-                    <div class="flex flex-col gap-4">
-                        <div class="flex flex-col gap-2">
-                            <label for="username">Nom</label>
-                            <InputText id="username" v-model="username" />
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label for="bio">Biographie</label>
-                            <InputText id="bio" v-model="bio" />
-                        </div>
-                        <div class="flex justify-end gap-2">
-                            <Button type="button" label="Annuler" severity="secondary"
-                                @click="visible = false"></Button>
-                            <Button type="button" label="Sauvegarder" @click="visible = false"></Button>
-                        </div>
-                    </div>
-                </Dialog>
-
             </template>
             <template #footer>
                 <div class="flex flex-col gap-2">
