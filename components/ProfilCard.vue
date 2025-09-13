@@ -15,18 +15,7 @@
 
                 <!-- Bouton Suivre -->
                 <div class="absolute bottom-[-2rem] right-4">
-                    <div class="flex gap-2">
-                        <Button class="whitespace-nowrap" severity="contrast">
-                            <Heart class="w-4 h-4" />
-                            <span>Suivre</span>
-                        </Button>
-                        <router-link :to="'/streamlink'" target="_blank">
-                            <Button class="whitespace-nowrap" severity="contrast">
-                                <span>StreamLink</span>
-                                <ExternalLink class="w-4 h-4" />
-                            </Button>
-                        </router-link>
-                    </div>
+                    <ButtonStreamLink />
                 </div>
             </div>
         </template>
@@ -44,7 +33,7 @@
 
         <!-- Bio -->
         <template #content>
-            <div class="flex flex-col gap-4">
+            <!-- <div class="flex flex-col gap-4">
                 <div class="flex items-center flex-wrap gap-8">
                     <div>
                         <span>Followers</span>
@@ -63,7 +52,7 @@
                         <div class="mt-1 text-sm font-semibold">546</div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </template>
     </Card>
 </template>

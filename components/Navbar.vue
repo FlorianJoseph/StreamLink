@@ -2,7 +2,20 @@
     <Menubar :model="items" class="h-13 fixed top-0 left-0 right-0 z-50">
         <template #start>
             <router-link v-ripple :to="'/'">
-                <span class="text-xl font-bold p-1.5 bg-purple-600 rounded">StreamHub</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="40" height="40">
+                    <defs>
+                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#7c3aed" />
+                            <stop offset="100%" stop-color="#9f5dfc" />
+                        </linearGradient>
+                    </defs>
+                    <g fill="none" stroke="url(#grad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Hexagone plus large -->
+                        <path d="M8 32 L20 8 L44 8 L56 32 L44 56 L20 56 Z" />
+                        <!-- Flèche centrale -->
+                        <path d="M30 22 L38 32 L30 42" stroke-linecap="round" />
+                    </g>
+                </svg>
             </router-link>
         </template>
         <template #item="{ item, props }">
@@ -43,7 +56,7 @@ const items = ref([
         route: '/streameurs'
     },
     {
-        label: 'StreamLink',
+        label: 'Mon StreamLink',
         icon: 'Link',
         route: '/streamlink'
     },

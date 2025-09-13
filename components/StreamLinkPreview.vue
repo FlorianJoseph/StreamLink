@@ -18,23 +18,7 @@
             </template>
             <template #content>
                 <div class="flex flex-col gap-2 text-center">
-                    <Card class="border-1">
-                        <template #content>
-                            <Twitch class="w-5 h-5 inline-block mr-2" />
-                            <span class="text-lg font-semibold">Twitch</span>
-                        </template>
-                    </Card>
-                    <Card class="border-1">
-                        <template #content>
-                            <Youtube class="w-5 h-5 inline-block mr-2" />
-                            <span class="text-lg font-semibold">YouTube</span>
-                        </template>
-                    </Card>
-                    <Card class="border-1">
-                        <template #content>
-                            <span class="text-lg font-semibold">TikTok</span>
-                        </template>
-                    </Card>
+                    <CardLink />
                 </div>
             </template>
             <template #footer>
@@ -50,7 +34,7 @@
 </template>
 
 <script setup>
-import { Twitch, Youtube, ArrowRight } from 'lucide-vue-next';
+import { Twitch, Youtube, ArrowRight, ExternalLink } from 'lucide-vue-next';
 
 const user = useSupabaseUser();
 </script>
