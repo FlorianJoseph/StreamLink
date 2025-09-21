@@ -10,15 +10,28 @@
         <!-- Aperçu du streamlink -->
         <Card class="flex items-center h-160">
             <template #title>
-                <div class="flex items-center text-center flex-col gap-2 mx-4 my-2">
-                    <Avatar :image="user.user_metadata.avatar_url" shape="circle" size="xlarge" />
-                    <span class="text-xl font-semibold">{{ user.user_metadata.nickname }}</span>
-                    <span class="text-sm text-surface-600">{{ user.user_metadata.custom_claims.description }}</span>
+                <div class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <Button rounded severity="secondary">
+                            <Home class="w-4 h-4" />
+                        </Button>
+                        <Button rounded severity="secondary">
+                            <span class="text-sm">Copier le lien</span>
+                            <Files class="w-4 h-4" />
+                        </Button>
+                    </div>
+                </div>
+                <div class="flex items-center text-center flex-col mx-auto my-6">
+                    <Avatar :image="user.user_metadata.avatar_url" shape="circle" size="xlarge" class="mb-2" />
+                    <span class="text-lg font-semibold">{{ user.user_metadata.nickname }}</span>
+                    <span class="text-sm font-medium">
+                        {{ user.user_metadata.custom_claims.description }}
+                    </span>
                 </div>
             </template>
             <template #content>
                 <div class="flex flex-col gap-2 text-center">
-                    <CardLink />
+                    <LinkCard />
                 </div>
             </template>
             <template #footer>
@@ -34,7 +47,7 @@
 </template>
 
 <script setup>
-import { Twitch, Youtube, ArrowRight, ExternalLink } from 'lucide-vue-next';
+import { ArrowRight, Home, Files } from 'lucide-vue-next';
 
 const user = useSupabaseUser();
 </script>

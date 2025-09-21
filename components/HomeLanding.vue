@@ -6,18 +6,17 @@
                     <div class="w-full max-w-2xl px-6 py-12 lg:p-12 xl:p-16 text-center lg:text-left">
                         <h1 class="text-4xl xl:text-5xl font-bold mb-6 leading-tight!">
                             <span class="block">Développe ta chaîne</span>
-                            <span class="block text-purple-600">avec StreamHub</span>
+                            <span class="block text-purple-500">avec StreamLink</span>
                         </h1>
                         <p class="text-lg md:text-xl leading-normal mb-8 max-w-xl lg:max-w-none">
-                            StreamHub est un outil tout-en-un pensé pour les petits créateurs et streameurs.
-                            Gère ta communauté, suis tes performances et trouve des moyens simples de grandir sur
-                            Twitch.
+                            StreamLink est un outil pensé pour les petits créateurs et streameurs.
                         </p>
-                        <div class="flex justify-center lg:justify-start">
-                            <Button size="large" severity="help" class="px-8 py-4 text-lg font-semibold">
+                        <NuxtLink to="/admin">
+                            <button
+                                class="px-5 py-3 text-lg font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                                 Créer mon StreamLink
-                            </Button>
-                        </div>
+                            </button>
+                        </NuxtLink>
                     </div>
                 </div>
             </div>

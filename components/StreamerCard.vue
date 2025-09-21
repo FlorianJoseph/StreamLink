@@ -3,35 +3,44 @@
         <!-- Bannière -->
         <template #header>
             <div class="relative">
-                <img alt="Twitch Banner" class="w-full h-32 object-cover"
+                <img alt="Twitch Banner" class="w-full h-24 object-cover"
                     :src="user.user_metadata.custom_claims.offline_image_url" />
 
                 <!-- Avatar -->
-                <img alt="Avatar"
-                    class="absolute left-4 bottom-[-2.5rem] w-20 h-20 rounded-full border-4 border-white shadow-lg"
-                    :src="user.user_metadata.picture" />
-
-                <!-- Bouton StreamLink -->
-                <div class="absolute bottom-[-2rem] right-4">
-                    <ButtonStreamLink />
+                <div class="flex justify-between items-center mx-4 mt-4">
+                    <div class="flex items-center gap-2">
+                        <Avatar :image="user.user_metadata.avatar_url" size="large" shape="circle" />
+                        <div class="flex items-center flex-col items-start">
+                            <span class="text-lg font-semibold">{{ user.user_metadata.nickname }}</span>
+                            <Badge :value="translateBroadcasterType(user.user_metadata.custom_claims.broadcaster_type)"
+                                severity="info" />
+                        </div>
+                    </div>
+                    <NuxtLink :to="{ path: `/${user.user_metadata.nickname}` }" target="_blank">
+                        <Button class="whitespace-nowrap" severity="contrast">
+                            <span class="text-sm font-medium">StreamLink</span>
+                            <ExternalLink class="w-4 h-4" />
+                        </Button>
+                    </NuxtLink>
                 </div>
             </div>
         </template>
 
         <!-- Nom & pseudo -->
         <template #title>
-            <div class="flex items-center gap-2 mt-10">
-                <span class="text-xl font-semibold">{{ user.user_metadata.nickname }}</span>
-                <Badge :value="translateBroadcasterType(user.user_metadata.custom_claims.broadcaster_type)"
-                    severity="info" />
-            </div>
         </template>
 
         <!-- Bio -->
         <template #content>
-            <p class="m-0 text-sm text-surface-600">
-                {{ user.user_metadata.custom_claims.description }}
-            </p>
+            <div class="flex flex-row items-start gap-1 ">
+                <Users class="w-5 h-5 mb-2 text-gray-300" />
+                <p class="text-sm text-gray-300">534 followers</p>
+            </div>
+            <div class="mx-auto text-start">
+                <p class="text-sm text-surface-600">
+                    {{ user.user_metadata.custom_claims.description }}
+                </p>
+            </div>
         </template>
 
         <!-- Boutons -->
@@ -41,15 +50,8 @@
 </template>
 
 <script setup>
-import { Heart, ExternalLink } from 'lucide-vue-next';
-
+import { Users, ExternalLink } from 'lucide-vue-next';
 const user = useSupabaseUser()
-
-function openTwitch() {
-    if (user.value) {
-        window.open(`https://twitch.tv/${user.value.user_metadata.nickname}`, "_blank")
-    }
-}
 
 function translateBroadcasterType(type) {
     switch (type) {
@@ -61,4 +63,7 @@ function translateBroadcasterType(type) {
             return 'Aucun'
     }
 }
+
+console.log(user.value);
+
 </script>

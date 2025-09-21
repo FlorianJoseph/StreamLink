@@ -1,6 +1,6 @@
 <template>
-  <Landing />
-  <Features />
+  <HomeLanding />
+  <HomeFeatures />
 </template>
 
 <script setup>

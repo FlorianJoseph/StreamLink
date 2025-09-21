@@ -20,15 +20,9 @@
         </div>
         <FilterBar />
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <StreamerCard />
-            <StreamerCard />
-            <StreamerCard />
-            <StreamerCard />
-            <StreamerCard />
-            <StreamerCard />
-            <StreamerCard />
-            <StreamerCard />
-            <StreamerCard />
+            <div v-for="n in 12" :key="n">
+                <StreamerCard />
+            </div>
         </div>
     </div>
 </template>
