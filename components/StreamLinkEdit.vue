@@ -12,8 +12,7 @@
 
         <!-- Avatar et bouton de modification -->
         <div class="flex flex-row gap-4 items-center">
-            <img :src="user.user_metadata.avatar_url" alt="Avatar"
-                class="w-16 h-16 rounded-full object-cover flex-shrink-0" />
+            <UploadAvatar />
             <div>
                 <div class="flex flex-col" @click="visible = true">
                     <span class="text-lg font-medium hover:underline cursor-pointer">

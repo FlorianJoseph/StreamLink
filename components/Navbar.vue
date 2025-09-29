@@ -40,11 +40,11 @@ const items = ref([
         icon: 'Link',
         route: '/admin',
     },
-    {
-        label: 'Roadmap',
-        icon: 'Waypoints',
-        route: '/',
-    },
+    // {
+    //     label: 'Roadmap',
+    //     icon: 'Waypoints',
+    //     route: '/',
+    // },
 ]);
 
 </script>
