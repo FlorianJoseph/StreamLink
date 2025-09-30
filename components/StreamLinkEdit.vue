@@ -122,30 +122,18 @@ import { Plus, Files, Pencil, Trash2, ExternalLink } from 'lucide-vue-next';
 const visible = ref(false);
 const username = ref('')
 const bio = ref('')
-const emit = defineEmits(['updated'])
 
 const { streamer, updateStreamer } = useStreamer()
 
-watch(
-    () => streamer.value,
-    (newStreamer) => {
-        if (newStreamer) {
-            username.value = newStreamer.username
-            bio.value = newStreamer.bio
-        }
-    },
-    { immediate: true } // si streamer est déjà défini
-)
-
-const saveChanges = async () => {
-    await updateStreamer({
-        username: username.value,
-        bio: bio.value
-    })
-}
+watchEffect(() => {
+    if (streamer.value) {
+        username.value = streamer.value.username
+        bio.value = streamer.value.bio
+    }
+})
 
 const handleSave = async () => {
-    await saveChanges()
+    await updateStreamer({ username: username.value, bio: bio.value })
     visible.value = false
 }
 </script>
