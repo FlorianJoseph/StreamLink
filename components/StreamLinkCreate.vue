@@ -25,32 +25,25 @@
 
 <script setup>
 const user = useSupabaseUser();
-const supabase = useSupabaseClient();
-const router = useRouter();
 const emit = defineEmits(['created'])
+
+const { createStreamer } = useStreamer()
 
 const form = ref({
     username: user.value?.user_metadata.nickname || '',
 });
 
 const createStreamlink = async () => {
-    if (!form.value.username) return;
+    if (!form.value.username) return
 
-    const { data, error } = await supabase
-        .from('Streamer')
-        .insert({
-            id: user.value.id,
-            username: form.value.username,
-            updatedAt: new Date(),
-        })
-        .select()
-        .single();
+    const { data, error } = await createStreamer({
+        username: form.value.username,
+    })
 
     if (!error) {
         emit('created', data)
-        router.push('/admin')
     } else {
-        console.error('Erreur création StreamLink', error);
+        console.error('Erreur création StreamLink', error)
     }
-};
+}
 </script>

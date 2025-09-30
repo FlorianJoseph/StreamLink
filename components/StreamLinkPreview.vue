@@ -8,10 +8,10 @@
         </div>
 
         <!-- Aperçu du streamlink -->
-        <Card class="flex items-center h-160">
+        <Card class="flex flex-col w-full h-160">
             <template #title>
-                <div class="mb-8">
-                    <div class="flex items-center justify-between">
+                <div class="mb-8 w-full">
+                    <div class="flex justify-between w-full">
                         <Button rounded severity="secondary">
                             <Home class="w-4 h-4" />
                         </Button>
@@ -21,23 +21,25 @@
                         </Button>
                     </div>
                 </div>
-                <div class="flex items-center text-center flex-col mx-auto my-6">
-                    <Avatar :image="user.user_metadata.avatar_url" shape="circle" size="xlarge" class="mb-2" />
-                    <span class="text-lg font-semibold">{{ user.user_metadata.nickname }}</span>
+                <div class="flex items-center text-center flex-col w-full my-6">
+                    <Avatar
+                        :image="streamer?.avatar_url || 'https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png'"
+                        shape="circle" size="xlarge" class="mb-2" />
+                    <span class="text-lg font-semibold">{{ streamer?.username }}</span>
                     <span class="text-sm font-medium">
-                        {{ user.user_metadata.custom_claims.description }}
+                        {{ streamer?.bio }}
                     </span>
                 </div>
             </template>
             <template #content>
-                <div class="flex flex-col gap-2 text-center">
+                <div class="flex flex-col gap-2 w-full">
                     <LinkCard />
                 </div>
             </template>
             <template #footer>
-                <div class="flex justify-center mt-4">
+                <div class="flex justify-center mt-4 w-full">
                     <Button severity="contrast">
-                        <span>Rejoignez {{ user.user_metadata.nickname }} sur StreamLink</span>
+                        <span>Rejoignez {{ streamer?.username }} sur StreamLink</span>
                         <ArrowRight class="w-4 h-4" />
                     </Button>
                 </div>
@@ -49,5 +51,6 @@
 <script setup>
 import { ArrowRight, Home, Files } from 'lucide-vue-next';
 
-const user = useSupabaseUser();
+const { streamer } = useStreamer()
+
 </script>
