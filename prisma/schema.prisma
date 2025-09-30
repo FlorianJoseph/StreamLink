@@ -17,7 +17,6 @@ model Streamer {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   links     Link[]
-  theme     Theme?
 }
 
 model Link {
@@ -30,17 +29,4 @@ model Link {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   streamer   Streamer @relation(fields: [streamerId], references: [id])
-}
-
-model Theme {
-  id              String   @id @default(cuid())
-  streamerId      String   @unique
-  backgroundColor String   @default("#000000")
-  textColor       String   @default("#FFFFFF")
-  accentColor     String   @default("#FF4C29")
-  fontFamily      String?
-  bannerUrl       String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  streamer        Streamer @relation(fields: [streamerId], references: [id])
 }
