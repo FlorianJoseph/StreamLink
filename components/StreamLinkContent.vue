@@ -1,5 +1,5 @@
 <template>
-    <Card class="min-h-full">
+    <Card class="min-h-full w-[580px]">
         <template #title>
             <div class="mb-8">
                 <div class="flex items-center justify-between">
@@ -8,7 +8,7 @@
                             <Home />
                         </Button>
                     </NuxtLink>
-                    <Button rounded severity="secondary">
+                    <Button rounded severity="secondary" @click="copyText">
                         <span>Copier le lien</span>
                         <Files />
                     </Button>
@@ -16,11 +16,11 @@
             </div>
 
             <div class="flex items-center text-center flex-col mx-auto my-6">
-                <img :src="user.user_metadata.avatar_url" alt="Avatar"
-                    class="w-24 h-24 rounded-full object-cover mb-4" />
-                <span class="text-xl font-semibold">{{ user.user_metadata.nickname }}</span>
+                <img :src="streamer?.avatar_url || 'https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png'"
+                    alt="Avatar" class="w-24 h-24 rounded-full object-cover mb-4" />
+                <span class="text-xl font-semibold">{{ streamer?.username }}</span>
                 <span class="text-base font-medium">
-                    {{ user.user_metadata.custom_claims.description }}
+                    {{ streamer?.bio }}
                 </span>
             </div>
 
@@ -34,9 +34,9 @@
 
         <template #footer>
             <div class="flex justify-center mt-14">
-                <NuxtLink :to="'/streamlink'">
+                <NuxtLink :to="'/admin'">
                     <Button severity="contrast">
-                        <span class="font-semibold">Rejoignez {{ user.user_metadata.nickname }} sur StreamLink</span>
+                        <span class="font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
                         <ArrowRight class="w-4 h-4" />
                     </Button>
                 </NuxtLink>
@@ -47,7 +47,15 @@
 </template>
 
 <script setup>
-import { ArrowRight, Files, Home, Link } from "lucide-vue-next";
+import { ArrowRight, Files, Home } from "lucide-vue-next";
 
-const user = useSupabaseUser();
+const route = useRoute()
+const { streamer } = useStreamer();
+const { copy } = useClipboard()
+
+const copyText = () => {
+    const url = `${window.location.origin}/${route.params.username || ''}`
+    copy(url)
+}
+
 </script>

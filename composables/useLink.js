@@ -3,18 +3,17 @@ export const useLink = () => {
     const user = useSupabaseUser()
 
     const links = ref([])
-    const loading = ref(false)
+
+    const toast = useToast();
 
     const fetchLinks = async () => {
         if (!user.value) return
-        loading.value = true
         const { data, error } = await supabase
             .from('Link')
             .select('*')
             .eq('streamer_id', user.value.sub)
             .order('created_at', { ascending: true })
         if (!error) links.value = data
-        loading.value = false
     }
 
     const addLink = async (payload) => {
@@ -32,7 +31,7 @@ export const useLink = () => {
             .select()
             .single()
         if (!error) links.value.push(data)
-        console.log(data, error);
+        toast.add({ severity: 'success', summary: 'Succès', detail: 'Lien ajouté avec succès', life: 3000 });
 
         return { data, error }
     }
@@ -54,19 +53,11 @@ export const useLink = () => {
     const deleteLink = async (id) => {
         const { error } = await supabase.from('Link').delete().eq('id', id)
         if (!error) links.value = links.value.filter((l) => l.id !== id)
+        toast.add({ severity: 'error', summary: 'Suppresion', detail: 'Lien supprimé avec succès', life: 3000 });
         return { error }
     }
 
-    onMounted(() => {
-        fetchLinks()
+    onMounted(fetchLinks)
 
-        supabase
-            .channel('links-changes')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'Link' }, payload => {
-                fetchLinks()
-            })
-            .subscribe()
-    })
-
-    return { links, loading, fetchLinks, addLink, updateLink, deleteLink }
+    return { links, fetchLinks, addLink, updateLink, deleteLink }
 }

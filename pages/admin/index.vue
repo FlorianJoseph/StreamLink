@@ -8,6 +8,7 @@
             <StreamLinkCreate @created="onStreamerCreated" />
         </div>
         <div v-else class="flex flex-col lg:flex-row lg:gap-48 gap-4">
+            <Toast />
             <StreamLinkEdit />
         </div>
     </div>

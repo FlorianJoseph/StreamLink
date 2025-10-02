@@ -67,11 +67,12 @@
                     </div>
                 </template>
                 <template #content>
-                    <div class="flex items-center bg-gray-100/10 rounded justify-between pr-4">
-                        <p class="m-4">
+                    <div class="flex items-center bg-gray-100/10 rounded justify-between pr-4 cursor-pointer"
+                        @click="copyText">
+                        <p ref="linkText" class="m-4">
                             streamlink.com/{{ streamer?.username }}
                         </p>
-                        <Files class="w-5 h-5 hover:text-blue-500 cursor-pointer transition-colors" />
+                        <Files class="w-5 h-5" />
                     </div>
                 </template>
             </Card>
@@ -147,7 +148,7 @@
 </template>
 
 <script setup>
-import { Plus, Files, Pencil, Trash2, ExternalLink, ArrowRight, Home } from 'lucide-vue-next';
+import { Files, ExternalLink, ArrowRight, Home } from 'lucide-vue-next';
 
 const visible = ref(false);
 const username = ref('')
@@ -165,5 +166,11 @@ watchEffect(() => {
 const handleSave = async () => {
     await updateStreamer({ username: username.value, bio: bio.value })
     visible.value = false
+}
+
+const linkText = ref(null)
+const { copy } = useClipboard()
+const copyText = () => {
+    if (linkText.value) copy(`http://${linkText.value.innerText}`)
 }
 </script>
