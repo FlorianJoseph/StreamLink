@@ -31,7 +31,7 @@ export const useStreamer = () => {
                 username: payload.username,
                 bio: payload.bio || '',
                 avatarUrl: '',
-                updatedAt: new Date(),
+                updated_at: new Date(),
             })
             .select()
             .single()
@@ -46,7 +46,7 @@ export const useStreamer = () => {
             .from('Streamer')
             .update({
                 ...payload,
-                updatedAt: new Date(),
+                updated_at: new Date(),
             })
             .eq('id', user.value.sub)
             .select()

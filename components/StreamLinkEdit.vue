@@ -88,41 +88,14 @@
                 </template>
                 <template #content>
                     <div class="flex flex-col gap-2">
-
-                        <Button severity="contrast" class="w-full">
-                            <Plus class="w-5 h-5" />
-                            <span class="font-medium">Ajouter un lien</span>
-                        </Button>
-
-                        <!-- Exemple de lien -->
-                        <div class="rounded-lg p-4 bg-gray-100/10 text-white">
-                            <!-- Header -->
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-lg font-semibold">Twitch</span>
-                                <Pencil class="w-4 h-4 cursor-pointer" />
-                            </div>
-
-                            <!-- Content -->
-                            <div class="flex justify-between items-center">
-                                <div class="flex gap-2 items-center">
-                                    <p class="m-0 text-sm">
-                                        https://www.twitch.tv/nordik_saga
-                                    </p>
-                                    <Pencil class="w-4 h-4 cursor-pointer" />
-                                </div>
-                                <div class="flex gap-2">
-                                    <Trash2 class="w-5 h-5 cursor-pointer hover:text-red-500 transition-colors" />
-                                </div>
-                            </div>
-                        </div>
-
+                        <EditCardLink />
                     </div>
                 </template>
             </Card>
         </div>
     </div>
 
-    <!-- Aperçu -->
+    <!-- Aperçu du streamlink -->
     <div class="flex-[1]">
         <div class="flex flex-col gap-4">
             <div class="py-4">
@@ -132,7 +105,6 @@
                 </div>
             </div>
 
-            <!-- Aperçu du streamlink -->
             <Card class="flex flex-col h-160 w-97">
                 <template #title>
                     <div class="mb-8 w-full">

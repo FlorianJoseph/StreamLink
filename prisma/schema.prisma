@@ -10,23 +10,23 @@ datasource db {
 }
 
 model Streamer {
-  id        String   @id
-  username  String
-  avatarUrl String?
-  bio       String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  links     Link[]
+  id         String   @id
+  username   String
+  avatarUrl  String?
+  bio        String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  Link       Link[]
 }
 
 model Link {
-  id         String   @id @default(cuid())
-  streamerId String
-  title      String
-  url        String
-  icon       String?
-  order      Int      @default(0)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  streamer   Streamer @relation(fields: [streamerId], references: [id])
+  id          String   @id @default(dbgenerated("gen_random_uuid()"))
+  streamer_id String
+  title       String
+  url         String
+  icon        String?
+  order       Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  Streamer    Streamer @relation(fields: [streamer_id], references: [id])
 }
