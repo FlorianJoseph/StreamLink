@@ -61,25 +61,31 @@ const saveCroppedImage = async () => {
     if (!croppedImage.value) return
 
     croppedImage.value.toBlob(async (blob) => {
-        const fileName = `${crypto.randomUUID()}.png`
-        const filePath = `Avatar/${fileName}`
+        const oldAvatarPath = streamer.value.avatar_url
+            ? streamer.value.avatar_url.split('/Avatar/')[1] // récupère le path après /Avatar/
+            : null
 
-        // Upload vers Supabase Storage
-        const { error } = await supabase.storage.from('Streamlink').upload(filePath, blob, { upsert: true })
-        if (error) {
-            console.error(error)
-            return
+        const filePath = `Avatar/${crypto.randomUUID()}.png`
+
+        // Upload le nouveau
+        const { data, error } = await supabase.storage
+            .from('Streamlink')
+            .upload(filePath, blob, { upsert: true })
+
+        if (!error) {
+            const publicUrl = supabase.storage
+                .from('Streamlink')
+                .getPublicUrl(filePath).data.publicUrl
+
+            // Supprime l'ancien fichier si il existe
+            if (oldAvatarPath) {
+                await supabase.storage.from('Streamlink').remove([`Avatar/${oldAvatarPath}`])
+            }
+
+            // Met à jour le streamer
+            await updateStreamer({ avatar_url: publicUrl })
+            closeModal()
         }
-
-        // Récupération de l’URL publique
-        const { data } = supabase.storage.from('Streamlink').getPublicUrl(filePath)
-        const publicUrl = data.publicUrl
-
-        // Mise à jour du streamer
-        await updateStreamer({ avatar_url: publicUrl })
-        previewUrl.value = publicUrl
-
-        closeModal()
     })
 }
 </script>
