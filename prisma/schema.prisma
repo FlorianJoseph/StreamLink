@@ -12,7 +12,7 @@ datasource db {
 model Streamer {
   id         String   @id
   username   String
-  avatarUrl  String?
+  avatar_url String?
   bio        String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

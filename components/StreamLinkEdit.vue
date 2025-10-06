@@ -17,7 +17,7 @@
 
             <!-- Avatar et bouton de modification -->
             <div class="flex flex-row gap-4 items-center">
-                <UploadAvatar />
+                <AvatarUploader />
                 <div>
                     <div class="flex flex-col" @click="visible = true">
                         <span class="text-lg font-medium hover:underline cursor-pointer">
@@ -121,7 +121,7 @@
                     </div>
                     <div class="flex items-center text-center flex-col w-full my-6">
                         <Avatar
-                            :image="streamer?.avatar_url || 'https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png'"
+                            :image="streamer?.avatar_url || 'https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/sign/Streamlink/Avatar/default.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80NDMzZjlmNi01NGMzLTQxNzQtYmY0ZC01YzVjZDliNmI2MjIiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTdHJlYW1saW5rL0F2YXRhci9kZWZhdWx0LnBuZyIsImlhdCI6MTc1OTc0NTEzMCwiZXhwIjoyMDc1MTA1MTMwfQ.IppJUbOxBC5Nihi0dUVSS_bNYmdvWEi5VzzRl5xyAng'"
                             shape="circle" size="xlarge" class="mb-2" />
                         <span class="text-lg font-semibold">{{ streamer?.username }}</span>
                         <span class="text-sm font-medium">
