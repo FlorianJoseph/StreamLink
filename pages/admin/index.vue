@@ -9,14 +9,22 @@
         </div>
         <div v-else class="flex flex-col lg:flex-row lg:gap-48 gap-4">
             <Toast />
-            <StreamLinkEdit />
+            <div class="flex-[2]">
+                <StreamLinkEdit :streamer="streamer" :links="links" @add="addLink" @update="updateLink"
+                    @delete="deleteLink" @updateStreamer="updateStreamer" />
+            </div>
+            <!-- Aperçu du streamlink -->
+            <div class="flex-[1]">
+                <StreamLinkPreview :links="links" :streamer="streamer" />
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
 
-const { loading, streamer } = useStreamer()
+const { streamer, updateStreamer, loading } = useStreamer()
+const { links, addLink, updateLink, deleteLink } = useLink()
 
 const onStreamerCreated = (data) => {
     streamer.value = data

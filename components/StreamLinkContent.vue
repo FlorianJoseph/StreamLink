@@ -16,8 +16,8 @@
             </div>
 
             <div class="flex items-center text-center flex-col mx-auto my-6">
-                <img :src="streamer?.avatar_url || 'https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png'"
-                    alt="Avatar" class="w-24 h-24 rounded-full object-cover mb-4" />
+                <img :src="streamer?.avatar_url || defaultAvatar" alt="Avatar"
+                    class="w-24 h-24 rounded-full object-cover mb-4" />
                 <span class="text-xl font-semibold">{{ streamer?.username }}</span>
                 <span class="text-base font-medium">
                     {{ streamer?.bio }}
@@ -27,8 +27,20 @@
         </template>
         <template #content>
             <!-- Liste de liens -->
-            <div class="flex flex-col gap-4">
-                <LinkCard />
+            <div class="flex flex-col gap-4 w-full">
+                <div class="w-full mx-auto" v-for="link in links" :key="link.id">
+                    <a :href="link.url" target="_blank">
+                        <button
+                            class="flex items-center w-full bg-white text-black font-semibold rounded-lg px-3 py-5 hover:bg-gray-100 transition">
+                            <!-- Icône ou image à gauche -->
+                            <div class="absolute flex items-center">
+                                <Twitch class="text-purple-600" />
+                            </div>
+                            <!-- Texte centré -->
+                            <span class="mx-auto font-medium">{{ link.title }}</span>
+                        </button>
+                    </a>
+                </div>
             </div>
         </template>
 
@@ -47,11 +59,14 @@
 </template>
 
 <script setup>
-import { ArrowRight, Files, Home } from "lucide-vue-next";
+import { ArrowRight, Files, Home, Twitch } from "lucide-vue-next";
 
 const route = useRoute()
 const { streamer } = useStreamer();
 const { copy } = useClipboard()
+const { links } = useLink()
+const defaultAvatar =
+    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";
 
 const copyText = () => {
     const url = `${window.location.origin}/${route.params.username || ''}`
