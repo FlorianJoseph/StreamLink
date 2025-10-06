@@ -16,7 +16,7 @@
             </div>
 
             <div class="flex items-center text-center flex-col mx-auto my-6">
-                <img :src="streamer?.avatar_url || 'https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/sign/Streamlink/Avatar/default.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80NDMzZjlmNi01NGMzLTQxNzQtYmY0ZC01YzVjZDliNmI2MjIiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTdHJlYW1saW5rL0F2YXRhci9kZWZhdWx0LnBuZyIsImlhdCI6MTc1OTc0NTEzMCwiZXhwIjoyMDc1MTA1MTMwfQ.IppJUbOxBC5Nihi0dUVSS_bNYmdvWEi5VzzRl5xyAng'"
+                <img :src="streamer?.avatar_url || 'https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png'"
                     alt="Avatar" class="w-24 h-24 rounded-full object-cover mb-4" />
                 <span class="text-xl font-semibold">{{ streamer?.username }}</span>
                 <span class="text-base font-medium">
