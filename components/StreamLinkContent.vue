@@ -62,9 +62,11 @@
 import { ArrowRight, Files, Home, Twitch } from "lucide-vue-next";
 
 const route = useRoute()
-const { streamer } = useStreamer();
+const props = defineProps({
+    streamer: { type: Object, required: true },
+    links: { type: Array, required: true },
+});
 const { copy } = useClipboard()
-const { links } = useLink()
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";
 

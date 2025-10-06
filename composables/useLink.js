@@ -3,7 +3,6 @@ export const useLink = () => {
     const user = useSupabaseUser()
 
     const links = ref([])
-
     const toast = useToast();
 
     const fetchLinks = async () => {
