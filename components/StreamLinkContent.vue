@@ -1,5 +1,5 @@
 <template>
-    <Card class="min-h-full w-[580px]">
+    <Card class="min-h-full w-[580px] p-2">
         <template #title>
             <div class="mb-8">
                 <div class="flex items-center justify-between">

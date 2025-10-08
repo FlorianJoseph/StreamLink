@@ -11,7 +11,7 @@
             <Toast />
             <div class="flex-[2]">
                 <StreamLinkEdit :streamer="streamer" :links="links" @add="addLink" @update="updateLink"
-                    @delete="deleteLink" @updateStreamer="updateStreamer" />
+                    @delete="deleteLink" @updateStreamer="updateStreamer" @updateOrder="updateOrder" />
             </div>
             <!-- Aperçu du streamlink -->
             <div class="flex-[1]">
@@ -24,7 +24,7 @@
 <script setup>
 
 const { streamer, updateStreamer, loading } = useStreamer()
-const { links, addLink, updateLink, deleteLink } = useLink()
+const { links, addLink, updateLink, deleteLink, updateOrder } = useLink()
 
 const onStreamerCreated = (data) => {
     streamer.value = data

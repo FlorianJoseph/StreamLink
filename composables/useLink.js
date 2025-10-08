@@ -10,7 +10,7 @@ export const useLink = () => {
             .from('Link')
             .select('*')
             .eq('streamer_id', user.value.sub)
-            .order('created_at', { ascending: true })
+            .order('order', { ascending: true })
         if (!error) links.value = data
     }
 
@@ -52,8 +52,26 @@ export const useLink = () => {
         if (!error) links.value = links.value.filter((l) => l.id !== id)
         return { error }
     }
+    const updateOrder = async (newLinks) => {
+        newLinks.forEach((link, index) => link.order = index + 1)
+
+        try {
+            for (const link of newLinks) {
+                const { error } = await supabase
+                    .from('Link')
+                    .update({ order: link.order })
+                    .eq('id', link.id)
+
+                if (error) console.error('Erreur lors de la mise à jour de', link.id, error)
+            }
+
+            links.value = [...newLinks]
+        } catch (err) {
+            console.error('Erreur lors de la mise à jour des ordres :', err)
+        }
+    }
 
     onMounted(fetchLinks)
 
-    return { links, fetchLinks, addLink, updateLink, deleteLink }
+    return { links, fetchLinks, addLink, updateLink, deleteLink, updateOrder }
 }

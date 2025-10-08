@@ -75,7 +75,7 @@
         </Card>
 
         <!-- Gérer les liens -->
-        <Card>
+        <Card class="mb-8">
             <template #title>
                 <div class="flex flex-col">
                     <span class="font-semibold">Gérer vos liens</span>
@@ -97,30 +97,47 @@
                         <div v-if="links.length === 0" class="text-gray-400 text-sm text-center py-4">
                             Aucun lien pour l’instant. Cliquez sur "Ajouter un lien" pour commencer
                         </div>
-                        <div v-else v-for="link in links" :key="link.id" class="rounded-lg p-4 bg-gray-100/10">
-                            <!-- Header -->
-                            <div class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max"
-                                @click="editLink(link)">
-                                <span class="text-lg font-semibold">
-                                    {{ link.title }}
-                                </span>
-                                <Pencil class="w-4 h-4" />
-                            </div>
+                        <Draggable v-model="localLinks" item-key="id" handle=".drag-handle" @end="saveOrder"
+                            class="flex flex-col gap-2">
+                            <template #item="{ element }">
+                                <div class="rounded-lg py-4 px-2 bg-gray-100/10">
 
-                            <!-- Content -->
-                            <div class="flex justify-between items-center">
-                                <div class="flex gap-2 items-center w-max hover:cursor-pointer" @click="editLink(link)">
-                                    <p class="m-0 text-sm">
-                                        {{ link.url }}
-                                    </p>
-                                    <Pencil class="w-4 h-4" />
+                                    <div class="flex flex-row gap-4 items-center">
+                                        <!-- Drag handle avec icône GripVertical -->
+                                        <div class="drag-handle cursor-grab flex-shrink-0">
+                                            <GripVertical class="w-4 h-4" />
+                                        </div>
+
+                                        <div class="flex flex-col flex-grow">
+                                            <!-- Header -->
+                                            <div class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max"
+                                                @click="editLink(element)">
+                                                <span class="text-lg font-semibold">
+                                                    {{ element.title }}
+                                                </span>
+                                                <Pencil class="w-4 h-4" />
+                                            </div>
+
+                                            <!-- Content -->
+                                            <div class="flex justify-between items-center">
+                                                <div class="flex gap-2 items-center w-max hover:cursor-pointer"
+                                                    @click="editLink(element)">
+                                                    <p class="m-0 text-sm">
+                                                        {{ element.url }}
+                                                    </p>
+                                                    <Pencil class="w-4 h-4" />
+                                                </div>
+                                                <div class="flex gap-2">
+                                                    <Trash2
+                                                        class="w-5 h-5 cursor-pointer hover:text-red-500 transition-colors"
+                                                        @click="confirmDelete(element.id)" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="flex gap-2">
-                                    <Trash2 class="w-5 h-5 cursor-pointer hover:text-red-500 transition-colors"
-                                        @click="confirmDelete(link.id)" />
-                                </div>
-                            </div>
-                        </div>
+                            </template>
+                        </Draggable>
 
                         <!-- Modal Ajouter / Modifier -->
                         <Dialog v-model:visible="linkModal" modal header="Lien" :style="{ width: '25rem' }">
@@ -150,13 +167,14 @@
 </template>
 
 <script setup>
-import { ExternalLink, Plus, Pencil, Trash2 } from 'lucide-vue-next';
+import { ExternalLink, Plus, Pencil, Trash2, GripVertical } from 'lucide-vue-next';
+import Draggable from 'vuedraggable'
 
 const streamerModal = ref(false);
 const linkModal = ref(false);
 const editingLink = ref(null)
 const form = reactive({ title: '', url: '', icon: 'link' })
-const emit = defineEmits(["add", "update", "delete", "updateStreamer"]);
+const emit = defineEmits(["add", "update", "delete", "updateStreamer", "updateOrder"]);
 
 const props = defineProps({
     streamer: { type: Object, required: true },
@@ -164,6 +182,14 @@ const props = defineProps({
 });
 const username = ref(props.streamer.username);
 const bio = ref(props.streamer.bio);
+
+const localLinks = ref([...props.links])
+watch(() => props.links, (newLinks) => {
+    localLinks.value = [...newLinks]
+})
+const saveOrder = async () => {
+    emit('updateOrder', localLinks.value)
+}
 
 watchEffect(() => {
     username.value = props.streamer.username;
@@ -217,10 +243,12 @@ const editLink = (link) => {
 
 const saveLink = async () => {
     const icon = getDefaultIcon(form.url)
+    const maxOrder = localLinks.value.length ? Math.max(...localLinks.value.map(l => l.order || 0)) : 0;
     if (editingLink.value) {
         await emit("update", editingLink.value.id, { title: form.title, url: form.url, icon });
     } else {
-        await emit("add", { title: form.title, url: form.url, icon });
+        localLinks.value.push({ title: form.title, url: form.url, icon, order: maxOrder + 1 })
+        await emit("add", { title: form.title, url: form.url, icon, order: maxOrder + 1 });
     }
     resetForm();
 };
