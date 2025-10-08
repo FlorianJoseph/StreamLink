@@ -67,7 +67,9 @@
                     <p ref="linkText" class="m-4">
                         streamlink.com/{{ streamer?.username }}
                     </p>
-                    <Files class="w-5 h-5" />
+                    <Tag :severity="copied ? 'success' : 'secondary'" class="transition-all duration-300">
+                        {{ copied ? 'Copié !' : 'Copier' }}
+                    </Tag>
                 </div>
             </template>
         </Card>
@@ -148,7 +150,7 @@
 </template>
 
 <script setup>
-import { Files, ExternalLink, Plus, Pencil, Trash2 } from 'lucide-vue-next';
+import { ExternalLink, Plus, Pencil, Trash2 } from 'lucide-vue-next';
 
 const streamerModal = ref(false);
 const linkModal = ref(false);
@@ -170,8 +172,11 @@ watchEffect(() => {
 
 const linkText = ref(null)
 const { copy } = useClipboard()
+const copied = ref(false)
 const copyText = () => {
     if (linkText.value) copy(`https://${linkText.value.innerText}`)
+    copied.value = true
+    setTimeout(() => (copied.value = false), 1500)
 }
 
 const getDefaultIcon = (url) => {

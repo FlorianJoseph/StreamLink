@@ -8,9 +8,11 @@
                             <Home />
                         </Button>
                     </NuxtLink>
-                    <Button rounded severity="secondary" @click="copyText">
-                        <span>Copier le lien</span>
-                        <Files />
+                    <Button rounded :severity="copied ? 'success' : 'secondary'" @click="copyText"
+                        class="transition-all duration-300">
+                        <Files v-if="!copied" />
+                        <Check v-else />
+                        <span>{{ copied ? 'Copié !' : 'Copier le Streamlink' }}</span>
                     </Button>
                 </div>
             </div>
@@ -60,7 +62,7 @@
 
 <script setup>
 import {
-    ArrowRight, Files, Home, Twitch, Youtube, Instagram, Twitter, Facebook, Globe, Music, ShoppingBag, Gamepad2, Link2,
+    ArrowRight, Files, Home, Twitch, Youtube, Instagram, Twitter, Facebook, Globe, Music, ShoppingBag, Gamepad2, Link2, Check
 } from "lucide-vue-next";
 
 /* Convertit le nom d’icône en composant */
@@ -91,9 +93,12 @@ const { copy } = useClipboard()
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";
 
+const copied = ref(false)
 const copyText = () => {
     const url = `${window.location.origin}/${route.params.username || ''}`
     copy(url)
+    copied.value = true
+    setTimeout(() => (copied.value = false), 1500)
 }
 
 </script>

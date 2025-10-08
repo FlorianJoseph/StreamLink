@@ -15,8 +15,8 @@
                             <Home class="w-4 h-4" />
                         </Button>
                         <Button rounded severity="secondary">
-                            <span class="text-sm">Copier le lien</span>
                             <Files class="w-4 h-4" />
+                            <span class="text-sm">Copier le lien</span>
                         </Button>
                     </div>
                 </div>
