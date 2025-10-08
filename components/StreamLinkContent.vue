@@ -34,7 +34,7 @@
                             class="flex items-center w-full bg-white text-black font-semibold rounded-lg px-3 py-5 hover:bg-gray-100 transition">
                             <!-- Icône ou image à gauche -->
                             <div class="absolute flex items-center">
-                                <Twitch class="text-purple-600" />
+                                <component :is="getIconComponent(link.icon)" />
                             </div>
                             <!-- Texte centré -->
                             <span class="mx-auto font-medium">{{ link.title }}</span>
@@ -59,7 +59,28 @@
 </template>
 
 <script setup>
-import { ArrowRight, Files, Home, Twitch } from "lucide-vue-next";
+import {
+    ArrowRight, Files, Home, Twitch, Youtube, Instagram, Twitter, Facebook, Globe, Music, ShoppingBag, Gamepad2, Link2,
+} from "lucide-vue-next";
+
+/* Convertit le nom d’icône en composant */
+const getIconComponent = (name) => {
+    const icons = {
+        twitch: Twitch,
+        youtube: Youtube,
+        instagram: Instagram,
+        twitter: Twitter,
+        facebook: Facebook,
+        discord: Globe,
+        tiktok: Globe,
+        kick: Globe,
+        gaming: Gamepad2,
+        music: Music,
+        shop: ShoppingBag,
+        link: Link2,
+    }
+    return icons[name] || Link2
+}
 
 const route = useRoute()
 const props = defineProps({

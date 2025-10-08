@@ -174,6 +174,22 @@ const copyText = () => {
     if (linkText.value) copy(`https://${linkText.value.innerText}`)
 }
 
+const getDefaultIcon = (url) => {
+    const lower = url.toLowerCase()
+    if (lower.includes('twitch')) return 'twitch'
+    if (lower.includes('youtube')) return 'youtube'
+    if (lower.includes('instagram')) return 'instagram'
+    if (lower.includes('twitter')) return 'twitter'
+    if (lower.includes('facebook')) return 'facebook'
+    // if (lower.includes('discord')) return 'discord'
+    if (lower.includes('tiktok')) return 'tiktok'
+    if (lower.includes('kick')) return 'kick'
+    // if (lower.includes('steam')) return 'gaming'
+    if (lower.includes('spotify')) return 'music'
+    if (lower.includes('amazon') || lower.includes('shop')) return 'shop'
+    return 'link'
+}
+
 const handleSave = async () => {
     await emit("updateStreamer", { username: username.value, bio: bio.value });
     streamerModal.value = false;
@@ -182,6 +198,7 @@ const handleSave = async () => {
 const resetForm = () => {
     form.title = '';
     form.url = '';
+    form.icon = 'link';
     editingLink.value = null;
     linkModal.value = false;
 }
@@ -194,10 +211,11 @@ const editLink = (link) => {
 }
 
 const saveLink = async () => {
+    const icon = getDefaultIcon(form.url)
     if (editingLink.value) {
-        await emit("update", editingLink.value.id, { title: form.title, url: form.url });
+        await emit("update", editingLink.value.id, { title: form.title, url: form.url, icon });
     } else {
-        await emit("add", { title: form.title, url: form.url });
+        await emit("add", { title: form.title, url: form.url, icon });
     }
     resetForm();
 };
