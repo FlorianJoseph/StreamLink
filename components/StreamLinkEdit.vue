@@ -97,16 +97,21 @@
                         </div>
                         <div v-else v-for="link in links" :key="link.id" class="rounded-lg p-4 bg-gray-100/10">
                             <!-- Header -->
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-lg font-semibold">{{ link.title }}</span>
-                                <Pencil class="w-4 h-4 cursor-pointer" @click="editLink(link)" />
+                            <div class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max"
+                                @click="editLink(link)">
+                                <span class="text-lg font-semibold">
+                                    {{ link.title }}
+                                </span>
+                                <Pencil class="w-4 h-4" />
                             </div>
 
                             <!-- Content -->
                             <div class="flex justify-between items-center">
-                                <div class="flex gap-2 items-center">
-                                    <p class="m-0 text-sm">{{ link.url }}</p>
-                                    <Pencil class="w-4 h-4 cursor-pointer" @click="editLink(link)" />
+                                <div class="flex gap-2 items-center w-max hover:cursor-pointer" @click="editLink(link)">
+                                    <p class="m-0 text-sm">
+                                        {{ link.url }}
+                                    </p>
+                                    <Pencil class="w-4 h-4" />
                                 </div>
                                 <div class="flex gap-2">
                                     <Trash2 class="w-5 h-5 cursor-pointer hover:text-red-500 transition-colors"
@@ -118,6 +123,7 @@
                         <!-- Modal Ajouter / Modifier -->
                         <Dialog v-model:visible="linkModal" modal header="Lien" :style="{ width: '25rem' }">
                             <div class="flex flex-col gap-4">
+
                                 <div class="flex flex-col gap-2">
                                     <label for="title">Titre</label>
                                     <InputText id="title" v-model="form.title" placeholder="Ex: Twitch" />
@@ -126,6 +132,7 @@
                                     <label for="url">URL</label>
                                     <InputText id="url" v-model="form.url" placeholder="https://..." />
                                 </div>
+
                                 <div class="flex justify-end gap-2">
                                     <Button type="button" label="Annuler" severity="secondary" @click="resetForm()" />
                                     <Button type="button" label="Sauvegarder" severity="contrast"
@@ -146,7 +153,7 @@ import { Files, ExternalLink, Plus, Pencil, Trash2 } from 'lucide-vue-next';
 const streamerModal = ref(false);
 const linkModal = ref(false);
 const editingLink = ref(null)
-const form = reactive({ title: '', url: '' })
+const form = reactive({ title: '', url: '', icon: 'link' })
 const emit = defineEmits(["add", "update", "delete", "updateStreamer"]);
 
 const props = defineProps({
@@ -164,7 +171,7 @@ watchEffect(() => {
 const linkText = ref(null)
 const { copy } = useClipboard()
 const copyText = () => {
-    if (linkText.value) copy(`http://${linkText.value.innerText}`)
+    if (linkText.value) copy(`https://${linkText.value.innerText}`)
 }
 
 const handleSave = async () => {

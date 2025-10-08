@@ -1,6 +1,6 @@
 <template>
     <img :src="previewUrl || streamer?.avatar_url || defaultAvatar" alt="Avatar"
-        class="w-16 h-16 rounded-full object-cover flex-shrink-0 hover:cursor-pointer" @click="openModal" />
+        class="w-16 h-16 rounded-full object-cover flex-shrink-0 hover:cursor-pointer hover:opacity-75 transition-opacity duration-200" @click="openModal" />
     <Dialog v-model:visible="visible" modal header="Changer l’avatar" :style="{ width: '30rem' }">
         <div class="flex flex-col gap-4 items-center">
 

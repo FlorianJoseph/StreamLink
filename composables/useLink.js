@@ -3,7 +3,6 @@ export const useLink = () => {
     const user = useSupabaseUser()
 
     const links = ref([])
-    const toast = useToast();
 
     const fetchLinks = async () => {
         if (!user.value) return
@@ -30,7 +29,6 @@ export const useLink = () => {
             .select()
             .single()
         if (!error) links.value.push(data)
-        toast.add({ severity: 'success', summary: 'Succès', detail: 'Lien ajouté avec succès', life: 3000 });
 
         return { data, error }
     }
@@ -52,7 +50,6 @@ export const useLink = () => {
     const deleteLink = async (id) => {
         const { error } = await supabase.from('Link').delete().eq('id', id)
         if (!error) links.value = links.value.filter((l) => l.id !== id)
-        toast.add({ severity: 'error', summary: 'Suppresion', detail: 'Lien supprimé avec succès', life: 3000 });
         return { error }
     }
 
