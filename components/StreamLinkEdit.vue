@@ -86,7 +86,7 @@
             </template>
             <template #content>
                 <div class="flex flex-col gap-2">
-                    <div class="flex flex-col gap-2 w-full">
+                    <div class="flex flex-col gap-2 w-full ">
                         <!-- Bouton Ajouter un lien -->
                         <Button class="w-full" severity="contrast" @click="linkModal = true">
                             <Plus class="w-5 h-5" />
@@ -101,37 +101,51 @@
                             class="flex flex-col gap-2">
                             <template #item="{ element }">
                                 <div class="rounded-lg py-4 px-2 bg-gray-100/10">
-
                                     <div class="flex flex-row gap-4 items-center">
                                         <!-- Drag handle avec icône GripVertical -->
                                         <div class="drag-handle cursor-grab flex-shrink-0">
-                                            <GripVertical class="w-4 h-4" />
+                                            <GripVertical class="w-5 h-5" />
                                         </div>
-
                                         <div class="flex flex-col flex-grow">
-                                            <!-- Header -->
-                                            <div class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max"
-                                                @click="editLink(element)">
-                                                <span class="text-lg font-semibold">
-                                                    {{ element.title }}
-                                                </span>
-                                                <Pencil class="w-4 h-4" />
-                                            </div>
-
-                                            <!-- Content -->
+                                            <!-- Titre -->
                                             <div class="flex justify-between items-center">
-                                                <div class="flex gap-2 items-center w-max hover:cursor-pointer"
-                                                    @click="editLink(element)">
-                                                    <p class="m-0 text-sm">
-                                                        {{ element.url }}
-                                                    </p>
-                                                    <Pencil class="w-4 h-4" />
+                                                <div>
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max"
+                                                            @click="editLink(element)">
+                                                            <span class="font-medium">
+                                                                {{ element.title }}
+                                                            </span>
+                                                            <Pencil class="w-4 h-4" />
+                                                        </div>
+                                                    </div>
+                                                    <!-- URL -->
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="flex gap-2 items-center w-max hover:cursor-pointer"
+                                                            @click="editLink(element)">
+                                                            <p class="m-0 text-sm">
+                                                                {{ element.url }}
+                                                            </p>
+                                                            <Pencil class="w-4 h-4" />
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="flex gap-2">
-                                                    <Trash2
-                                                        class="w-5 h-5 cursor-pointer hover:text-red-500 transition-colors"
-                                                        @click="confirmDelete(element.id)" />
+                                                <ToggleSwitch v-model="element.checked" class="mr-4" />
+                                            </div>
+                                            <!-- Actions -->
+                                            <div class="flex justify-between items-center mr-3">
+                                                <div
+                                                    class="text-sm text-gray-400 mt-2 italic hover:cursor-pointer w-max">
+                                                    <Button severity="secondary" variant="text"
+                                                        v-tooltip.bottom="{ value: 'Icone' }">
+                                                        <Image class="w-4 h-4" />
+                                                    </Button>
+
                                                 </div>
+                                                <Button severity="secondary" variant="text"
+                                                    v-tooltip.bottom="{ value: 'Supprimer' }">
+                                                    <Trash2 class="w-5 h-5" @click="confirmDelete(element.id)" />
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>
@@ -167,7 +181,7 @@
 </template>
 
 <script setup>
-import { ExternalLink, Plus, Pencil, Trash2, GripVertical } from 'lucide-vue-next';
+import { ExternalLink, Plus, Pencil, Trash2, GripVertical, Image } from 'lucide-vue-next';
 import Draggable from 'vuedraggable'
 
 const streamerModal = ref(false);

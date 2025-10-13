@@ -7,7 +7,7 @@
             </div>
         </div>
 
-        <Card class="flex flex-col h-max w-97">
+        <Card class="flex flex-col h-max min-h-160 w-97">
             <template #title>
                 <div class="mb-8 w-full">
                     <div class="flex justify-between w-full">

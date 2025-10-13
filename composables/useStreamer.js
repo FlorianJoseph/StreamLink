@@ -29,8 +29,8 @@ export const useStreamer = () => {
             .insert({
                 id: user.value.sub,
                 username: payload.username,
-                bio: payload.bio || '',
-                avatarUrl: '',
+                bio: '',
+                avatar_url: '',
                 updated_at: new Date(),
             })
             .select()
