@@ -2,7 +2,7 @@
     <div v-if="!user">
         <button @click="twitchAuth"
             class="flex flex-row items-center gap-2 px-3 py-2 text-lg bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-            <Twitch class="w-5 h-5 text-white" />
+            <Icon name="lucide:twitch" size="20" />
             <span class="text-base font-semibold">Se connecter avec Twitch</span>
         </button>
     </div>
@@ -34,8 +34,6 @@
 </template>
 
 <script setup>
-import { Twitch } from 'lucide-vue-next';
-
 const svgIcons = {
     User: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
     LogOut: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>',

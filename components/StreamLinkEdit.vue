@@ -56,7 +56,7 @@
                     <NuxtLink :to="{ path: `/${streamer?.username}` }" target="_blank">
                         <Button class="whitespace-nowrap w-full" severity="contrast" variant="outlined">
                             <span>Voir mon StreamLink</span>
-                            <ExternalLink class="w-4 h-4" />
+                            <Icon name="lucide:external-link" size="16" />
                         </Button>
                     </NuxtLink>
                 </div>
@@ -89,7 +89,7 @@
                     <div class="flex flex-col gap-2 w-full ">
                         <!-- Bouton Ajouter un lien -->
                         <Button class="w-full" severity="contrast" @click="linkModal = true">
-                            <Plus class="w-5 h-5" />
+                            <Icon name="lucide:plus" size="20" />
                             <span class="font-medium">Ajouter un lien</span>
                         </Button>
 
@@ -104,7 +104,7 @@
                                     <div class="flex flex-row gap-4 items-center">
                                         <!-- Drag handle avec icône GripVertical -->
                                         <div class="drag-handle cursor-grab flex-shrink-0">
-                                            <GripVertical class="w-5 h-5" />
+                                            <Icon name="lucide:grip-vertical" size="20" />
                                         </div>
                                         <div class="flex flex-col flex-grow">
                                             <!-- Titre -->
@@ -116,7 +116,7 @@
                                                             <span class="font-medium">
                                                                 {{ element.title }}
                                                             </span>
-                                                            <Pencil class="w-4 h-4" />
+                                                            <Icon name="lucide:pencil" size="16" />
                                                         </div>
                                                     </div>
                                                     <!-- URL -->
@@ -126,7 +126,7 @@
                                                             <p class="m-0 text-sm">
                                                                 {{ element.url }}
                                                             </p>
-                                                            <Pencil class="w-4 h-4" />
+                                                            <Icon name="lucide:pencil" size="16" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -138,14 +138,14 @@
                                                     class="text-sm text-gray-400 mt-2 italic hover:cursor-pointer w-max">
                                                     <Button severity="secondary" variant="text"
                                                         v-tooltip.bottom="{ value: 'Icone' }">
-                                                        <Image class="w-4 h-4" />
+                                                        <Icon name="lucide:image" size="16" />
                                                     </Button>
 
                                                 </div>
                                                 <Button severity="secondary" variant="text"
                                                     v-tooltip.bottom="{ value: 'Supprimer' }"
                                                     @click="confirmDeletePopup($event, element.id)">
-                                                    <Trash2 class="w-5 h-5" />
+                                                    <Icon name="lucide:trash-2" size="20" />
                                                 </Button>
                                             </div>
                                         </div>
@@ -182,7 +182,6 @@
 </template>
 
 <script setup>
-import { ExternalLink, Plus, Pencil, Trash2, GripVertical, Image } from 'lucide-vue-next';
 import Draggable from 'vuedraggable'
 
 // Stores
@@ -218,21 +217,6 @@ const copyText = () => {
     setTimeout(() => (copied.value = false), 1500)
 }
 
-const getDefaultIcon = (url) => {
-    const lower = url.toLowerCase()
-    if (lower.includes('twitch')) return 'twitch'
-    if (lower.includes('youtube')) return 'youtube'
-    if (lower.includes('instagram')) return 'instagram'
-    if (lower.includes('twitter')) return 'twitter'
-    if (lower.includes('facebook')) return 'facebook'
-    // if (lower.includes('discord')) return 'discord'
-    if (lower.includes('tiktok')) return 'tiktok'
-    if (lower.includes('kick')) return 'kick'
-    // if (lower.includes('steam')) return 'gaming'
-    if (lower.includes('spotify')) return 'music'
-    if (lower.includes('amazon') || lower.includes('shop')) return 'shop'
-    return 'link'
-}
 
 // Actions
 const linkModal = ref(false);
@@ -250,6 +234,8 @@ const editLink = (link) => {
     editingLink.value = link
     linkModal.value = true
 }
+
+const { getDefaultIcon } = useLinkIcon()
 
 const saveLink = async () => {
     const icon = getDefaultIcon(form.url)
@@ -277,7 +263,6 @@ const confirmDeletePopup = (event, id) => {
     confirm.require({
         target: event.currentTarget,
         message: 'Êtes vous sûr de vouloir supprimer ce lien ?',
-        icon: 'pi pi-exclamation-triangle',
         rejectProps: {
             label: 'Annuler',
             severity: 'secondary',

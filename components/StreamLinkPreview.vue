@@ -12,10 +12,10 @@
                 <div class="mb-8 w-full">
                     <div class="flex justify-between w-full">
                         <Button rounded severity="secondary">
-                            <Home class="w-4 h-4" />
+                            <Icon name="lucide:home" />
                         </Button>
                         <Button rounded severity="secondary">
-                            <Files class="w-4 h-4" />
+                            <Icon name="lucide:files" />
                             <span class="text-sm">Copier le Streamlink</span>
                         </Button>
                     </div>
@@ -35,7 +35,7 @@
                             class="flex items-center w-full bg-white text-black font-semibold rounded-lg px-3 py-4 hover:bg-gray-100 transition">
                             <!-- Icône ou image à gauche -->
                             <div class="absolute flex items-center">
-                                <component :is="getIconComponent(link.icon)" class="w-5 h-5 text-contrast" />
+                                <Icon :name="link.icon" size="20" />
                             </div>
                             <!-- Texte centré -->
                             <span class="mx-auto font-medium">{{ link.title }}</span>
@@ -47,7 +47,7 @@
                 <div class="flex justify-center mt-14">
                     <Button severity="contrast">
                         <span class="text-sm font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
-                        <ArrowRight class="w-4 h-4" />
+                        <Icon name="lucide:arrow-right" />
                     </Button>
                 </div>
             </template>
@@ -56,41 +56,11 @@
 </template>
 
 <script setup>
-import {
-    Twitch, Files, ArrowRight, Home, Youtube,
-    Instagram,
-    Twitter,
-    Facebook,
-    Globe,
-    Music,
-    ShoppingBag,
-    Gamepad2,
-    Link2,
-} from "lucide-vue-next";
-
 const linkStore = useLinkStore()
 const streamerStore = useStreamerStore()
 const { links } = storeToRefs(linkStore)
 const { streamer } = storeToRefs(streamerStore)
 
-/* Convertit le nom d’icône en composant */
-const getIconComponent = (name) => {
-    const icons = {
-        twitch: Twitch,
-        youtube: Youtube,
-        instagram: Instagram,
-        twitter: Twitter,
-        facebook: Facebook,
-        discord: Globe,
-        tiktok: Globe,
-        kick: Globe,
-        gaming: Gamepad2,
-        music: Music,
-        shop: ShoppingBag,
-        link: Link2,
-    }
-    return icons[name] || Link2
-}
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";

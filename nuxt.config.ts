@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@primevue/nuxt-module', '@nuxtjs/supabase', '@prisma/nuxt', '@pinia/nuxt'],
+  modules: ['@primevue/nuxt-module', '@nuxtjs/supabase', '@prisma/nuxt', '@pinia/nuxt', '@nuxt/icon'],
   primevue: {
     autoImport: true,
     options: {

@@ -5,13 +5,13 @@
                 <div class="flex items-center justify-between">
                     <NuxtLink v-ripple :to="'/'">
                         <Button rounded severity="secondary">
-                            <Home />
+                            <Icon name="lucide:home" size="24" />
                         </Button>
                     </NuxtLink>
                     <Button rounded :severity="copied ? 'success' : 'secondary'" @click="copyText"
                         class="transition-all duration-300">
-                        <Files v-if="!copied" />
-                        <Check v-else />
+                        <Icon v-if="!copied" name="lucide:files" size="24" />
+                        <Icon v-else name="lucide:check" size="24" />
                         <span>{{ copied ? 'Copié !' : 'Copier le Streamlink' }}</span>
                     </Button>
                 </div>
@@ -36,7 +36,7 @@
                             class="flex items-center w-full bg-white text-black font-semibold rounded-lg px-3 py-5 hover:bg-gray-100 transition">
                             <!-- Icône ou image à gauche -->
                             <div class="absolute flex items-center">
-                                <component :is="getIconComponent(link.icon)" />
+                                <Icon :name="link.icon" size="24" />
                             </div>
                             <!-- Texte centré -->
                             <span class="mx-auto font-medium">{{ link.title }}</span>
@@ -51,7 +51,7 @@
                 <NuxtLink :to="'/admin'">
                     <Button severity="contrast">
                         <span class="font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
-                        <ArrowRight class="w-4 h-4" />
+                        <Icon name="lucide:arrow-right" size="16" />
                     </Button>
                 </NuxtLink>
             </div>
@@ -61,29 +61,6 @@
 </template>
 
 <script setup>
-import {
-    ArrowRight, Files, Home, Twitch, Youtube, Instagram, Twitter, Facebook, Globe, Music, ShoppingBag, Gamepad2, Link2, Check
-} from "lucide-vue-next";
-
-/* Convertit le nom d’icône en composant */
-const getIconComponent = (name) => {
-    const icons = {
-        twitch: Twitch,
-        youtube: Youtube,
-        instagram: Instagram,
-        twitter: Twitter,
-        facebook: Facebook,
-        discord: Globe,
-        tiktok: Globe,
-        kick: Globe,
-        gaming: Gamepad2,
-        music: Music,
-        shop: ShoppingBag,
-        link: Link2,
-    }
-    return icons[name] || Link2
-}
-
 const route = useRoute()
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";
