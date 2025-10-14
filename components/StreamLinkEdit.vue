@@ -143,8 +143,9 @@
 
                                                 </div>
                                                 <Button severity="secondary" variant="text"
-                                                    v-tooltip.bottom="{ value: 'Supprimer' }">
-                                                    <Trash2 class="w-5 h-5" @click="confirmDelete(element.id)" />
+                                                    v-tooltip.bottom="{ value: 'Supprimer' }"
+                                                    @click="confirmDeletePopup($event, element.id)">
+                                                    <Trash2 class="w-5 h-5" />
                                                 </Button>
                                             </div>
                                         </div>
@@ -270,10 +271,28 @@ const resetForm = () => {
     linkModal.value = false
 }
 
-const confirmDelete = async (id) => {
-    if (confirm("Voulez-vous vraiment supprimer ce lien ?")) {
-        await linkStore.deleteLink(id)
-    }
-}
+const confirm = useConfirm();
+
+const confirmDeletePopup = (event, id) => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Êtes vous sûr de vouloir supprimer ce lien ?',
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: 'Annuler',
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: 'Supprimer',
+            severity: 'danger'
+        },
+        accept: async () => {
+            linkStore.deleteLink(id)
+        },
+        reject: () => {
+        }
+    });
+};
 
 </script>
