@@ -44,7 +44,7 @@
                 </div>
             </template>
             <template #footer>
-                <div class="flex justify-center mt-14">
+                <div class="flex justify-center mt-10">
                     <Button severity="contrast">
                         <span class="text-sm font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
                         <Icon name="lucide:arrow-right" />

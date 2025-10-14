@@ -19,7 +19,7 @@
 
             <div class="flex items-center text-center flex-col mx-auto my-6">
                 <img :src="streamer?.avatar_url || defaultAvatar" alt="Avatar"
-                    class="w-24 h-24 rounded-full object-cover mb-4" />
+                    class="w-24 h-24 rounded-full object-cover mb-4 mt-4" />
                 <span class="text-xl font-semibold">{{ streamer?.username }}</span>
                 <span class="text-base font-medium">
                     {{ streamer?.bio }}

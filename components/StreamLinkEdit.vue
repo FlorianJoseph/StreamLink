@@ -100,7 +100,7 @@
                         <Draggable v-model="links" item-key="id" handle=".drag-handle" @end="saveOrder"
                             class="flex flex-col gap-2">
                             <template #item="{ element }">
-                                <div class="rounded-lg py-4 px-2 bg-gray-100/10">
+                                <div class="rounded-3xl py-3 px-2 bg-gray-100/10">
                                     <div class="flex flex-row gap-4 items-center">
                                         <!-- Drag handle avec icône GripVertical -->
                                         <div class="drag-handle cursor-grab flex-shrink-0">
@@ -130,10 +130,10 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <ToggleSwitch v-model="element.checked" class="mr-4" />
+                                                <ToggleSwitch v-model="element.checked" class="mr-1" />
                                             </div>
                                             <!-- Actions -->
-                                            <div class="flex justify-between items-center mr-3">
+                                            <div class="flex justify-between items-center">
                                                 <div
                                                     class="text-sm text-gray-400 mt-2 italic hover:cursor-pointer w-max">
                                                     <Button severity="secondary" variant="text"
