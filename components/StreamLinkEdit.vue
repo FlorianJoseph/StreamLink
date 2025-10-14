@@ -97,7 +97,7 @@
                         <div v-if="links.length === 0" class="text-gray-400 text-sm text-center py-4">
                             Aucun lien pour l’instant. Cliquez sur "Ajouter un lien" pour commencer
                         </div>
-                        <Draggable v-model="localLinks" item-key="id" handle=".drag-handle" @end="saveOrder"
+                        <Draggable v-model="links" item-key="id" handle=".drag-handle" @end="saveOrder"
                             class="flex flex-col gap-2">
                             <template #item="{ element }">
                                 <div class="rounded-lg py-4 px-2 bg-gray-100/10">
@@ -184,37 +184,35 @@
 import { ExternalLink, Plus, Pencil, Trash2, GripVertical, Image } from 'lucide-vue-next';
 import Draggable from 'vuedraggable'
 
-const streamerModal = ref(false);
-const linkModal = ref(false);
-const editingLink = ref(null)
-const form = reactive({ title: '', url: '', icon: 'link' })
-const emit = defineEmits(["add", "update", "delete", "updateStreamer", "updateOrder"]);
+// Stores
+const linkStore = useLinkStore()
+const { links } = storeToRefs(linkStore)
+const streamerStore = useStreamerStore()
+const { streamer } = storeToRefs(streamerStore)
 
-const props = defineProps({
-    streamer: { type: Object, required: true },
-    links: { type: Array, required: true },
-});
-const username = ref(props.streamer.username);
-const bio = ref(props.streamer.bio);
+// Modale streamer
+const streamerModal = ref(false)
+const username = ref('')
+const bio = ref('')
+watchEffect(() => {
+    username.value = streamer?.value?.username || ''
+    bio.value = streamer?.value?.bio || ''
+})
 
-const localLinks = ref([...props.links])
-watch(() => props.links, (newLinks) => {
-    localLinks.value = [...newLinks]
+// Draggable
+const localLinks = ref([])
+watchEffect(() => {
+    localLinks.value = [...links.value]
 })
 const saveOrder = async () => {
-    emit('updateOrder', localLinks.value)
+    await linkStore.updateOrder(localLinks.value)
 }
 
-watchEffect(() => {
-    username.value = props.streamer.username;
-    bio.value = props.streamer.bio;
-});
-
+// Copier le lien
 const linkText = ref(null)
-const { copy } = useClipboard()
 const copied = ref(false)
 const copyText = () => {
-    if (linkText.value) copy(`https://${linkText.value.innerText}`)
+    if (linkText.value) navigator.clipboard.writeText(`https://${linkText.value.innerText}`)
     copied.value = true
     setTimeout(() => (copied.value = false), 1500)
 }
@@ -235,19 +233,16 @@ const getDefaultIcon = (url) => {
     return 'link'
 }
 
+// Actions
+const linkModal = ref(false);
+const form = reactive({ title: '', url: '', icon: 'link' })
+
 const handleSave = async () => {
-    await emit("updateStreamer", { username: username.value, bio: bio.value });
+    await streamerStore.updateStreamer({ username: username.value, bio: bio.value })
     streamerModal.value = false;
 };
 
-const resetForm = () => {
-    form.title = '';
-    form.url = '';
-    form.icon = 'link';
-    editingLink.value = null;
-    linkModal.value = false;
-}
-
+const editingLink = ref(null)
 const editLink = (link) => {
     form.title = link.title
     form.url = link.url
@@ -257,20 +252,28 @@ const editLink = (link) => {
 
 const saveLink = async () => {
     const icon = getDefaultIcon(form.url)
-    const maxOrder = localLinks.value.length ? Math.max(...localLinks.value.map(l => l.order || 0)) : 0;
+    const maxOrder = links.value.length ? Math.max(...links.value.map(l => l.order || 0)) : 0
     if (editingLink.value) {
-        await emit("update", editingLink.value.id, { title: form.title, url: form.url, icon });
+        await linkStore.updateLink(editingLink.value.id, { title: form.title, url: form.url, icon })
     } else {
-        localLinks.value.push({ title: form.title, url: form.url, icon, order: maxOrder + 1 })
-        await emit("add", { title: form.title, url: form.url, icon, order: maxOrder + 1 });
+        const newLink = await linkStore.addLink({ title: form.title, url: form.url, icon, order: maxOrder + 1 })
+        localLinks.value.push(newLink.data)
     }
-    resetForm();
-};
+    resetForm()
+}
+
+const resetForm = () => {
+    form.title = ''
+    form.url = ''
+    form.icon = 'link'
+    editingLink.value = null
+    linkModal.value = false
+}
 
 const confirmDelete = async (id) => {
     if (confirm("Voulez-vous vraiment supprimer ce lien ?")) {
-        await emit("delete", id);
+        await linkStore.deleteLink(id)
     }
-};
+}
 
 </script>

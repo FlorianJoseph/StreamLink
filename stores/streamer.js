@@ -1,4 +1,6 @@
-export const useStreamer = () => {
+import { defineStore } from 'pinia'
+
+export const useStreamerStore = defineStore('streamer', () => {
     const supabase = useSupabaseClient()
     const user = useSupabaseUser()
 
@@ -22,7 +24,7 @@ export const useStreamer = () => {
         loading.value = false
     }
 
-    // Créer le streamer
+    // Créer un streamer
     const createStreamer = async (payload) => {
         const { data, error } = await supabase
             .from('Streamer')
@@ -40,7 +42,7 @@ export const useStreamer = () => {
         return { data, error }
     }
 
-    // Mettre à jour
+    // Mettre à jour le streamer
     const updateStreamer = async (payload) => {
         const { data, error } = await supabase
             .from('Streamer')
@@ -56,13 +58,16 @@ export const useStreamer = () => {
         return { data, error }
     }
 
+    // Charger automatiquement à l’ouverture
     onMounted(fetchStreamer)
 
     return {
+        // État
         loading,
         streamer,
+        // Actions
         fetchStreamer,
         createStreamer,
-        updateStreamer,
+        updateStreamer
     }
-}
+})

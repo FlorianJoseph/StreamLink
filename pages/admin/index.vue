@@ -5,29 +5,25 @@
     </div>
     <div v-else class="mt-8">
         <div v-if="!streamer">
-            <StreamLinkCreate @created="onStreamerCreated" />
+            <StreamLinkCreate />
         </div>
         <div v-else class="flex flex-col lg:flex-row lg:gap-48 gap-4">
             <Toast />
             <div class="flex-[2]">
-                <StreamLinkEdit :streamer="streamer" :links="links" @add="addLink" @update="updateLink"
-                    @delete="deleteLink" @updateStreamer="updateStreamer" @updateOrder="updateOrder" />
+                <!--  -->
+                <StreamLinkEdit />
             </div>
             <!-- Aperçu du streamlink -->
             <div class="flex-[1]">
-                <StreamLinkPreview :links="links" :streamer="streamer" />
+                <StreamLinkPreview />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-
-const { streamer, updateStreamer, loading } = useStreamer()
-const { links, addLink, updateLink, deleteLink, updateOrder } = useLink()
-
-const onStreamerCreated = (data) => {
-    streamer.value = data
-}
+// Stores
+const streamerStore = useStreamerStore()
+const { streamer, loading } = storeToRefs(streamerStore)
 
 </script>

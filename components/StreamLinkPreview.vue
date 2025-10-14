@@ -16,7 +16,7 @@
                         </Button>
                         <Button rounded severity="secondary">
                             <Files class="w-4 h-4" />
-                            <span class="text-sm">Copier le lien</span>
+                            <span class="text-sm">Copier le Streamlink</span>
                         </Button>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                 <div class="flex flex-col gap-2 w-full">
                     <div class="w-full mx-auto" v-for="link in links" :key="link.id">
                         <button
-                            class="flex items-center w-full bg-white text-black font-semibold rounded-lg px-3 py-5 hover:bg-gray-100 transition">
+                            class="flex items-center w-full bg-white text-black font-semibold rounded-lg px-3 py-4 hover:bg-gray-100 transition">
                             <!-- Icône ou image à gauche -->
                             <div class="absolute flex items-center">
                                 <component :is="getIconComponent(link.icon)" class="w-5 h-5 text-contrast" />
@@ -44,9 +44,9 @@
                 </div>
             </template>
             <template #footer>
-                <div class="flex justify-center mt-4 w-full">
+                <div class="flex justify-center mt-14">
                     <Button severity="contrast">
-                        <span>Rejoignez {{ streamer?.username }} sur StreamLink</span>
+                        <span class="text-sm font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
                         <ArrowRight class="w-4 h-4" />
                     </Button>
                 </div>
@@ -68,6 +68,11 @@ import {
     Link2,
 } from "lucide-vue-next";
 
+const linkStore = useLinkStore()
+const streamerStore = useStreamerStore()
+const { links } = storeToRefs(linkStore)
+const { streamer } = storeToRefs(streamerStore)
+
 /* Convertit le nom d’icône en composant */
 const getIconComponent = (name) => {
     const icons = {
@@ -86,11 +91,6 @@ const getIconComponent = (name) => {
     }
     return icons[name] || Link2
 }
-
-const props = defineProps({
-    links: { type: Array, required: true },
-    streamer: { type: Object, required: true },
-});
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";

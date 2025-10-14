@@ -7,4 +7,5 @@
 definePageMeta({
   layout: 'landing'
 })
+
 </script>

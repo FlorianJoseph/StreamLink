@@ -1,9 +1,12 @@
-export const useLink = () => {
+import { defineStore } from 'pinia'
+
+export const useLinkStore = defineStore('link', () => {
     const supabase = useSupabaseClient()
     const user = useSupabaseUser()
 
     const links = ref([])
 
+    /** Récupérer tous les liens du streamer */
     const fetchLinks = async () => {
         if (!user.value) return
         const { data, error } = await supabase
@@ -11,9 +14,11 @@ export const useLink = () => {
             .select('*')
             .eq('streamer_id', user.value.sub)
             .order('order', { ascending: true })
+
         if (!error) links.value = data
     }
 
+    /** Ajouter un lien */
     const addLink = async (payload) => {
         if (!user.value) return
 
@@ -24,15 +29,16 @@ export const useLink = () => {
                 ...payload,
                 streamer_id: user.value.sub,
                 created_at: new Date(),
-                updated_at: new Date()
+                updated_at: new Date(),
             })
             .select()
             .single()
-        if (!error) links.value.push(data)
 
+        if (!error) links.value.push(data)
         return { data, error }
     }
 
+    /** Modifier un lien */
     const updateLink = async (id, payload) => {
         const { data, error } = await supabase
             .from('Link')
@@ -40,20 +46,25 @@ export const useLink = () => {
             .eq('id', id)
             .select()
             .single()
+
         if (!error) {
             const index = links.value.findIndex((l) => l.id === id)
             if (index !== -1) Object.assign(links.value[index], data)
         }
+
         return { data, error }
     }
 
+    /** Supprimer un lien */
     const deleteLink = async (id) => {
         const { error } = await supabase.from('Link').delete().eq('id', id)
         if (!error) links.value = links.value.filter((l) => l.id !== id)
         return { error }
     }
+
+    /**  Mettre à jour l’ordre (drag & drop) */
     const updateOrder = async (newLinks) => {
-        newLinks.forEach((link, index) => link.order = index + 1)
+        newLinks.forEach((link, index) => (link.order = index + 1))
 
         try {
             for (const link of newLinks) {
@@ -73,5 +84,12 @@ export const useLink = () => {
 
     onMounted(fetchLinks)
 
-    return { links, fetchLinks, addLink, updateLink, deleteLink, updateOrder }
-}
+    return {
+        links,
+        fetchLinks,
+        addLink,
+        updateLink,
+        deleteLink,
+        updateOrder,
+    }
+})

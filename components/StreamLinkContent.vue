@@ -85,20 +85,21 @@ const getIconComponent = (name) => {
 }
 
 const route = useRoute()
-const props = defineProps({
-    streamer: { type: Object, required: true },
-    links: { type: Array, required: true },
-});
-const { copy } = useClipboard()
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";
 
 const copied = ref(false)
 const copyText = () => {
     const url = `${window.location.origin}/${route.params.username || ''}`
-    copy(url)
+    navigator.clipboard.writeText(url)
     copied.value = true
     setTimeout(() => (copied.value = false), 1500)
 }
+
+// Stores
+const linkStore = useLinkStore()
+const { links } = storeToRefs(linkStore)
+const streamerStore = useStreamerStore()
+const { streamer } = storeToRefs(streamerStore)
 
 </script>

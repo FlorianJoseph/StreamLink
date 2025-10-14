@@ -24,10 +24,9 @@
 </template>
 
 <script setup>
-const user = useSupabaseUser();
-const emit = defineEmits(['created'])
-
-const { createStreamer } = useStreamer()
+// Stores
+const user = useSupabaseUser()
+const streamerStore = useStreamerStore()
 
 const form = ref({
     username: user.value?.user_metadata.nickname || '',
@@ -36,14 +35,9 @@ const form = ref({
 const createStreamlink = async () => {
     if (!form.value.username) return
 
-    const { data, error } = await createStreamer({
-        username: form.value.username,
+    else await streamerStore.createStreamer({
+        username: form.value.username
     })
-
-    if (!error) {
-        emit('created', data)
-    } else {
-        console.error('Erreur création StreamLink', error)
-    }
 }
+
 </script>
