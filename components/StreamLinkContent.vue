@@ -20,7 +20,7 @@
             <div class="flex items-center text-center flex-col mx-auto my-6">
                 <img :src="streamer?.avatar_url || defaultAvatar" alt="Avatar"
                     class="w-24 h-24 rounded-full object-cover mb-4 mt-4" />
-                <span class="text-xl font-semibold">{{ streamer?.username }}</span>
+                <span class="text-2xl font-bold">{{ streamer?.username }}</span>
                 <span class="text-base font-medium">
                     {{ streamer?.bio }}
                 </span>
@@ -32,11 +32,18 @@
             <div class="flex flex-col gap-4 w-full">
                 <div class="w-full mx-auto" v-for="link in links" :key="link.id">
                     <a :href="link.url" target="_blank">
-                        <button
-                            class="flex items-center w-full bg-white text-black font-semibold rounded-lg px-3 py-5 hover:bg-gray-100 transition">
+                        <button :class="[
+                            'flex items-center w-full bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition',
+                            link.vignette_url ? 'px-3 py-5' : 'px-5 py-5'
+                        ]">
                             <!-- Icône ou image à gauche -->
                             <div class="absolute flex items-center">
-                                <Icon :name="link.icon" size="24" />
+                                <template v-if="link.vignette_url">
+                                    <img :src="link.vignette_url" class="w-10 h-10 object-contain" />
+                                </template>
+                                <template v-else>
+                                    <Icon :name="link.icon" size="24" />
+                                </template>
                             </div>
                             <!-- Texte centré -->
                             <span class="mx-auto font-medium">{{ link.title }}</span>
@@ -47,7 +54,7 @@
         </template>
 
         <template #footer>
-            <div class="flex justify-center mt-14">
+            <div class="flex justify-center my-14">
                 <NuxtLink :to="'/admin'">
                     <Button severity="contrast">
                         <span class="font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>

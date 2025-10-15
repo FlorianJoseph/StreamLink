@@ -1,6 +1,5 @@
 <template>
-    <!-- Edition -->
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 min-w-[650px]">
         <!-- En-tête -->
         <div class="py-4">
             <div class="flex items-center flex-col lg:items-start h-12 justify-end">
@@ -42,142 +41,144 @@
                 </Dialog>
             </div>
         </div>
+        <!-- Bouton Ajouter un lien -->
+        <Button class="w-full" severity="contrast" @click="linkModal = true">
+            <Icon name="lucide:plus" size="20" />
+            <span class="font-medium">Ajouter un lien</span>
+        </Button>
+
 
         <!-- Aperçu du lien -->
-        <Card>
-            <template #title>
-                <div class="flex items-center justify-between">
-                    <div class="flex flex-col">
-                        <span class="text-lg font-semibold">Votre lien</span>
-                        <span class="text-sm text-gray-400">
-                            Partagez ce lien avec votre audience pour qu'elle puisse vous suivre facilement.
-                        </span>
-                    </div>
-                    <NuxtLink :to="{ path: `/${streamer?.username}` }" target="_blank">
-                        <Button class="whitespace-nowrap w-full" severity="contrast" variant="outlined">
-                            <span>Voir mon StreamLink</span>
-                            <Icon name="lucide:external-link" size="16" />
-                        </Button>
-                    </NuxtLink>
-                </div>
-            </template>
-            <template #content>
-                <div class="flex items-center bg-gray-100/10 rounded justify-between pr-4 cursor-pointer"
-                    @click="copyText">
-                    <p ref="linkText" class="m-4">
-                        streamlink.com/{{ streamer?.username }}
-                    </p>
-                    <Tag :severity="copied ? 'success' : 'secondary'" class="transition-all duration-300">
-                        {{ copied ? 'Copié !' : 'Copier' }}
-                    </Tag>
-                </div>
-            </template>
-        </Card>
+        <!-- <NuxtLink :to="{ path: `/${streamer?.username}` }" target="_blank">
+            <Button class="whitespace-nowrap w-full" severity="contrast" variant="outlined">
+                <span>Voir mon StreamLink</span>
+                <Icon name="lucide:external-link" size="16" />
+            </Button>
+        </NuxtLink>
+        <div class="flex items-center bg-gray-100/10 rounded justify-between pr-4 cursor-pointer" @click="copyText">
+            <p ref="linkText" class="m-4">
+                streamlink.com/{{ streamer?.username }}
+            </p>
+            <Tag :severity="copied ? 'success' : 'secondary'" class="transition-all duration-300">
+                {{ copied ? 'Copié !' : 'Copier' }}
+            </Tag>
+        </div> -->
 
         <!-- Gérer les liens -->
-        <Card class="mb-8">
-            <template #title>
-                <div class="flex flex-col">
-                    <span class="font-semibold">Gérer vos liens</span>
-                    <span class="text-sm text-gray-400">
-                        Ajoutez, modifiez ou supprimez vos liens pour les mettre à jour facilement.
-                    </span>
-                </div>
-            </template>
-            <template #content>
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-col gap-2 w-full ">
-                        <!-- Bouton Ajouter un lien -->
-                        <Button class="w-full" severity="contrast" @click="linkModal = true">
-                            <Icon name="lucide:plus" size="20" />
-                            <span class="font-medium">Ajouter un lien</span>
-                        </Button>
-
-                        <!-- Liste des liens -->
-                        <div v-if="links.length === 0" class="text-gray-400 text-sm text-center py-4">
-                            Aucun lien pour l’instant. Cliquez sur "Ajouter un lien" pour commencer
-                        </div>
-                        <Draggable v-model="links" item-key="id" handle=".drag-handle" @end="saveOrder"
-                            class="flex flex-col gap-2">
-                            <template #item="{ element }">
-                                <div class="rounded-3xl py-3 px-2 bg-gray-100/10">
-                                    <div class="flex flex-row gap-4 items-center">
-                                        <!-- Drag handle avec icône GripVertical -->
-                                        <div class="drag-handle cursor-grab flex-shrink-0">
-                                            <Icon name="lucide:grip-vertical" size="20" />
+        <div class="mb-8">
+            <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-2 w-full ">
+                    <!-- Liste des liens -->
+                    <div v-if="links.length === 0" class="text-gray-400 text-sm text-center py-4">
+                        Aucun lien pour l’instant. Cliquez sur "Ajouter un lien" pour commencer
+                    </div>
+                    <Draggable v-model="links" item-key="id" handle=".drag-handle" @end="saveOrder"
+                        class="flex flex-col gap-2">
+                        <template #item="{ element }">
+                            <div class="rounded-3xl pt-3 pb-2 px-2 bg-gray-100/10">
+                                <div class="flex flex-row gap-4 items-center">
+                                    <!-- Drag handle avec icône GripVertical -->
+                                    <div class="drag-handle cursor-grab flex-shrink-0">
+                                        <Icon name="lucide:grip-vertical" size="20" />
+                                    </div>
+                                    <div class="flex flex-col flex-grow">
+                                        <!-- Titre -->
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <div class="flex justify-between items-center">
+                                                    <div class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max"
+                                                        @click="editLink(element)">
+                                                        <span class="font-medium">
+                                                            {{ element.title }}
+                                                        </span>
+                                                        <Icon name="lucide:pencil" size="16" />
+                                                    </div>
+                                                </div>
+                                                <!-- URL -->
+                                                <div class="flex justify-between items-center">
+                                                    <div class="flex gap-2 items-center w-max hover:cursor-pointer"
+                                                        @click="editLink(element)">
+                                                        <p class="m-0 text-sm">
+                                                            {{ element.url }}
+                                                        </p>
+                                                        <Icon name="lucide:pencil" size="16" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <ToggleSwitch v-model="element.checked" class="mr-1" />
                                         </div>
-                                        <div class="flex flex-col flex-grow">
-                                            <!-- Titre -->
-                                            <div class="flex justify-between items-center">
-                                                <div>
-                                                    <div class="flex justify-between items-center">
-                                                        <div class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max"
-                                                            @click="editLink(element)">
-                                                            <span class="font-medium">
-                                                                {{ element.title }}
-                                                            </span>
-                                                            <Icon name="lucide:pencil" size="16" />
-                                                        </div>
-                                                    </div>
-                                                    <!-- URL -->
-                                                    <div class="flex justify-between items-center">
-                                                        <div class="flex gap-2 items-center w-max hover:cursor-pointer"
-                                                            @click="editLink(element)">
-                                                            <p class="m-0 text-sm">
-                                                                {{ element.url }}
-                                                            </p>
-                                                            <Icon name="lucide:pencil" size="16" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <ToggleSwitch v-model="element.checked" class="mr-1" />
-                                            </div>
-                                            <!-- Actions -->
-                                            <div class="flex justify-between items-center">
-                                                <div
-                                                    class="text-sm text-gray-400 mt-2 italic hover:cursor-pointer w-max">
-                                                    <Button severity="secondary" variant="text"
-                                                        v-tooltip.bottom="{ value: 'Icone' }">
-                                                        <Icon name="lucide:image" size="16" />
-                                                    </Button>
-
-                                                </div>
+                                        <!-- Actions -->
+                                        <div class="flex justify-between items-center">
+                                            <div class="text-sm text-gray-400 mt-2 italic hover:cursor-pointer w-max">
                                                 <Button severity="secondary" variant="text"
-                                                    v-tooltip.bottom="{ value: 'Supprimer' }"
-                                                    @click="confirmDeletePopup($event, element.id)">
-                                                    <Icon name="lucide:trash-2" size="20" />
+                                                    v-tooltip.bottom="{ value: 'Vignette' }"
+                                                    @click="openVignetteModal(element)">
+                                                    <Icon name="lucide:image" size="16" />
                                                 </Button>
+
+                                                <!-- Modal Icone ou image -->
+                                                <Dialog v-model:visible="iconModal" modal header="Modifier la vignette"
+                                                    :style="{ width: '25rem' }">
+
+                                                    <div class="flex flex-col gap-4 items-center">
+
+                                                        <!-- Étape 1 : Upload -->
+                                                        <div v-if="!imageUrl" class="flex flex-row gap-2">
+                                                            <FileUpload mode="basic" @select="onFileSelect" customUpload
+                                                                auto chooseLabel="Choisir une image"
+                                                                class="p-button-contrast" accept="image/*" />
+                                                            <Button label="Choisir une icone" severity="contrast" variant="outlined" />
+                                                        </div>
+
+                                                        <!-- Étape 2 : Crop -->
+                                                        <div v-else class="mt-4 w-full">
+                                                            <Cropper :src="imageUrl" :stencil-props="{ aspectRatio: 1 }"
+                                                                @change="onCropChange" image-restriction="fit-area" />
+                                                            <div class="flex justify-between gap-2 mt-4">
+                                                                <Button label="Annuler" severity="secondary" />
+                                                                <Button label="Sauvegarder" severity="contrast"
+                                                                    :disabled="!croppedImage" @click="saveImage" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Dialog>
+
                                             </div>
+                                            <Button severity="secondary" variant="text"
+                                                v-tooltip.bottom="{ value: 'Supprimer' }"
+                                                @click="confirmDeletePopup($event, element.id)">
+                                                <Icon name="lucide:trash-2" size="20" />
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
-                            </template>
-                        </Draggable>
-
-                        <!-- Modal Ajouter / Modifier -->
-                        <Dialog v-model:visible="linkModal" modal header="Lien" :style="{ width: '25rem' }">
-                            <div class="flex flex-col gap-4">
-
-                                <div class="flex flex-col gap-2">
-                                    <label for="title">Titre</label>
-                                    <InputText id="title" v-model="form.title" placeholder="Ex: Twitch" />
-                                </div>
-                                <div class="flex flex-col gap-2">
-                                    <label for="url">URL</label>
-                                    <InputText id="url" v-model="form.url" placeholder="https://..." />
-                                </div>
-
-                                <div class="flex justify-end gap-2">
-                                    <Button type="button" label="Annuler" severity="secondary" @click="resetForm()" />
-                                    <Button type="button" label="Sauvegarder" severity="contrast"
-                                        :disabled="!form.title || !form.url" @click="saveLink()" />
-                                </div>
                             </div>
-                        </Dialog>
-                    </div>
+                        </template>
+                    </Draggable>
+
+                    <!-- Modal Ajouter / Modifier -->
+                    <Dialog v-model:visible="linkModal" modal header="Lien" :style="{ width: '25rem' }">
+                        <div class="flex flex-col gap-4">
+
+                            <div class="flex flex-col gap-2">
+                                <label for="title">Titre</label>
+                                <InputText id="title" v-model="form.title" placeholder="Ex: Twitch" />
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label for="url">URL</label>
+                                <InputText id="url" v-model="form.url" placeholder="https://..." />
+                            </div>
+
+                            <div class="flex justify-end gap-2">
+                                <Button type="button" label="Annuler" severity="secondary" @click="resetForm()" />
+                                <Button type="button" label="Sauvegarder" severity="contrast"
+                                    :disabled="!form.title || !form.url" @click="saveLink()" />
+                            </div>
+                        </div>
+                    </Dialog>
                 </div>
-            </template>
-        </Card>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -258,7 +259,6 @@ const resetForm = () => {
 }
 
 const confirm = useConfirm();
-
 const confirmDeletePopup = (event, id) => {
     confirm.require({
         target: event.currentTarget,
@@ -279,5 +279,36 @@ const confirmDeletePopup = (event, id) => {
         }
     });
 };
+
+// Changer l'icone
+import { Cropper } from 'vue-advanced-cropper'
+import 'vue-advanced-cropper/dist/style.css';
+
+const iconModal = ref(false);
+const currentLinkRef = ref(null)
+// Composable VignetteUploader
+const {
+    imageUrl,
+    croppedImage,
+    onFileSelect,
+    onCropChange,
+    saveCroppedImage
+} = useVignetteUploader(currentLinkRef)
+
+const openVignetteModal = (link) => {
+    currentLinkRef.value = link
+    iconModal.value = true
+}
+
+const closeModal = () => {
+    iconModal.value = false
+    imageUrl.value = null
+    croppedImage.value = null
+}
+
+const saveImage = async () => {
+    await saveCroppedImage()
+    closeModal()
+}
 
 </script>

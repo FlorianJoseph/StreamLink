@@ -9,8 +9,8 @@
         </div>
         <div v-else class="flex flex-col lg:flex-row lg:gap-48 gap-4">
             <ConfirmPopup></ConfirmPopup>
+            <!-- Édition du streamlink -->
             <div class="flex-[2]">
-                <!--  -->
                 <StreamLinkEdit />
             </div>
             <!-- Aperçu du streamlink -->

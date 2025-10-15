@@ -7,7 +7,7 @@
             </div>
         </div>
 
-        <Card class="flex flex-col h-max min-h-160 w-97">
+        <Card class="flex flex-col h-160 w-97 overflow-auto">
             <template #title>
                 <div class="mb-8 w-full">
                     <div class="flex justify-between w-full">
@@ -31,20 +31,28 @@
             <template #content>
                 <div class="flex flex-col gap-2 w-full">
                     <div class="w-full mx-auto" v-for="link in links" :key="link.id">
-                        <button
-                            class="flex items-center w-full bg-white text-black font-semibold rounded-lg px-3 py-4 hover:bg-gray-100 transition">
-                            <!-- Icône ou image à gauche -->
-                            <div class="absolute flex items-center">
-                                <Icon :name="link.icon" size="20" />
-                            </div>
-                            <!-- Texte centré -->
-                            <span class="mx-auto font-medium">{{ link.title }}</span>
-                        </button>
+                        <a :href="link.url" target="_blank">
+                            <button
+                                class="relative flex items-center justify-center w-full bg-white text-black font-semibold rounded-lg px-3 py-4 hover:bg-gray-100 transition">
+                                <!-- Icône ou image à gauche -->
+                                <div class="absolute flex items-center justify-center"
+                                    :class="link.vignette_url ? 'left-2.5' : 'left-4'">
+                                    <template v-if="link.vignette_url">
+                                        <img :src="link.vignette_url" class="w-8.5 h-8.5 object-contain" />
+                                    </template>
+                                    <template v-else>
+                                        <Icon :name="link.icon" size="20" />
+                                    </template>
+                                </div>
+                                <!-- Texte centré -->
+                                <span class="font-medium text-center w-full">{{ link.title }}</span>
+                            </button>
+                        </a>
                     </div>
                 </div>
             </template>
             <template #footer>
-                <div class="flex justify-center mt-10">
+                <div class="flex justify-center my-10">
                     <Button severity="contrast">
                         <span class="text-sm font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
                         <Icon name="lucide:arrow-right" />
