@@ -4,6 +4,18 @@ export function useVignetteUploader(linkRef) {
 
     const imageUrl = ref(null)
     const croppedImage = ref(null)
+    const selectedIcon = ref(null)
+
+    // Liste d'icônes disponibles
+    const availableIcons = [
+        'lucide:home',
+        'lucide:youtube',
+        'lucide:twitch',
+        'lucide:instagram',
+        'lucide:twitter',
+        'lucide:facebook',
+        'lucide:globe'
+    ]
 
     // Étape 1 : Fichier sélectionné
     const onFileSelect = (event) => {
@@ -18,60 +30,66 @@ export function useVignetteUploader(linkRef) {
         if (canvas) croppedImage.value = canvas
     }
 
+    const selectIcon = (iconName) => {
+        selectedIcon.value = iconName
+        imageUrl.value = null // supprime l'image si icône choisie
+    }
+
     // Étape 3 : Sauvegarde sur Supabase
-    const saveCroppedImage = async () => {
-        if (!croppedImage.value) return
-        if (!linkRef?.value?.id) {
-            console.error("linkRef ou linkRef.id est manquant !")
+    const saveVignette = async () => {
+        if (!linkRef.value) {
+            console.warn('linkRef ou linkRef.id est manquant !')
             return
         }
-        
-        // Supprime l’ancienne image si elle existe
-        croppedImage.value.toBlob(async (blob) => {
-            const oldPath = linkRef.value?.vignette_url
-                ? linkRef.value.vignette_url.split('/Vignette/')[1]
-                : null
 
-            const filePath = `Vignette/${crypto.randomUUID()}.png`
+        // Si une image est uploadée
+        if (croppedImage.value) {
+            croppedImage.value.toBlob(async (blob) => {
+                const filePath = `Vignette/${linkRef.value.id}_${crypto.randomUUID()}.png`
+                const { error } = await supabase.storage.from('Streamlink').upload(filePath, blob, { upsert: true })
 
-            const { error } = await supabase.storage
-                .from('Streamlink')
-                .upload(filePath, blob, { upsert: true })
+                if (error) {
+                    console.error('Erreur upload:', error)
+                    return
+                }
 
-            if (error) {
-                console.error('Erreur upload:', error)
-                return
-            }
+                const publicUrl = supabase.storage.from('Streamlink').getPublicUrl(filePath).data.publicUrl
+                await linkStore.updateLink(linkRef.value.id, { vignette_url: publicUrl })
+            }, 'image/png')
+        }
+        // Si une icône est choisie
+        else if (selectedIcon.value) {
+            await linkStore.updateLink(linkRef.value.id, { icon: selectedIcon.value, vignette_url: null })
+        }
 
-            const publicUrl = supabase.storage
-                .from('Streamlink')
-                .getPublicUrl(filePath).data.publicUrl
-
-            // Suppression de l’ancienne image
-            if (oldPath) {
-                await supabase.storage.from('Streamlink').remove([`Vignette/${oldPath}`])
-            }
-
-            // Mise à jour du lien
-            await linkStore.updateLink(linkRef.value.id, { vignette_url: publicUrl })
-        }, 'image/png')
+        // Reset
+        imageUrl.value = null
+        croppedImage.value = null
+        selectedIcon.value = null
     }
 
     // Supprimer la vignette
     const removeVignette = async () => {
-        if (!linkRef.value?.vignette_url) return
-
-        const oldPath = linkRef.value.vignette_url.split('/Vignette/')[1]
-        await supabase.storage.from('Streamlink').remove([`Vignette/${oldPath}`])
-        await linkStore.updateLink(linkRef.value.id, { vignette_url: '' })
+        if (!linkRef.value) return
+        if (linkRef.value.vignette_url) {
+            const path = linkRef.value.vignette_url.split('/Vignette/')[1]
+            await supabase.storage.from('Streamlink').remove([`Vignette/${path}`])
+        }
+        await linkStore.updateLink(linkRef.value.id, { vignette_url: null })
+        imageUrl.value = null
+        croppedImage.value = null
+        selectedIcon.value = null
     }
 
     return {
         imageUrl,
         croppedImage,
+        selectedIcon,
+        availableIcons,
         onFileSelect,
         onCropChange,
-        saveCroppedImage,
-        removeVignette,
+        selectIcon,
+        saveVignette,
+        removeVignette
     }
 }

@@ -62,6 +62,19 @@ export const useLinkStore = defineStore('link', () => {
         return { error }
     }
 
+    const toggleVisibility = async (linkId, visible) => {
+        const { error } = await supabase
+            .from('Link')
+            .update({ visible })
+            .eq('id', linkId)
+
+        if (error) console.error('Erreur update visible:', error)
+
+        // Met à jour le front localement
+        const index = links.value.findIndex(l => l.id === linkId)
+        if (index !== -1) links.value[index].visible = visible
+    }
+
     /**  Mettre à jour l’ordre (drag & drop) */
     const updateOrder = async (newLinks) => {
         newLinks.forEach((link, index) => (link.order = index + 1))
@@ -82,6 +95,20 @@ export const useLinkStore = defineStore('link', () => {
         }
     }
 
+    const toggleLinkVisibility = async (link) => {
+        // Mettre à jour localement
+        link.visible = !link.visible
+
+        // Mettre à jour dans Supabase
+        const { error } = await supabase
+            .from('links')
+            .update({ visible: link.visible })
+            .eq('id', link.id)
+
+        if (error) console.error('Erreur update visible:', error)
+    }
+
+
     onMounted(fetchLinks)
 
     return {
@@ -91,5 +118,6 @@ export const useLinkStore = defineStore('link', () => {
         updateLink,
         deleteLink,
         updateOrder,
+        toggleVisibility
     }
 })

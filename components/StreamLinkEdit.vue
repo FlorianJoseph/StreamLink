@@ -105,7 +105,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <ToggleSwitch v-model="element.checked" class="mr-1" />
+                                            <ToggleSwitch v-model="element.visible" class="mr-1"
+                                                style="--p-toggleswitch-checked-background: #ffffff;--p-toggleswitch-checked-hover-background: #f3f4f6;"
+                                                @change="() => linkStore.toggleVisibility(element.id, element.visible)" />
                                         </div>
                                         <!-- Actions -->
                                         <div class="flex justify-between items-center">
@@ -127,7 +129,23 @@
                                                             <FileUpload mode="basic" @select="onFileSelect" customUpload
                                                                 auto chooseLabel="Choisir une image"
                                                                 class="p-button-contrast" accept="image/*" />
-                                                            <Button label="Choisir une icone" severity="contrast" variant="outlined" />
+                                                            <Button label="Choisir une icone" severity="contrast"
+                                                                variant="outlined" @click="showIcons = true" />
+                                                        </div>
+
+                                                        <!-- Étape 1b : Sélection icône -->
+                                                        <div v-if="showIcons"
+                                                            class="flex flex-wrap gap-3 justify-center">
+                                                            <div v-for="icon in availableIcons" :key="icon"
+                                                                class="p-2 cursor-pointer hover:bg-gray-400/10"
+                                                                @click="selectIcon(icon)"
+                                                                :class="{ 'border border-gray-500': selectedIcon === icon }">
+                                                                <Icon :name="icon" size="24" />
+                                                            </div>
+                                                            <Button label="Retour" severity="secondary"
+                                                                @click="showIcons = false" class="mt-2" />
+                                                            <Button label="Sauvegarder" severity="contrast"
+                                                                :disabled="!selectedIcon" @click="saveImage" />
                                                         </div>
 
                                                         <!-- Étape 2 : Crop -->
@@ -135,7 +153,8 @@
                                                             <Cropper :src="imageUrl" :stencil-props="{ aspectRatio: 1 }"
                                                                 @change="onCropChange" image-restriction="fit-area" />
                                                             <div class="flex justify-between gap-2 mt-4">
-                                                                <Button label="Annuler" severity="secondary" />
+                                                                <Button label="Annuler" severity="secondary"
+                                                                    @click="closeModal()" class="mt-2" />
                                                                 <Button label="Sauvegarder" severity="contrast"
                                                                     :disabled="!croppedImage" @click="saveImage" />
                                                             </div>
@@ -286,13 +305,18 @@ import 'vue-advanced-cropper/dist/style.css';
 
 const iconModal = ref(false);
 const currentLinkRef = ref(null)
+const showIcons = ref(false)
+
 // Composable VignetteUploader
 const {
     imageUrl,
     croppedImage,
+    selectedIcon,
+    availableIcons,
     onFileSelect,
     onCropChange,
-    saveCroppedImage
+    selectIcon,
+    saveVignette,
 } = useVignetteUploader(currentLinkRef)
 
 const openVignetteModal = (link) => {
@@ -307,7 +331,7 @@ const closeModal = () => {
 }
 
 const saveImage = async () => {
-    await saveCroppedImage()
+    await saveVignette()
     closeModal()
 }
 

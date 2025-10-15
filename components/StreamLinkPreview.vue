@@ -30,7 +30,7 @@
             </template>
             <template #content>
                 <div class="flex flex-col gap-2 w-full">
-                    <div class="w-full mx-auto" v-for="link in links" :key="link.id">
+                    <div class="w-full mx-auto" v-for="link in visibleLinks" :key="link.id">
                         <a :href="link.url" target="_blank">
                             <button
                                 class="relative flex items-center justify-center w-full bg-white text-black font-semibold rounded-lg px-3 py-4 hover:bg-gray-100 transition">
@@ -38,7 +38,7 @@
                                 <div class="absolute flex items-center justify-center"
                                     :class="link.vignette_url ? 'left-2.5' : 'left-4'">
                                     <template v-if="link.vignette_url">
-                                        <img :src="link.vignette_url" class="w-8.5 h-8.5 object-contain" />
+                                        <img :src="link.vignette_url" class="w-8.5 h-8.5 object-contain rounded" />
                                     </template>
                                     <template v-else>
                                         <Icon :name="link.icon" size="20" />
@@ -68,7 +68,7 @@ const linkStore = useLinkStore()
 const streamerStore = useStreamerStore()
 const { links } = storeToRefs(linkStore)
 const { streamer } = storeToRefs(streamerStore)
-
+const visibleLinks = computed(() => links.value.filter(link => link.visible))
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";

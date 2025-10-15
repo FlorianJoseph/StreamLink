@@ -30,7 +30,7 @@
         <template #content>
             <!-- Liste de liens -->
             <div class="flex flex-col gap-4 w-full">
-                <div class="w-full mx-auto" v-for="link in links" :key="link.id">
+                <div class="w-full mx-auto" v-for="link in visibleLinks" :key="link.id">
                     <a :href="link.url" target="_blank">
                         <button :class="[
                             'flex items-center w-full bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition',
@@ -39,7 +39,7 @@
                             <!-- Icône ou image à gauche -->
                             <div class="absolute flex items-center">
                                 <template v-if="link.vignette_url">
-                                    <img :src="link.vignette_url" class="w-10 h-10 object-contain" />
+                                    <img :src="link.vignette_url" class="w-10 h-10 object-contain rounded" />
                                 </template>
                                 <template v-else>
                                     <Icon :name="link.icon" size="24" />
@@ -85,5 +85,7 @@ const linkStore = useLinkStore()
 const { links } = storeToRefs(linkStore)
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
+
+const visibleLinks = computed(() => links.value.filter(link => link.visible))
 
 </script>
