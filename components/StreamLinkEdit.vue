@@ -86,22 +86,45 @@
                                         <div class="flex justify-between items-center">
                                             <div>
                                                 <div class="flex justify-between items-center">
-                                                    <div class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max"
-                                                        @click="editLink(element)">
-                                                        <span class="font-medium">
-                                                            {{ element.title }}
-                                                        </span>
-                                                        <Icon name="lucide:pencil" size="16" />
+                                                    <div
+                                                        class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max">
+                                                        <template
+                                                            v-if="editing.id === element.id && editing.field === 'title'">
+                                                            <input :ref="el => inputRefs[`${element.id}-title`] = el"
+                                                                v-model="editing.value" @blur="saveEdit(element)"
+                                                                @keyup.enter="saveEdit(element)"
+                                                                class="bg-transparent border-none focus:outline-none font-medium" />
+                                                        </template>
+                                                        <template v-else>
+                                                            <div class="flex items-center gap-2"
+                                                                @click="editField(element, 'title')">
+                                                                <span class="font-medium hover:cursor-pointer">
+                                                                    {{ element.title }}
+                                                                </span>
+                                                                <Icon name="lucide:pencil" size="16" />
+                                                            </div>
+                                                        </template>
                                                     </div>
                                                 </div>
                                                 <!-- URL -->
                                                 <div class="flex justify-between items-center">
-                                                    <div class="flex gap-2 items-center w-max hover:cursor-pointer"
-                                                        @click="editLink(element)">
-                                                        <p class="m-0 text-sm">
-                                                            {{ element.url }}
-                                                        </p>
-                                                        <Icon name="lucide:pencil" size="16" />
+                                                    <div class="flex gap-2 items-center w-max hover:cursor-pointer">
+                                                        <template
+                                                            v-if="editing.id === element.id && editing.field === 'url'">
+                                                            <input :ref="el => inputRefs[`${element.id}-url`] = el"
+                                                                v-model="editing.value" @blur="saveEdit(element)"
+                                                                @keyup.enter="saveEdit(element)"
+                                                                class="bg-transparent border-none focus:outline-none text-sm" />
+                                                        </template>
+                                                        <template v-else>
+                                                            <div class="flex items-center gap-2"
+                                                                @click="editField(element, 'url')">
+                                                                <span class="text-sm hover:cursor-pointer">
+                                                                    {{ element.url }}
+                                                                </span>
+                                                                <Icon name="lucide:pencil" size="16" />
+                                                            </div>
+                                                        </template>
                                                     </div>
                                                 </div>
                                             </div>
@@ -128,7 +151,8 @@
                                                         <div v-if="!imageUrl" class="flex flex-row gap-2">
                                                             <FileUpload mode="basic" @select="onFileSelect" customUpload
                                                                 auto chooseLabel="Choisir une image"
-                                                                class="p-button-contrast" accept="image/*" />
+                                                                class="p-button-contrast" accept="image/*"
+                                                                @click="showIcons = false" />
                                                             <Button label="Choisir une icone" severity="contrast"
                                                                 variant="outlined" @click="showIcons = true" />
                                                         </div>
@@ -191,7 +215,7 @@
                             <div class="flex justify-end gap-2">
                                 <Button type="button" label="Annuler" severity="secondary" @click="resetForm()" />
                                 <Button type="button" label="Sauvegarder" severity="contrast"
-                                    :disabled="!form.title || !form.url" @click="saveLink()" />
+                                    :disabled="!form.title || !form.url" @click="saveNewLink()" />
                             </div>
                         </div>
                     </Dialog>
@@ -237,7 +261,6 @@ const copyText = () => {
     setTimeout(() => (copied.value = false), 1500)
 }
 
-
 // Actions
 const linkModal = ref(false);
 const form = reactive({ title: '', url: '', icon: 'link' })
@@ -247,25 +270,61 @@ const handleSave = async () => {
     streamerModal.value = false;
 };
 
-const editingLink = ref(null)
-const editLink = (link) => {
-    form.title = link.title
-    form.url = link.url
-    editingLink.value = link
-    linkModal.value = true
+const newLink = ref(null)
+
+// test
+const editing = ref({
+    id: null,
+    field: null,
+    value: ''
+})
+const inputRefs = ref({})
+
+const editField = (link, field) => {
+    editing.value.id = link.id
+    editing.value.field = field
+    editing.value.value = link[field]
+
+    nextTick(() => {
+        const key = `${link.id}-${field}`
+        if (inputRefs.value[key]) {
+            inputRefs.value[key].focus()
+        }
+    })
+}
+
+const saveEdit = async (link) => {
+    if (!editing.value.id || !editing.value.field) return
+
+    const field = editing.value.field
+    const newValue = editing.value.value
+
+    // Si on modifie l'URL et qu'il n'y a pas de vignette personnalisée
+    let icon = link.icon
+    if (field === 'url' && !link.vignette_url) {
+        icon = getDefaultIcon(newValue)
+    }
+
+    if (newValue !== link[field] || icon !== link.icon) {
+        await linkStore.updateLink(link.id, {
+            [field]: newValue,
+            icon
+        })
+
+        link[field] = newValue
+        link.icon = icon
+    }
+
+    editing.value = { id: null, field: null, value: '' }
 }
 
 const { getDefaultIcon } = useLinkIcon()
 
-const saveLink = async () => {
+const saveNewLink = async () => {
     const icon = getDefaultIcon(form.url)
     const maxOrder = links.value.length ? Math.max(...links.value.map(l => l.order || 0)) : 0
-    if (editingLink.value) {
-        await linkStore.updateLink(editingLink.value.id, { title: form.title, url: form.url, icon })
-    } else {
-        const newLink = await linkStore.addLink({ title: form.title, url: form.url, icon, order: maxOrder + 1 })
-        localLinks.value.push(newLink.data)
-    }
+    const newLink = await linkStore.addLink({ title: form.title, url: form.url, icon, order: maxOrder + 1 })
+    localLinks.value.push(newLink.data)
     resetForm()
 }
 
@@ -273,7 +332,7 @@ const resetForm = () => {
     form.title = ''
     form.url = ''
     form.icon = 'link'
-    editingLink.value = null
+    newLink.value = null
     linkModal.value = false
 }
 
@@ -328,6 +387,7 @@ const closeModal = () => {
     iconModal.value = false
     imageUrl.value = null
     croppedImage.value = null
+    showIcons.value = false
 }
 
 const saveImage = async () => {

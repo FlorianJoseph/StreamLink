@@ -8,13 +8,17 @@ export function useVignetteUploader(linkRef) {
 
     // Liste d'icônes disponibles
     const availableIcons = [
-        'lucide:home',
-        'lucide:youtube',
-        'lucide:twitch',
-        'lucide:instagram',
-        'lucide:twitter',
-        'lucide:facebook',
-        'lucide:globe'
+        'simple-icons:twitch',
+        'simple-icons:youtube',
+        'simple-icons:instagram',
+        'simple-icons:twitter',
+        'simple-icons:facebook',
+        'simple-icons:discord',
+        'simple-icons:tiktok',
+        'simple-icons:kick',
+        'simple-icons:spotify',
+        'simple-icons:steam',
+        'simple-icons:amazon',
     ]
 
     // Étape 1 : Fichier sélectionné
