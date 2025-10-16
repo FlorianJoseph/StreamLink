@@ -21,6 +21,14 @@ export function useVignetteUploader(linkRef) {
         'simple-icons:amazon',
     ]
 
+    const searchIcon = ref('')
+
+    const filteredIcons = computed(() => {
+        const query = searchIcon.value.trim().toLowerCase()
+        if (!query) return availableIcons
+        return availableIcons.filter(icon => icon.toLowerCase().includes(query))
+    })
+
     // Étape 1 : Fichier sélectionné
     const onFileSelect = (event) => {
         const file = event.files?.[0]
@@ -94,6 +102,8 @@ export function useVignetteUploader(linkRef) {
         onCropChange,
         selectIcon,
         saveVignette,
-        removeVignette
+        removeVignette,
+        searchIcon,
+        filteredIcons,
     }
 }

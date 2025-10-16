@@ -128,58 +128,6 @@
                                                     @click="openVignetteModal(element)">
                                                     <Icon name="lucide:image" size="16" />
                                                 </Button>
-
-                                                <!-- Modal Icone ou image -->
-                                                <Dialog v-model:visible="thumbnailModal" modal
-                                                    header="Modifier l\'icone'" :style="{ width: '25rem' }">
-
-                                                    <div class="flex flex-col gap-4 items-center">
-
-                                                        <!-- Étape 1 : Upload -->
-                                                        <div v-if="!imageUrl" class="flex flex-col gap-2">
-                                                            <FileUpload mode="basic" @select="onFileSelect" customUpload
-                                                                auto chooseLabel="Choisir une image"
-                                                                class="p-button-contrast" accept="image/*"
-                                                                @click="showIcons = false" />
-                                                            <Button severity="contrast" variant="outlined"
-                                                                @click="iconModal = true, thumbnailModal = false">
-                                                                <Icon name="lucide:layout-grid" size="20px" />
-                                                                <span>Choisir une icone</span>
-                                                            </Button>
-                                                        </div>
-
-                                                        <!-- Étape 2 : Crop -->
-                                                        <div v-else class="mt-4 w-full">
-                                                            <Cropper :src="imageUrl" :stencil-props="{ aspectRatio: 1 }"
-                                                                @change="onCropChange" image-restriction="fit-area" />
-                                                            <div class="flex justify-between gap-2 mt-4">
-                                                                <Button label="Annuler" severity="secondary"
-                                                                    @click="closeModal()" class="mt-2" />
-                                                                <Button label="Sauvegarder" severity="contrast"
-                                                                    :disabled="!croppedImage" @click="saveImage" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </Dialog>
-
-                                                <Dialog v-model:visible="iconModal" modal
-                                                    header="Sélectionner une icône" :style="{ width: '25rem' }">
-                                                    <div class="flex flex-wrap gap-3 justify-center p-4">
-                                                        <div v-for="icon in availableIcons" :key="icon"
-                                                            class="p-2 cursor-pointer hover:bg-gray-400/10"
-                                                            :class="{ 'border border-gray-500': selectedIcon === icon }"
-                                                            @click="selectIcon(icon)">
-                                                            <Icon :name="icon" size="24" />
-                                                        </div>
-                                                        <div class="flex justify-between w-full mt-4">
-                                                            <Button label="Retour" severity="secondary"
-                                                                @click="iconModal = false, thumbnailModal = true" />
-                                                            <Button label="Sauvegarder" severity="contrast"
-                                                                :disabled="!selectedIcon" @click="saveImage" />
-                                                        </div>
-                                                    </div>
-                                                </Dialog>
-
                                             </div>
                                             <Button severity="secondary" variant="text"
                                                 v-tooltip.bottom="{ value: 'Supprimer' }"
@@ -192,6 +140,71 @@
                             </div>
                         </template>
                     </Draggable>
+
+                    <!-- Modal Icone ou image -->
+                    <Dialog v-model:visible="thumbnailModal" modal header="Modifier l'icone"
+                        :style="{ width: '30rem' }">
+                        <Stepper value="1">
+                            <StepPanels>
+                                <StepPanel v-slot="{ activateCallback }" value="1">
+                                    <div class="flex flex-col gap-4 items-center">
+                                        <!-- Étape 1 : Upload -->
+                                        <div v-if="!imageUrl" class="flex flex-row gap-2">
+                                            <FileUpload mode="basic" @select="onFileSelect" auto
+                                                chooseLabel="Choisir une image" class="p-button-contrast"
+                                                accept="image/*" @click="showIcons = false" />
+                                            <Button severity="contrast" variant="outlined"
+                                                @click="activateCallback('2')">
+                                                <Icon name="lucide:layout-grid" size="20px" />
+                                                <span>Choisir une icone</span>
+                                            </Button>
+                                        </div>
+                                        <!-- Étape 2 : Crop -->
+                                        <div v-else class="w-full max-h-[60vh]">
+                                            <div class="relative w-full flex justify-center items-center overflow-hidden"
+                                                style="aspect-ratio: 1 / 1">
+                                                <Cropper :src="imageUrl" :stencil-props="{ aspectRatio: 1 }"
+                                                    @change="onCropChange" image-restriction="fit-area"
+                                                    :stencil-component="CircleStencil"
+                                                    :style="{ width: '100%', height: '100%' }"
+                                                    :default-size="defaultSize" />
+                                            </div>
+                                            <div class="flex flex-col w-full mt-4 gap-2">
+                                                <Button label="Sauvegarder" severity="contrast" @click="saveImage"
+                                                    :disabled="!croppedImage" />
+                                                <Button label="Retour" severity="secondary" @click="imageUrl = null" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </StepPanel>
+                                <StepPanel v-slot="{ activateCallback }" value="2">
+                                    <div class="flex flex-col h-full">
+                                        <!-- Barre de recherche -->
+                                        <div class="p-4">
+                                            <InputText v-model="searchIcon" placeholder="Rechercher une icône..."
+                                                class="w-full" />
+                                        </div>
+                                        <!-- Liste des icônes filtrées -->
+                                        <div
+                                            class="flex flex-wrap gap-3 justify-center p-4 overflow-y-auto max-h-[50vh]">
+                                            <div v-for="icon in filteredIcons" :key="icon"
+                                                class="p-2 cursor-pointer hover:bg-gray-400/10 rounded-md transition"
+                                                :class="{ 'border border-gray-500': selectedIcon === icon }"
+                                                @click="selectIcon(icon)">
+                                                <Icon :name="icon" size="24" />
+                                            </div>
+                                            <div class="flex flex-col justify-between w-full mt-4 gap-2">
+                                                <Button label="Sauvegarder" severity="contrast"
+                                                    :disabled="!selectedIcon" @click="saveImage" />
+                                                <Button label="Retour" severity="secondary"
+                                                    @click="activateCallback('1')" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </StepPanel>
+                            </StepPanels>
+                        </Stepper>
+                    </Dialog>
 
                     <!-- Modal Ajouter / Modifier -->
                     <Dialog v-model:visible="newlinkModal" modal header="Ajouter un lien" :style="{ width: '25rem' }">
@@ -349,7 +362,7 @@ const confirmDeletePopup = (event, id) => {
 };
 
 // Changer l'icone
-import { Cropper } from 'vue-advanced-cropper'
+import { Cropper, CircleStencil } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css';
 
 const thumbnailModal = ref(false);
@@ -362,17 +375,19 @@ const {
     imageUrl,
     croppedImage,
     selectedIcon,
-    availableIcons,
     onFileSelect,
     onCropChange,
     selectIcon,
     saveVignette,
+    searchIcon,
+    filteredIcons,
 } = useVignetteUploader(currentLinkRef)
 
 const openVignetteModal = (link) => {
     currentLinkRef.value = link
     thumbnailModal.value = true
     showIcons.value = false
+    imageUrl.value = null
 }
 
 const closeModal = () => {
@@ -386,5 +401,13 @@ const saveImage = async () => {
     await saveVignette()
     closeModal()
 }
+
+// Cropper
+const defaultSize = ({ imageSize, visibleArea }) => {
+    return {
+        width: (visibleArea || imageSize).width,
+        height: (visibleArea || imageSize).height,
+    };
+};
 
 </script>

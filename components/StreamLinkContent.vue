@@ -34,12 +34,12 @@
                     <a :href="link.url" target="_blank">
                         <button :class="[
                             'flex items-center w-full bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition',
-                            link.vignette_url ? 'px-3 py-5' : 'px-5 py-5'
+                            link.icon_url ? 'px-3 py-5' : 'px-5 py-5'
                         ]">
                             <!-- Icône ou image à gauche -->
                             <div class="absolute flex items-center">
-                                <template v-if="link.vignette_url">
-                                    <img :src="link.vignette_url" class="w-10 h-10 object-contain rounded" />
+                                <template v-if="link.icon_url">
+                                    <img :src="link.icon_url" class="w-10 h-10 object-contain rounded" />
                                 </template>
                                 <template v-else>
                                     <Icon :name="link.icon" size="24" />
