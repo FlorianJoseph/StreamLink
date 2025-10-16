@@ -58,12 +58,12 @@ export function useVignetteUploader(linkRef) {
                 }
 
                 const publicUrl = supabase.storage.from('Streamlink').getPublicUrl(filePath).data.publicUrl
-                await linkStore.updateLink(linkRef.value.id, { vignette_url: publicUrl })
+                await linkStore.updateLink(linkRef.value.id, { icon_url: publicUrl, custom_icon: true })
             }, 'image/png')
         }
         // Si une icône est choisie
         else if (selectedIcon.value) {
-            await linkStore.updateLink(linkRef.value.id, { icon: selectedIcon.value, vignette_url: null })
+            await linkStore.updateLink(linkRef.value.id, { icon: selectedIcon.value, icon_url: null, custom_icon: true })
         }
 
         // Reset
@@ -75,11 +75,11 @@ export function useVignetteUploader(linkRef) {
     // Supprimer la vignette
     const removeVignette = async () => {
         if (!linkRef.value) return
-        if (linkRef.value.vignette_url) {
-            const path = linkRef.value.vignette_url.split('/Vignette/')[1]
+        if (linkRef.value.icon_url) {
+            const path = linkRef.value.icon_url.split('/Vignette/')[1]
             await supabase.storage.from('Streamlink').remove([`Vignette/${path}`])
         }
-        await linkStore.updateLink(linkRef.value.id, { vignette_url: null })
+        await linkStore.updateLink(linkRef.value.id, { icon_url: null, custom_icon: false })
         imageUrl.value = null
         croppedImage.value = null
         selectedIcon.value = null

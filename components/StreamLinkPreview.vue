@@ -36,9 +36,9 @@
                                 class="relative flex items-center justify-center w-full bg-white text-black font-semibold rounded-lg px-3 py-4 hover:bg-gray-100 transition">
                                 <!-- Icône ou image à gauche -->
                                 <div class="absolute flex items-center justify-center"
-                                    :class="link.vignette_url ? 'left-2.5' : 'left-4'">
-                                    <template v-if="link.vignette_url">
-                                        <img :src="link.vignette_url" class="w-8.5 h-8.5 object-contain rounded" />
+                                    :class="link.icon_url ? 'left-2.5' : 'left-4'">
+                                    <template v-if="link.icon_url">
+                                        <img :src="link.icon_url" class="w-8.5 h-8.5 object-contain rounded" />
                                     </template>
                                     <template v-else>
                                         <Icon :name="link.icon" size="20" />

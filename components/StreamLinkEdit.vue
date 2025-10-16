@@ -124,14 +124,14 @@
                                         <div class="flex justify-between items-center">
                                             <div class="text-sm text-gray-400 mt-2 italic hover:cursor-pointer w-max">
                                                 <Button severity="secondary" variant="text"
-                                                    v-tooltip.bottom="{ value: 'Vignette' }"
+                                                    v-tooltip.bottom="{ value: 'Modifier l\'icone' }"
                                                     @click="openVignetteModal(element)">
                                                     <Icon name="lucide:image" size="16" />
                                                 </Button>
 
                                                 <!-- Modal Icone ou image -->
                                                 <Dialog v-model:visible="thumbnailModal" modal
-                                                    header="Modifier la vignette" :style="{ width: '25rem' }">
+                                                    header="Modifier l\'icone'" :style="{ width: '25rem' }">
 
                                                     <div class="flex flex-col gap-4 items-center">
 
@@ -301,7 +301,7 @@ const saveEdit = async (link) => {
     const newValue = editing.value.value
 
     let icon = link.icon
-    if (field === 'url' && !link.vignette_url) {
+    if (field === 'url' && !link.icon_url && link.custom_icon === false) {
         icon = getDefaultIcon(newValue)
     }
 
