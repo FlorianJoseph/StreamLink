@@ -95,20 +95,6 @@ export const useLinkStore = defineStore('link', () => {
         }
     }
 
-    const toggleLinkVisibility = async (link) => {
-        // Mettre à jour localement
-        link.visible = !link.visible
-
-        // Mettre à jour dans Supabase
-        const { error } = await supabase
-            .from('links')
-            .update({ visible: link.visible })
-            .eq('id', link.id)
-
-        if (error) console.error('Erreur update visible:', error)
-    }
-
-
     onMounted(fetchLinks)
 
     return {

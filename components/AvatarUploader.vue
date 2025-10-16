@@ -5,15 +5,17 @@
         @click="openModal" />
 
     <!-- Modal -->
-    <Dialog v-model:visible="visible" modal header="Changer l’avatar" :style="{ width: '30rem' }">
+    <Dialog v-model:visible="visible" modal header="Modifier l’avatar" :style="{ width: '30rem' }">
         <div class="flex flex-col gap-4 items-center">
 
             <!-- Étape 1 : Upload -->
             <div v-if="!imageUrl" class="flex flex-row gap-2">
                 <FileUpload mode="basic" @select="onFileSelect" customUpload auto chooseLabel="Choisir une image"
                     class="p-button-contrast" accept="image/*" />
-                <Button label="Supprimer l’avatar" severity="danger" @click="deleteAvatar"
-                    :disabled="!streamer?.avatar_url" />
+                <Button severity="danger" @click="deleteAvatar" :disabled="!streamer?.avatar_url">
+                    <Icon name="lucide:trash-2" size="20px" />
+                    <span>Supprimer l’avatar</span>
+                </Button>
             </div>
 
             <!-- Étape 2 : Crop -->

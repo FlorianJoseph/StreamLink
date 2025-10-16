@@ -42,11 +42,10 @@
             </div>
         </div>
         <!-- Bouton Ajouter un lien -->
-        <Button class="w-full" severity="contrast" @click="linkModal = true">
+        <Button class="w-full" severity="contrast" @click="newlinkModal = true">
             <Icon name="lucide:plus" size="20" />
             <span class="font-medium">Ajouter un lien</span>
         </Button>
-
 
         <!-- Aperçu du lien -->
         <!-- <NuxtLink :to="{ path: `/${streamer?.username}` }" target="_blank">
@@ -82,50 +81,45 @@
                                         <Icon name="lucide:grip-vertical" size="20" />
                                     </div>
                                     <div class="flex flex-col flex-grow">
-                                        <!-- Titre -->
                                         <div class="flex justify-between items-center">
-                                            <div>
-                                                <div class="flex justify-between items-center">
-                                                    <div
-                                                        class="flex items-center gap-2 mb-2 hover:cursor-pointer w-max">
-                                                        <template
-                                                            v-if="editing.id === element.id && editing.field === 'title'">
-                                                            <input :ref="el => inputRefs[`${element.id}-title`] = el"
-                                                                v-model="editing.value" @blur="saveEdit(element)"
-                                                                @keyup.enter="saveEdit(element)"
-                                                                class="bg-transparent border-none focus:outline-none font-medium" />
-                                                        </template>
-                                                        <template v-else>
-                                                            <div class="flex items-center gap-2"
-                                                                @click="editField(element, 'title')">
-                                                                <span class="font-medium hover:cursor-pointer">
-                                                                    {{ element.title }}
-                                                                </span>
-                                                                <Icon name="lucide:pencil" size="16" />
-                                                            </div>
-                                                        </template>
-                                                    </div>
+                                            <div class="flex flex-col w-full">
+                                                <!-- Titre -->
+                                                <div class="flex mb-2 hover:cursor-pointer w-max">
+                                                    <template
+                                                        v-if="editing.id === element.id && editing.field === 'title'">
+                                                        <input :ref="el => inputRefs[`${element.id}-title`] = el"
+                                                            v-model="editing.value" @blur="saveEdit(element)"
+                                                            @keyup.enter="saveEdit(element)"
+                                                            class="bg-transparent border-none focus:outline-none font-medium" />
+                                                    </template>
+                                                    <template v-else>
+                                                        <div class="flex items-center gap-2"
+                                                            @click="editField(element, 'title')">
+                                                            <span class="font-medium hover:cursor-pointer">
+                                                                {{ element.title }}
+                                                            </span>
+                                                            <Icon name="lucide:pencil" size="16" />
+                                                        </div>
+                                                    </template>
                                                 </div>
                                                 <!-- URL -->
-                                                <div class="flex justify-between items-center">
-                                                    <div class="flex gap-2 items-center w-max hover:cursor-pointer">
-                                                        <template
-                                                            v-if="editing.id === element.id && editing.field === 'url'">
-                                                            <input :ref="el => inputRefs[`${element.id}-url`] = el"
-                                                                v-model="editing.value" @blur="saveEdit(element)"
-                                                                @keyup.enter="saveEdit(element)"
-                                                                class="bg-transparent border-none focus:outline-none text-sm" />
-                                                        </template>
-                                                        <template v-else>
-                                                            <div class="flex items-center gap-2"
-                                                                @click="editField(element, 'url')">
-                                                                <span class="text-sm hover:cursor-pointer">
-                                                                    {{ element.url }}
-                                                                </span>
-                                                                <Icon name="lucide:pencil" size="16" />
-                                                            </div>
-                                                        </template>
-                                                    </div>
+                                                <div class="flex hover:cursor-pointer">
+                                                    <template
+                                                        v-if="editing.id === element.id && editing.field === 'url'">
+                                                        <input :ref="el => inputRefs[`${element.id}-url`] = el"
+                                                            v-model="editing.value" @blur="saveEdit(element)"
+                                                            @keyup.enter="saveEdit(element)"
+                                                            class="bg-transparent border-none focus:outline-none text-sm" />
+                                                    </template>
+                                                    <template v-else>
+                                                        <div class="flex items-center gap-2"
+                                                            @click="editField(element, 'url')">
+                                                            <span class="text-sm hover:cursor-pointer">
+                                                                {{ element.url }}
+                                                            </span>
+                                                            <Icon name="lucide:pencil" size="16" />
+                                                        </div>
+                                                    </template>
                                                 </div>
                                             </div>
                                             <ToggleSwitch v-model="element.visible" class="mr-1"
@@ -142,34 +136,22 @@
                                                 </Button>
 
                                                 <!-- Modal Icone ou image -->
-                                                <Dialog v-model:visible="iconModal" modal header="Modifier la vignette"
-                                                    :style="{ width: '25rem' }">
+                                                <Dialog v-model:visible="thumbnailModal" modal
+                                                    header="Modifier la vignette" :style="{ width: '25rem' }">
 
                                                     <div class="flex flex-col gap-4 items-center">
 
                                                         <!-- Étape 1 : Upload -->
-                                                        <div v-if="!imageUrl" class="flex flex-row gap-2">
+                                                        <div v-if="!imageUrl" class="flex flex-col gap-2">
                                                             <FileUpload mode="basic" @select="onFileSelect" customUpload
                                                                 auto chooseLabel="Choisir une image"
                                                                 class="p-button-contrast" accept="image/*"
                                                                 @click="showIcons = false" />
-                                                            <Button label="Choisir une icone" severity="contrast"
-                                                                variant="outlined" @click="showIcons = true" />
-                                                        </div>
-
-                                                        <!-- Étape 1b : Sélection icône -->
-                                                        <div v-if="showIcons"
-                                                            class="flex flex-wrap gap-3 justify-center">
-                                                            <div v-for="icon in availableIcons" :key="icon"
-                                                                class="p-2 cursor-pointer hover:bg-gray-400/10"
-                                                                @click="selectIcon(icon)"
-                                                                :class="{ 'border border-gray-500': selectedIcon === icon }">
-                                                                <Icon :name="icon" size="24" />
-                                                            </div>
-                                                            <Button label="Retour" severity="secondary"
-                                                                @click="showIcons = false" class="mt-2" />
-                                                            <Button label="Sauvegarder" severity="contrast"
-                                                                :disabled="!selectedIcon" @click="saveImage" />
+                                                            <Button severity="contrast" variant="outlined"
+                                                                @click="iconModal = true, thumbnailModal = false">
+                                                                <Icon name="lucide:layout-grid" size="20px" />
+                                                                <span>Choisir une icone</span>
+                                                            </Button>
                                                         </div>
 
                                                         <!-- Étape 2 : Crop -->
@@ -182,6 +164,24 @@
                                                                 <Button label="Sauvegarder" severity="contrast"
                                                                     :disabled="!croppedImage" @click="saveImage" />
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </Dialog>
+
+                                                <Dialog v-model:visible="iconModal" modal
+                                                    header="Sélectionner une icône" :style="{ width: '25rem' }">
+                                                    <div class="flex flex-wrap gap-3 justify-center p-4">
+                                                        <div v-for="icon in availableIcons" :key="icon"
+                                                            class="p-2 cursor-pointer hover:bg-gray-400/10"
+                                                            :class="{ 'border border-gray-500': selectedIcon === icon }"
+                                                            @click="selectIcon(icon)">
+                                                            <Icon :name="icon" size="24" />
+                                                        </div>
+                                                        <div class="flex justify-between w-full mt-4">
+                                                            <Button label="Retour" severity="secondary"
+                                                                @click="iconModal = false, thumbnailModal = true" />
+                                                            <Button label="Sauvegarder" severity="contrast"
+                                                                :disabled="!selectedIcon" @click="saveImage" />
                                                         </div>
                                                     </div>
                                                 </Dialog>
@@ -200,7 +200,7 @@
                     </Draggable>
 
                     <!-- Modal Ajouter / Modifier -->
-                    <Dialog v-model:visible="linkModal" modal header="Lien" :style="{ width: '25rem' }">
+                    <Dialog v-model:visible="newlinkModal" modal header="Ajouter un lien" :style="{ width: '25rem' }">
                         <div class="flex flex-col gap-4">
 
                             <div class="flex flex-col gap-2">
@@ -234,14 +234,19 @@ const { links } = storeToRefs(linkStore)
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
 
-// Modale streamer
+// Actions de modification du Streamer
 const streamerModal = ref(false)
 const username = ref('')
 const bio = ref('')
+
 watchEffect(() => {
     username.value = streamer?.value?.username || ''
     bio.value = streamer?.value?.bio || ''
 })
+const handleSave = async () => {
+    await streamerStore.updateStreamer({ username: username.value, bio: bio.value })
+    streamerModal.value = false;
+};
 
 // Draggable
 const localLinks = ref([])
@@ -261,24 +266,26 @@ const copyText = () => {
     setTimeout(() => (copied.value = false), 1500)
 }
 
-// Actions
-const linkModal = ref(false);
+// Actions de modification du lien
+const newlinkModal = ref(false);
 const form = reactive({ title: '', url: '', icon: 'link' })
-
-const handleSave = async () => {
-    await streamerStore.updateStreamer({ username: username.value, bio: bio.value })
-    streamerModal.value = false;
-};
-
 const newLink = ref(null)
+const inputRefs = ref({})
+const { getDefaultIcon } = useLinkIcon()
 
-// test
+const saveNewLink = async () => {
+    const icon = getDefaultIcon(form.url)
+    const maxOrder = links.value.length ? Math.max(...links.value.map(l => l.order || 0)) : 0
+    const newLink = await linkStore.addLink({ title: form.title, url: form.url, icon, order: maxOrder + 1 })
+    localLinks.value.push(newLink.data)
+    resetForm()
+}
+
 const editing = ref({
     id: null,
     field: null,
     value: ''
 })
-const inputRefs = ref({})
 
 const editField = (link, field) => {
     editing.value.id = link.id
@@ -299,7 +306,6 @@ const saveEdit = async (link) => {
     const field = editing.value.field
     const newValue = editing.value.value
 
-    // Si on modifie l'URL et qu'il n'y a pas de vignette personnalisée
     let icon = link.icon
     if (field === 'url' && !link.vignette_url) {
         icon = getDefaultIcon(newValue)
@@ -318,22 +324,12 @@ const saveEdit = async (link) => {
     editing.value = { id: null, field: null, value: '' }
 }
 
-const { getDefaultIcon } = useLinkIcon()
-
-const saveNewLink = async () => {
-    const icon = getDefaultIcon(form.url)
-    const maxOrder = links.value.length ? Math.max(...links.value.map(l => l.order || 0)) : 0
-    const newLink = await linkStore.addLink({ title: form.title, url: form.url, icon, order: maxOrder + 1 })
-    localLinks.value.push(newLink.data)
-    resetForm()
-}
-
 const resetForm = () => {
     form.title = ''
     form.url = ''
     form.icon = 'link'
     newLink.value = null
-    linkModal.value = false
+    newlinkModal.value = false
 }
 
 const confirm = useConfirm();
@@ -362,7 +358,8 @@ const confirmDeletePopup = (event, id) => {
 import { Cropper } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css';
 
-const iconModal = ref(false);
+const thumbnailModal = ref(false);
+const iconModal = ref(false)
 const currentLinkRef = ref(null)
 const showIcons = ref(false)
 
@@ -380,14 +377,15 @@ const {
 
 const openVignetteModal = (link) => {
     currentLinkRef.value = link
-    iconModal.value = true
+    thumbnailModal.value = true
+    showIcons.value = false
 }
 
 const closeModal = () => {
-    iconModal.value = false
+    thumbnailModal.value = false
     imageUrl.value = null
     croppedImage.value = null
-    showIcons.value = false
+    iconModal.value = false
 }
 
 const saveImage = async () => {
