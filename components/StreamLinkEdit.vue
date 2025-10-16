@@ -84,43 +84,37 @@
                                         <div class="flex justify-between items-center">
                                             <div class="flex flex-col w-full">
                                                 <!-- Titre -->
-                                                <div class="flex mb-2 hover:cursor-pointer w-max">
-                                                    <template
-                                                        v-if="editing.id === element.id && editing.field === 'title'">
-                                                        <input :ref="el => inputRefs[`${element.id}-title`] = el"
-                                                            v-model="editing.value" @blur="saveEdit(element)"
-                                                            @keyup.enter="saveEdit(element)"
-                                                            class="bg-transparent border-none focus:outline-none font-medium" />
-                                                    </template>
-                                                    <template v-else>
-                                                        <div class="flex items-center gap-2"
-                                                            @click="editField(element, 'title')">
-                                                            <span class="font-medium hover:cursor-pointer">
-                                                                {{ element.title }}
-                                                            </span>
-                                                            <Icon name="lucide:pencil" size="16" />
-                                                        </div>
-                                                    </template>
-                                                </div>
+                                                <template v-if="editing.id === element.id && editing.field === 'title'">
+                                                    <input :ref="el => inputRefs[`${element.id}-title`] = el"
+                                                        v-model="editing.value" @blur="saveEdit(element)"
+                                                        @keyup.enter="saveEdit(element)"
+                                                        class="bg-transparent border-none focus:outline-none font-medium w-full mb-2" />
+                                                </template>
+                                                <template v-else>
+                                                    <div class="flex items-center mb-2 gap-2 hover:cursor-pointer w-max"
+                                                        @click="editField(element, 'title')">
+                                                        <span class="font-medium">
+                                                            {{ element.title }}
+                                                        </span>
+                                                        <Icon name="lucide:pencil" size="16" />
+                                                    </div>
+                                                </template>
                                                 <!-- URL -->
-                                                <div class="flex hover:cursor-pointer">
-                                                    <template
-                                                        v-if="editing.id === element.id && editing.field === 'url'">
-                                                        <input :ref="el => inputRefs[`${element.id}-url`] = el"
-                                                            v-model="editing.value" @blur="saveEdit(element)"
-                                                            @keyup.enter="saveEdit(element)"
-                                                            class="bg-transparent border-none focus:outline-none text-sm" />
-                                                    </template>
-                                                    <template v-else>
-                                                        <div class="flex items-center gap-2"
-                                                            @click="editField(element, 'url')">
-                                                            <span class="text-sm hover:cursor-pointer">
-                                                                {{ element.url }}
-                                                            </span>
-                                                            <Icon name="lucide:pencil" size="16" />
-                                                        </div>
-                                                    </template>
-                                                </div>
+                                                <template v-if="editing.id === element.id && editing.field === 'url'">
+                                                    <input :ref="el => inputRefs[`${element.id}-url`] = el"
+                                                        v-model="editing.value" @blur="saveEdit(element)"
+                                                        @keyup.enter="saveEdit(element)"
+                                                        class="bg-transparent border-none focus:outline-none text-sm w-full" />
+                                                </template>
+                                                <template v-else>
+                                                    <div class="flex items-center gap-2 hover:cursor-pointer w-max"
+                                                        @click="editField(element, 'url')">
+                                                        <span class="text-sm">
+                                                            {{ element.url }}
+                                                        </span>
+                                                        <Icon name="lucide:pencil" size="16" />
+                                                    </div>
+                                                </template>
                                             </div>
                                             <ToggleSwitch v-model="element.visible" class="mr-1"
                                                 style="--p-toggleswitch-checked-background: #ffffff;--p-toggleswitch-checked-hover-background: #f3f4f6;"
