@@ -19,7 +19,7 @@ export default defineNuxtConfig({
       }
     }
   },
-  css: ['~/assets/styles/main.css'],
+  css: ['~/assets/styles/main.css', 'vue-advanced-cropper/dist/theme.classic.css'],
   vite: {
     plugins: [
       tailwindcss(),

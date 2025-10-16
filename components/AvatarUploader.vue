@@ -10,7 +10,7 @@
 
             <!-- Étape 1 : Upload -->
             <div v-if="!imageUrl" class="flex flex-row gap-2">
-                <FileUpload mode="basic" @select="onFileSelect" customUpload auto chooseLabel="Choisir une image"
+                <FileUpload mode="basic" @select="onFileSelect" auto chooseLabel="Choisir une image"
                     class="p-button-contrast" accept="image/*" />
                 <Button severity="danger" @click="deleteAvatar" :disabled="!streamer?.avatar_url">
                     <Icon name="lucide:trash-2" size="20px" />
@@ -19,13 +19,15 @@
             </div>
 
             <!-- Étape 2 : Crop -->
-            <div v-else class="mt-4 w-full">
-                <Cropper :src="imageUrl" :stencil-props="{ aspectRatio: 1 }" @change="onCropChange"
-                    image-restriction="fit-area" />
-                <div class="flex justify-between gap-2 mt-4">
-                    <Button label="Annuler" severity="secondary" @click="closeModal" />
-                    <Button label="Sauvegarder" severity="contrast" @click="saveAvatar" :disabled="!croppedImage" />
+            <div v-else class="w-full max-h-[60vh]">
+                <div class="relative w-full flex justify-center items-center overflow-hidden"
+                    style="aspect-ratio: 1 / 1">
+                    <Cropper :src="imageUrl" :stencil-props="{ aspectRatio: 1 }" @change="onCropChange"
+                        image-restriction="fit-area" :stencil-component="CircleStencil"
+                        :style="{ width: '100%', height: '100%' }" :default-size="defaultSize" />
                 </div>
+                <Button label="Sauvegarder" severity="contrast" @click="saveAvatar" :disabled="!croppedImage"
+                    class="w-full mt-4" />
             </div>
 
         </div>
@@ -33,8 +35,7 @@
 </template>
 
 <script setup>
-import { Cropper } from 'vue-advanced-cropper'
-import 'vue-advanced-cropper/dist/style.css';
+import { Cropper, CircleStencil } from 'vue-advanced-cropper'
 
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
@@ -42,7 +43,10 @@ const { streamer } = storeToRefs(streamerStore)
 
 // Modal control
 const visible = ref(false)
-const openModal = () => (visible.value = true)
+const openModal = () => {
+    visible.value = true
+    imageUrl.value = null
+}
 const closeModal = () => {
     visible.value = false
     imageUrl.value = null
@@ -70,5 +74,13 @@ const deleteAvatar = async () => {
     await removeAvatar()
     closeModal()
 }
+
+// Cropper
+const defaultSize = ({ imageSize, visibleArea }) => {
+    return {
+        width: (visibleArea || imageSize).width,
+        height: (visibleArea || imageSize).height,
+    };
+};
 
 </script>
