@@ -34,6 +34,10 @@
                                 {{ username.length }}/30
                             </span>
                         </div>
+                        <!-- Message d'erreur -->
+                        <span v-if="usernameError" class="text-xs text-red-500">
+                            {{ usernameError }}
+                        </span>
                         <!-- Description -->
                         <div class="flex flex-col gap-1 relative">
                             <label for="description">Description</label>
@@ -271,13 +275,34 @@ const { streamer } = storeToRefs(streamerStore)
 const streamerModal = ref(false)
 const username = ref('')
 const bio = ref('')
+const usernameError = ref('')
 
 watchEffect(() => {
     username.value = streamer?.value?.username || ''
     bio.value = streamer?.value?.bio || ''
 })
+
+watch(username, () => {
+    usernameError.value = ''
+})
+
 const handleSave = async () => {
-    await streamerStore.updateStreamer({ username: username.value, bio: bio.value })
+    const { data, error } = await streamerStore.updateStreamer({
+        username: username.value,
+        bio: bio.value
+    })
+    // Gestion de l'erreur
+    if (error) {
+        if (error.code === '23505') {
+            // Conflit unique Postgres
+            usernameError.value = 'Ce pseudo est déjà utilisé !'
+        } else {
+            usernameError.value = error.message
+        }
+        return
+    }
+
+    usernameError.value = ''
     streamerModal.value = false;
 };
 

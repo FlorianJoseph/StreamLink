@@ -14,6 +14,9 @@
                 <InputGroupAddon>streamlink/</InputGroupAddon>
                 <InputText v-model="form.username" placeholder="Nom d'utilisateur" />
             </InputGroup>
+            <span v-if="usernameError" class="text-xs text-red-500">
+                {{ usernameError }}
+            </span>
 
             <button type="button" @click="createStreamlink"
                 class="bg-purple-600 font-medium text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors">
@@ -27,6 +30,7 @@
 // Stores
 const user = useSupabaseUser()
 const streamerStore = useStreamerStore()
+const usernameError = ref('')
 
 const form = ref({
     username: user.value?.user_metadata.nickname || '',
@@ -35,9 +39,29 @@ const form = ref({
 const createStreamlink = async () => {
     if (!form.value.username) return
 
-    else await streamerStore.createStreamer({
-        username: form.value.username
-    })
+    else {
+        const { data, error } = await streamerStore.createStreamer({
+            username: form.value.username
+        })
+
+        // Gestion de l'erreur
+        if (error) {
+            if (error.code === '23505') {
+                // Conflit unique Postgres
+                usernameError.value = 'Ce pseudo est déjà utilisé !'
+            } else {
+                usernameError.value = error.message
+            }
+            return
+        }
+        usernameError.value = ''
+    }
 }
 
+watch(
+    () => form.value.username,
+    () => {
+        usernameError.value = ''
+    }
+)
 </script>
