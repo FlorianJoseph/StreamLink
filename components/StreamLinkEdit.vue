@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-4 min-w-[650px]">
+    <div class="flex flex-col gap-4 w-[650px]">
         <!-- En-tête -->
         <div class="py-4">
             <div class="flex items-center flex-col lg:items-start h-12 justify-end">
@@ -18,25 +18,34 @@
                     <span class="text-lg font-medium hover:underline cursor-pointer">
                         {{ streamer?.username }}
                     </span>
-                    <span class="text-sm text-gray-400 hover:underline cursor-pointer line-clamp-1">
+                    <span class="text-sm font-medium text-gray-400 hover:underline cursor-pointer line-clamp-1">
                         {{ streamer?.bio || 'Ajouter une description' }}
                     </span>
                 </div>
-                <Dialog v-model:visible="streamerModal" modal header="Nom et description" :style="{ width: '25rem' }">
+                <Dialog v-model:visible="streamerModal" modal dismissableMask header="Nom et description"
+                    :style="{ width: '25rem' }">
                     <div class="flex flex-col gap-4">
-                        <div class="flex flex-col gap-2">
+                        <!-- Nom -->
+                        <div class="flex flex-col gap-1 relative">
                             <label for="username">Nom</label>
-                            <InputText id="username" v-model="username" />
+                            <InputText id="username" v-model="username" maxlength="30" placeholder="Entrez votre nom"
+                                class="w-full" style="--p-inputtext-focus-border-color : #ffffff" />
+                            <span class="absolute right-2 bottom-1 text-xs text-gray-500">
+                                {{ username.length }}/30
+                            </span>
                         </div>
-                        <div class="flex flex-col gap-2">
+                        <!-- Description -->
+                        <div class="flex flex-col gap-1 relative">
                             <label for="description">Description</label>
-                            <Textarea id="description" v-model="bio" rows="5" cols="30" autoResize />
+                            <Textarea id="description" v-model="bio" rows="5" autoResize maxlength="160"
+                                placeholder="Écrivez une courte description..." class="w-full"
+                                style="--p-textarea-focus-border-color : #ffffff" />
+                            <span class="absolute right-2 bottom-1 text-xs text-gray-500">
+                                {{ bio.length }}/160
+                            </span>
                         </div>
-                        <div class="flex justify-end gap-2">
-                            <Button type="button" label="Annuler" severity="secondary"
-                                @click="streamerModal = false"></Button>
-                            <Button type="button" label="Sauvegarder" severity="contrast" @click="handleSave"></Button>
-                        </div>
+                        <Button type="button" label="Sauvegarder" severity="contrast" @click="handleSave"
+                            class="w-full" />
                     </div>
                 </Dialog>
             </div>
@@ -88,12 +97,12 @@
                                                     <input :ref="el => inputRefs[`${element.id}-title`] = el"
                                                         v-model="editing.value" @blur="saveEdit(element)"
                                                         @keyup.enter="saveEdit(element)"
-                                                        class="bg-transparent border-none focus:outline-none font-medium w-full mb-2" />
+                                                        class="bg-transparent border-none focus:outline-none font-medium w-full mb-2 truncate max-w-[500px]" />
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center mb-2 gap-2 hover:cursor-pointer w-max"
                                                         @click="editField(element, 'title')">
-                                                        <span class="font-medium">
+                                                        <span class="font-medium truncate max-w-[500px]">
                                                             {{ element.title }}
                                                         </span>
                                                         <Icon name="lucide:pencil" size="16" />
@@ -104,12 +113,12 @@
                                                     <input :ref="el => inputRefs[`${element.id}-url`] = el"
                                                         v-model="editing.value" @blur="saveEdit(element)"
                                                         @keyup.enter="saveEdit(element)"
-                                                        class="bg-transparent border-none focus:outline-none text-sm w-full" />
+                                                        class="bg-transparent border-none focus:outline-none text-sm w-full truncate max-w-[500px]" />
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer w-max"
                                                         @click="editField(element, 'url')">
-                                                        <span class="text-sm">
+                                                        <span class="text-sm truncate max-w-[500px]">
                                                             {{ element.url }}
                                                         </span>
                                                         <Icon name="lucide:pencil" size="16" />
@@ -143,7 +152,7 @@
                     </Draggable>
 
                     <!-- Modal Icone ou image -->
-                    <Dialog v-model:visible="thumbnailModal" modal header="Modifier l'icone"
+                    <Dialog v-model:visible="thumbnailModal" dismissableMask modal header="Modifier l'icone"
                         :style="{ width: '30rem' }">
                         <Stepper value="1">
                             <StepPanels>
@@ -192,7 +201,7 @@
                                             </IconField>
                                         </div>
                                         <!-- Liste des icônes filtrées -->
-                                        <div class="flex flex-wrap gap-6 overflow-y-auto max-h-[35vh]">
+                                        <div class="flex flex-wrap gap-6 overflow-y-auto h-[35vh]">
                                             <div v-for="(icons, category) in filteredIconsByCategory" :key="category"
                                                 class="flex flex-col gap-3">
                                                 <!-- Titre de la catégorie -->
@@ -223,7 +232,8 @@
                     </Dialog>
 
                     <!-- Modal Ajouter / Modifier -->
-                    <Dialog v-model:visible="newlinkModal" modal header="Ajouter un lien" :style="{ width: '25rem' }">
+                    <Dialog v-model:visible="newlinkModal" dismissableMask modal header="Ajouter un lien"
+                        :style="{ width: '25rem' }">
                         <div class="flex flex-col gap-4">
 
                             <div class="flex flex-col gap-2">

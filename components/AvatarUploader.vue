@@ -5,7 +5,7 @@
         @click="openModal" />
 
     <!-- Modal -->
-    <Dialog v-model:visible="visible" modal header="Modifier l’avatar" :style="{ width: '30rem' }">
+    <Dialog v-model:visible="visible" dismissableMask modal header="Modifier l’avatar" :style="{ width: '30rem' }">
         <div class="flex flex-col gap-4 items-center">
 
             <!-- Étape 1 : Upload -->
