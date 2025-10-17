@@ -11,7 +11,7 @@ datasource db {
 
 model Streamer {
   id         String   @id
-  username   String
+  username   String   @unique
   avatar_url String?
   bio        String?
   created_at DateTime @default(now())
@@ -28,5 +28,8 @@ model Link {
   order       Int      @default(0)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
+  icon_url    String?
+  visible     Boolean? @default(true)
+  custom_icon Boolean? @default(false)
   Streamer    Streamer @relation(fields: [streamer_id], references: [id])
 }

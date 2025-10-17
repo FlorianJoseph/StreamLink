@@ -123,6 +123,7 @@ export function useVignetteUploader(linkRef) {
                 }
 
                 const publicUrl = supabase.storage.from('Streamlink').getPublicUrl(filePath).data.publicUrl
+                await removeVignette()
                 await linkStore.updateLink(linkRef.value.id, { icon_url: publicUrl, custom_icon: true })
             }, 'image/png')
         }
@@ -144,7 +145,7 @@ export function useVignetteUploader(linkRef) {
             const path = linkRef.value.icon_url.split('/Vignette/')[1]
             await supabase.storage.from('Streamlink').remove([`Vignette/${path}`])
         }
-        await linkStore.updateLink(linkRef.value.id, { icon_url: null, custom_icon: false })
+        await linkStore.updateLink(linkRef.value.id, { icon: '', icon_url: null, custom_icon: true })
         imageUrl.value = null
         croppedImage.value = null
         selectedIcon.value = null

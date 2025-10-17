@@ -14,7 +14,7 @@
         <div class="flex flex-row gap-4 items-center">
             <AvatarUploader />
             <div>
-                <div class="flex flex-col" @click="streamerModal = true">
+                <div class="flex flex-col" @click="openStreamerModal()">
                     <span class="text-lg font-medium hover:underline cursor-pointer">
                         {{ streamer?.username }}
                     </span>
@@ -26,7 +26,7 @@
                     :style="{ width: '25rem' }">
                     <div class="flex flex-col gap-4">
                         <!-- Nom -->
-                        <div class="flex flex-col gap-1 relative">
+                        <div class="flex flex-col gap-2 relative">
                             <label for="username">Nom</label>
                             <InputText id="username" v-model="username" maxlength="30" placeholder="Entrez votre nom"
                                 class="w-full" style="--p-inputtext-focus-border-color : #ffffff" />
@@ -39,7 +39,7 @@
                             {{ usernameError }}
                         </span>
                         <!-- Description -->
-                        <div class="flex flex-col gap-1 relative">
+                        <div class="flex flex-col gap-2 relative">
                             <label for="description">Description</label>
                             <Textarea id="description" v-model="bio" rows="5" autoResize maxlength="160"
                                 placeholder="Écrivez une courte description..." class="w-full"
@@ -49,7 +49,7 @@
                             </span>
                         </div>
                         <Button type="button" label="Sauvegarder" severity="contrast" @click="handleSave" class="w-full"
-                            :disabled="!username" />
+                            :disabled="!username || !!usernameError" />
                     </div>
                 </Dialog>
             </div>
@@ -61,7 +61,7 @@
         </Button>
 
         <!-- Aperçu du lien -->
-        <!-- <NuxtLink :to="{ path: `/${streamer?.username}` }" target="_blank">
+        <NuxtLink :to="{ path: `/${streamer?.username}` }" target="_blank">
             <Button class="whitespace-nowrap w-full" severity="contrast" variant="outlined">
                 <span>Voir mon StreamLink</span>
                 <Icon name="lucide:external-link" size="16" />
@@ -74,7 +74,7 @@
             <Tag :severity="copied ? 'success' : 'secondary'" class="transition-all duration-300">
                 {{ copied ? 'Copié !' : 'Copier' }}
             </Tag>
-        </div> -->
+        </div>
 
         <!-- Gérer les liens -->
         <div class="mb-8">
@@ -163,14 +163,21 @@
                                 <StepPanel v-slot="{ activateCallback }" value="1">
                                     <div class="flex flex-col gap-4 items-center">
                                         <!-- Étape 1 : Upload -->
-                                        <div v-if="!imageUrl" class="flex flex-row gap-2">
-                                            <FileUpload mode="basic" @select="onFileSelect" auto
-                                                chooseLabel="Choisir une image" class="p-button-contrast"
-                                                accept="image/*" @click="showIcons = false" />
-                                            <Button severity="contrast" variant="outlined"
-                                                @click="activateCallback('2')">
-                                                <Icon name="lucide:layout-grid" size="20px" />
-                                                <span>Choisir une icone</span>
+                                        <div v-if="!imageUrl" class="flex flex-col gap-2">
+                                            <div class="flex flex-row gap-2">
+                                                <FileUpload mode="basic" @select="onFileSelect" auto
+                                                    chooseLabel="Choisir une image" class="p-button-contrast"
+                                                    accept="image/*" @click="showIcons = false" />
+                                                <Button severity="contrast" variant="outlined"
+                                                    @click="activateCallback('2')">
+                                                    <Icon name="lucide:layout-grid" size="20px" />
+                                                    <span>Choisir une icone</span>
+                                                </Button>
+                                            </div>
+                                            <Button severity="danger" @click="deleteIcon"
+                                                :disabled="!currentLinkRef.icon_url">
+                                                <Icon name="lucide:trash-2" size="20px" />
+                                                <span>Supprimer l'icone</span>
                                             </Button>
                                         </div>
                                         <!-- Étape 2 : Crop -->
@@ -239,21 +246,18 @@
                     <Dialog v-model:visible="newlinkModal" dismissableMask modal header="Ajouter un lien"
                         :style="{ width: '25rem' }">
                         <div class="flex flex-col gap-4">
-
                             <div class="flex flex-col gap-2">
                                 <label for="title">Titre</label>
-                                <InputText id="title" v-model="form.title" placeholder="Ex: Twitch" />
+                                <InputText id="title" v-model="form.title" placeholder="Ex: Twitch"
+                                    style="--p-inputtext-focus-border-color : #ffffff" />
                             </div>
                             <div class="flex flex-col gap-2">
                                 <label for="url">URL</label>
-                                <InputText id="url" v-model="form.url" placeholder="https://..." />
+                                <InputText id="url" v-model="form.url" placeholder="https://..."
+                                    style="--p-inputtext-focus-border-color : #ffffff" />
                             </div>
-
-                            <div class="flex justify-end gap-2">
-                                <Button type="button" label="Annuler" severity="secondary" @click="resetForm()" />
-                                <Button type="button" label="Sauvegarder" severity="contrast"
-                                    :disabled="!form.title || !form.url" @click="saveNewLink()" />
-                            </div>
+                            <Button type="button" label="Sauvegarder" severity="contrast"
+                                :disabled="!form.title || !form.url" @click="saveNewLink()" class="w-full" />
                         </div>
                     </Dialog>
                 </div>
@@ -285,6 +289,11 @@ watchEffect(() => {
 watch(username, () => {
     usernameError.value = ''
 })
+
+const openStreamerModal = async () => {
+    username.value = streamer?.value?.username
+    streamerModal.value = true;
+}
 
 const handleSave = async () => {
     const { data, error } = await streamerStore.updateStreamer({
@@ -432,6 +441,7 @@ const {
     saveVignette,
     searchIcon,
     filteredIconsByCategory,
+    removeVignette
 } = useVignetteUploader(currentLinkRef)
 
 const openVignetteModal = (link) => {
@@ -450,6 +460,11 @@ const closeModal = () => {
 
 const saveImage = async () => {
     await saveVignette()
+    closeModal()
+}
+
+const deleteIcon = async () => {
+    await removeVignette()
     closeModal()
 }
 

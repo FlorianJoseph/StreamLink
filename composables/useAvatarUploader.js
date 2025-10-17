@@ -23,10 +23,6 @@ export function useAvatarUploader(streamerRef) {
         if (!croppedImage.value) return
 
         croppedImage.value.toBlob(async (blob) => {
-            const oldAvatarPath = streamerRef.value.avatar_url
-                ? streamerRef.value.avatar_url.split('/Avatar/')[1]
-                : null
-
             const filePath = `Avatar/${crypto.randomUUID()}.png`
 
             const { error } = await supabase.storage
@@ -42,9 +38,7 @@ export function useAvatarUploader(streamerRef) {
                 .from('Streamlink')
                 .getPublicUrl(filePath).data.publicUrl
 
-            if (oldAvatarPath) {
-                await supabase.storage.from('Streamlink').remove([`Avatar/${oldAvatarPath}`])
-            }
+            await removeAvatar()
 
             await streamerStore.updateStreamer({ avatar_url: publicUrl })
             previewUrl.value = publicUrl
