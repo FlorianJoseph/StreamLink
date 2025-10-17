@@ -116,21 +116,22 @@
                                                     </div>
                                                 </template>
                                             </div>
-                                            <ToggleSwitch v-model="element.visible" class="mr-1"
-                                                style="--p-toggleswitch-checked-background: #ffffff;--p-toggleswitch-checked-hover-background: #f3f4f6;"
-                                                @change="() => linkStore.toggleVisibility(element.id, element.visible)" />
+                                            <div>
+                                                <ToggleSwitch v-model="element.visible" class="mr-1"
+                                                    style="--p-toggleswitch-checked-background: #ffffff;--p-toggleswitch-checked-hover-background: #f3f4f6;"
+                                                    @change="() => linkStore.toggleVisibility(element.id, element.visible)" />
+                                            </div>
                                         </div>
                                         <!-- Actions -->
                                         <div class="flex justify-between items-center">
-                                            <div class="text-sm text-gray-400 mt-2 italic hover:cursor-pointer w-max">
-                                                <Button severity="secondary" variant="text"
+                                            <div class="mt-2 hover:cursor-pointer w-max">
+                                                <Button severity="secondary"
                                                     v-tooltip.bottom="{ value: 'Modifier l\'icone' }"
                                                     @click="openVignetteModal(element)">
                                                     <Icon name="lucide:image" size="16" />
                                                 </Button>
                                             </div>
-                                            <Button severity="secondary" variant="text"
-                                                v-tooltip.bottom="{ value: 'Supprimer' }"
+                                            <Button severity="secondary" v-tooltip.bottom="{ value: 'Supprimer' }"
                                                 @click="confirmDeletePopup($event, element.id)">
                                                 <Icon name="lucide:trash-2" size="20" />
                                             </Button>
@@ -172,34 +173,49 @@
                                             <div class="flex flex-col w-full mt-4 gap-2">
                                                 <Button label="Sauvegarder" severity="contrast" @click="saveImage"
                                                     :disabled="!croppedImage" />
-                                                <Button label="Retour" severity="secondary" @click="imageUrl = null" />
+                                                <Button label="Retour" severity="secondary"
+                                                    @click="imageUrl = null, croppedImage = null" />
                                             </div>
                                         </div>
                                     </div>
                                 </StepPanel>
                                 <StepPanel v-slot="{ activateCallback }" value="2">
-                                    <div class="flex flex-col h-full">
+                                    <div class="flex flex-col h-full gap-4">
                                         <!-- Barre de recherche -->
-                                        <div class="p-4">
-                                            <InputText v-model="searchIcon" placeholder="Rechercher une icône..."
-                                                class="w-full" />
+                                        <div class="mb-2 relative">
+                                            <IconField>
+                                                <InputIcon>
+                                                    <Icon name="lucide:search" />
+                                                </InputIcon>
+                                                <InputText v-model="searchIcon" placeholder="Rechercher une icône..."
+                                                    class="w-full" />
+                                            </IconField>
                                         </div>
                                         <!-- Liste des icônes filtrées -->
-                                        <div
-                                            class="flex flex-wrap gap-3 justify-center p-4 overflow-y-auto max-h-[50vh]">
-                                            <div v-for="icon in filteredIcons" :key="icon"
-                                                class="p-2 cursor-pointer hover:bg-gray-400/10 rounded-md transition"
-                                                :class="{ 'border border-gray-500': selectedIcon === icon }"
-                                                @click="selectIcon(icon)">
-                                                <Icon :name="icon" size="24" />
-                                            </div>
-                                            <div class="flex flex-col justify-between w-full mt-4 gap-2">
-                                                <Button label="Sauvegarder" severity="contrast"
-                                                    :disabled="!selectedIcon" @click="saveImage" />
-                                                <Button label="Retour" severity="secondary"
-                                                    @click="activateCallback('1')" />
+                                        <div class="flex flex-wrap gap-6 overflow-y-auto max-h-[35vh]">
+                                            <div v-for="(icons, category) in filteredIconsByCategory" :key="category"
+                                                class="flex flex-col gap-3">
+                                                <!-- Titre de la catégorie -->
+                                                <h3 class="text-lg font-semibold text-left">
+                                                    {{ category }}
+                                                </h3>
+
+                                                <!-- Icônes -->
+                                                <div class="flex flex-wrap gap-3 justify-start p-2">
+                                                    <div v-for="icon in icons" :key="icon" class="flex justify-center items-center p-8
+                                                         cursor-pointer hover:bg-gray-400/10 rounded-md transition"
+                                                        :class="selectedIcon === icon ? 'outline outline-2 border-gray-500' : ''"
+                                                        @click="selectIcon(icon)">
+                                                        <Icon :name="icon" size="24" />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="flex flex-col justify-between w-full mt-4 gap-2">
+                                        <Button label="Sauvegarder" severity="contrast" :disabled="!selectedIcon"
+                                            @click="saveImage" />
+                                        <Button label="Retour" severity="secondary" @click="activateCallback('1')" />
                                     </div>
                                 </StepPanel>
                             </StepPanels>
@@ -380,7 +396,7 @@ const {
     selectIcon,
     saveVignette,
     searchIcon,
-    filteredIcons,
+    filteredIconsByCategory,
 } = useVignetteUploader(currentLinkRef)
 
 const openVignetteModal = (link) => {
