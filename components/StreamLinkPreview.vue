@@ -23,7 +23,7 @@
                 <div class="flex items-center text-center flex-col w-full my-6">
                     <Avatar :image="streamer?.avatar_url || defaultAvatar" shape="circle" size="xlarge" class="mb-2" />
                     <span class="text-lg font-semibold">{{ streamer?.username }}</span>
-                    <span class="text-sm font-medium">
+                    <span class="text-sm font-medium break-all">
                         {{ streamer?.bio }}
                     </span>
                 </div>

@@ -21,7 +21,7 @@
                 <img :src="streamer?.avatar_url || defaultAvatar" alt="Avatar"
                     class="w-24 h-24 rounded-full object-cover mb-4 mt-4" />
                 <span class="text-2xl font-bold">{{ streamer?.username }}</span>
-                <span class="text-base font-medium">
+                <span class="text-base font-medium break-all">
                     {{ streamer?.bio }}
                 </span>
             </div>

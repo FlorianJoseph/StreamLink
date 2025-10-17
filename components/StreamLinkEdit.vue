@@ -11,14 +11,14 @@
         </div>
 
         <!-- Avatar et bouton de modification -->
-        <div class="flex flex-row gap-4 items-center">
+        <div class="flex flex-row gap-4 items-center max-w-[650px]">
             <AvatarUploader />
-            <div>
+            <div class="min-w-0">
                 <div class="flex flex-col" @click="openStreamerModal()">
                     <span class="text-lg font-medium hover:underline cursor-pointer">
                         {{ streamer?.username }}
                     </span>
-                    <span class="text-sm font-medium text-gray-400 hover:underline cursor-pointer line-clamp-1">
+                    <span class="block text-sm font-medium text-gray-400 hover:underline cursor-pointer truncate">
                         {{ streamer?.bio || 'Ajouter une description' }}
                     </span>
                 </div>
@@ -54,19 +54,8 @@
                 </Dialog>
             </div>
         </div>
-        <!-- Bouton Ajouter un lien -->
-        <Button class="w-full" severity="contrast" @click="newlinkModal = true">
-            <Icon name="lucide:plus" size="20" />
-            <span class="font-medium">Ajouter un lien</span>
-        </Button>
 
         <!-- Aperçu du lien -->
-        <NuxtLink :to="{ path: `/${streamer?.username}` }" target="_blank">
-            <Button class="whitespace-nowrap w-full" severity="contrast" variant="outlined">
-                <span>Voir mon StreamLink</span>
-                <Icon name="lucide:external-link" size="16" />
-            </Button>
-        </NuxtLink>
         <div class="flex items-center bg-gray-100/10 rounded justify-between pr-4 cursor-pointer" @click="copyText">
             <p ref="linkText" class="m-4">
                 streamlink.com/{{ streamer?.username }}
@@ -75,6 +64,12 @@
                 {{ copied ? 'Copié !' : 'Copier' }}
             </Tag>
         </div>
+
+        <!-- Bouton Ajouter un lien -->
+        <Button class="w-full" severity="contrast" @click="newlinkModal = true">
+            <Icon name="lucide:plus" size="20" />
+            <span class="font-medium">Ajouter un lien</span>
+        </Button>
 
         <!-- Gérer les liens -->
         <div class="mb-8">
