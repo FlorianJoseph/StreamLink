@@ -9,9 +9,9 @@
             </div>
         </div>
 
-        <div class="flex flex-col gap-4">
+        <div v-if="user" class="flex flex-col gap-4">
             <InputGroup>
-                <InputGroupAddon>streamlink/</InputGroupAddon>
+                <InputGroupAddon>streamlink.com/</InputGroupAddon>
                 <InputText v-model="form.username" placeholder="Nom d'utilisateur" />
             </InputGroup>
             <span v-if="usernameError" class="text-xs text-red-500">
@@ -23,12 +23,37 @@
                 Créer mon StreamLink
             </button>
         </div>
+        <button @click="twitchAuth" v-else
+            class="flex flex-row items-center justify-center gap-2 p-4 text-lg bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+            <Icon name="lucide:twitch" size="24" />
+            <span class="text-base font-semibold">Se connecter avec Twitch</span>
+        </button>
     </div>
 </template>
 
 <script setup>
-// Stores
+
+const supabase = useSupabaseClient();
 const user = useSupabaseUser()
+const router = useRouter();
+
+async function twitchAuth() {
+    try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'twitch',
+            options: {
+                redirectTo: `https://vcvwxwhiltffzmojiinc.supabase.co/auth/v1/callback`,
+            },
+        });
+        if (error) {
+            return;
+        }
+    } catch (err) {
+        console.error('Erreur lors de la connexion Twitch:', err);
+    }
+}
+
+// Stores
 const streamerStore = useStreamerStore()
 const usernameError = ref('')
 
