@@ -42,7 +42,7 @@ export const useStreamerStore = defineStore('streamer', () => {
         return { data, error }
     }
 
-    // Mettre à jour le streamer
+    // Mettre à jour le streamer avec vérification du pseudo unique
     const updateStreamer = async (payload) => {
         const { data, error } = await supabase
             .from('Streamer')

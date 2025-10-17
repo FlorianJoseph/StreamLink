@@ -44,8 +44,8 @@
                                 {{ bio.length }}/160
                             </span>
                         </div>
-                        <Button type="button" label="Sauvegarder" severity="contrast" @click="handleSave"
-                            class="w-full" />
+                        <Button type="button" label="Sauvegarder" severity="contrast" @click="handleSave" class="w-full"
+                            :disabled="!username" />
                     </div>
                 </Dialog>
             </div>
