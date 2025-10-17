@@ -58,6 +58,32 @@ export const useStreamerStore = defineStore('streamer', () => {
         return { data, error }
     }
 
+    const deleteStreamerWithLinks = async (streamerId) => {
+        try {
+            // Supprimer les liens associés
+            const { error: linksError } = await supabase
+                .from('Link')
+                .delete()
+                .eq('streamer_id', streamerId)
+
+            if (linksError) throw linksError
+
+            // Supprimer le streamer
+            const { error: streamerError } = await supabase
+                .from('Streamer')
+                .delete()
+                .eq('id', streamerId)
+
+            if (streamerError) throw streamerError
+
+            console.log('Streamer et liens supprimés !')
+            return true
+        } catch (err) {
+            console.error('Erreur lors de la suppression :', err.message)
+            return false
+        }
+    }
+
     // Charger automatiquement à l’ouverture
     onMounted(fetchStreamer)
 
@@ -68,6 +94,7 @@ export const useStreamerStore = defineStore('streamer', () => {
         // Actions
         fetchStreamer,
         createStreamer,
-        updateStreamer
+        updateStreamer,
+        deleteStreamerWithLinks
     }
 })

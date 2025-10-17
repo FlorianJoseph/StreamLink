@@ -1,25 +1,14 @@
 <template>
     <div class="flex flex-col gap-4">
         <div class="py-4">
-            <div class="flex items-center flex-col h-12 justify-end">
-                <h1 class="text-3xl font-bold">Aperçu</h1>
+            <div class="flex flex-col h-12 justify-end">
+                <h1 class="text-3xl font-bold">Aperçu du StreamLink</h1>
                 <p class="text-center lg:text-left">Voici comment votre page apparaîtra à vos visiteurs</p>
             </div>
         </div>
-
+        <StreamLinkShare />
         <Card class="flex flex-col h-160 w-97 overflow-auto">
             <template #title>
-                <div class="mb-8 w-full">
-                    <div class="flex justify-between w-full">
-                        <Button rounded severity="secondary">
-                            <Icon name="lucide:home" />
-                        </Button>
-                        <Button rounded severity="secondary">
-                            <Icon name="lucide:files" />
-                            <span class="text-sm">Copier le Streamlink</span>
-                        </Button>
-                    </div>
-                </div>
                 <div class="flex items-center text-center flex-col w-full my-6">
                     <Avatar :image="streamer?.avatar_url || defaultAvatar" shape="circle" size="xlarge" class="mb-2" />
                     <span class="text-lg font-semibold">{{ streamer?.username }}</span>

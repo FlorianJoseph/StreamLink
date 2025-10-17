@@ -31,7 +31,7 @@
                 <div class="flex flex-col">
                     <span class="font-semibold">Supprimer pour toujours</span>
                     <span class="text-sm text-gray-400">
-                        Supprimez définitivement votre compte et votre profil StreamLink.
+                        Supprimez définitivement votre profil StreamLink.
                     </span>
                 </div>
             </template>
@@ -49,6 +49,9 @@
 <script setup>
 const user = useSupabaseUser();
 const confirm = useConfirm();
+const router = useRouter();
+const streamerStore = useStreamerStore()
+const supabase = useSupabaseClient();
 
 import { TriangleAlert } from 'lucide-vue-next'
 
@@ -69,6 +72,21 @@ const confirmDelete = () => {
         acceptProps: {
             label: 'Supprimer',
             severity: 'danger',
+        },
+        accept: async () => {
+            try {
+                // Supprimer le streamer et les liens
+                const success = await streamerStore.deleteStreamerWithLinks(user.value?.sub);
+                if (!success) throw new Error('La suppression a échoué');
+
+                // Déconnexion
+                await supabase.auth.signOut();
+
+                // Redirection
+                router.push('/');
+            } catch (err) {
+                console.error('Erreur lors de la suppression :', err.message);
+            }
         },
     });
 };

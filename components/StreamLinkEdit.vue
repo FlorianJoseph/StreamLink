@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-4 w-[650px]">
+    <div class="flex flex-col gap-4 lg:w-[650px]">
         <!-- En-tête -->
         <div class="py-4">
             <div class="flex items-center flex-col lg:items-start h-12 justify-end">
@@ -9,7 +9,6 @@
                     audience</p>
             </div>
         </div>
-
         <!-- Avatar et bouton de modification -->
         <div class="flex flex-row gap-4 items-center max-w-[650px]">
             <AvatarUploader />
@@ -53,16 +52,6 @@
                     </div>
                 </Dialog>
             </div>
-        </div>
-
-        <!-- Aperçu du lien -->
-        <div class="flex items-center bg-gray-100/10 rounded justify-between pr-4 cursor-pointer" @click="copyText">
-            <p ref="linkText" class="m-4">
-                streamlink.com/{{ streamer?.username }}
-            </p>
-            <Tag :severity="copied ? 'success' : 'secondary'" class="transition-all duration-300">
-                {{ copied ? 'Copié !' : 'Copier' }}
-            </Tag>
         </div>
 
         <!-- Bouton Ajouter un lien -->
@@ -317,15 +306,6 @@ watchEffect(() => {
 })
 const saveOrder = async () => {
     await linkStore.updateOrder(localLinks.value)
-}
-
-// Copier le lien
-const linkText = ref(null)
-const copied = ref(false)
-const copyText = () => {
-    if (linkText.value) navigator.clipboard.writeText(`https://${linkText.value.innerText}`)
-    copied.value = true
-    setTimeout(() => (copied.value = false), 1500)
 }
 
 // Actions de modification du lien

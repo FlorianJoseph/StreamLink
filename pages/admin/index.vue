@@ -13,8 +13,9 @@
             <div class="flex-[2]">
                 <StreamLinkEdit />
             </div>
+            <Divider layout="vertical" />
             <!-- Aperçu du streamlink -->
-            <div class="flex-[1]">
+            <div class="flex-[1] sticky top-21 self-start">
                 <StreamLinkPreview />
             </div>
         </div>
@@ -25,5 +26,4 @@
 // Stores
 const streamerStore = useStreamerStore()
 const { streamer, loading } = storeToRefs(streamerStore)
-
 </script>
