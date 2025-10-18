@@ -88,4 +88,7 @@ const { streamer } = storeToRefs(streamerStore)
 
 const visibleLinks = computed(() => links.value.filter(link => link.visible))
 
+onMounted(async () => {
+    await streamerStore.fetchStreamer(route.params.username)
+})
 </script>

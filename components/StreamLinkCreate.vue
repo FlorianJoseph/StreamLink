@@ -24,9 +24,9 @@
             </button>
         </div>
         <button @click="twitchAuth" v-else
-            class="flex flex-row items-center justify-center gap-2 p-4 text-lg bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+            class="flex flex-row items-center justify-center gap-2 p-3 text-lg bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
             <Icon name="lucide:twitch" size="24" />
-            <span class="text-base font-semibold">Se connecter avec Twitch</span>
+            <span class="text-md font-semibold">Se connecter avec Twitch</span>
         </button>
     </div>
 </template>
@@ -39,10 +39,11 @@ const router = useRouter();
 
 async function twitchAuth() {
     try {
+        const currentPath = window.location.pathname
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'twitch',
             options: {
-                redirectTo: `https://vcvwxwhiltffzmojiinc.supabase.co/auth/v1/callback`,
+                redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(currentPath)}`,
             },
         });
         if (error) {

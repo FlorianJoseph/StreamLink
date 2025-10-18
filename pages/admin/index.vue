@@ -26,4 +26,11 @@
 // Stores
 const streamerStore = useStreamerStore()
 const { streamer, loading } = storeToRefs(streamerStore)
+const user = useSupabaseUser()
+
+watch(user, async (val) => {
+    if (val) {
+        await streamerStore.fetchStreamer(val.sub)
+    }
+}, { immediate: true })
 </script>
