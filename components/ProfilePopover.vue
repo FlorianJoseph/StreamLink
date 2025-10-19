@@ -67,14 +67,23 @@ const supabase = useSupabaseClient();
 const user = useSupabaseUser()
 const router = useRouter();
 
+const redirectUrl =
+    process.env.NODE_ENV === 'production'
+        ? 'https://streamlink-v1.vercel.app/'
+        : 'http://localhost:3000/'
+
 async function twitchAuth() {
     try {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'twitch',
             options: {
-                redirectTo: `https://streamlink-v1.vercel.app/`,
+                redirectTo: redirectUrl,
             },
         });
+
+        if (data.url) {
+            redirect(data.url)
+        }
 
         if (error) {
             return;
