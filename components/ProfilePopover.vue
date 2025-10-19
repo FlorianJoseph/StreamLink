@@ -67,18 +67,23 @@ const supabase = useSupabaseClient();
 const user = useSupabaseUser()
 const router = useRouter();
 
+// Exemple à coller dans votre composant ou composable Nuxt (client-side)
 async function twitchAuth() {
     try {
-        const currentPath = window.location.pathname
+        const callback = 'https://vcvwxwhiltffzmojiinc.supabase.co/auth/v1/callback';
+        const nextUrl = encodeURIComponent('https://streamlink-v1.vercel.app/');
+        const redirectTo = `${callback}?next=${nextUrl}`;
+
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'twitch',
-            options: {
-                redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(currentPath)}`,
-            },
+            options: { redirectTo },
         });
+
         if (error) {
+            console.error('Erreur signInWithOAuth:', error);
             return;
         }
+
     } catch (err) {
         console.error('Erreur lors de la connexion Twitch:', err);
     }
