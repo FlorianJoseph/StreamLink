@@ -72,7 +72,7 @@ async function twitchAuth() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'twitch',
             options: {
-                redirectTo: `https://vcvwxwhiltffzmojiinc.supabase.co/auth/v1/callback`,
+                redirectTo: `https://streamlink-v1.vercel.app/`,
             },
         });
 
