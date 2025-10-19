@@ -1,7 +1,7 @@
 <template>
     <div class="card flex justify-center">
         <Button type="button" severity="contrast" @click="toggle">
-            <span>streamlink.com/{{ streamer?.username }}</span>
+            <span>{{ streamlinkUrl }}</span>
             <Icon name="lucide:share" size="20" />
         </Button>
         <Popover ref="op">
@@ -12,7 +12,7 @@
                 <div class="flex items-center bg-gray-100/10 rounded-2xl justify-between pr-4 cursor-pointer"
                     @click="copyText">
                     <p ref="linkText" class="m-4">
-                        streamlink.com/{{ streamer?.username }}
+                        {{ streamlinkUrl }}
                     </p>
                     <Tag :severity="copied ? 'success' : 'secondary'" class="transition-all duration-300">
                         {{ copied ? 'Copié !' : 'Copier' }}
@@ -33,6 +33,13 @@
 <script setup>
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
+const route = useRoute()
+
+// computed qui retourne l'URL complète basée sur la route
+const streamlinkUrl = computed(() => {
+    const username = streamerStore.streamer?.username
+    return username ? `${window.location.host}/${username}` : ''
+})
 
 const op = ref();
 
@@ -44,7 +51,8 @@ const toggle = (event) => {
 const linkText = ref(null)
 const copied = ref(false)
 const copyText = () => {
-    if (linkText.value) navigator.clipboard.writeText(`https://${linkText.value.innerText}`)
+    const username = streamerStore.streamer?.username
+    if (linkText.value) navigator.clipboard.writeText(`${window.location.origin}/${username}`)
     copied.value = true
     setTimeout(() => (copied.value = false), 1500)
 }

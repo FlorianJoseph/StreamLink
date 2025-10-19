@@ -3,7 +3,7 @@
         <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="6" fill="transparent" animationDuration=".5s"
             aria-label="Chargement..." />
     </div>
-    <Card v-else class="min-h-full w-[580px] p-2">
+    <Card class="min-h-full w-[580px] p-2" v-else-if="streamer">
         <template #title>
             <div class="mb-8">
                 <div class="flex items-center justify-between">
@@ -67,13 +67,34 @@
                 </NuxtLink>
             </div>
         </template>
-
     </Card>
+    <template v-else>
+        <div class="flex flex-col items-center text-center gap-6">
+            <!-- Icône pour illustrer l'erreur -->
+            <Icon name="lucide:info" size="48" />
+
+            <!-- Message principal -->
+            <h2 class="text-2xl font-bold">La page que vous cherchez n'existe pas</h2>
+
+            <!-- Message secondaire -->
+            <p class="text-gray-500 max-w-md">
+                Cette page n'existe pas encore. Créez votre page maintenant et commencez à partager vos liens facilement
+                !
+            </p>
+
+            <!-- Bouton CTA -->
+            <NuxtLink :to="'/admin'">
+                <Button severity="contrast">
+                    <Icon name="lucide:plus" size="20" />
+                    <span class="font-semibold">Créez votre page StreamLink</span>
+                </Button>
+            </NuxtLink>
+        </div>
+    </template>
 </template>
 
 <script setup>
 const route = useRoute()
-const router = useRouter()
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";
@@ -97,13 +118,6 @@ const visibleLinks = computed(() => links.value.filter(link => link.visible))
 onMounted(async () => {
     const username = route.params.username
     const data = await streamerStore.fetchStreamerByUsername(username)
-
-    if (!data) {
-        router.replace('/')
-        return
-    }
-
     await linkStore.fetchLinksByStreamerId(data.id)
-
 })
 </script>

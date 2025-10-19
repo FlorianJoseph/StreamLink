@@ -13,8 +13,8 @@
                         </p>
                         <NuxtLink to="/admin">
                             <button
-                                class="px-5 py-3 text-lg font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-                                Créer mon StreamLink
+                                class="flex items-center justify-center gap-2 px-5 py-3 text-lg font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                                <span>Créer mon StreamLink </span>
                             </button>
                         </NuxtLink>
                     </div>
@@ -22,10 +22,13 @@
             </div>
             <div class="absolute lg:relative inset-0 lg:inset-auto flex-1">
                 <div class="absolute lg:hidden inset-0 z-10" />
-                <img src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/sign/images/blog_og-image.avif?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80NDMzZjlmNi01NGMzLTQxNzQtYmY0ZC01YzVjZDliNmI2MjIiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvYmxvZ19vZy1pbWFnZS5hdmlmIiwiaWF0IjoxNzU1MzU1NDExLCJleHAiOjMzMzIxNTU0MTF9.YhBw8BaUN1jQlBJIlZMryn2-2ef5yd4uOLC_4KqPjHc"
-                    alt="hero-1"
+                <img :src="backgroundImg"
                     class="h-full w-full object-cover xl:[clip-path:polygon(12%_0,100%_0%,100%_100%,0_100%)]" />
             </div>
         </div>
     </div>
 </template>
+
+<script setup>
+const backgroundImg = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/sign/images/arriere-plan-lignes-violettes-dynamiques-gradient_23-2148995757.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80NDMzZjlmNi01NGMzLTQxNzQtYmY0ZC01YzVjZDliNmI2MjIiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvYXJyaWVyZS1wbGFuLWxpZ25lcy12aW9sZXR0ZXMtZHluYW1pcXVlcy1ncmFkaWVudF8yMy0yMTQ4OTk1NzU3LmpwZyIsImlhdCI6MTc2MDg3NDE5NSwiZXhwIjoxNzkyNDEwMTk1fQ.AgXqRJ--nS8npOmJ5mzmaeHEQL1U7FgBs3ZtFpOuC-s"
+</script>

@@ -27,8 +27,6 @@ export const useLinkStore = defineStore('link', () => {
             .select('*')
             .eq('streamer_id', streamerId)
             .order('order', { ascending: true })
-
-            console.log(links.value);
             
         if (!error) links.value = data
         else links.value = []
