@@ -69,18 +69,16 @@ const router = useRouter();
 
 async function twitchAuth() {
     try {
+        const currentPath = window.location.pathname
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'twitch',
             options: {
-                redirectTo: `https://vcvwxwhiltffzmojiinc.supabase.co/auth/v1/callback`,
+                redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(currentPath)}`,
             },
         });
-
         if (error) {
             return;
         }
-        router.push('/');
-
     } catch (err) {
         console.error('Erreur lors de la connexion Twitch:', err);
     }
