@@ -1,5 +1,9 @@
 <template>
-    <Card class="min-h-full w-[580px] p-2">
+    <div v-if="loading" class="flex justify-center items-center w-full py-20">
+        <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="6" fill="transparent" animationDuration=".5s"
+            aria-label="Chargement..." />
+    </div>
+    <Card v-else class="min-h-full w-[580px] p-2">
         <template #title>
             <div class="mb-8">
                 <div class="flex items-center justify-between">
@@ -69,6 +73,8 @@
 
 <script setup>
 const route = useRoute()
+const router = useRouter()
+
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";
 
@@ -84,11 +90,20 @@ const copyText = () => {
 const linkStore = useLinkStore()
 const { links } = storeToRefs(linkStore)
 const streamerStore = useStreamerStore()
-const { streamer } = storeToRefs(streamerStore)
+const { streamer, loading } = storeToRefs(streamerStore)
 
 const visibleLinks = computed(() => links.value.filter(link => link.visible))
 
 onMounted(async () => {
-    await streamerStore.fetchStreamer(route.params.username)
+    const username = route.params.username
+    const data = await streamerStore.fetchStreamerByUsername(username)
+
+    if (!data) {
+        router.replace('/')
+        return
+    }
+
+    await linkStore.fetchLinksByStreamerId(data.id)
+
 })
 </script>

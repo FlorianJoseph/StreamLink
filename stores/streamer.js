@@ -24,6 +24,29 @@ export const useStreamerStore = defineStore('streamer', () => {
         loading.value = false
     }
 
+    //Récupère un streamer à partir de son username (page publique)
+    const fetchStreamerByUsername = async (username) => {
+        if (!username) {
+            streamer.value = null
+            return null
+        }
+
+        const { data, error } = await supabase
+            .from('Streamer')
+            .select('*')
+            .eq('username', username)
+            .single()
+
+        if (error) {
+            console.error('Erreur lors de la récupération du streamer :', error)
+            streamer.value = null
+            return null
+        }
+
+        streamer.value = data
+        return data
+    }
+
     // Créer un streamer
     const createStreamer = async (payload) => {
         const { data, error } = await supabase
@@ -95,6 +118,7 @@ export const useStreamerStore = defineStore('streamer', () => {
         fetchStreamer,
         createStreamer,
         updateStreamer,
-        deleteStreamerWithLinks
+        deleteStreamerWithLinks,
+        fetchStreamerByUsername
     }
 })
