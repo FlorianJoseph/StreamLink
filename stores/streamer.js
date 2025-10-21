@@ -24,6 +24,18 @@ export const useStreamerStore = defineStore('streamer', () => {
         loading.value = false
     }
 
+    const fetchAllStreamers = async () => {
+        const { data, error } = await supabase
+            .from('Streamer')
+            .select('*')
+            .order('created_at', { ascending: true })
+        if (error) {
+            console.error('Erreur lors de la récupération des streamers :', error)
+            return []
+        }
+        return data
+    }
+
     //Récupère un streamer à partir de son username (page publique)
     const fetchStreamerByUsername = async (username) => {
         if (!username) {
@@ -98,8 +110,6 @@ export const useStreamerStore = defineStore('streamer', () => {
                 .eq('id', streamerId)
 
             if (streamerError) throw streamerError
-
-            console.log('Streamer et liens supprimés !')
             return true
         } catch (err) {
             console.error('Erreur lors de la suppression :', err.message)
@@ -116,9 +126,10 @@ export const useStreamerStore = defineStore('streamer', () => {
         streamer,
         // Actions
         fetchStreamer,
+        fetchStreamerByUsername,
+        fetchAllStreamers,
         createStreamer,
         updateStreamer,
         deleteStreamerWithLinks,
-        fetchStreamerByUsername
     }
 })
