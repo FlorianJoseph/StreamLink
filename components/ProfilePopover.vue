@@ -79,7 +79,6 @@ async function twitchAuth() {
         if (error) {
             return;
         }
-        router.push('/');
 
     } catch (err) {
         console.error('Erreur lors de la connexion Twitch:', err);

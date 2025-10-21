@@ -232,7 +232,7 @@
                         <div class="flex flex-col gap-4">
                             <div class="flex flex-col gap-2">
                                 <label for="title">Titre</label>
-                                <InputText id="title" v-model="form.title" placeholder="Ex: Twitch"
+                                <InputText id="title" v-model="form.title" placeholder="Ex: Twitch, TikTok, Discord..."
                                     style="--p-inputtext-focus-border-color : #ffffff" />
                             </div>
                             <div class="flex flex-col gap-2">
