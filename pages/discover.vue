@@ -1,12 +1,17 @@
 <template>
     <div class="flex flex-col gap-4 mt-8 min-w-full">
         <div>
+            <!-- En-tête -->
             <div class="py-4">
-                <div class="flex items-center flex-col h-12 justify-end">
-                    <h1 class="text-3xl font-bold">Découvrir des
-                        streamers</h1>
-                    <p class="text-center lg:text-left">Découvrir des
-                        streamers talentueux et trouvez votre prochain coup de cœur</p>
+                <div class="flex flex-col lg:items-start items-center h-12 justify-end">
+                    <!-- Titre -->
+                    <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
+                        Découvrir des streamers
+                    </h1>
+                    <!-- Sous-titre -->
+                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                        Découvrir des streamers talentueux et trouvez votre prochain coup de cœur
+                    </p>
                 </div>
             </div>
             <!-- <div class="flex justify-center gap-2">

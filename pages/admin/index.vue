@@ -13,7 +13,9 @@
             <div class="flex-[2]">
                 <StreamLinkEdit />
             </div>
-            <Divider layout="vertical" />
+            <div class="hidden sm:block">
+                <Divider layout="vertical" />
+            </div>
             <!-- Aperçu du streamlink -->
             <div class="flex-[1] sticky top-21 self-start">
                 <StreamLinkPreview />

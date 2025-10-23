@@ -2,11 +2,15 @@
     <div class="flex flex-col gap-4 lg:w-[650px]">
         <!-- En-tête -->
         <div class="py-4">
-            <div class="flex items-center flex-col lg:items-start h-12 justify-end">
-                <h1 class="text-3xl font-bold">Modifier mon StreamLink</h1>
-                <p class="text-center lg:text-left">Créez votre page de liens personnalisée à partager avec
-                    votre
-                    audience</p>
+            <div class="flex flex-col lg:items-start items-center h-12 justify-end">
+                <!-- Titre -->
+                <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
+                    Modifier mon StreamLink
+                </h1>
+                <!-- Sous-titre -->
+                <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                    Créez votre page de liens personnalisée à partager avec votre audience
+                </p>
             </div>
         </div>
         <!-- Avatar et bouton de modification -->
@@ -77,20 +81,20 @@
                                     <div class="drag-handle cursor-grab flex-shrink-0">
                                         <Icon name="lucide:grip-vertical" size="20" />
                                     </div>
-                                    <div class="flex flex-col flex-grow">
+                                    <div class="flex flex-col flex-grow min-w-0 px-3.5 py-2">
                                         <div class="flex justify-between items-center">
-                                            <div class="flex flex-col w-full">
+                                            <div class="flex flex-col flex-grow min-w-0">
                                                 <!-- Titre -->
                                                 <template v-if="editing.id === element.id && editing.field === 'title'">
                                                     <input :ref="el => inputRefs[`${element.id}-title`] = el"
                                                         v-model="editing.value" @blur="saveEdit(element)"
                                                         @keyup.enter="saveEdit(element)"
-                                                        class="bg-transparent border-none focus:outline-none font-medium w-full mb-2 truncate max-w-[500px]" />
+                                                        class="bg-transparent border-none focus:outline-none font-medium w-full mb-2 truncate" />
                                                 </template>
                                                 <template v-else>
-                                                    <div class="flex items-center mb-2 gap-2 hover:cursor-pointer w-max"
+                                                    <div class="flex items-center mb-2 gap-2 hover:cursor-pointer w-full min-w-0"
                                                         @click="editField(element, 'title')">
-                                                        <span class="font-medium truncate max-w-[500px]">
+                                                        <span class="font-medium truncate max-w-[70%]">
                                                             {{ element.title }}
                                                         </span>
                                                         <Icon name="lucide:pencil" size="16" />
@@ -101,12 +105,12 @@
                                                     <input :ref="el => inputRefs[`${element.id}-url`] = el"
                                                         v-model="editing.value" @blur="saveEdit(element)"
                                                         @keyup.enter="saveEdit(element)"
-                                                        class="bg-transparent border-none focus:outline-none text-sm w-full truncate max-w-[500px]" />
+                                                        class="bg-transparent border-none focus:outline-none text-sm w-full truncate" />
                                                 </template>
                                                 <template v-else>
-                                                    <div class="flex items-center gap-2 hover:cursor-pointer w-max"
+                                                    <div class="flex items-center gap-2 hover:cursor-pointer w-full min-w-0"
                                                         @click="editField(element, 'url')">
-                                                        <span class="text-sm truncate max-w-[500px]">
+                                                        <span class="text-sm truncate max-w-[70%]">
                                                             {{ element.url }}
                                                         </span>
                                                         <Icon name="lucide:pencil" size="16" />
@@ -114,7 +118,7 @@
                                                 </template>
                                             </div>
                                             <div>
-                                                <ToggleSwitch v-model="element.visible" class="mr-1"
+                                                <ToggleSwitch v-model="element.visible" class="flex-shrink-0 mr-1"
                                                     style="--p-toggleswitch-checked-background: #ffffff;--p-toggleswitch-checked-hover-background: #f3f4f6;"
                                                     @change="() => linkStore.toggleVisibility(element.id, element.visible)" />
                                             </div>
