@@ -13,7 +13,7 @@
             </div>
         </div>
         <StreamLinkShare />
-        <Card class="flex flex-col h-160 w-97 overflow-auto">
+        <Card class="flex flex-col h-160 w-full sm:w-97 overflow-auto">
             <template #title>
                 <div class="flex items-center text-center flex-col w-full my-6">
                     <Avatar :image="streamer?.avatar_url || defaultAvatar" shape="circle" size="xlarge" class="mb-2" />
