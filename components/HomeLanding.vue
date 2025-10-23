@@ -3,7 +3,8 @@
         <div class="flex lg:flex lg:flex-row flex-col justify-center md:justify-normal h-full flex-1">
             <div class="relative flex-1 z-20 flex items-center justify-center">
                 <div class="flex items-center justify-center h-full">
-                    <div class="flex flex-col items-center w-full max-w-2xl px-6 py-12 lg:p-12 xl:p-16 text-center lg:text-left">
+                    <div
+                        class="flex w-full flex-col items-center sm:items-start max-w-2xl px-6 py-12 lg:p-12 xl:p-16 text-center lg:text-left">
                         <h1 class="text-4xl xl:text-5xl font-bold mb-6 leading-tight!">
                             <span class="block">Développe ta chaîne</span>
                             <span class="block text-purple-500">avec StreamLink</span>
@@ -15,7 +16,7 @@
                             <button
                                 class="flex items-center justify-center gap-2 px-5 py-3 text-lg font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                                 <span>{{ user ? "Modifier mon StreamLink" : "Créer mon StreamLink"
-                                }}</span>
+                                    }}</span>
                             </button>
                         </NuxtLink>
                     </div>

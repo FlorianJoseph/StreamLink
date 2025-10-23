@@ -38,7 +38,7 @@ const route = useRoute()
 // computed qui retourne l'URL complète basée sur la route
 const streamlinkUrl = computed(() => {
     const username = streamerStore.streamer?.username
-    return username ? `${window.location.hostname}/${username}` : ''
+    return username ? `${window.location.host.replace(/^www\./, '')}/${username}` : ''
 })
 
 const op = ref();
