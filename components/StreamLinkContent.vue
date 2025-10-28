@@ -58,13 +58,25 @@
         </template>
 
         <template #footer>
-            <div class="flex justify-center my-14">
+            <div class="flex justify-center my-12">
                 <NuxtLink :to="'/admin'">
                     <Button severity="contrast">
                         <span class="font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
                         <Icon name="lucide:arrow-right" size="16" />
                     </Button>
                 </NuxtLink>
+            </div>
+            <!-- Footer infos -->
+            <div class="flex flex-col items-center gap-3 pb-10 text-xs">
+                <div class="flex items-center gap-2">
+                    <NuxtLink to="/contact" class="hover:underline font-medium">
+                        Contact
+                    </NuxtLink>
+                    <span>•</span>
+                    <NuxtLink to="/privacy" class="hover:underline font-medium">
+                        Confidentialité
+                    </NuxtLink>
+                </div>
             </div>
         </template>
     </Card>

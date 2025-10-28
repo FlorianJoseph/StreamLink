@@ -16,7 +16,7 @@
         <!-- Formulaire de contact -->
         <div class="flex flex-col text-center">
             <p>Le formulaire de contact sera bientôt disponible.</p>
-            <p>En attendant, vous pouvez nous envoyer un email à nordik.contact@gmail.com.</p>
+            <p>En attendant, vous pouvez nous envoyer un email à nordik.contact@gmail.com</p>
         </div>
     </div>
     <!-- <Card>
