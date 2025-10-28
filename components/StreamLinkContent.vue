@@ -3,7 +3,7 @@
         <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="6" fill="transparent" animationDuration=".5s"
             aria-label="Chargement..." />
     </div>
-    <Card class="min-h-full w-full sm:w-[580px] p-2" v-else-if="streamer">
+    <Card class="min-h-full w-full sm:w-[580px] sm:p-2" v-else-if="streamer">
         <template #title>
             <div class="mb-8">
                 <div class="flex items-center justify-between">
@@ -58,13 +58,25 @@
         </template>
 
         <template #footer>
-            <div class="flex justify-center my-14">
+            <div class="flex justify-center my-12">
                 <NuxtLink :to="'/admin'">
                     <Button severity="contrast">
                         <span class="font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
                         <Icon name="lucide:arrow-right" size="16" />
                     </Button>
                 </NuxtLink>
+            </div>
+            <!-- Footer infos -->
+            <div class="flex flex-col items-center gap-3 pb-10 text-xs">
+                <div class="flex items-center gap-2">
+                    <NuxtLink to="/contact" class="hover:underline font-medium">
+                        Contact
+                    </NuxtLink>
+                    <span>•</span>
+                    <NuxtLink to="/privacy" class="hover:underline font-medium">
+                        Confidentialité
+                    </NuxtLink>
+                </div>
             </div>
         </template>
     </Card>

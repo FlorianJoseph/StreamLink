@@ -11,7 +11,7 @@
 
         <div v-if="user" class="flex flex-col gap-4">
             <InputGroup>
-                <InputGroupAddon>streamlink.com/</InputGroupAddon>
+                <InputGroupAddon>stream-link.fr/</InputGroupAddon>
                 <InputText v-model="form.username" placeholder="Nom d'utilisateur" />
             </InputGroup>
             <span v-if="usernameError" class="text-xs text-red-500">

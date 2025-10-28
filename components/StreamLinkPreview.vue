@@ -53,6 +53,14 @@
                         <Icon name="lucide:arrow-right" />
                     </Button>
                 </div>
+                <!-- Footer infos -->
+                <div class="flex flex-col items-center gap-3 pb-6 text-xs">
+                    <div class="flex items-center gap-2">
+                        <p class="hover:underline">Contact</p>
+                        <span>•</span>
+                        <p class="hover:underline">Confidentialité</p>
+                    </div>
+                </div>
             </template>
         </Card>
     </div>

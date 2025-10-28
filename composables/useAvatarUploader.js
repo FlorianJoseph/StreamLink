@@ -1,4 +1,4 @@
-export function useAvatarUploader(streamerRef) {
+export function useAvatarUploader(streamer) {
     const supabase = useSupabaseClient()
     const streamerStore = useStreamerStore()
 
@@ -45,10 +45,11 @@ export function useAvatarUploader(streamerRef) {
         }, 'image/png')
     }
 
+    // Supprimer l'avatar actuel
     const removeAvatar = async () => {
-        if (!streamerRef.value?.avatar_url) return
+        if (!streamer.value?.avatar_url) return
 
-        const oldAvatarPath = streamerRef.value.avatar_url.split('/Avatar/')[1]
+        const oldAvatarPath = streamer.value.avatar_url.split('/Avatar/')[1]
         await supabase.storage.from('Streamlink').remove([`Avatar/${oldAvatarPath}`])
         await streamerStore.updateStreamer({ avatar_url: '' })
         previewUrl.value = defaultAvatar
