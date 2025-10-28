@@ -74,6 +74,7 @@ export function useVignetteUploader(linkRef) {
         ],
     })
 
+    // Filtrer les icônes selon la recherche
     const filteredIconsByCategory = computed(() => {
         const query = searchIcon.value.trim().toLowerCase()
         if (!query) return availableIcons

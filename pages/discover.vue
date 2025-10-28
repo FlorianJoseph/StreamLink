@@ -3,13 +3,13 @@
         <div>
             <!-- En-tête -->
             <div class="py-4">
-                <div class="flex flex-col lg:items-start items-center h-12 justify-end">
+                <div class="flex flex-col items-center h-12 justify-end">
                     <!-- Titre -->
-                    <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
+                    <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
                         Découvrir des streamers
                     </h1>
                     <!-- Sous-titre -->
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                    <p class="text-sm sm:text-base text-center max-w-xl">
                         Découvrir des streamers talentueux et trouvez votre prochain coup de cœur
                     </p>
                 </div>
@@ -38,8 +38,6 @@
 </template>
 
 <script setup>
-import { Shuffle, Zap } from 'lucide-vue-next';
-
 const streamerStore = useStreamerStore()
 const streamers = ref([])
 const search = ref('')

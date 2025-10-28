@@ -1,4 +1,5 @@
 <template>
+    <NotificationBanner />
     <div class="relative h-160 lg:min-h-0 flex lg:flex-row flex-col">
         <div class="flex lg:flex lg:flex-row flex-col justify-center md:justify-normal h-full flex-1">
             <div class="relative flex-1 z-20 flex items-center justify-center">

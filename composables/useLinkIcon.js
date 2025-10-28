@@ -14,6 +14,7 @@ export const iconMapping = {
     shop: 'simple-icons:amazon'
 }
 
+// Fonction pour obtenir une icône par défaut en fonction de l'URL
 export const useLinkIcon = () => {
     const getDefaultIcon = (url) => {
         if (!url) return 'lucide:link-2'

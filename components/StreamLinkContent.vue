@@ -3,7 +3,7 @@
         <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="6" fill="transparent" animationDuration=".5s"
             aria-label="Chargement..." />
     </div>
-    <Card class="min-h-full w-full sm:w-[580px] p-2" v-else-if="streamer">
+    <Card class="min-h-full w-full sm:w-[580px] sm:p-2" v-else-if="streamer">
         <template #title>
             <div class="mb-8">
                 <div class="flex items-center justify-between">
