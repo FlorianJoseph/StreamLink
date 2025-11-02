@@ -56,9 +56,9 @@
                 <!-- Footer infos -->
                 <div class="flex flex-col items-center gap-3 pb-6 text-xs">
                     <div class="flex items-center gap-2">
-                        <p class="hover:underline">Contact</p>
+                        <p class="hover:underline font-medium">Contact</p>
                         <span>•</span>
-                        <p class="hover:underline">Confidentialité</p>
+                        <p class="hover:underline font-medium">Confidentialité</p>
                     </div>
                 </div>
             </template>

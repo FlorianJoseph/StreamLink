@@ -1,10 +1,12 @@
 <template>
     <div v-if="!user">
-        <button @click="twitchAuth"
-            class="flex flex-row items-center gap-2 px-3 py-2 text-lg bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-            <Icon name="lucide:twitch" size="20" />
-            <span class="text-base font-semibold">Se connecter avec Twitch</span>
-        </button>
+        <NuxtLink to="/auth/login">
+            <button
+                class="flex flex-row items-center gap-2 px-3 py-2 text-lg bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                <Icon name="lucide:twitch" size="20" />
+                <span class="text-base font-semibold">Se connecter avec Twitch</span>
+            </button>
+        </NuxtLink>
     </div>
     <div v-else>
         <Avatar :image="user.user_metadata.avatar_url" shape="circle" @click="toggle" aria-haspopup="true"
@@ -66,24 +68,6 @@ const toggle = (event) => {
 const supabase = useSupabaseClient();
 const user = useSupabaseUser()
 const router = useRouter();
-
-async function twitchAuth() {
-    try {
-        const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: 'twitch',
-            options: {
-                redirectTo: `https://vcvwxwhiltffzmojiinc.supabase.co/auth/v1/callback`,
-            },
-        });
-
-        if (error) {
-            return;
-        }
-
-    } catch (err) {
-        console.error('Erreur lors de la connexion Twitch:', err);
-    }
-}
 
 async function logOut() {
     try {

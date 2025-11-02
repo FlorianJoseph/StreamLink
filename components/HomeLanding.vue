@@ -17,7 +17,7 @@
                             <button
                                 class="flex items-center justify-center gap-2 px-5 py-3 text-lg font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                                 <span>{{ user ? "Modifier mon StreamLink" : "Créer mon StreamLink"
-                                    }}</span>
+                                }}</span>
                             </button>
                         </NuxtLink>
                     </div>

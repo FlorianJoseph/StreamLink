@@ -1,9 +1,16 @@
 <template>
     <div class="flex flex-col gap-4 mt-8 min-w-full">
+        <!-- En-tête -->
         <div class="py-4">
-            <div class="flex items-center flex-col lg:items-start h-12 justify-end">
-                <h1 class="text-3xl font-bold">Mon Profil</h1>
-                <p class="text-center lg:text-left">Modifiez vos informations personnelles</p>
+            <div class="flex flex-col items-center h-12 justify-end">
+                <!-- Titre -->
+                <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
+                    Mon Profil
+                </h1>
+                <!-- Sous-titre -->
+                <p class="text-sm sm:text-base text-center max-w-xl">
+                    Modifiez vos informations personnelles
+                </p>
             </div>
         </div>
 

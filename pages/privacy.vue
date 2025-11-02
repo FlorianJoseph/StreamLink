@@ -1,7 +1,7 @@
 <template>
     <!-- En-tête -->
-    <div class="py-4 mt-8">
-        <div class="flex flex-col items-center h-12 justify-end">
+    <div class="py-4">
+        <div class="flex flex-col items-center sm:h-12 justify-end">
             <!-- Titre -->
             <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
                 Avis de confidentialité et Mentions légales
@@ -13,7 +13,7 @@
         </div>
     </div>
     <!-- Contenu principal -->
-    <div class="max-w-4xl mx-auto px-6 pb-12 space-y-4">
+    <div class="max-w-4xl mx-auto sm:px-6 pb-12 space-y-4">
         <Card>
             <template #content>
                 <p>Chez StreamLink, nous accordons une grande importance à la transparence dans la manière dont vos
@@ -359,5 +359,9 @@
 </template>
 
 <script setup>
-const updatedAt = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+const updatedAt = "28 Octobre 2025"
+
+definePageMeta({
+    layout: 'auth'
+})
 </script>
