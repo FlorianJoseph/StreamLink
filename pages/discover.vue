@@ -1,9 +1,9 @@
 <template>
-    <div class="flex flex-col gap-4 mt-8 min-w-full">
-        <div>
+    <div class="flex flex-col gap-4">
+        <div class="lg:max-w-5xl xl:max-w-6xl">
             <!-- En-tête -->
             <div class="py-4">
-                <div class="flex flex-col items-center h-12 justify-end">
+                <div class="flex flex-col items-center justify-end">
                     <!-- Titre -->
                     <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
                         Découvrir des streamers

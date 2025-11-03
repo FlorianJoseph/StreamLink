@@ -18,7 +18,6 @@
                 <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
                 <span class="font-medium">{{ user.user_metadata.nickname }}</span>
             </span>
-            <Divider />
         </template>
         <template #item="{ item, props }">
             <NuxtLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>

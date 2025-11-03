@@ -3,7 +3,7 @@
         <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="6" fill="transparent" animationDuration=".5s"
             aria-label="Chargement..." />
     </div>
-    <Card class="min-h-full w-full sm:w-[580px] sm:p-2" v-else-if="streamer">
+    <Card class="min-h-full w-full sm:w-2xl sm:p-2" v-else-if="streamer">
         <template #title>
             <div class="mb-8">
                 <div class="flex items-center justify-between">
@@ -25,7 +25,7 @@
                 <img :src="streamer?.avatar_url || defaultAvatar" alt="Avatar"
                     class="w-24 h-24 rounded-full object-cover mb-4 mt-4" />
                 <span class="text-2xl font-bold">{{ streamer?.username }}</span>
-                <span class="text-base font-medium break-all">
+                <span class="text-base font-medium break-words">
                     {{ streamer?.bio }}
                 </span>
             </div>
@@ -41,7 +41,7 @@
                             link.icon_url ? 'px-3 py-5' : 'px-5 py-5'
                         ]">
                             <!-- Icône ou image à gauche -->
-                            <div class="absolute flex items-center">
+                            <div class="flex-shrink-0 mr-3 sm:mr-0">
                                 <template v-if="link.icon_url">
                                     <img :src="link.icon_url" class="w-10 h-10 object-contain rounded" />
                                 </template>
@@ -50,7 +50,7 @@
                                 </template>
                             </div>
                             <!-- Texte centré -->
-                            <span class="mx-auto font-medium">{{ link.title }}</span>
+                            <span class="font-medium break-words flex-1 text-center">{{ link.title }}</span>
                         </button>
                     </a>
                 </div>

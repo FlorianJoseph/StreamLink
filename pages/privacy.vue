@@ -1,6 +1,6 @@
 <template>
     <!-- En-tête -->
-    <div class="py-4">
+    <div class="py-4 mt-8">
         <div class="flex flex-col items-center sm:h-12 justify-end">
             <!-- Titre -->
             <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
