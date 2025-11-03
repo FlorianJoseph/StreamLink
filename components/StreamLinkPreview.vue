@@ -27,20 +27,22 @@
                 <div class="flex flex-col gap-2 w-full">
                     <div class="w-full mx-auto" v-for="link in visibleLinks" :key="link.id">
                         <a :href="link.url" target="_blank">
-                            <button
-                                class="relative flex items-center justify-center w-full bg-white text-black font-semibold rounded-lg px-3 py-4 hover:bg-gray-100 transition">
+                            <button :class="['relative flex items-center w-full bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition h-14',
+                                link.icon_url ? 'px-3 py-3' : 'px-5 py-5']">
                                 <!-- Icône ou image à gauche -->
-                                <div class="absolute flex items-center justify-center"
-                                    :class="link.icon_url ? 'left-2.5' : 'left-4'">
+                                <div
+                                    :class="['absolute flex items-center justify-center', link.icon_url ? 'left-2.5' : 'left-4.5']">
                                     <template v-if="link.icon_url">
-                                        <img :src="link.icon_url" class="w-8.5 h-8.5 object-contain rounded" />
+                                        <img :src="link.icon_url"
+                                            class="w-8.5 h-8.5 object-contain rounded flex-shrink-0" />
                                     </template>
                                     <template v-else>
-                                        <Icon :name="link.icon" size="20" />
+                                        <Icon :name="link.icon" size="20" class="flex-shrink-0" />
                                     </template>
                                 </div>
                                 <!-- Texte centré -->
-                                <span class="font-medium text-center w-full">{{ link.title }}</span>
+                                <span class="font-medium break-words flex-1 text-sm sm:text-base text-center mx-8">{{
+                                    link.title }}</span>
                             </button>
                         </a>
                     </div>
