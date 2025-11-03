@@ -28,8 +28,18 @@ export default defineNuxtRouteMiddleware(async (to) => {
         return navigateTo(`/auth/login?redirect=${redirect}`)
     }
 
-    // Si on revient depuis Twitch avec un redirect → on envoie au bon endroit
-    if (to.query.redirect && user.value) {
+    // Si utilisateur connecté mais CGU non acceptées → page d'acceptation
+    if (
+        user.value &&
+        user.value.user_metadata?.terms_accepted !== true &&
+        !['/auth/accept-terms', '/privacy'].includes(to.path)
+    ) {
+        const redirect = encodeURIComponent(to.fullPath)
+        return navigateTo(`/auth/accept-terms?redirect=${redirect}`)
+    }
+
+    // Redirection après login OAuth (mais seulement si pas déjà sur accept-terms)
+    if (to.query.redirect && user.value && to.path !== '/auth/accept-terms') {
         const path = decodeURIComponent(to.query.redirect as string)
         return navigateTo(path)
     }

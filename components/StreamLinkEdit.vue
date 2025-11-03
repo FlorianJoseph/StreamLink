@@ -1,8 +1,8 @@
 <template>
-    <div class="flex flex-col gap-4 lg:w-[650px]">
+    <div class="flex flex-col gap-4">
         <!-- En-tête -->
         <div class="py-4">
-            <div class="flex flex-col lg:items-start items-center h-12 justify-end">
+            <div class="flex flex-col lg:items-start items-center justify-end">
                 <!-- Titre -->
                 <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
                     Modifier mon StreamLink
@@ -14,7 +14,7 @@
             </div>
         </div>
         <!-- Avatar et bouton de modification -->
-        <div class="flex flex-row gap-4 items-center max-w-[650px]">
+        <div class="flex flex-row gap-4 items-center max-w-2xl">
             <AvatarUploader />
             <div class="min-w-0">
                 <div class="flex flex-col" @click="openStreamerModal()">
@@ -65,7 +65,7 @@
         </Button>
 
         <!-- Gérer les liens -->
-        <div class="mb-8">
+        <div>
             <div class="flex flex-col gap-2">
                 <div class="flex flex-col gap-2 w-full ">
                     <!-- Liste des liens -->

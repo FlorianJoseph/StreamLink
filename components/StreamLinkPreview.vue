@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col gap-4">
-        <div class="py-4">
-            <div class="flex flex-col items-center h-12 justify-end">
+        <div class="pb-4 lg:py-4">
+            <div class="flex flex-col items-center justify-end">
                 <!-- Titre -->
                 <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
                     Aperçu du StreamLink
@@ -13,12 +13,12 @@
             </div>
         </div>
         <StreamLinkShare />
-        <Card class="flex flex-col h-160 w-full sm:w-97 overflow-auto">
+        <Card class="flex flex-col w-full h-160 sm:w-sm overflow-auto">
             <template #title>
                 <div class="flex items-center text-center flex-col w-full my-6">
                     <Avatar :image="streamer?.avatar_url || defaultAvatar" shape="circle" size="xlarge" class="mb-2" />
                     <span class="text-lg font-semibold">{{ streamer?.username }}</span>
-                    <span class="text-sm font-medium break-all">
+                    <span class="text-sm font-medium break-words">
                         {{ streamer?.bio }}
                     </span>
                 </div>
@@ -56,9 +56,9 @@
                 <!-- Footer infos -->
                 <div class="flex flex-col items-center gap-3 pb-6 text-xs">
                     <div class="flex items-center gap-2">
-                        <p class="hover:underline">Contact</p>
+                        <p class="hover:underline font-medium">Contact</p>
                         <span>•</span>
-                        <p class="hover:underline">Confidentialité</p>
+                        <p class="hover:underline font-medium">Confidentialité</p>
                     </div>
                 </div>
             </template>

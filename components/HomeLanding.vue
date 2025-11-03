@@ -11,7 +11,7 @@
                             <span class="block text-purple-500">avec StreamLink</span>
                         </h1>
                         <p class="text-lg md:text-xl leading-normal mb-8 max-w-xl lg:max-w-none">
-                            StreamLink est un outil pensé pour les petits créateurs et streameurs.
+                            StreamLink est un outil pensé pour les streameurs.
                         </p>
                         <NuxtLink to="/admin">
                             <button

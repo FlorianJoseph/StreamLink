@@ -3,21 +3,25 @@
         <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="6" fill="transparent" animationDuration=".5s"
             aria-label="Custom ProgressSpinner" />
     </div>
-    <div v-else class="mt-8">
+    <div v-else>
         <div v-if="!streamer">
             <StreamLinkCreate />
         </div>
-        <div v-else class="flex flex-col lg:flex-row lg:gap-48 gap-4">
+        <div v-else
+            class="flex flex-col lg:flex-row sm:max-w-4xl lg:max-w-5xl xl:max-w-full sm:gap-6 lg:gap-12 xl:gap-24 2xl:gap-42">
             <ConfirmPopup></ConfirmPopup>
             <!-- Édition du streamlink -->
-            <div class="flex-[2]">
+            <div class="flex-1 lg:flex-[2] min-w-0">
                 <StreamLinkEdit />
             </div>
-            <div class="hidden sm:block">
+            <div class="hidden lg:block">
                 <Divider layout="vertical" />
             </div>
+            <div class="lg:hidden block">
+                <Divider />
+            </div>
             <!-- Aperçu du streamlink -->
-            <div class="flex-[1] sticky top-21 self-start">
+            <div class="sticky top-21 lg:self-start sm:mb-8 mx-auto">
                 <StreamLinkPreview />
             </div>
         </div>

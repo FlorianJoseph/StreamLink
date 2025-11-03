@@ -1,9 +1,9 @@
 <template>
-    <div class="flex flex-col gap-4 mt-8 min-w-full">
-        <div>
+    <div class="flex flex-col gap-4">
+        <div class="lg:max-w-5xl xl:max-w-6xl">
             <!-- En-tête -->
             <div class="py-4">
-                <div class="flex flex-col items-center h-12 justify-end">
+                <div class="flex flex-col items-center justify-end">
                     <!-- Titre -->
                     <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
                         Découvrir des streamers
@@ -27,11 +27,11 @@
             <!-- <FilterBar /> -->
             <!-- Barre de recherche -->
             <div class="flex justify-center mb-4">
-                <InputText v-model="search" placeholder="Rechercher par nom" class="w-[1080px]"
+                <InputText v-model="search" placeholder="Rechercher par nom" class="w-full lg:w-6xl"
                     style="--p-inputtext-focus-border-color: #ffffff" />
             </div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <StreamerCard v-for="s in filteredStreamers" :key="s.id" :streamer="s" />
         </div>
     </div>

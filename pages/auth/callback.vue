@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col justify-center items-center min-h-full text-center ">
+    <div class="flex flex-col justify-center items-center min-h-full text-center">
         <ProgressSpinner style="width: 60px; height: 60px" strokeWidth="5" fill="transparent" animationDuration=".5s"
             aria-label="Chargement..." />
         <h2 class="text-lg font-medium mt-4">Connexion en cours...</h2>
@@ -20,24 +20,39 @@ onMounted(async () => {
         // Récupère la session actuelle
         const { data: { session }, error } = await supabase.auth.getSession()
         if (error) throw error
+        if (!session?.user) throw new Error('Utilisateur non authentifié')
 
-        // Si l'utilisateur est authentifié, redirige vers la page souhaitée
-        const redirect = route.query.redirect || '/'
-        if (session) {
+        const redirect = route.query.redirect ? decodeURIComponent(route.query.redirect) : '/'
+        const accept = route.query.accept === 'true'
+
+        // Si on vient d'accepter les conditions
+        if (accept) {
+            const { error: updateError } = await supabase.auth.updateUser({
+                data: { terms_accepted: true }
+            })
+            if (updateError) throw updateError
+            await supabase.auth.refreshSession()
+            // Attends juste un petit délai pour que Supabase mette à jour la session côté client
+            setTimeout(() => {
+                router.replace(redirect)
+            }, 300)
+
+            return
+        }
+
+        // Si l'utilisateur a déjà accepté
+        if (session.user.user_metadata?.terms_accepted) {
             router.replace(redirect)
         } else {
-            throw new Error('Utilisateur non authentifié')
+            router.replace(`/auth/accept-terms?redirect=${encodeURIComponent(redirect)}`)
         }
     } catch (err) {
-        console.error('Erreur lors de la récupération de la session :', err)
+        console.error(err)
         router.replace('/auth/login')
     }
 })
 
-onMounted(async () => {
-    if (user.value) {
-        await streamerStore.fetchStreamer()
-    }
+definePageMeta({
+    layout: 'auth'
 })
-
 </script>

@@ -6,7 +6,7 @@
         </header>
 
         <!-- Contenu principal -->
-        <main class="mx-4 sm:mx-auto sm:max-w-[75vw] pt-0 sm:pt-13">
+        <main class="mx-4 sm:mx-auto sm:w-[90vw] lg:w-[75vw] lg:mt-18 lg:flex lg:justify-center">
             <slot />
         </main>
     </div>

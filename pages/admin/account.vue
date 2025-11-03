@@ -1,9 +1,16 @@
 <template>
-    <div class="flex flex-col gap-4 mt-8 min-w-full">
+    <div class="flex flex-col gap-4 min-w-full">
+        <!-- En-tête -->
         <div class="py-4">
-            <div class="flex items-center flex-col lg:items-start h-12 justify-end">
-                <h1 class="text-3xl font-bold">Mon Profil</h1>
-                <p class="text-center lg:text-left">Modifiez vos informations personnelles</p>
+            <div class="flex flex-col items-center h-12 justify-end">
+                <!-- Titre -->
+                <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
+                    Mon Profil
+                </h1>
+                <!-- Sous-titre -->
+                <p class="text-sm sm:text-base text-center max-w-xl">
+                    Modifiez vos informations personnelles
+                </p>
             </div>
         </div>
 
@@ -53,17 +60,10 @@ const router = useRouter();
 const streamerStore = useStreamerStore()
 const supabase = useSupabaseClient();
 
-import { TriangleAlert } from 'lucide-vue-next'
-
-const svgIcons = {
-    TriangleAlert: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert-icon lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>'
-};
-
 const confirmDelete = () => {
     confirm.require({
         message: 'Etes-vous sûr de vouloir supprimer votre compte ?',
         header: 'Confirmation',
-        icon: TriangleAlert,
         rejectProps: {
             label: 'Annuler',
             severity: 'secondary',
