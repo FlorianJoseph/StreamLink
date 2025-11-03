@@ -6,7 +6,7 @@
         </header>
 
         <!-- Contenu principal -->
-        <main class="pt-13">
+        <main>
             <slot />
         </main>
     </div>

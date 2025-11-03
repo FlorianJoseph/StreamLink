@@ -27,7 +27,7 @@
             <!-- <FilterBar /> -->
             <!-- Barre de recherche -->
             <div class="flex justify-center mb-4">
-                <InputText v-model="search" placeholder="Rechercher par nom" class="w-[1080px]"
+                <InputText v-model="search" placeholder="Rechercher par nom" class="w-full lg:w-6xl"
                     style="--p-inputtext-focus-border-color: #ffffff" />
             </div>
         </div>

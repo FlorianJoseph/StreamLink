@@ -11,13 +11,13 @@
                             <span class="block text-purple-500">avec StreamLink</span>
                         </h1>
                         <p class="text-lg md:text-xl leading-normal mb-8 max-w-xl lg:max-w-none">
-                            StreamLink est un outil pensé pour les petits créateurs et streameurs.
+                            StreamLink est un outil pensé pour les streameurs.
                         </p>
                         <NuxtLink to="/admin">
                             <button
                                 class="flex items-center justify-center gap-2 px-5 py-3 text-lg font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                                 <span>{{ user ? "Modifier mon StreamLink" : "Créer mon StreamLink"
-                                }}</span>
+                                    }}</span>
                             </button>
                         </NuxtLink>
                     </div>

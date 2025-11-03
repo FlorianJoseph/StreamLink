@@ -1,5 +1,5 @@
 <template>
-    <Card class="w-full max-w-md sm:max-w-lg lg:max-w-xl mx-auto">
+    <Card class="w-full sm:max-w-sm lg:max-w-md mx-auto">
         <template #title>
             <div class="pt-4">
                 <div class="flex flex-col items-center h-12 justify-end">
@@ -9,27 +9,27 @@
                     </h1>
                     <!-- Sous-titre -->
                     <p class="text-sm sm:text-base text-center max-w-xl">
-                        Vous devez être connecté pour accéder à cette page.
+                        Rejoignez les créateurs sur StreamLink
                     </p>
                 </div>
             </div>
         </template>
         <template #content>
-            <div class="text-center text-gray-500 text-sm sm:text-base leading-relaxed px-4 py-3 space-y-2">
-                <p>
+            <div class="text-gray-500 text-sm py-2 space-y-4">
+                <p class="font-medium">
                     En vous connectant avec <strong>Twitch</strong>, vous autorisez <strong>StreamLink</strong> à
                     accéder à vos
-                    informations publiques Twitch :
+                    informations publiques :
                 </p>
 
-                <ul class="text-left text-gray-600 list-disc list-inside">
-                    <li>Votre identifiant et nom d'utilisateur Twitch</li>
-                    <li>Votre image de profil et la date de mise à jour du profil</li>
-                    <li>Votre adresse e-mail et son statut de vérification</li>
+                <ul class="text-left text-gray-600 list-disc text-sm pl-8">
+                    <li>Obtenir votre identifiant, nom d'utilisateur, image de profil et date de mise à jour du profil
+                    </li>
+                    <li>Lire votre adresse e-mail et son statut de vérification</li>
                 </ul>
                 <Divider />
-                <p class="text-xs">
-                    Vous pouvez révoquer cette autorisation à tout moment depuis votre page
+                <p class="text-xs lg:whitespace-nowrap text-gray-600">
+                    Vous pouvez révoquer cette autorisation depuis votre page
                     <a href="https://www.twitch.tv/settings/connections" target="_blank"
                         class="text-blue-500 hover:underline">Connexions</a>.
                 </p>
@@ -42,7 +42,7 @@
                w-full">
                         <span class="text-sm sm:text-base font-semibold">Autoriser</span>
                     </button>
-                    <Button severity="contrast" @click="goBack" class="w-full">
+                    <Button severity="contrast" variant="outlined" @click="goBack" class="w-full">
                         <span>Retour</span>
                     </Button>
                     <div v-if="error" class="text-red-500 text-sm mt-4">

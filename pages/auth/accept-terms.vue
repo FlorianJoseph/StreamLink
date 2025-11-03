@@ -1,7 +1,7 @@
 <template>
-    <Card class="w-full sm:w-[600px] lg:w-[750px]">
+    <Card class="w-full sm:max-w-md lg:max-w-2xl mx-auto">
         <template #title>
-            <div class="py-4">
+            <div class="py-2 pt-4 sm:py-4 sm:pt-8 lg:pt-4">
                 <div class="flex flex-col items-center h-12 justify-end">
                     <!-- Titre -->
                     <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
