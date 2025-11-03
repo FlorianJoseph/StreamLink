@@ -1,5 +1,5 @@
 <template>
-    <div v-if="visible" class="bg-gradient-to-br from-purple-500 to-purple-700">
+    <div v-if="visible" class="bg-gradient-to-br from-purple-500 to-purple-700 mt-13">
         <div class="bg-surface-900 text-surface-100 py-4 px-6 lg:px-20 flex justify-between items-center flex-wrap">
             <div class="flex inline-flex gap-1 items-center">
                 <Icon name="lucide:lock-keyhole" />
@@ -21,16 +21,16 @@
 </template>
 
 <script setup>
-const visible = ref(true)
+const visible = ref(false)
 
 const closeBanner = () => {
     visible.value = false
     localStorage.setItem('bannerClosed', 'true')
 }
 
-onMounted(() => {
-    if (localStorage.getItem('bannerClosed') === 'true') {
-        visible.value = false
-    }
-})
+// onMounted(() => {
+//     if (localStorage.getItem('bannerClosed') === 'true') {
+//         visible.value = false
+//     }
+// })
 </script>
