@@ -21,7 +21,7 @@
                 <Divider />
             </div>
             <!-- Aperçu du streamlink -->
-            <div class="sticky top-21 lg:self-start sm:mb-8 mx-auto">
+            <div class="sticky top-21 lg:self-start mx-auto">
                 <StreamLinkPreview />
             </div>
         </div>

@@ -9,8 +9,8 @@
                         Découvrir des streamers
                     </h1>
                     <!-- Sous-titre -->
-                    <p class="text-sm sm:text-base text-center max-w-xl">
-                        Découvrir des streamers talentueux et trouvez votre prochain coup de cœur
+                    <p class="text-sm sm:text-base text-center max-w-xl sm:whitespace-nowrap">
+                        Découvrir des streameurs talentueux et trouvez votre prochain coup de cœur
                     </p>
                 </div>
             </div>
@@ -34,6 +34,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <StreamerCard v-for="s in filteredStreamers" :key="s.id" :streamer="s" />
         </div>
+        <Paginator :rows="10" :totalRecords="120" :rowsPerPageOptions="[10, 20, 30]"></Paginator>
     </div>
 </template>
 

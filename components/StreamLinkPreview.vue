@@ -50,7 +50,6 @@
                 <div class="flex justify-center my-10">
                     <Button severity="contrast">
                         <span class="text-sm font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
-                        <Icon name="lucide:arrow-right" />
                     </Button>
                 </div>
                 <!-- Footer infos -->

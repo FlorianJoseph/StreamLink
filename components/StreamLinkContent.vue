@@ -36,21 +36,22 @@
             <div class="flex flex-col gap-4 w-full">
                 <div class="w-full mx-auto" v-for="link in visibleLinks" :key="link.id">
                     <a :href="link.url" target="_blank">
-                        <button :class="[
-                            'flex items-center w-full bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition',
-                            link.icon_url ? 'px-3 py-5' : 'px-5 py-5'
-                        ]">
+                        <button :class="['relative flex items-center w-full bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition h-16',
+                            link.icon_url ? 'px-3 py-3' : 'px-5 py-5']">
                             <!-- Icône ou image à gauche -->
-                            <div class="flex-shrink-0 mr-3 sm:mr-0">
+                            <div
+                                :class="['absolute flex items-center justify-center', link.icon_url ? 'left-3' : 'left-5']">
                                 <template v-if="link.icon_url">
-                                    <img :src="link.icon_url" class="w-10 h-10 object-contain rounded" />
+                                    <img :src="link.icon_url" class="w-10 h-10 object-contain rounded flex-shrink-0" />
                                 </template>
                                 <template v-else>
-                                    <Icon :name="link.icon" size="24" />
+                                    <Icon :name="link.icon" size="24" class="flex-shrink-0" />
                                 </template>
                             </div>
                             <!-- Texte centré -->
-                            <span class="font-medium break-words flex-1 text-center">{{ link.title }}</span>
+                            <span class="font-medium break-words flex-1 text-sm sm:text-base text-center mx-8">{{
+                                link.title
+                                }}</span>
                         </button>
                     </a>
                 </div>
@@ -61,8 +62,7 @@
             <div class="flex justify-center my-12">
                 <NuxtLink :to="'/admin'">
                     <Button severity="contrast">
-                        <span class="font-semibold">Rejoignez {{ streamer?.username }} sur StreamLink</span>
-                        <Icon name="lucide:arrow-right" size="16" />
+                        <span class="font-semibold font-sm">Rejoignez {{ streamer?.username }} sur StreamLink</span>
                     </Button>
                 </NuxtLink>
             </div>
