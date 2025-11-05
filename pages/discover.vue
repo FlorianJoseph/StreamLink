@@ -66,7 +66,7 @@
             <StreamerCard v-for="s in paginatedStreamers" :key="s.id" :streamer="s" />
         </div>
         <div
-            class="w-full fixed left-0 xl:top-190 lg:top-190 md:top-185 sm:top-170 top-160 flex justify-center">
+            class="w-full fixed left-0 xl:top-190 lg:top-190 md:top-185 sm:top-170 top-160 bottom-10 mb-10 flex justify-center">
             <Paginator :template="{
                 '640px': 'PrevPageLink CurrentPageReport NextPageLink',
                 '960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
