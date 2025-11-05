@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-4 min-w-full">
+    <div class="flex flex-col gap-4 w-full lg:w-3xl">
         <!-- En-tête -->
         <div class="py-4">
             <div class="flex flex-col items-center h-12 justify-end">
