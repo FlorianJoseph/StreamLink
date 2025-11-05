@@ -66,7 +66,7 @@
             <StreamerCard v-for="s in paginatedStreamers" :key="s.id" :streamer="s" />
         </div>
         <div
-            class="w-full fixed left-0 xl:top-190 lg:top-190 md:top-185 sm:top-170 top-150 flex justify-center">
+            class="w-full fixed left-0 bottom-0 flex justify-center pb-safe pb-4 sm:pb-6 md:pb-8 lg:pb-10 xl:pb-12">
             <Paginator :template="{
                 '640px': 'PrevPageLink CurrentPageReport NextPageLink',
                 '960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
@@ -74,9 +74,9 @@
                 default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
             }" :rows="rowsPerPage" :totalRecords="filteredStreamers.length" @page="onPageChange"
                 style="--p-paginator-nav-button-selected-background:#fff; --p-paginator-nav-button-selected-color:#000"
-                currentPageReportTemplate="Page {currentPage} sur {totalPages}">
-            </Paginator>
+                currentPageReportTemplate="Page {currentPage} sur {totalPages}" />
         </div>
+
     </div>
 </template>
 
@@ -122,7 +122,7 @@ function updateRowsPerPage() {
     } else if (width >= 1024) { // lg
         rowsPerPage.value = 12   // 3 colonnes x 4 lignes
     } else if (width >= 640) {  // sm
-        rowsPerPage.value = 8    // 2 colonnes x 4 lignes
+        rowsPerPage.value = 10    // 2 colonnes x 5 lignes
     } else {
         rowsPerPage.value = 4    // 1 colonne x 4 lignes
     }
