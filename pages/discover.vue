@@ -64,9 +64,10 @@
 </Card> -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <StreamerCard v-for="s in paginatedStreamers" :key="s.id" :streamer="s" />
+            <!-- Espace réservé pour que le paginator ne recouvre pas -->
+            <div class="h-10"></div>
         </div>
-        <div
-            class="w-full fixed left-0 bottom-0 flex justify-center pb-safe pb-4 sm:pb-6 md:pb-8 lg:pb-10 xl:pb-12">
+        <div class="w-full fixed left-0 bottom-0 flex justify-center pb-safe pb-4 sm:pb-6 md:pb-8 lg:pb-10 xl:pb-12">
             <Paginator :template="{
                 '640px': 'PrevPageLink CurrentPageReport NextPageLink',
                 '960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
