@@ -6,18 +6,6 @@ export const useLinkStore = defineStore('link', () => {
 
     const links = ref([])
 
-    /** Récupérer tous les liens du streamer connecté */
-    const fetchLinks = async () => {
-        if (!user.value) return
-        const { data, error } = await supabase
-            .from('Link')
-            .select('*')
-            .eq('streamer_id', user.value.sub)
-            .order('order', { ascending: true })
-
-        if (!error) links.value = data
-    }
-
     /** Récupérer tous les liens d'un streamer */
     const fetchLinksByStreamerId = async (streamerId) => {
         if (!streamerId) return
@@ -27,7 +15,7 @@ export const useLinkStore = defineStore('link', () => {
             .select('*')
             .eq('streamer_id', streamerId)
             .order('order', { ascending: true })
-            
+
         if (!error) links.value = data
         else links.value = []
     }
@@ -109,11 +97,8 @@ export const useLinkStore = defineStore('link', () => {
         }
     }
 
-    onMounted(fetchLinks)
-
     return {
         links,
-        fetchLinks,
         addLink,
         updateLink,
         deleteLink,

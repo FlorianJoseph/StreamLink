@@ -156,9 +156,6 @@ export const useStreamerStore = defineStore('streamer', () => {
         }
     }
 
-    // Charger automatiquement à l’ouverture
-    onMounted(fetchStreamer)
-
     return {
         // État
         loading,

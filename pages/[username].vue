@@ -138,8 +138,10 @@ const visibleLinks = computed(() => links.value.filter(link => link.visible))
 
 onMounted(async () => {
     const username = route.params.username
+    streamerStore.loading = true
     const data = await streamerStore.fetchStreamerByUsername(username)
     await linkStore.fetchLinksByStreamerId(data.id)
+    streamerStore.loading = false
 })
 </script>
 

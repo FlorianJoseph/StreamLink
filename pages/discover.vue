@@ -75,7 +75,6 @@
                 style="--p-paginator-nav-button-selected-background:#fff; --p-paginator-nav-button-selected-color:#000"
                 currentPageReportTemplate="Page {currentPage} sur {totalPages}" />
         </div>
-
     </div>
 </template>
 
