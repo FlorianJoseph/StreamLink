@@ -14,7 +14,7 @@
                     <!-- Bouton StreamLink -->
                     <NuxtLink :to="{ path: `/${streamer.username}` }" target="_blank">
                         <button
-                            class="px-4 py-2 text-sm font-medium rounded flex items-center justify-center gap-1 bg-white text-black max-w-full truncate">
+                            class="px-4 py-2 text-sm font-medium rounded flex items-center justify-center gap-1 bg-white hover:bg-gray-200 transition-colors text-black max-w-full truncate">
                             <span class="truncate">StreamLink</span>
                             <Icon name="lucide:external-link" class="flex-shrink-0" />
                         </button>
