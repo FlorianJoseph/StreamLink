@@ -18,7 +18,7 @@
                         class="transition-all duration-300">
                         <Icon v-if="!copied" name="lucide:files" size="24" />
                         <Icon v-else name="lucide:check" size="24" />
-                        <span>{{ copied ? 'Copié !' : 'Copier le Streamlink' }}</span>
+                        <span>{{ copied ? 'Copié !' : 'Copier le StreamLink' }}</span>
                     </Button>
                 </div>
             </div>

@@ -5,13 +5,22 @@
                 <Home />
             </NuxtLink>
         </template>
-        <template #item="{ item, props }">
+        <template #item="{ item, props, hasSubmenu, root }">
             <NuxtLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
                 <a v-ripple :href="href" v-bind="props.action" @click="navigate">
                     <Icon :name=item.icon size="20" />
                     <span class="font-medium">{{ item.label }}</span>
+                    <Icon v-if="hasSubmenu" :name="root ? 'lucide:chevron-down' : 'lucide:chevron-right'"
+                        class="ml-auto" size="20" />
                 </a>
             </NuxtLink>
+            <!-- Cas où l’item n’a pas de route -->
+            <div v-else v-bind="props.action">
+                <Icon :name="item.icon" size="20" />
+                <span class="font-medium">{{ item.label }}</span>
+                <Icon v-if="hasSubmenu" :name="root ? 'lucide:chevron-down' : 'lucide:chevron-right'" class="ml-auto"
+                    size="20" />
+            </div>
         </template>
         <template #end>
             <div v-if="!user">
@@ -63,7 +72,18 @@ const menuItems = ref([
     {
         label: 'Mon StreamLink',
         icon: 'lucide:link',
-        route: '/admin',
+        items: [
+            {
+                route: '/admin/links',
+                label: 'Liens',
+                icon: 'lucide:link',
+            },
+            {
+                route: '/admin/design',
+                label: 'Design',
+                icon: 'lucide:brush',
+            },
+        ]
     },
 ]);
 
