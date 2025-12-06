@@ -1,5 +1,5 @@
     <template>
-        <div class="flex flex-col gap-4 min-h-[600px] lg:min-h-[800px]">
+        <div class="flex flex-col gap-4 ">
             <!-- En-tête -->
             <div class="py-4">
                 <div class="flex flex-col lg:items-start items-center justify-end">
@@ -13,17 +13,7 @@
                     </p>
                 </div>
             </div>
-
-            <Menubar :model="items">
-                <template #item="{ item }">
-                    <div class="flex items-center gap-2 px-2 py-2 cursor-pointer">
-                        <Icon :name=item.icon size="20" />
-                        <span class="font-medium">{{ item.label }}</span>
-                    </div>
-                </template>
-            </Menubar>
-
-            <div class="flex justify-center gap-4 flex-col w-full sm:w-2xl lg:w-2xl xl:w-2xl">
+            <div class="flex justify-center gap-4 flex-col w-full lg:w-lg xl:w-2xl 2xl:w-2xl">
                 <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
                     <template #legend>
                         <div class="flex items-center gap-2">
@@ -33,9 +23,7 @@
                     </template>
                     <div class="flex items-center gap-4">
                         <AvatarUploader />
-                        <Button variant="outlined" severity="contrast">
-                            <Icon name="lucide:pencil" size="18" />Modifier l'avatar
-                        </Button>
+                        <AvatarUploaderButton />
                     </div>
                     <div class="mt-4">
                         <p class="font-semibold mb-2">Forme de l'image</p>
@@ -174,39 +162,5 @@
     </template>
 
 <script setup>
-
-const selectedLayout = ref();
-const layouts = ref([
-    { name: 'Classique' },
-    { name: 'Carrée' },
-]);
-
-const items = ref([
-    {
-        label: 'En-tête',
-        icon: 'lucide:square-user'
-    },
-    {
-        label: 'Texte',
-        icon: 'lucide:case-sensitive'
-    },
-    {
-        label: 'Boutons',
-        icon: 'lucide:stretch-horizontal',
-    },
-    {
-        label: 'Arrière-plan',
-        icon: 'lucide:images'
-    },
-    {
-        label: 'Thème',
-        icon: 'lucide:panels-top-left'
-    },
-    {
-        label: 'Couleurs',
-        icon: 'lucide:palette'
-    }
-]);
-
 const color = ref();
 </script>

@@ -120,7 +120,7 @@ const { streamer, loading } = storeToRefs(streamerStore)
 const route = useRoute()
 
 const defaultAvatar =
-    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";
+    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 
 const copied = ref(false)
 const copyText = () => {

@@ -40,6 +40,40 @@ watch(user, async (val) => {
         await streamerStore.fetchStreamer(val.sub)
     }
 }, { immediate: true })
+
+const items = ref([
+    {
+        label: 'En-tête',
+        icon: 'lucide:square-user',
+        key: 'header'
+    },
+    {
+        label: 'Texte',
+        icon: 'lucide:case-sensitive',
+        key: 'text'
+    },
+    {
+        label: 'Boutons',
+        icon: 'lucide:stretch-horizontal',
+        key: 'buttons'
+    },
+    {
+        label: 'Arrière-plan',
+        icon: 'lucide:images',
+        key: 'background'
+    },
+    {
+        label: 'Thème',
+        icon: 'lucide:panels-top-left',
+        key: 'theme'
+    },
+    {
+        label: 'Couleurs',
+        icon: 'lucide:palette',
+        key: 'colors'
+    }
+])
+
 </script>
 
 <style scoped>
