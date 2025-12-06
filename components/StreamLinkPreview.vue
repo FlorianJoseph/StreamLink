@@ -75,6 +75,6 @@ const { streamer } = storeToRefs(streamerStore)
 const visibleLinks = computed(() => links.value.filter(link => link.visible))
 
 const defaultAvatar =
-    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Avatar/default/avatar.png";
+    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 
 </script>
