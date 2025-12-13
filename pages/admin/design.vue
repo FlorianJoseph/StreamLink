@@ -23,7 +23,7 @@
             </div>
             <!-- Aperçu du streamlink -->
             <div class="sticky top-21 lg:self-start mx-auto">
-                <StreamLinkPreview />
+                <StreamLinkDesignPreview />
             </div>
         </div>
     </div>

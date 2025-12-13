@@ -12,12 +12,14 @@
                     <span class="font-medium">{{ item.label }}</span>
                     <Icon v-if="hasSubmenu" :name="root ? 'lucide:chevron-down' : 'lucide:chevron-right'"
                         class="ml-auto" size="20" />
+                    <Tag v-if="item.badge" :value="item.badge" class="text-xs" />
                 </a>
             </NuxtLink>
             <!-- Cas où l’item n’a pas de route -->
             <div v-else v-bind="props.action">
                 <Icon :name="item.icon" size="20" />
                 <span class="font-medium">{{ item.label }}</span>
+                <Tag v-if="item.badge" :value="item.badge" class=" text-xs" />
                 <Icon v-if="hasSubmenu" :name="root ? 'lucide:chevron-down' : 'lucide:chevron-right'" class="ml-auto"
                     size="20" />
             </div>
@@ -72,6 +74,7 @@ const menuItems = ref([
     {
         label: 'Mon StreamLink',
         icon: 'lucide:link',
+        badge: 'Nouveau',
         items: [
             {
                 route: '/admin/links',
@@ -82,6 +85,7 @@ const menuItems = ref([
                 route: '/admin/design',
                 label: 'Design',
                 icon: 'lucide:brush',
+                badge: 'Nouveau'
             },
         ]
     },

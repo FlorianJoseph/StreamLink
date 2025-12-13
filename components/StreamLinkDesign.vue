@@ -27,12 +27,21 @@
                     </div>
                     <div class="mt-4">
                         <p class="font-semibold mb-2">Forme de l'image</p>
-                        <div class="flex justify-center gap-2 w-full">
+                        <div class="flex justify-center gap-2 w-full mb-4">
                             <Button variant="outlined" severity="contrast" class="flex-1">
                                 <Icon name="lucide:circle-user-round" size="20" />Ronde
                             </Button>
                             <Button variant="outlined" severity="contrast" class="flex-1">
                                 <Icon name="lucide:square-user-round" size="20" />Carrée
+                            </Button>
+                        </div>
+                        <p class="font-semibold mb-2">Taille du nom d'utilisateur</p>
+                        <div class="flex justify-center gap-2 w-full">
+                            <Button variant="outlined" severity="contrast" class="flex-1">
+                                Normal
+                            </Button>
+                            <Button variant="outlined" severity="contrast" class="flex-1">
+                                Moyen
                             </Button>
                         </div>
                     </div>
@@ -48,7 +57,7 @@
                         <p class="font-semibold mb-2">Nom d'utilisateur</p>
                         <div class="flex flex-row gap-2 mb-4">
                             <Button variant="outlined" severity="contrast" class="flex-1">
-                                Police
+                                Police : Inter
                             </Button>
                             <Button variant="outlined" severity="contrast" class="flex-1">
                                 Couleur
@@ -82,9 +91,6 @@
                             </Button>
                             <Button variant="outlined" severity="contrast" class="flex-1">
                                 Bordure
-                            </Button>
-                            <Button variant="text" severity="contrast" class="flex-1">
-                                Glace
                             </Button>
                         </div>
                         <Button variant="outlined" severity="contrast" class="w-full">
