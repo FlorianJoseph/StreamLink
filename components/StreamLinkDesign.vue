@@ -13,6 +13,23 @@
                     </p>
                 </div>
             </div>
+            <Menubar class="sticky top-20 z-10">
+                <template #end>
+                    <div class="flex items-center gap-2 sticky top-16 z-10">
+                        <Button severity="secondary" :disabled="!history.length" @click="undo">
+                            <Icon name="lucide:undo" size="20" />
+                        </Button>
+                        <Button severity="secondary" :disabled="!future.length" @click="redo">
+                            <Icon name="lucide:redo" size="20" />
+                        </Button>
+                        <Button severity="contrast" :disabled="!isDirty" @click="saveDesign">
+                            <Icon name="lucide:save" size="20" />
+                            <span>Sauvegarder</span>
+                        </Button>
+                    </div>
+                </template>
+            </Menubar>
+
             <div class="flex justify-center gap-4 flex-col w-full lg:w-lg xl:w-2xl 2xl:w-2xl">
                 <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
                     <template #legend>
@@ -169,4 +186,13 @@
 
 <script setup>
 const color = ref();
+const designStore = useDesignStore()
+const { undo, redo, saveDesign } = designStore
+const { history, future, isDirty } = storeToRefs(designStore)
+
+onBeforeRouteLeave(() => {
+    if (isDirty.value) {
+        return confirm('Vous avez des modifications non sauvegardées')
+    }
+})
 </script>
