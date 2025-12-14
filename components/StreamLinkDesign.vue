@@ -54,10 +54,12 @@
                         </div>
                         <p class="font-semibold mb-2">Taille du nom d'utilisateur</p>
                         <div class="flex justify-center gap-2 w-full">
-                            <Button variant="outlined" severity="contrast" class="flex-1">
+                            <Button variant="outlined" severity="contrast" class="flex-1"
+                                @click="updateSection('username_style', { size: 'normal' })">
                                 Normal
                             </Button>
-                            <Button variant="outlined" severity="contrast" class="flex-1">
+                            <Button variant="outlined" severity="contrast" class="flex-1"
+                                @click="updateSection('username_style', { size: 'medium' })">
                                 Moyen
                             </Button>
                         </div>
@@ -103,12 +105,22 @@
                     <div>
                         <p class="font-semibold mb-2">Style</p>
                         <div class="flex justify-center gap-2 w-full mb-4">
-                            <Button severity="contrast" class="flex-1">
+                            <Button severity="contrast" class="flex-1"
+                                @click="updateSection('button_style', { variant: 'filled' })">
                                 Plein
                             </Button>
-                            <Button variant="outlined" severity="contrast" class="flex-1">
+                            <Button variant="outlined" severity="contrast" class="flex-1"
+                                @click="updateSection('button_style', { variant: 'outlined' })">
                                 Bordure
                             </Button>
+                        </div>
+                        <div class="flex flex-row items-center gap-8 justify-between my-8">
+                            <p>Corners :</p>
+                            <div class="flex items-center gap-6 w-2/3">
+                                <span>Carré</span>
+                                <Slider v-model="cornerValue" :step="25" class="w-full" />
+                                <span>Arrondi</span>
+                            </div>
                         </div>
                         <Button variant="outlined" severity="contrast" class="w-full">
                             Couleur
@@ -187,12 +199,25 @@
 <script setup>
 const color = ref();
 const designStore = useDesignStore()
+const { updateSection } = designStore
 const { undo, redo, saveDesign } = designStore
 const { history, future, isDirty } = storeToRefs(designStore)
+
+const cornerValue = ref(0);
 
 onBeforeRouteLeave(() => {
     if (isDirty.value) {
         return confirm('Vous avez des modifications non sauvegardées')
     }
+})
+
+watch(cornerValue, (value) => {
+    let borderRadius
+    switch (value) {
+        case 0: borderRadius = 'rounded-none'; break
+        case 1: borderRadius = 'rounded-md'; break
+        case 2: borderRadius = 'rounded-full'; break
+    }
+    designStore.updateSection('button_style', { borderRadius })
 })
 </script>

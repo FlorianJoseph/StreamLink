@@ -10,12 +10,12 @@ export const useDesignStore = defineStore('design', () => {
     const future = ref([])
 
     const fetchDesign = async (streamerId) => {
-
+        // Récupérer le design existants pour ce streamer
         const { data, error } = await supabase
             .from('Design')
             .select('*')
             .eq('streamer_id', streamerId)
-            .single()
+            .maybeSingle()
 
         if (error) throw error
 
@@ -25,12 +25,15 @@ export const useDesignStore = defineStore('design', () => {
             savedDesign.value = structuredClone(data)
         } else {
             // Pas de design existant : on crée un design par défaut
+            const defaultDesign = {
+                streamer_id: streamerId,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+            }
+
             const { data: newData, error: insertError } = await supabase
                 .from('Design')
-                .insert({
-                    streamer_id: streamerId,
-                    created_at: new Date().toISOString(),
-                })
+                .insert(defaultDesign)
                 .select()
                 .single()
 
@@ -39,6 +42,8 @@ export const useDesignStore = defineStore('design', () => {
             design.value = structuredClone(newData)
             savedDesign.value = structuredClone(newData)
         }
+
+        // Reset undo/redo
         history.value = []
         future.value = []
     }
@@ -47,7 +52,9 @@ export const useDesignStore = defineStore('design', () => {
         if (!design.value) return
 
         // sauvegarder l'état actuel dans l'historique avant de faire la mise à jour
-        history.value.push(structuredClone(design.value))
+        history.value.push(
+            structuredClone(toRaw(design.value))
+        )
         future.value = []
 
         design.value[section] = {
@@ -59,14 +66,18 @@ export const useDesignStore = defineStore('design', () => {
     const undo = () => {
         if (!history.value.length) return
 
-        future.value.push(structuredClone(design.value))
+        future.value.push(
+            structuredClone(toRaw(design.value))
+        )
         design.value = history.value.pop()
     }
 
     const redo = () => {
         if (!future.value.length) return
 
-        history.value.push(structuredClone(design.value))
+        history.value.push(
+            structuredClone(toRaw(design.value))
+        )
         design.value = future.value.pop()
     }
 
@@ -85,7 +96,7 @@ export const useDesignStore = defineStore('design', () => {
 
         if (error) throw error
 
-        savedDesign.value = structuredClone(design.value)
+        savedDesign.value = structuredClone(toRaw(design.value))
         history.value = []
         future.value = []
     }

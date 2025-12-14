@@ -17,7 +17,9 @@
             <template #title>
                 <div class="flex items-center text-center flex-col w-full my-6">
                     <Avatar :image="streamer?.avatar_url || defaultAvatar" shape="circle" size="xlarge" class="mb-2" />
-                    <span class="text-lg font-semibold">{{ streamer?.username }}</span>
+                    <span :class="['font-semibold', usernameSizeClass]">
+                        {{ streamer?.username }}
+                    </span>
                     <span class="text-sm font-medium break-words">
                         {{ streamer?.bio }}
                     </span>
@@ -27,8 +29,8 @@
                 <div class="flex flex-col gap-2 w-full">
                     <div class="w-full mx-auto" v-for="link in visibleLinks" :key="link.id">
                         <a :href="link.url" target="_blank">
-                            <button :class="['relative flex items-center w-full bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition h-14',
-                                link.icon_url ? 'px-3 py-3' : 'px-5 py-5']">
+                            <button :class="['relative flex items-center w-full font-semibold rounded-lg transition h-14',
+                                link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass]">
                                 <!-- Icône ou image à gauche -->
                                 <div
                                     :class="['absolute flex items-center justify-center', link.icon_url ? 'left-2.5' : 'left-4.5']">
@@ -79,4 +81,28 @@ const visibleLinks = computed(() => links.value.filter(link => link.visible))
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 
+const streamerId = streamer.value?.id
+
+onMounted(async () => {
+    if (streamerId) {
+        await designStore.fetchDesign(streamerId)
+    }
+})
+
+const usernameSizeClass = computed(() => {
+    const size = design.value?.username_style?.size ?? 'normal'
+
+    return size === 'medium' ? 'text-2xl' : 'text-lg'
+})
+
+const buttonClass = computed(() => {
+    const variant = design.value?.button_style?.variant
+
+    if (variant === 'outlined') {
+        return 'bg-transparent border border-2 border-white text-white hover:bg-gray-100/10'
+    }
+
+    // default = filled
+    return 'bg-white text-black hover:bg-gray-100'
+})
 </script>
