@@ -118,7 +118,15 @@
                             <p>Corners :</p>
                             <div class="flex items-center gap-6 w-2/3">
                                 <span>Carré</span>
-                                <Slider v-model="cornerValue" :step="25" class="w-full" />
+                                <div class="relative w-full">
+                                    <!-- Label au-dessus du curseur -->
+                                    <span
+                                        class="absolute -top-8 text-xs opacity-70 whitespace-nowrap transition-transform"
+                                        :style="{ left: `${cornerValue}%`, transform: 'translateX(-50%)' }">
+                                        {{ valueToLabel[cornerValue] }}
+                                    </span>
+                                    <Slider v-model="cornerValue" :step="25" :min="0" :max="100" class="w-full" />
+                                </div>
                                 <span>Arrondi</span>
                             </div>
                         </div>
@@ -201,9 +209,41 @@ const color = ref();
 const designStore = useDesignStore()
 const { updateSection } = designStore
 const { undo, redo, saveDesign } = designStore
-const { history, future, isDirty } = storeToRefs(designStore)
+const { history, future, isDirty, design } = storeToRefs(designStore)
 
-const cornerValue = ref(0);
+const radiusToValue = {
+    'rounded-none': 0,
+    'rounded-md': 25,
+    'rounded-lg': 50,
+    'rounded-xl': 75,
+    'rounded-full': 100,
+}
+
+const valueToLabel = {
+    25: 'Léger',
+    50: 'Moyen',
+    75: 'Arrondi léger',
+}
+
+const valueToRadius = {
+    0: 'rounded-none',
+    25: 'rounded-md',
+    50: 'rounded-lg',
+    75: 'rounded-xl',
+    100: 'rounded-full',
+}
+
+const cornerValue = computed({
+    get() {
+        const radius = design.value?.button_style?.borderRadius ?? 'rounded-lg'
+        return radiusToValue[radius] ?? 75
+    },
+    set(value) {
+        designStore.updateSection('button_style', {
+            borderRadius: valueToRadius[value],
+        })
+    },
+})
 
 onBeforeRouteLeave(() => {
     if (isDirty.value) {
@@ -211,13 +251,4 @@ onBeforeRouteLeave(() => {
     }
 })
 
-watch(cornerValue, (value) => {
-    let borderRadius
-    switch (value) {
-        case 0: borderRadius = 'rounded-none'; break
-        case 1: borderRadius = 'rounded-md'; break
-        case 2: borderRadius = 'rounded-full'; break
-    }
-    designStore.updateSection('button_style', { borderRadius })
-})
 </script>

@@ -29,8 +29,8 @@
                 <div class="flex flex-col gap-2 w-full">
                     <div class="w-full mx-auto" v-for="link in visibleLinks" :key="link.id">
                         <a :href="link.url" target="_blank">
-                            <button :class="['relative flex items-center w-full font-semibold rounded-lg transition h-14',
-                                link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass]">
+                            <button :class="['relative flex items-center w-full font-semibold transition h-14',
+                                link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]">
                                 <!-- Icône ou image à gauche -->
                                 <div
                                     :class="['absolute flex items-center justify-center', link.icon_url ? 'left-2.5' : 'left-4.5']">
@@ -105,4 +105,9 @@ const buttonClass = computed(() => {
     // default = filled
     return 'bg-white text-black hover:bg-gray-100'
 })
+
+const buttonRadiusClass = computed(() => {
+    return design.value?.button_style?.borderRadius ?? 'rounded-lg'
+})
+
 </script>

@@ -51,6 +51,10 @@ export const useDesignStore = defineStore('design', () => {
     const updateSection = (section, payload) => {
         if (!design.value) return
 
+        const newSection = { ...design.value[section], ...payload }
+        // Si c'est identique à l'existant, on ne fait rien
+        if (JSON.stringify(design.value[section]) === JSON.stringify(newSection)) return
+
         // sauvegarder l'état actuel dans l'historique avant de faire la mise à jour
         history.value.push(
             structuredClone(toRaw(design.value))
