@@ -105,6 +105,13 @@ export const useDesignStore = defineStore('design', () => {
         future.value = []
     }
 
+    const resetDesign = () => {
+        if (!savedDesign.value) return
+        design.value = structuredClone(toRaw(savedDesign.value))
+        history.value = []
+        future.value = []
+    }
+
     const isDirty = computed(() =>
         JSON.stringify(design.value) !== JSON.stringify(savedDesign.value)
     )
@@ -114,6 +121,7 @@ export const useDesignStore = defineStore('design', () => {
         fetchDesign,
         updateSection,
         saveDesign,
+        resetDesign,
         undo,
         redo,
         isDirty,

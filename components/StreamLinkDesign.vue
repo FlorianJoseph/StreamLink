@@ -14,6 +14,12 @@
                 </div>
             </div>
             <Menubar class="sticky top-20 z-10">
+                <template #start>
+                    <Button severity="secondary" :disabled="!isDirty" @click="resetDesign">
+                        <Icon name="lucide:rotate-ccw" size="20" />
+                        <span>Annuler les modifications</span>
+                    </Button>
+                </template>
                 <template #end>
                     <div class="flex items-center gap-2 sticky top-16 z-10">
                         <Button severity="secondary" :disabled="!history.length" @click="undo">
@@ -125,7 +131,8 @@
                                         :style="{ left: `${cornerValue}%`, transform: 'translateX(-50%)' }">
                                         {{ valueToLabel[cornerValue] }}
                                     </span>
-                                    <Slider v-model="cornerValue" :step="25" :min="0" :max="100" class="w-full" />
+                                    <Slider v-model="cornerValue" :step="25" :min="0" :max="100" class="w-full"
+                                        style="--p-slider-handle-focus-ring-color: none;--p-slider-range-background: #fff" />
                                 </div>
                                 <span>Arrondi</span>
                             </div>
@@ -208,7 +215,7 @@
 const color = ref();
 const designStore = useDesignStore()
 const { updateSection } = designStore
-const { undo, redo, saveDesign } = designStore
+const { undo, redo, saveDesign, resetDesign } = designStore
 const { history, future, isDirty, design } = storeToRefs(designStore)
 
 const radiusToValue = {
