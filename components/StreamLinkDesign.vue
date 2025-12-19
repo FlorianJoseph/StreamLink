@@ -13,6 +13,7 @@
                     </p>
                 </div>
             </div>
+            <!-- Barre d'outils -->
             <Menubar class="sticky top-20 z-10">
                 <template #start>
                     <Button severity="secondary" :disabled="!isDirty" @click="resetDesign">
@@ -35,7 +36,7 @@
                     </div>
                 </template>
             </Menubar>
-
+            <!-- Header -->
             <div class="flex justify-center gap-4 flex-col w-full lg:w-lg xl:w-2xl 2xl:w-2xl">
                 <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
                     <template #legend>
@@ -44,63 +45,59 @@
                             <span class="font-semibold">En-tête</span>
                         </div>
                     </template>
-                    <div class="flex items-center gap-4">
-                        <AvatarUploader />
-                        <AvatarUploaderButton />
-                    </div>
-                    <div class="mt-4">
-                        <p class="font-semibold mb-2">Forme de l'image</p>
-                        <div class="flex justify-center gap-2 w-full mb-4">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-4">
+                            <AvatarUploader />
+                            <AvatarUploaderButton />
+                        </div>
+                        <!-- <p class="font-semibold mb-2">Forme de l'image</p>
+                        <div class="flex justify-center gap-2 w-full">
                             <Button variant="outlined" severity="contrast" class="flex-1">
                                 <Icon name="lucide:circle-user-round" size="20" />Ronde
                             </Button>
                             <Button variant="outlined" severity="contrast" class="flex-1">
                                 <Icon name="lucide:square-user-round" size="20" />Carrée
                             </Button>
+                        </div> -->
+                        <div class="flex flex-col gap-2">
+                            <p class="font-semibold">Taille du pseudo</p>
+                            <div class="flex justify-center gap-2 w-full">
+                                <Button variant="outlined" severity="contrast" class="flex-1"
+                                    @click="updateSection('username_style', { size: 'normal' })">
+                                    Normale
+                                </Button>
+                                <Button variant="outlined" severity="contrast" class="flex-1"
+                                    @click="updateSection('username_style', { size: 'medium' })">
+                                    Moyen
+                                </Button>
+                            </div>
                         </div>
-                        <p class="font-semibold mb-2">Taille du nom d'utilisateur</p>
-                        <div class="flex justify-center gap-2 w-full">
-                            <Button variant="outlined" severity="contrast" class="flex-1"
-                                @click="updateSection('username_style', { size: 'normal' })">
-                                Normal
+                        <div class="flex flex-col gap-2">
+                            <p class="font-semibold">Couleurs</p>
+                            <Button variant="outlined" severity="contrast" class="flex-1">
+                                <div class="flex-1 flex flex-row items-center justify-between">
+                                    <span>Pseudo</span>
+                                    <div class="flex items-center gap-2">
+                                        <ColorPicker v-model="usernameColor" format="hex" />
+                                        <span class="text-sm font-medium">#{{ usernameColor }}</span>
+                                        <Icon name="lucide:chevron-right" size="20" />
+                                    </div>
+                                </div>
                             </Button>
-                            <Button variant="outlined" severity="contrast" class="flex-1"
-                                @click="updateSection('username_style', { size: 'medium' })">
-                                Moyen
+                            <Button variant="outlined" severity="contrast" class="flex-1">
+                                <div class="flex-1 flex flex-row items-center justify-between">
+                                    <span>Biographie</span>
+                                    <div class="flex items-center gap-2">
+                                        <ColorPicker v-model="biographyColor" format="hex" />
+                                        <span class="text-sm font-medium">{{ biographyColor }}</span>
+                                        <Icon name="lucide:chevron-right" size="20" />
+                                    </div>
+                                </div>
                             </Button>
                         </div>
                     </div>
                 </Fieldset>
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
-                    <template #legend>
-                        <div class="flex items-center gap-2">
-                            <Icon name="lucide:case-sensitive" size="24" />
-                            <span class="font-semibold">Texte</span>
-                        </div>
-                    </template>
-                    <div class="flex flex-col w-full">
-                        <p class="font-semibold mb-2">Nom d'utilisateur</p>
-                        <div class="flex flex-row gap-2 mb-4">
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                Police : Inter
-                            </Button>
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                Couleur
-                                <ColorPicker v-model="color" />
-                            </Button>
-                        </div>
-                        <p class="font-semibold mb-2">Boutons</p>
-                        <div class="flex flex-row gap-2">
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                Police
-                            </Button>
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                Couleur
-                                <ColorPicker v-model="color" />
-                            </Button>
-                        </div>
-                    </div>
-                </Fieldset>
+                <!-- Boutons -->
                 <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
                     <template #legend>
                         <div class="flex items-center gap-2">
@@ -108,20 +105,23 @@
                             <span class="font-semibold">Boutons</span>
                         </div>
                     </template>
-                    <div>
-                        <p class="font-semibold mb-2">Style</p>
-                        <div class="flex justify-center gap-2 w-full mb-4">
-                            <Button severity="contrast" class="flex-1"
-                                @click="updateSection('button_style', { variant: 'filled' })">
-                                Plein
-                            </Button>
-                            <Button variant="outlined" severity="contrast" class="flex-1"
-                                @click="updateSection('button_style', { variant: 'outlined' })">
-                                Bordure
-                            </Button>
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-2">
+                            <p class="font-semibold mb-2">Style</p>
+                            <div class="flex justify-center gap-2 w-full">
+                                <Button severity="contrast" class="flex-1"
+                                    @click="updateSection('button_style', { variant: 'filled' })">
+                                    Plein
+                                </Button>
+                                <Button variant="outlined" severity="contrast" class="flex-1"
+                                    @click="updateSection('button_style', { variant: 'outlined' })">
+                                    Bordure
+                                </Button>
+                            </div>
                         </div>
-                        <div class="flex flex-row items-center gap-8 justify-between my-8">
-                            <p>Corners :</p>
+                        <Divider />
+                        <div class="flex flex-row items-center gap-8 justify-between">
+                            <p class="font-semibold">Corners</p>
                             <div class="flex items-center gap-6 w-2/3">
                                 <span>Carré</span>
                                 <div class="relative w-full">
@@ -137,12 +137,34 @@
                                 <span>Arrondi</span>
                             </div>
                         </div>
-                        <Button variant="outlined" severity="contrast" class="w-full">
-                            Couleur
-                            <ColorPicker v-model="color" />
-                        </Button>
+                        <Divider />
+                        <div class="flex flex-col gap-2">
+                            <p class="font-semibold">Texte</p>
+                            <div class="flex flex-row gap-2">
+                                <Button variant="outlined" severity="contrast" class="flex-1">
+                                    <div class="flex justify-between items-center w-full">
+                                        <span>Police</span>
+                                        <div class="flex items-center gap-2">
+                                            <span>Inter</span>
+                                            <Icon name="lucide:chevron-right" size="20" />
+                                        </div>
+                                    </div>
+                                </Button>
+                                <Button variant="outlined" severity="contrast" class="flex-1">
+                                    <div class="flex-1 flex flex-row items-center justify-between">
+                                        <span>Couleur</span>
+                                        <div class="flex items-center gap-2">
+                                            <ColorPicker v-model="usernameColor" format="hex" />
+                                            <span class="text-sm font-medium">{{ usernameColor }}</span>
+                                            <Icon name="lucide:chevron-right" size="20" />
+                                        </div>
+                                    </div>
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </Fieldset>
+                <!-- Arrière-plan -->
                 <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
                     <template #legend>
                         <div class="flex items-center gap-2">
@@ -155,17 +177,18 @@
 
                         <p class="font-semibold mb-2">Couleur</p>
                         <div class="flex flex-row gap-2">
+                            <!-- <ColorPicker v-model="color" />
                             <ColorPicker v-model="color" />
                             <ColorPicker v-model="color" />
                             <ColorPicker v-model="color" />
                             <ColorPicker v-model="color" />
                             <ColorPicker v-model="color" />
                             <ColorPicker v-model="color" />
-                            <ColorPicker v-model="color" />
-                            <ColorPicker v-model="color" />
+                            <ColorPicker v-model="color" /> -->
                         </div>
                     </div>
                 </Fieldset>
+                <!-- Thème -->
                 <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
                     <template #legend>
                         <div class="flex items-center gap-2">
@@ -181,6 +204,7 @@
                         <Card style="--p-card-background:orange" class="h-30 w-25"></Card>
                     </div>
                 </Fieldset>
+                <!-- Couleurs -->
                 <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
                     <template #legend>
                         <div class="flex items-center gap-2">
@@ -212,11 +236,12 @@
     </template>
 
 <script setup>
-const color = ref();
 const designStore = useDesignStore()
 const { updateSection } = designStore
 const { undo, redo, saveDesign, resetDesign } = designStore
 const { history, future, isDirty, design } = storeToRefs(designStore)
+
+const biographyColor = ref('6b7280');
 
 const radiusToValue = {
     'rounded-none': 0,
@@ -248,6 +273,17 @@ const cornerValue = computed({
     set(value) {
         designStore.updateSection('button_style', {
             borderRadius: valueToRadius[value],
+        })
+    },
+})
+
+const usernameColor = computed({
+    get() {
+        return design.value?.username_style?.color ?? '#ffffff'
+    },
+    set(color) {
+        designStore.updateSection('username_style', {
+            color,
         })
     },
 })

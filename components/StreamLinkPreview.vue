@@ -17,7 +17,7 @@
             <template #title>
                 <div class="flex items-center text-center flex-col w-full my-6">
                     <Avatar :image="streamer?.avatar_url || defaultAvatar" shape="circle" size="xlarge" class="mb-2" />
-                    <span :class="['font-semibold', usernameSizeClass]">
+                    <span :class="['font-semibold', usernameSizeClass]" :style="{ color: usernameColor }">
                         {{ streamer?.username }}
                     </span>
                     <span class="text-sm font-medium break-words">
@@ -93,6 +93,11 @@ const usernameSizeClass = computed(() => {
     const size = design.value?.username_style?.size ?? 'normal'
 
     return size === 'medium' ? 'text-2xl' : 'text-lg'
+})
+
+const usernameColor = computed(() => {
+    const color = design.value?.username_style?.color ?? '#ffffff'
+    return color ? `#${color}` : '#ffffff'
 })
 
 const buttonClass = computed(() => {
