@@ -78,15 +78,16 @@
                                 <div class="flex-1 flex flex-row items-center justify-between">
                                     <span>Pseudo</span>
                                     <div class="flex items-center gap-2">
-                                        <ColorPicker v-model="usernameColor" format="hex" />
-                                        <span class="text-sm font-medium">#{{ usernameColor }}</span>
+                                        <ColorPicker v-model="usernameColorLocal" format="hex"
+                                            @hide="commitUsernameColor" />
+                                        <span class="text-sm font-medium">#{{ usernameColorLocal }}</span>
                                         <Icon name="lucide:chevron-right" size="20" />
                                     </div>
                                 </div>
                             </Button>
                             <Button variant="outlined" severity="contrast" class="flex-1">
                                 <div class="flex-1 flex flex-row items-center justify-between">
-                                    <span>Biographie</span>
+                                    <span>Description</span>
                                     <div class="flex items-center gap-2">
                                         <ColorPicker v-model="biographyColor" format="hex" />
                                         <span class="text-sm font-medium">{{ biographyColor }}</span>
@@ -276,6 +277,23 @@ const cornerValue = computed({
         })
     },
 })
+
+const usernameColorLocal = ref(
+    design.value?.username_style?.color ?? '#ffffff'
+)
+
+watch(
+    () => design.value?.username_style?.color,
+    (color) => {
+        if (color) usernameColorLocal.value = color
+    }
+)
+
+const commitUsernameColor = () => {
+    designStore.updateSection('username_style', {
+        color: usernameColorLocal.value,
+    })
+}
 
 const usernameColor = computed({
     get() {
