@@ -83,12 +83,14 @@ const defaultAvatar =
 
 const streamerId = streamer.value?.id
 
+// Charger le design au montage du composant
 onMounted(async () => {
     if (streamerId) {
         await designStore.fetchDesign(streamerId)
     }
 })
 
+// Style du pseudo dynamique
 const usernameSizeClass = computed(() => {
     const size = design.value?.username_style?.size ?? 'normal'
 
@@ -100,6 +102,7 @@ const usernameColor = computed(() => {
     return color ? `#${color}` : '#ffffff'
 })
 
+// Style des boutons dynamique
 const buttonClass = computed(() => {
     const variant = design.value?.button_style?.variant
 

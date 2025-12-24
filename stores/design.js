@@ -9,8 +9,8 @@ export const useDesignStore = defineStore('design', () => {
     const history = ref([])
     const future = ref([])
 
+    // Récupérer le design pour un streamer donné
     const fetchDesign = async (streamerId) => {
-        // Récupérer le design existants pour ce streamer
         const { data, error } = await supabase
             .from('Design')
             .select('*')
@@ -31,6 +31,7 @@ export const useDesignStore = defineStore('design', () => {
                 updated_at: new Date().toISOString(),
             }
 
+            // Insérer le design par défaut dans la base de données
             const { data: newData, error: insertError } = await supabase
                 .from('Design')
                 .insert(defaultDesign)
@@ -39,6 +40,7 @@ export const useDesignStore = defineStore('design', () => {
 
             if (insertError) throw insertError
 
+            // Mettre à jour le store avec le nouveau design
             design.value = structuredClone(newData)
             savedDesign.value = structuredClone(newData)
         }
@@ -48,6 +50,7 @@ export const useDesignStore = defineStore('design', () => {
         future.value = []
     }
 
+    // Mettre à jour une section du design avec gestion de l'historique
     const updateSection = (section, payload) => {
         if (!design.value) return
 
@@ -61,12 +64,14 @@ export const useDesignStore = defineStore('design', () => {
         )
         future.value = []
 
+        // Mettre à jour la section
         design.value[section] = {
             ...design.value[section],
             ...payload,
         }
     }
 
+    // Undo / Redo
     const undo = () => {
         if (!history.value.length) return
 
@@ -85,6 +90,7 @@ export const useDesignStore = defineStore('design', () => {
         design.value = future.value.pop()
     }
 
+    // Sauvegarder le design actuel dans la base de données
     const saveDesign = async () => {
         if (!design.value) return
 
@@ -105,6 +111,7 @@ export const useDesignStore = defineStore('design', () => {
         future.value = []
     }
 
+    // Réinitialiser le design à la dernière version sauvegardée
     const resetDesign = () => {
         if (!savedDesign.value) return
         design.value = structuredClone(toRaw(savedDesign.value))
@@ -112,6 +119,7 @@ export const useDesignStore = defineStore('design', () => {
         future.value = []
     }
 
+    // Indicateur de modifications non sauvegardées
     const isDirty = computed(() =>
         JSON.stringify(design.value) !== JSON.stringify(savedDesign.value)
     )

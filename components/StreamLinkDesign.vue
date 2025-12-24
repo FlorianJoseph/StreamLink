@@ -78,8 +78,7 @@
                                 <div class="flex-1 flex flex-row items-center justify-between">
                                     <span>Pseudo</span>
                                     <div class="flex items-center gap-2">
-                                        <ColorPicker v-model="usernameColorLocal" format="hex"
-                                            @hide="commitUsernameColor" />
+                                        <ColorPicker v-model="usernameColorLocal" format="hex" />
                                         <span class="text-sm font-medium">#{{ usernameColorLocal }}</span>
                                         <Icon name="lucide:chevron-right" size="20" />
                                     </div>
@@ -244,6 +243,7 @@ const { history, future, isDirty, design } = storeToRefs(designStore)
 
 const biographyColor = ref('6b7280');
 
+// Conversion entre labels et valeurs des coins
 const radiusToValue = {
     'rounded-none': 0,
     'rounded-md': 25,
@@ -266,6 +266,7 @@ const valueToRadius = {
     100: 'rounded-full',
 }
 
+// Liaison directe de la valeur des coins
 const cornerValue = computed({
     get() {
         const radius = design.value?.button_style?.borderRadius ?? 'rounded-lg'
@@ -278,10 +279,12 @@ const cornerValue = computed({
     },
 })
 
+// Gestion de la couleur du pseudo avec délai de commit
 const usernameColorLocal = ref(
     design.value?.username_style?.color ?? '#ffffff'
 )
 
+// Mettre à jour la valeur locale si le design change
 watch(
     () => design.value?.username_style?.color,
     (color) => {
@@ -289,12 +292,20 @@ watch(
     }
 )
 
-const commitUsernameColor = () => {
-    designStore.updateSection('username_style', {
-        color: usernameColorLocal.value,
-    })
-}
+// Mettre à jour la couleur du pseudo avec délai
+let commitTimeout = null
 
+watch(usernameColorLocal, (value) => {
+    clearTimeout(commitTimeout)
+
+    commitTimeout = setTimeout(() => {
+        designStore.updateSection('username_style', {
+            color: value.replace('#', ''),
+        })
+    }, 1200)
+})
+
+// Liaison directe de la couleur du pseudo
 const usernameColor = computed({
     get() {
         return design.value?.username_style?.color ?? '#ffffff'
@@ -306,6 +317,7 @@ const usernameColor = computed({
     },
 })
 
+// Avertir l'utilisateur en cas de modifications non sauvegardées
 onBeforeRouteLeave(() => {
     if (isDirty.value) {
         return confirm('Vous avez des modifications non sauvegardées')
