@@ -88,8 +88,8 @@
                                 <div class="flex-1 flex flex-row items-center justify-between">
                                     <span>Description</span>
                                     <div class="flex items-center gap-2">
-                                        <ColorPicker v-model="biographyColor" format="hex" />
-                                        <span class="text-sm font-medium">{{ biographyColor }}</span>
+                                        <ColorPicker v-model="descriptionColorLocal" format="hex" />
+                                        <span class="text-sm font-medium">#{{ descriptionColorLocal }}</span>
                                         <Icon name="lucide:chevron-right" size="20" />
                                     </div>
                                 </div>
@@ -154,8 +154,8 @@
                                     <div class="flex-1 flex flex-row items-center justify-between">
                                         <span>Couleur</span>
                                         <div class="flex items-center gap-2">
-                                            <ColorPicker v-model="usernameColor" format="hex" />
-                                            <span class="text-sm font-medium">{{ usernameColor }}</span>
+                                            <ColorPicker v-model="buttonColorLocal" format="hex" />
+                                            <span class="text-sm font-medium">#{{ buttonColorLocal }}</span>
                                             <Icon name="lucide:chevron-right" size="20" />
                                         </div>
                                     </div>
@@ -241,8 +241,6 @@ const { updateSection } = designStore
 const { undo, redo, saveDesign, resetDesign } = designStore
 const { history, future, isDirty, design } = storeToRefs(designStore)
 
-const biographyColor = ref('6b7280');
-
 // Conversion entre labels et valeurs des coins
 const radiusToValue = {
     'rounded-none': 0,
@@ -279,43 +277,17 @@ const cornerValue = computed({
     },
 })
 
-// Gestion de la couleur du pseudo avec délai de commit
-const usernameColorLocal = ref(
-    design.value?.username_style?.color ?? '#ffffff'
+const { colorLocal: usernameColorLocal } = useDebouncedColor(
+    'username_style',
+    design,
+    designStore
 )
 
-// Mettre à jour la valeur locale si le design change
-watch(
-    () => design.value?.username_style?.color,
-    (color) => {
-        if (color) usernameColorLocal.value = color
-    }
+const { colorLocal: descriptionColorLocal } = useDebouncedColor(
+    'bio_style',
+    design,
+    designStore
 )
-
-// Mettre à jour la couleur du pseudo avec délai
-let commitTimeout = null
-
-watch(usernameColorLocal, (value) => {
-    clearTimeout(commitTimeout)
-
-    commitTimeout = setTimeout(() => {
-        designStore.updateSection('username_style', {
-            color: value.replace('#', ''),
-        })
-    }, 1200)
-})
-
-// Liaison directe de la couleur du pseudo
-const usernameColor = computed({
-    get() {
-        return design.value?.username_style?.color ?? '#ffffff'
-    },
-    set(color) {
-        designStore.updateSection('username_style', {
-            color,
-        })
-    },
-})
 
 // Avertir l'utilisateur en cas de modifications non sauvegardées
 onBeforeRouteLeave(() => {

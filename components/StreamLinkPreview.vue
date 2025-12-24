@@ -20,7 +20,7 @@
                     <span :class="['font-semibold', usernameSizeClass]" :style="{ color: usernameColor }">
                         {{ streamer?.username }}
                     </span>
-                    <span class="text-sm font-medium break-words">
+                    <span class="text-sm font-medium break-words" :style="{ color: descriptionColor }">
                         {{ streamer?.bio }}
                     </span>
                 </div>
@@ -99,6 +99,12 @@ const usernameSizeClass = computed(() => {
 
 const usernameColor = computed(() => {
     const color = design.value?.username_style?.color ?? '#ffffff'
+    return color ? `#${color}` : '#ffffff'
+})
+
+// Style de la description dynamique
+const descriptionColor = computed(() => {
+    const color = design.value?.bio_style?.color ?? '#ffffff'
     return color ? `#${color}` : '#ffffff'
 })
 
