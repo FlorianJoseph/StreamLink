@@ -43,8 +43,9 @@
                                     </template>
                                 </div>
                                 <!-- Texte centré -->
-                                <span class="font-medium break-words flex-1 text-sm sm:text-base text-center mx-8">{{
-                                    link.title }}</span>
+                                <span class="font-medium break-words flex-1 text-sm sm:text-base text-center mx-8"
+                                    :style="{ color: buttonTextColor }">{{
+                                        link.title }}</span>
                             </button>
                         </a>
                     </div>
@@ -113,11 +114,16 @@ const buttonClass = computed(() => {
     const variant = design.value?.button_style?.variant
 
     if (variant === 'outlined') {
-        return 'bg-transparent border border-2 border-white text-white hover:bg-gray-100/10'
+        return 'bg-transparent border border-2 border-white hover:bg-gray-100/10'
     }
 
     // default = filled
-    return 'bg-white text-black hover:bg-gray-100'
+    return 'bg-white hover:bg-gray-100'
+})
+
+const buttonTextColor = computed(() => {
+    const color = design.value?.button_style?.color ?? '#000000'
+    return color ? `#${color}` : '#000000'
 })
 
 const buttonRadiusClass = computed(() => {

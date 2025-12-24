@@ -289,6 +289,12 @@ const { colorLocal: descriptionColorLocal } = useDebouncedColor(
     designStore
 )
 
+const { colorLocal: buttonColorLocal } = useDebouncedColor(
+    'button_style',
+    design,
+    designStore,
+)
+
 // Avertir l'utilisateur en cas de modifications non sauvegardées
 onBeforeRouteLeave(() => {
     if (isDirty.value) {
