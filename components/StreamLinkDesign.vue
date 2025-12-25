@@ -144,8 +144,8 @@
                                 <div class="flex-1 flex flex-row items-center justify-between">
                                     <span>Bouton</span>
                                     <div class="flex items-center gap-2">
-                                        <ColorPicker v-model="buttonBackgroundColorLocal" format="hex" />
-                                        <span class="text-sm font-medium">#{{ buttonBackgroundColorLocal }}</span>
+                                        <ColorPicker v-model="buttonBgColorLocal" format="hex" />
+                                        <span class="text-sm font-medium">#{{ buttonBgColorLocal }}</span>
                                         <Icon name="lucide:chevron-right" size="20" />
                                     </div>
                                 </div>
@@ -241,31 +241,38 @@ const cornerValue = computed({
     },
 })
 
-const { colorLocal: usernameColorLocal } = useDebouncedColor(
+const { localValue: usernameColorLocal } = useDebouncedColor(
     'username_style',
-    design,
-    designStore
-)
-
-const { colorLocal: descriptionColorLocal } = useDebouncedColor(
-    'bio_style',
-    design,
-    designStore
-)
-
-const { colorLocal: buttonTextColorLocal } = useDebouncedColor(
-    'button_style',
+    'textColor',
     design,
     designStore,
-    {
-        defaultColor: '000000',
-    }
+    { defaultValue: 'ffffff' }
 )
-const { colorLocal: buttonBackgroundColorLocal } = useDebouncedColor(
-    'button_style',
+
+const { localValue: descriptionColorLocal } = useDebouncedColor(
+    'bio_style',
+    'textColor',
     design,
-    designStore
+    designStore,
+    { defaultValue: 'ffffff' }
 )
+
+const { localValue: buttonTextColorLocal } = useDebouncedColor(
+    'button_style',
+    'textColor',
+    design,
+    designStore,
+    { defaultValue: '000000' }
+)
+
+const { localValue: buttonBgColorLocal } = useDebouncedColor(
+    'button_style',
+    'backgroundColor',
+    design,
+    designStore,
+    { defaultValue: 'ffffff' }
+)
+
 
 
 // Avertir l'utilisateur en cas de modifications non sauvegardées
