@@ -2,18 +2,22 @@ export function useDebouncedColor(
     section,
     design,
     designStore,
-    delay = 1200
+    {
+        delay = 1200,
+        defaultColor = 'ffffff',
+    } = {}
 ) {
-    const colorLocal = ref(`${design.value?.[section]?.color ?? 'ffffff'}`)
+    const colorLocal = ref(
+        design.value?.[section]?.color ?? defaultColor
+    )
+
     let timeout = null
 
     // Sync store → local
     watch(
         () => design.value?.[section]?.color,
         (color) => {
-            if (color) {
-                colorLocal.value = `${color}`
-            }
+            colorLocal.value = color ?? defaultColor
         },
         { immediate: true }
     )

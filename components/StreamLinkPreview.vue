@@ -122,8 +122,8 @@ const buttonClass = computed(() => {
 })
 
 const buttonTextColor = computed(() => {
-    const color = design.value?.button_style?.color ?? '#000000'
-    return color ? `#${color}` : '#000000'
+    const color = design.value?.button_style?.color ?? '000000'
+    return `#${color}`
 })
 
 const buttonRadiusClass = computed(() => {

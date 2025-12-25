@@ -293,7 +293,11 @@ const { colorLocal: buttonColorLocal } = useDebouncedColor(
     'button_style',
     design,
     designStore,
+    {
+        defaultColor: '000000',
+    }
 )
+
 
 // Avertir l'utilisateur en cas de modifications non sauvegardées
 onBeforeRouteLeave(() => {
