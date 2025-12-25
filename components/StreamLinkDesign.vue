@@ -273,8 +273,6 @@ const { localValue: buttonBgColorLocal } = useDebouncedColor(
     { defaultValue: 'ffffff' }
 )
 
-
-
 // Avertir l'utilisateur en cas de modifications non sauvegardées
 onBeforeRouteLeave(() => {
     if (isDirty.value) {

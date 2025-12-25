@@ -30,7 +30,10 @@
                     <div class="w-full mx-auto" v-for="link in visibleLinks" :key="link.id">
                         <a :href="link.url" target="_blank">
                             <button :class="['relative flex items-center w-full font-semibold transition h-14',
-                                link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]">
+                                link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]" :style="{
+                                    backgroundColor: buttonBackgroundColor,
+                                    borderColor: buttonBorderColor
+                                }">
                                 <!-- Icône ou image à gauche -->
                                 <div
                                     :class="['absolute flex items-center justify-center', link.icon_url ? 'left-2.5' : 'left-4.5']">
@@ -114,11 +117,37 @@ const buttonClass = computed(() => {
     const variant = design.value?.button_style?.variant
 
     if (variant === 'outlined') {
-        return 'bg-transparent border border-2 border-white hover:bg-gray-100/10'
+        return [
+            'bg-transparent',
+            `border border-2`,
+            'hover:bg-gray-100/10',
+        ]
     }
 
-    // default = filled
-    return 'bg-white hover:bg-gray-100'
+    // filled
+    return ['hover:bg-gray-100/10']
+})
+
+const buttonBorderColor = computed(() => {
+    const variant = design.value?.button_style?.variant
+    const color = design.value?.button_style?.backgroundColor ?? 'ffffff'
+
+    if (variant === 'outlined') {
+        return `#${color}`
+    }
+
+    return null
+})
+
+const buttonBackgroundColor = computed(() => {
+    const variant = design.value?.button_style?.variant
+    const color = design.value?.button_style?.backgroundColor ?? 'ffffff'
+
+    if (variant === 'filled') {
+        return `#${color}`
+    }
+
+    return null // transparent pour outlined
 })
 
 const buttonTextColor = computed(() => {

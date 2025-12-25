@@ -5,7 +5,7 @@ export function useDebouncedColor(
     designStore,
     {
         delay = 1200,
-        defaultValue = 'ffffff', // valeur par défaut
+        defaultValue = 'ffffff',
     } = {}
 ) {
     const localValue = ref(
@@ -14,7 +14,6 @@ export function useDebouncedColor(
 
     let timeout = null
 
-    // Sync store → local (undo / redo / reset)
     watch(
         () => design.value?.[section]?.[property],
         (val) => {
@@ -23,7 +22,6 @@ export function useDebouncedColor(
         { immediate: true }
     )
 
-    // Commit avec debounce
     watch(localValue, (value) => {
         clearTimeout(timeout)
         timeout = setTimeout(() => {
