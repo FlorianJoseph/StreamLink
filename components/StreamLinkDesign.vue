@@ -139,28 +139,27 @@
                         </div>
                         <Divider />
                         <div class="flex flex-col gap-2">
-                            <p class="font-semibold">Texte</p>
-                            <div class="flex flex-row gap-2">
-                                <Button variant="outlined" severity="contrast" class="flex-1">
-                                    <div class="flex justify-between items-center w-full">
-                                        <span>Police</span>
-                                        <div class="flex items-center gap-2">
-                                            <span>Inter</span>
-                                            <Icon name="lucide:chevron-right" size="20" />
-                                        </div>
+                            <p class="font-semibold">Couleurs</p>
+                            <Button variant="outlined" severity="contrast" class="flex-1">
+                                <div class="flex-1 flex flex-row items-center justify-between">
+                                    <span>Bouton</span>
+                                    <div class="flex items-center gap-2">
+                                        <ColorPicker v-model="buttonBackgroundColorLocal" format="hex" />
+                                        <span class="text-sm font-medium">#{{ buttonBackgroundColorLocal }}</span>
+                                        <Icon name="lucide:chevron-right" size="20" />
                                     </div>
-                                </Button>
-                                <Button variant="outlined" severity="contrast" class="flex-1">
-                                    <div class="flex-1 flex flex-row items-center justify-between">
-                                        <span>Couleur</span>
-                                        <div class="flex items-center gap-2">
-                                            <ColorPicker v-model="buttonColorLocal" format="hex" />
-                                            <span class="text-sm font-medium">#{{ buttonColorLocal }}</span>
-                                            <Icon name="lucide:chevron-right" size="20" />
-                                        </div>
+                                </div>
+                            </Button>
+                            <Button variant="outlined" severity="contrast" class="flex-1">
+                                <div class="flex-1 flex flex-row items-center justify-between">
+                                    <span>Texte</span>
+                                    <div class="flex items-center gap-2">
+                                        <ColorPicker v-model="buttonTextColorLocal" format="hex" />
+                                        <span class="text-sm font-medium">#{{ buttonTextColorLocal }}</span>
+                                        <Icon name="lucide:chevron-right" size="20" />
                                     </div>
-                                </Button>
-                            </div>
+                                </div>
+                            </Button>
                         </div>
                     </div>
                 </Fieldset>
@@ -177,14 +176,6 @@
 
                         <p class="font-semibold mb-2">Couleur</p>
                         <div class="flex flex-row gap-2">
-                            <!-- <ColorPicker v-model="color" />
-                            <ColorPicker v-model="color" />
-                            <ColorPicker v-model="color" />
-                            <ColorPicker v-model="color" />
-                            <ColorPicker v-model="color" />
-                            <ColorPicker v-model="color" />
-                            <ColorPicker v-model="color" />
-                            <ColorPicker v-model="color" /> -->
                         </div>
                     </div>
                 </Fieldset>
@@ -202,33 +193,6 @@
                         <Card style="--p-card-background:blue" class="h-30 w-25"></Card>
                         <Card style="--p-card-background:yellow" class="h-30 w-25"></Card>
                         <Card style="--p-card-background:orange" class="h-30 w-25"></Card>
-                    </div>
-                </Fieldset>
-                <!-- Couleurs -->
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
-                    <template #legend>
-                        <div class="flex items-center gap-2">
-                            <Icon name="lucide:palette" size="24" />
-                            <span class="font-semibold">Couleurs</span>
-                        </div>
-                    </template>
-                    <div>
-                        <label class="block mb-2">
-                            Texte :
-                            <input type="color" class="ml-2" />
-                        </label>
-                        <label class="block mb-2">
-                            Liens :
-                            <input type="color" class="ml-2" />
-                        </label>
-                        <label class="block mb-2">
-                            Boutons :
-                            <input type="color" class="ml-2" />
-                        </label>
-                        <label class="block">
-                            Arrière-plan :
-                            <input type="color" class="ml-2" />
-                        </label>
                     </div>
                 </Fieldset>
             </div>
@@ -289,13 +253,18 @@ const { colorLocal: descriptionColorLocal } = useDebouncedColor(
     designStore
 )
 
-const { colorLocal: buttonColorLocal } = useDebouncedColor(
+const { colorLocal: buttonTextColorLocal } = useDebouncedColor(
     'button_style',
     design,
     designStore,
     {
         defaultColor: '000000',
     }
+)
+const { colorLocal: buttonBackgroundColorLocal } = useDebouncedColor(
+    'button_style',
+    design,
+    designStore
 )
 
 

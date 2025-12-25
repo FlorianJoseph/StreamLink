@@ -99,13 +99,13 @@ const usernameSizeClass = computed(() => {
 })
 
 const usernameColor = computed(() => {
-    const color = design.value?.username_style?.color ?? '#ffffff'
+    const color = design.value?.username_style?.textColor ?? '#ffffff'
     return color ? `#${color}` : '#ffffff'
 })
 
 // Style de la description dynamique
 const descriptionColor = computed(() => {
-    const color = design.value?.bio_style?.color ?? '#ffffff'
+    const color = design.value?.bio_style?.textColor ?? '#ffffff'
     return color ? `#${color}` : '#ffffff'
 })
 
@@ -122,7 +122,7 @@ const buttonClass = computed(() => {
 })
 
 const buttonTextColor = computed(() => {
-    const color = design.value?.button_style?.color ?? '000000'
+    const color = design.value?.button_style?.textColor ?? '000000'
     return `#${color}`
 })
 

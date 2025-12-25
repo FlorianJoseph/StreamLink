@@ -8,16 +8,16 @@ export function useDebouncedColor(
     } = {}
 ) {
     const colorLocal = ref(
-        design.value?.[section]?.color ?? defaultColor
+        design.value?.[section]?.textColor ?? defaultColor
     )
 
     let timeout = null
 
     // Sync store → local
     watch(
-        () => design.value?.[section]?.color,
-        (color) => {
-            colorLocal.value = color ?? defaultColor
+        () => design.value?.[section]?.textColor,
+        (textColor) => {
+            colorLocal.value = textColor ?? defaultColor
         },
         { immediate: true }
     )
@@ -28,7 +28,7 @@ export function useDebouncedColor(
 
         timeout = setTimeout(() => {
             designStore.updateSection(section, {
-                color: value.replace('#', ''),
+                textColor: value.replace('#', ''),
             })
         }, delay)
     })
