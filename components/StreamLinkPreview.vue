@@ -13,7 +13,8 @@
             </div>
         </div>
         <StreamLinkShare />
-        <Card class="flex flex-col w-full h-160 sm:w-sm overflow-auto">
+        <Card class="flex flex-col w-full h-160 sm:w-sm overflow-auto"
+            :style="{ '--p-card-background': wallpaperColor }">
             <template #title>
                 <div class="flex items-center text-center flex-col w-full my-6">
                     <Avatar :image="streamer?.avatar_url || defaultAvatar" shape="circle" size="xlarge" class="mb-2" />
@@ -159,4 +160,8 @@ const buttonRadiusClass = computed(() => {
     return design.value?.button_style?.borderRadius ?? 'rounded-lg'
 })
 
+const wallpaperColor = computed(() => {
+    const color = design.value?.wallpaper_style?.backgroundColor ?? '18181B'
+    return `#${color}`
+})
 </script>

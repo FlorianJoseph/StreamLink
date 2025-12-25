@@ -171,12 +171,28 @@
                             <span class="font-semibold">Arrière-plan</span>
                         </div>
                     </template>
-                    <div>
-                        <p class="font-semibold mb-2">Motif</p>
-
-                        <p class="font-semibold mb-2">Couleur</p>
-                        <div class="flex flex-row gap-2">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-2">
+                            <p class="font-semibold mb-2">Motif</p>
+                            <div class="flex flex-wrap justify-center gap-4">
+                                <Card style="--p-card-background:#ffff" class="h-30 w-25"></Card>
+                                <Card style="--p-card-background:brown" class="h-30 w-25"></Card>
+                                <Card style="--p-card-background:blue" class="h-30 w-25"></Card>
+                                <Card style="--p-card-background:yellow" class="h-30 w-25"></Card>
+                                <Card style="--p-card-background:orange" class="h-30 w-25"></Card>
+                            </div>
                         </div>
+                        <Divider />
+                        <Button variant="outlined" severity="contrast" class="flex-1">
+                            <div class="flex-1 flex flex-row items-center justify-between">
+                                <span>Couleur</span>
+                                <div class="flex items-center gap-2">
+                                    <ColorPicker v-model="wallpaperColorLocal" format="hex" />
+                                    <span class="text-sm font-medium">#{{ wallpaperColorLocal }}</span>
+                                    <Icon name="lucide:chevron-right" size="20" />
+                                </div>
+                            </div>
+                        </Button>
                     </div>
                 </Fieldset>
                 <!-- Thème -->
@@ -271,6 +287,14 @@ const { localValue: buttonBgColorLocal } = useDebouncedColor(
     design,
     designStore,
     { defaultValue: 'ffffff' }
+)
+
+const { localValue: wallpaperColorLocal } = useDebouncedColor(
+    'wallpaper_style',
+    'backgroundColor',
+    design,
+    designStore,
+    { defaultValue: '18181B' }
 )
 
 // Avertir l'utilisateur en cas de modifications non sauvegardées
