@@ -50,23 +50,16 @@
                             <AvatarUploader />
                             <AvatarUploaderButton />
                         </div>
-                        <!-- <p class="font-semibold mb-2">Forme de l'image</p>
-                        <div class="flex justify-center gap-2 w-full">
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                <Icon name="lucide:circle-user-round" size="20" />Ronde
-                            </Button>
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                <Icon name="lucide:square-user-round" size="20" />Carrée
-                            </Button>
-                        </div> -->
                         <div class="flex flex-col gap-2">
                             <p class="font-semibold">Taille du pseudo</p>
                             <div class="flex justify-center gap-2 w-full">
-                                <Button variant="outlined" severity="contrast" class="flex-1"
+                                <Button variant="outlined" severity="contrast" class="flex-1 transition 
+                                hover:ring-2 hover:ring-white"
                                     @click="updateSection('username_style', { size: 'normal' })">
                                     Normale
                                 </Button>
-                                <Button variant="outlined" severity="contrast" class="flex-1"
+                                <Button variant="outlined" severity="contrast" class="flex-1 transition 
+                                hover:ring-2 hover:ring-white"
                                     @click="updateSection('username_style', { size: 'medium' })">
                                     Moyen
                                 </Button>
@@ -74,26 +67,28 @@
                         </div>
                         <div class="flex flex-col gap-2">
                             <p class="font-semibold">Couleurs</p>
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                <div class="flex-1 flex flex-row items-center justify-between">
-                                    <span>Pseudo</span>
-                                    <div class="flex items-center gap-2">
-                                        <ColorPicker v-model="usernameColorLocal" format="hex" />
-                                        <span class="text-sm font-medium">#{{ usernameColorLocal }}</span>
-                                        <Icon name="lucide:chevron-right" size="20" />
+                            <div class="flex justify-center gap-2 w-full">
+                                <Button variant="outlined" severity="contrast" class="flex-1">
+                                    <div class="flex-1 flex flex-row items-center justify-between">
+                                        <span>Pseudo</span>
+                                        <div class="flex items-center gap-2">
+                                            <ColorPicker v-model="usernameColorLocal" format="hex" />
+                                            <span class="text-sm font-medium">#{{ usernameColorLocal }}</span>
+                                            <Icon name="lucide:chevron-right" size="20" />
+                                        </div>
                                     </div>
-                                </div>
-                            </Button>
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                <div class="flex-1 flex flex-row items-center justify-between">
-                                    <span>Description</span>
-                                    <div class="flex items-center gap-2">
-                                        <ColorPicker v-model="descriptionColorLocal" format="hex" />
-                                        <span class="text-sm font-medium">#{{ descriptionColorLocal }}</span>
-                                        <Icon name="lucide:chevron-right" size="20" />
+                                </Button>
+                                <Button variant="outlined" severity="contrast" class="flex-1">
+                                    <div class="flex-1 flex flex-row items-center justify-between">
+                                        <span>Description</span>
+                                        <div class="flex items-center gap-2">
+                                            <ColorPicker v-model="descriptionColorLocal" format="hex" />
+                                            <span class="text-sm font-medium">#{{ descriptionColorLocal }}</span>
+                                            <Icon name="lucide:chevron-right" size="20" />
+                                        </div>
                                     </div>
-                                </div>
-                            </Button>
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </Fieldset>
@@ -105,7 +100,7 @@
                             <span class="font-semibold">Thème</span>
                         </div>
                     </template>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         <ThemePreviewCard v-for="(theme, key) in THEME_PRESETS" :key="key" :theme="theme"
                             @click="designStore.applyTheme(theme)" :isSelected="selectedTheme === key" />
                     </div>
@@ -119,30 +114,6 @@
                         </div>
                     </template>
                     <div class="flex flex-col gap-4">
-                        <!-- <div class="flex flex-col gap-2">
-                            <p class="font-semibold mb-2">Motif</p>
-                            <div class="flex flex-wrap gap-4">
-                                <div
-                                    class="flex flex-col text-center gap-2 w-full sm:w-1/3 md:w-1/5 hover:ring-2 rounded-xl hover:cursor-pointer transition p-2 bg-slate-600/10">
-                                    <Card :style="{ '--p-card-background': (wallpaperColor ?? '18181B') }">
-                                        <div class="p-4 text-center font-semibold">Couleur unie</div>
-                                    </Card>
-                                    <span class="text-sm">Couleur unie</span>
-                                </div>
-                                <div
-                                    class="flex flex-col text-center gap-2 w-full sm:w-1/3 md:w-1/5 hover:ring-2 rounded-xl hover:cursor-pointer transition p-2 bg-slate-600/10">
-                                    <Card :style="{
-                                        '--p-card-background': wallpaperColor
-                                            ? `linear-gradient(to bottom, ${wallpaperColor}99, ${wallpaperColor})`
-                                            : '#18181B'
-                                    }">
-                                        <div class="p-4 text-center font-semibold">Dégradé</div>
-                                    </Card>
-                                    <span class="text-sm">Dégradé</span>
-                                </div>
-                            </div>
-                        </div>
-                        <Divider /> -->
                         <Button variant="outlined" severity="contrast" class="flex-1">
                             <div class="flex-1 flex flex-row items-center justify-between">
                                 <span>Couleur</span>
@@ -167,11 +138,13 @@
                         <div class="flex flex-col gap-2">
                             <p class="font-semibold mb-2">Style</p>
                             <div class="flex justify-center gap-2 w-full">
-                                <Button severity="contrast" class="flex-1"
+                                <Button severity="contrast" class="flex-1 transition 
+                                hover:ring-2 hover:ring-white hover:ring-offset-2 hover:ring-offset-black"
                                     @click="updateSection('button_style', { variant: 'filled' })">
                                     Plein
                                 </Button>
-                                <Button variant="outlined" severity="contrast" class="flex-1"
+                                <Button variant="outlined" severity="contrast" class="flex-1 transition 
+                                hover:ring-2 hover:ring-white"
                                     @click="updateSection('button_style', { variant: 'outlined' })">
                                     Bordure
                                 </Button>
@@ -198,26 +171,28 @@
                         <Divider />
                         <div class="flex flex-col gap-2">
                             <p class="font-semibold">Couleurs</p>
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                <div class="flex-1 flex flex-row items-center justify-between">
-                                    <span>Bouton</span>
-                                    <div class="flex items-center gap-2">
-                                        <ColorPicker v-model="buttonBgColorLocal" format="hex" />
-                                        <span class="text-sm font-medium">#{{ buttonBgColorLocal }}</span>
-                                        <Icon name="lucide:chevron-right" size="20" />
+                            <div class="flex justify-center gap-2 w-full">
+                                <Button variant="outlined" severity="contrast" class="flex-1">
+                                    <div class="flex-1 flex flex-row items-center justify-between">
+                                        <span>Bouton</span>
+                                        <div class="flex items-center gap-2">
+                                            <ColorPicker v-model="buttonBgColorLocal" format="hex" />
+                                            <span class="text-sm font-medium">#{{ buttonBgColorLocal }}</span>
+                                            <Icon name="lucide:chevron-right" size="20" />
+                                        </div>
                                     </div>
-                                </div>
-                            </Button>
-                            <Button variant="outlined" severity="contrast" class="flex-1">
-                                <div class="flex-1 flex flex-row items-center justify-between">
-                                    <span>Texte</span>
-                                    <div class="flex items-center gap-2">
-                                        <ColorPicker v-model="buttonTextColorLocal" format="hex" />
-                                        <span class="text-sm font-medium">#{{ buttonTextColorLocal }}</span>
-                                        <Icon name="lucide:chevron-right" size="20" />
+                                </Button>
+                                <Button variant="outlined" severity="contrast" class="flex-1">
+                                    <div class="flex-1 flex flex-row items-center justify-between">
+                                        <span>Texte</span>
+                                        <div class="flex items-center gap-2">
+                                            <ColorPicker v-model="buttonTextColorLocal" format="hex" />
+                                            <span class="text-sm font-medium">#{{ buttonTextColorLocal }}</span>
+                                            <Icon name="lucide:chevron-right" size="20" />
+                                        </div>
                                     </div>
-                                </div>
-                            </Button>
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </Fieldset>
@@ -267,6 +242,7 @@ const cornerValue = computed({
     },
 })
 
+// Couleurs locales avec debounce
 const { localValue: usernameColorLocal } = useDebouncedColor(
     'username_style',
     'textColor',
@@ -306,6 +282,8 @@ const { localValue: wallpaperColorLocal } = useDebouncedColor(
     designStore,
     { defaultValue: '18181B' }
 )
+
+// Si j'ustilise le preview des wallpapers
 
 // const wallpaperColor = computed(() => {
 //     const color = design.value?.wallpaper_style?.backgroundColor ?? '18181B'

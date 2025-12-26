@@ -1,5 +1,6 @@
 <template>
-    <div class="relative w-32 h-42 rounded-xl overflow-hidden cursor-pointer transition"
+    <div class="relative w-32 h-42 rounded-xl overflow-hidden cursor-pointer transition 
+    hover:ring-2 hover:ring-white hover:ring-2 hover:ring-white border-2 border-black "
         :style="{ backgroundColor: '#' + theme.wallpaper_style.backgroundColor }">
         <!-- Fake content -->
         <div class="flex flex-col gap-2 px-2 py-4">
@@ -44,7 +45,6 @@ const props = defineProps({
     theme: {
         type: Object,
         required: true,
-        isSelected: Boolean,
     },
 })
 
