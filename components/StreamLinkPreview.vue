@@ -98,19 +98,18 @@ onMounted(async () => {
 // Style du pseudo dynamique
 const usernameSizeClass = computed(() => {
     const size = design.value?.username_style?.size ?? 'normal'
-
     return size === 'medium' ? 'text-2xl' : 'text-lg'
 })
 
 const usernameColor = computed(() => {
-    const color = design.value?.username_style?.textColor ?? '#ffffff'
+    const color = design.value?.username_style?.textColor ?? 'ffffff'
     return color ? `#${color}` : '#ffffff'
 })
 
 // Style de la description dynamique
 const descriptionColor = computed(() => {
-    const color = design.value?.bio_style?.textColor ?? '#ffffff'
-    return color ? `#${color}` : '#ffffff'
+    const color = design.value?.bio_style?.textColor ?? 'd4d4d8'
+    return color ? `#${color}` : '#d4d4d8'
 })
 
 // Style des boutons dynamique

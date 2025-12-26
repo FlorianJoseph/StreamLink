@@ -90,6 +90,43 @@ export const useDesignStore = defineStore('design', () => {
         design.value = future.value.pop()
     }
 
+    // Appliquer un thème prédéfini
+    const applyTheme = (theme) => {
+        if (!design.value || !theme) return
+
+        // Sauvegarder l'état actuel UNE SEULE FOIS
+        history.value.push(structuredClone(toRaw(design.value)))
+        future.value = []
+
+        // Appliquer le thème
+        if (theme.wallpaper_style) {
+            design.value.wallpaper_style = {
+                ...design.value.wallpaper_style,
+                ...theme.wallpaper_style,
+            }
+        }
+
+        if (theme.button_style) {
+            design.value.button_style = {
+                ...design.value.button_style,
+                ...theme.button_style,
+            }
+        }
+
+        if (theme.username_style) {
+            design.value.username_style = {
+                ...design.value.username_style,
+                ...theme.username_style,
+            }
+        }
+        if (theme.bio_style) {
+            design.value.bio_style = {
+                ...design.value.bio_style,
+                ...theme.bio_style,
+            }
+        }
+    }
+
     // Sauvegarder le design actuel dans la base de données
     const saveDesign = async () => {
         if (!design.value) return
@@ -128,6 +165,7 @@ export const useDesignStore = defineStore('design', () => {
         design,
         fetchDesign,
         updateSection,
+        applyTheme,
         saveDesign,
         resetDesign,
         undo,

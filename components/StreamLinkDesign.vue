@@ -172,17 +172,30 @@
                         </div>
                     </template>
                     <div class="flex flex-col gap-4">
-                        <div class="flex flex-col gap-2">
+                        <!-- <div class="flex flex-col gap-2">
                             <p class="font-semibold mb-2">Motif</p>
-                            <div class="flex flex-wrap justify-center gap-4">
-                                <Card style="--p-card-background:#ffff" class="h-30 w-25"></Card>
-                                <Card style="--p-card-background:brown" class="h-30 w-25"></Card>
-                                <Card style="--p-card-background:blue" class="h-30 w-25"></Card>
-                                <Card style="--p-card-background:yellow" class="h-30 w-25"></Card>
-                                <Card style="--p-card-background:orange" class="h-30 w-25"></Card>
+                            <div class="flex flex-wrap gap-4">
+                                <div
+                                    class="flex flex-col text-center gap-2 w-full sm:w-1/3 md:w-1/5 hover:ring-2 rounded-xl hover:cursor-pointer transition p-2 bg-slate-600/10">
+                                    <Card :style="{ '--p-card-background': (wallpaperColor ?? '18181B') }">
+                                        <div class="p-4 text-center font-semibold">Couleur unie</div>
+                                    </Card>
+                                    <span class="text-sm">Couleur unie</span>
+                                </div>
+                                <div
+                                    class="flex flex-col text-center gap-2 w-full sm:w-1/3 md:w-1/5 hover:ring-2 rounded-xl hover:cursor-pointer transition p-2 bg-slate-600/10">
+                                    <Card :style="{
+                                        '--p-card-background': wallpaperColor
+                                            ? `linear-gradient(to bottom, ${wallpaperColor}99, ${wallpaperColor})`
+                                            : '#18181B'
+                                    }">
+                                        <div class="p-4 text-center font-semibold">Dégradé</div>
+                                    </Card>
+                                    <span class="text-sm">Dégradé</span>
+                                </div>
                             </div>
                         </div>
-                        <Divider />
+                        <Divider /> -->
                         <Button variant="outlined" severity="contrast" class="flex-1">
                             <div class="flex-1 flex flex-row items-center justify-between">
                                 <span>Couleur</span>
@@ -203,13 +216,25 @@
                             <span class="font-semibold">Thème</span>
                         </div>
                     </template>
-                    <div class="flex flex-wrap justify-center gap-4">
+                    <Button @click="applyDefaultTheme">
+                        {{ THEME_PRESETS.dark.label }}
+                    </Button>
+                    <Button @click="applyModernTheme">
+                        {{ THEME_PRESETS.modern.label }}
+                    </Button>
+                    <Button @click="applyTwitchTheme">
+                        {{ THEME_PRESETS.twitch.label }}
+                    </Button>
+                    <Button @click="applyLightTheme">
+                        {{ THEME_PRESETS.light.label }}
+                    </Button>
+                    <!-- <div class="flex flex-wrap justify-center gap-4">
                         <Card style="--p-card-background:#ffff" class="h-30 w-25"></Card>
                         <Card style="--p-card-background:brown" class="h-30 w-25"></Card>
                         <Card style="--p-card-background:blue" class="h-30 w-25"></Card>
                         <Card style="--p-card-background:yellow" class="h-30 w-25"></Card>
                         <Card style="--p-card-background:orange" class="h-30 w-25"></Card>
-                    </div>
+                    </div> -->
                 </Fieldset>
             </div>
         </div>
@@ -270,7 +295,7 @@ const { localValue: descriptionColorLocal } = useDebouncedColor(
     'textColor',
     design,
     designStore,
-    { defaultValue: 'ffffff' }
+    { defaultValue: 'd4d4d8' }
 )
 
 const { localValue: buttonTextColorLocal } = useDebouncedColor(
@@ -296,6 +321,25 @@ const { localValue: wallpaperColorLocal } = useDebouncedColor(
     designStore,
     { defaultValue: '18181B' }
 )
+
+// const wallpaperColor = computed(() => {
+//     const color = design.value?.wallpaper_style?.backgroundColor ?? '18181B'
+//     return `#${color}`
+// })
+
+
+const applyDefaultTheme = () => {
+    designStore.applyTheme(THEME_PRESETS.dark)
+}
+const applyLightTheme = () => {
+    designStore.applyTheme(THEME_PRESETS.light)
+}
+const applyModernTheme = () => {
+    designStore.applyTheme(THEME_PRESETS.modern)
+}
+const applyTwitchTheme = () => {
+    designStore.applyTheme(THEME_PRESETS.twitch)
+}
 
 // Avertir l'utilisateur en cas de modifications non sauvegardées
 onBeforeRouteLeave(() => {
