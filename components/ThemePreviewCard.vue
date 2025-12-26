@@ -1,17 +1,16 @@
 <template>
-    <div class="relative w-32 h-44 rounded-xl overflow-hidden cursor-pointer transition
-               hover:scale-105 hover:ring-2 hover:ring-white/20"
+    <div class="relative w-32 h-42 rounded-xl overflow-hidden cursor-pointer transition"
         :style="{ backgroundColor: '#' + theme.wallpaper_style.backgroundColor }">
         <!-- Fake content -->
-        <div class="flex flex-col gap-2 px-3 py-4">
+        <div class="flex flex-col gap-2 px-2 py-4">
             <!-- Fake avatar -->
-            <div class="w-8 h-8 rounded-full bg-white/20 mx-auto" />
-
+            <Avatar :image="streamer?.avatar_url || defaultAvatar" shape="circle" class="mx-auto" />
             <!-- Fake username -->
-            <div class="h-2 w-16 bg-white/30 rounded mx-auto" />
-
+            <span class="font-medium text-xs mx-auto" :style="{ color: '#' + (theme.username_style.textColor) }">
+                {{ streamer?.username }}
+            </span>
             <!-- Fake buttons -->
-            <div class="flex flex-col gap-1 mt-3">
+            <div class="flex flex-col gap-1">
                 <div v-for="i in 2" :key="i" :class="[
                     'h-6 w-full flex items-center justify-center text-[9px] font-medium',
                     theme.button_style.borderRadius,
@@ -24,17 +23,28 @@
 
         <!-- Label -->
         <div class="absolute bottom-0 inset-x-0 text-center text-xs font-semibold py-1
-                    bg-black/40 backdrop-blur">
+                    bg-black/40">
             {{ theme.label }}
         </div>
+
+        <!-- <div v-if="theme.badge" class="absolute top-2 right-2 z-10
+           text-[10px] px-2 py-0.5 rounded-full
+           bg-primary text-white font-semibold">
+            {{ theme.badge }}
+        </div> -->
+
     </div>
 </template>
 
 <script setup>
+const streamerStore = useStreamerStore()
+const { streamer } = storeToRefs(streamerStore)
+
 const props = defineProps({
     theme: {
         type: Object,
         required: true,
+        isSelected: Boolean,
     },
 })
 
@@ -60,4 +70,5 @@ const buttonStyle = computed(() => {
         color: `#${btn.textColor}`,
     }
 })
+
 </script>

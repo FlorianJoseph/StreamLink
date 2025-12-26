@@ -1,7 +1,9 @@
 export const THEME_PRESETS = {
     dark: {
-        label: 'Par défaut (Sombre)',
+        label: 'Sombre',
+        badge: 'Par défaut',
         username_style: {
+            size: 'normal',
             textColor: 'ffffff',
         },
         bio_style: {
@@ -18,28 +20,10 @@ export const THEME_PRESETS = {
         },
     },
 
-    light: {
-        label: 'Clair',
-        username_style: {
-            textColor: '111827',
-        },
-        bio_style: {
-            textColor: '374151',
-        },
-        wallpaper_style: {
-            backgroundColor: 'eceef1',
-        },
-        button_style: {
-            variant: 'filled',
-            backgroundColor: 'ffffff',
-            textColor: '111827',
-            borderRadius: 'rounded-lg',
-        },
-    },
-
     twitch: {
         label: 'Purple',
         username_style: {
+            size: 'medium',
             textColor: 'ffffff',
         },
         bio_style: {
@@ -56,9 +40,30 @@ export const THEME_PRESETS = {
         },
     },
 
-    modern: {
-        label: 'Moderne',
+    light: {
+        label: 'Clair',
         username_style: {
+            size: 'normal',
+            textColor: '111827',
+        },
+        bio_style: {
+            textColor: '374151',
+        },
+        wallpaper_style: {
+            backgroundColor: 'eceef1',
+        },
+        button_style: {
+            variant: 'filled',
+            backgroundColor: 'ffffff',
+            textColor: '111827',
+            borderRadius: 'rounded-lg',
+        },
+    },
+
+    coffee: {
+        label: 'Café',
+        username_style: {
+            size: 'normal',
             textColor: '1f2937',
         },
         bio_style: {
