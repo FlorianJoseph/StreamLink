@@ -102,11 +102,11 @@
                     </template>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         <ThemePreviewCard v-for="(theme, key) in THEME_PRESETS" :key="key" :theme="theme"
-                            @click="designStore.applyTheme(theme)" :isSelected="selectedTheme === key" />
+                            @click="designStore.applyTheme(theme)" :isSelected="isThemeActive(theme).value" />
                     </div>
                 </Fieldset>
                 <!-- Arrière-plan -->
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
+                <Fieldset style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
                     <template #legend>
                         <div class="flex items-center gap-2">
                             <Icon name="lucide:images" size="24" />
@@ -290,7 +290,8 @@ const { localValue: wallpaperColorLocal } = useDebouncedColor(
 //     return `#${color}`
 // })
 
-const { isActive } = useDesignActive(design)
+const { isActive, isThemeActive } = useDesignActive(design)
+
 const isUsernameNormal = isActive('username_style', 'size', 'normal')
 const isUsernameMedium = isActive('username_style', 'size', 'medium')
 const isFilled = isActive('button_style', 'variant', 'filled')
