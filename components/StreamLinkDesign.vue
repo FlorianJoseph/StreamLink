@@ -53,13 +53,13 @@
                         <div class="flex flex-col gap-2">
                             <p class="font-semibold">Taille du pseudo</p>
                             <div class="flex justify-center gap-2 w-full">
-                                <Button variant="outlined" severity="contrast" class="flex-1 transition 
-                                hover:ring-2 hover:ring-white"
+                                <Button variant="outlined" severity="contrast" class="flex-1 transition"
+                                    :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isUsernameNormal }"
                                     @click="updateSection('username_style', { size: 'normal' })">
                                     Normale
                                 </Button>
-                                <Button variant="outlined" severity="contrast" class="flex-1 transition 
-                                hover:ring-2 hover:ring-white"
+                                <Button variant="outlined" severity="contrast" class="flex-1 transition"
+                                    :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isUsernameMedium }"
                                     @click="updateSection('username_style', { size: 'medium' })">
                                     Moyen
                                 </Button>
@@ -138,13 +138,13 @@
                         <div class="flex flex-col gap-2">
                             <p class="font-semibold mb-2">Style</p>
                             <div class="flex justify-center gap-2 w-full">
-                                <Button severity="contrast" class="flex-1 transition 
-                                hover:ring-2 hover:ring-white hover:ring-offset-2 hover:ring-offset-black"
+                                <Button severity="contrast" class="flex-1 transition"
+                                    :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isFilled }"
                                     @click="updateSection('button_style', { variant: 'filled' })">
                                     Plein
                                 </Button>
-                                <Button variant="outlined" severity="contrast" class="flex-1 transition 
-                                hover:ring-2 hover:ring-white"
+                                <Button variant="outlined" severity="contrast" class="flex-1 transition"
+                                    :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isOutlined }"
                                     @click="updateSection('button_style', { variant: 'outlined' })">
                                     Bordure
                                 </Button>
@@ -289,6 +289,12 @@ const { localValue: wallpaperColorLocal } = useDebouncedColor(
 //     const color = design.value?.wallpaper_style?.backgroundColor ?? '18181B'
 //     return `#${color}`
 // })
+
+const { isActive } = useDesignActive(design)
+const isUsernameNormal = isActive('username_style', 'size', 'normal')
+const isUsernameMedium = isActive('username_style', 'size', 'medium')
+const isFilled = isActive('button_style', 'variant', 'filled')
+const isOutlined = isActive('button_style', 'variant', 'outlined')
 
 // Avertir l'utilisateur en cas de modifications non sauvegardées
 onBeforeRouteLeave(() => {
