@@ -67,27 +67,31 @@
                         </div>
                         <div class="flex flex-col gap-2">
                             <p class="font-semibold">Couleurs</p>
-                            <div class="flex justify-center gap-2 w-full">
-                                <Button variant="outlined" severity="contrast" class="flex-1">
-                                    <div class="flex-1 flex flex-row items-center justify-between">
-                                        <span>Pseudo</span>
+                            <div class="flex justify-center gap-2 w-full sm:flex-row flex-col">
+                                <InputGroup class="flex-1" @click="openPicker(usernameColorPicker, 'username')">
+                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                         <div class="flex items-center gap-2">
-                                            <ColorPicker v-model="usernameColorLocal" format="hex" />
-                                            <span class="text-sm font-medium">#{{ usernameColorLocal }}</span>
-                                            <Icon name="lucide:chevron-right" size="20" />
+                                            <span>Pseudo</span>
+                                            <ColorPicker ref="usernameColorPicker" v-model="usernameColorLocal"
+                                                format="hex" @click.stop
+                                                style="--p-colorpicker-preview-focus-ring-color :none" />
                                         </div>
-                                    </div>
-                                </Button>
-                                <Button variant="outlined" severity="contrast" class="flex-1">
-                                    <div class="flex-1 flex flex-row items-center justify-between">
-                                        <span>Description</span>
+                                    </InputGroupAddon>
+                                    <InputText v-model="usernameColorLocal" :invalid="!usernameColorLocal"
+                                        style="--p-inputtext-focus-border-color:white" />
+                                </InputGroup>
+                                <InputGroup class="flex-1" @click="openPicker(descriptionColorPicker, 'description')">
+                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                         <div class="flex items-center gap-2">
-                                            <ColorPicker v-model="descriptionColorLocal" format="hex" />
-                                            <span class="text-sm font-medium">#{{ descriptionColorLocal }}</span>
-                                            <Icon name="lucide:chevron-right" size="20" />
+                                            <span>Description</span>
+                                            <ColorPicker ref="descriptionColorPicker" v-model="descriptionColorLocal"
+                                                format="hex" @click.stop
+                                                style="--p-colorpicker-preview-focus-ring-color :none" />
                                         </div>
-                                    </div>
-                                </Button>
+                                    </InputGroupAddon>
+                                    <InputText v-model="descriptionColorLocal" :invalid="!descriptionColorLocal"
+                                        style="--p-inputtext-focus-border-color:white" />
+                                </InputGroup>
                             </div>
                         </div>
                     </div>
@@ -114,16 +118,17 @@
                         </div>
                     </template>
                     <div class="flex flex-col gap-4">
-                        <Button variant="outlined" severity="contrast" class="flex-1">
-                            <div class="flex-1 flex flex-row items-center justify-between">
-                                <span>Couleur</span>
+                        <InputGroup class="flex-1" @click="openPicker(wallpaperColorPicker, 'wallpaper')">
+                            <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                 <div class="flex items-center gap-2">
-                                    <ColorPicker v-model="wallpaperColorLocal" format="hex" />
-                                    <span class="text-sm font-medium">#{{ wallpaperColorLocal }}</span>
-                                    <Icon name="lucide:chevron-right" size="20" />
+                                    <span>Couleur</span>
+                                    <ColorPicker ref="wallpaperColorPicker" v-model="wallpaperColorLocal" format="hex"
+                                        @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
                                 </div>
-                            </div>
-                        </Button>
+                            </InputGroupAddon>
+                            <InputText v-model="wallpaperColorLocal" :invalid="!wallpaperColorLocal"
+                                style="--p-inputtext-focus-border-color:white" />
+                        </InputGroup>
                     </div>
                 </Fieldset>
                 <!-- Boutons -->
@@ -171,27 +176,31 @@
                         <Divider />
                         <div class="flex flex-col gap-2">
                             <p class="font-semibold">Couleurs</p>
-                            <div class="flex justify-center gap-2 w-full">
-                                <Button variant="outlined" severity="contrast" class="flex-1">
-                                    <div class="flex-1 flex flex-row items-center justify-between">
-                                        <span>Bouton</span>
+                            <div class="flex justify-center gap-2 w-full sm:flex-row flex-col">
+                                <InputGroup class="flex-1" @click="openPicker(buttonBgColorPicker, 'buttonBg')">
+                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                         <div class="flex items-center gap-2">
-                                            <ColorPicker v-model="buttonBgColorLocal" format="hex" />
-                                            <span class="text-sm font-medium">#{{ buttonBgColorLocal }}</span>
-                                            <Icon name="lucide:chevron-right" size="20" />
+                                            <span>Bouton</span>
+                                            <ColorPicker ref="buttonBgColorPicker" v-model="buttonBgColorLocal"
+                                                format="hex" @click.stop
+                                                style="--p-colorpicker-preview-focus-ring-color :none" />
                                         </div>
-                                    </div>
-                                </Button>
-                                <Button variant="outlined" severity="contrast" class="flex-1">
-                                    <div class="flex-1 flex flex-row items-center justify-between">
-                                        <span>Texte</span>
+                                    </InputGroupAddon>
+                                    <InputText v-model="buttonBgColorLocal" :invalid="!buttonBgColorLocal"
+                                        style="--p-inputtext-focus-border-color:white" />
+                                </InputGroup>
+                                <InputGroup class="flex-1" @click="openPicker(buttonTextColorPicker, 'buttonText')">
+                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                         <div class="flex items-center gap-2">
-                                            <ColorPicker v-model="buttonTextColorLocal" format="hex" />
-                                            <span class="text-sm font-medium">#{{ buttonTextColorLocal }}</span>
-                                            <Icon name="lucide:chevron-right" size="20" />
+                                            <span>Texte</span>
+                                            <ColorPicker ref="buttonTextColorPicker" v-model="buttonTextColorLocal"
+                                                format="hex" @click.stop
+                                                style="--p-colorpicker-preview-focus-ring-color :none" />
                                         </div>
-                                    </div>
-                                </Button>
+                                    </InputGroupAddon>
+                                    <InputText v-model="buttonTextColorLocal" :invalid="!buttonTextColorLocal"
+                                        style="--p-inputtext-focus-border-color:white" />
+                                </InputGroup>
                             </div>
                         </div>
                     </div>
@@ -250,6 +259,34 @@ const { localValue: usernameColorLocal } = useDebouncedColor(
     designStore,
     { defaultValue: 'ffffff' }
 )
+
+const pickersOpenState = reactive({
+    username: false,
+    description: false,
+    wallpaper: false,
+    buttonBg: false,
+    buttonText: false,
+})
+const usernameColorPicker = ref(null)
+const descriptionColorPicker = ref(null)
+const wallpaperColorPicker = ref(null)
+const buttonBgColorPicker = ref(null)
+const buttonTextColorPicker = ref(null)
+
+const openPicker = (pickerRef, key) => {
+    const input = pickerRef?.$el?.querySelector('input')
+
+    if (pickersOpenState[key]) {
+        input.blur()
+        pickersOpenState[key] = false
+    } else {
+        nextTick(() => {
+            input.focus()
+            input.click()
+            pickersOpenState[key] = true
+        })
+    }
+}
 
 const { localValue: descriptionColorLocal } = useDebouncedColor(
     'bio_style',
