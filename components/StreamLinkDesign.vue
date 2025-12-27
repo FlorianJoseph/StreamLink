@@ -77,8 +77,9 @@
                                                 style="--p-colorpicker-preview-focus-ring-color :none" />
                                         </div>
                                     </InputGroupAddon>
-                                    <InputText v-model="usernameColorLocal" :invalid="!usernameColorLocal"
-                                        style="--p-inputtext-focus-border-color:white" />
+                                    <InputText v-model="usernameColorLocal"
+                                        style="--p-inputtext-focus-border-color:white" @blur="validateUsernameColor"
+                                        :invalid="!isValidColor(usernameColorLocal)" />
                                 </InputGroup>
                                 <InputGroup class="flex-1" @click="openPicker(descriptionColorPicker, 'description')">
                                     <InputGroupAddon style="--p-inputgroup-addon-color:white">
@@ -260,6 +261,7 @@ const { localValue: usernameColorLocal } = useDebouncedColor(
     { defaultValue: 'ffffff' }
 )
 
+// Gestion de l'ouverture des color pickers
 const pickersOpenState = reactive({
     username: false,
     description: false,
@@ -281,10 +283,19 @@ const openPicker = (pickerRef, key) => {
         pickersOpenState[key] = false
     } else {
         nextTick(() => {
-            input.focus()
             input.click()
             pickersOpenState[key] = true
         })
+    }
+}
+
+// Test alidation de la couleur du pseudo
+const defaultUsernameColor = 'ffffff'
+const isValidColor = (val) => /^([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(val)
+
+const validateUsernameColor = () => {
+    if (!isValidColor(usernameColorLocal.value)) {
+        usernameColorLocal.value = defaultUsernameColor
     }
 }
 
@@ -320,13 +331,13 @@ const { localValue: wallpaperColorLocal } = useDebouncedColor(
     { defaultValue: '18181B' }
 )
 
-// Si j'ustilise le preview des wallpapers
-
+// Si j'utilise le preview du motif wallpaper
 // const wallpaperColor = computed(() => {
 //     const color = design.value?.wallpaper_style?.backgroundColor ?? '18181B'
 //     return `#${color}`
 // })
 
+// Vérification de l'état actif des options de design
 const { isActive, isThemeActive } = useDesignActive(design)
 
 const isUsernameNormal = isActive('username_style', 'size', 'normal')
