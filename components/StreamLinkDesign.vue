@@ -79,7 +79,8 @@
                                     </InputGroupAddon>
                                     <InputText v-model="usernameColorLocal"
                                         style="--p-inputtext-focus-border-color:white" @blur="validateUsernameColor"
-                                        :invalid="!isValidColor(usernameColorLocal)" />
+                                        maxlength="7" :style="{ color: !isUsernameColorValid ? '#f87171' : '#ffffff' }"
+                                        :invalid="!isUsernameColorValid" />
                                 </InputGroup>
                                 <InputGroup class="flex-1" @click="openPicker(descriptionColorPicker, 'description')">
                                     <InputGroupAddon style="--p-inputgroup-addon-color:white">
@@ -252,14 +253,6 @@ const cornerValue = computed({
     },
 })
 
-// Couleurs locales avec debounce
-const { localValue: usernameColorLocal } = useDebouncedColor(
-    'username_style',
-    'textColor',
-    design,
-    designStore,
-    { defaultValue: 'ffffff' }
-)
 
 // Gestion de l'ouverture des color pickers
 const pickersOpenState = reactive({
@@ -289,15 +282,18 @@ const openPicker = (pickerRef, key) => {
     }
 }
 
-// Test alidation de la couleur du pseudo
-const defaultUsernameColor = 'ffffff'
-const isValidColor = (val) => /^([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(val)
-
-const validateUsernameColor = () => {
-    if (!isValidColor(usernameColorLocal.value)) {
-        usernameColorLocal.value = defaultUsernameColor
-    }
-}
+// Couleurs locales avec debounce
+const {
+    localValue: usernameColorLocal,
+    validateValue: validateUsernameColor,
+    isValid: isUsernameColorValid,
+} = useDebouncedColor(
+    'username_style',
+    'textColor',
+    design,
+    designStore,
+    { defaultValue: 'ffffff' }
+)
 
 const { localValue: descriptionColorLocal } = useDebouncedColor(
     'bio_style',
