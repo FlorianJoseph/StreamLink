@@ -78,6 +78,7 @@
                                         </div>
                                     </InputGroupAddon>
                                     <InputText v-model="usernameColorLocal"
+                                        @input="usernameColorLocal = usernameColorLocal.toUpperCase()"
                                         style="--p-inputtext-focus-border-color:white" @blur="validateUsernameColor"
                                         maxlength="7" :style="{ color: !isUsernameColorValid ? '#f87171' : '#ffffff' }"
                                         :invalid="!isUsernameColorValid" />
@@ -91,8 +92,12 @@
                                                 style="--p-colorpicker-preview-focus-ring-color :none" />
                                         </div>
                                     </InputGroupAddon>
-                                    <InputText v-model="descriptionColorLocal" :invalid="!descriptionColorLocal"
-                                        style="--p-inputtext-focus-border-color:white" />
+                                    <InputText v-model="descriptionColorLocal"
+                                        @input="descriptionColorLocal = descriptionColorLocal.toUpperCase()"
+                                        style="--p-inputtext-focus-border-color:white" @blur="validateDescriptionColor"
+                                        maxlength="7"
+                                        :style="{ color: !isDescriptionColorValid ? '#f87171' : '#ffffff' }"
+                                        :invalid="!isDescriptionColorValid" />
                                 </InputGroup>
                             </div>
                         </div>
@@ -128,8 +133,11 @@
                                         @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
                                 </div>
                             </InputGroupAddon>
-                            <InputText v-model="wallpaperColorLocal" :invalid="!wallpaperColorLocal"
-                                style="--p-inputtext-focus-border-color:white" />
+                            <InputText v-model="wallpaperColorLocal"
+                                @input="wallpaperColorLocal = wallpaperColorLocal.toUpperCase()"
+                                style="--p-inputtext-focus-border-color:white" @blur="validateWallpaperColor"
+                                maxlength="7" :style="{ color: !isWallpaperColorValid ? '#f87171' : '#ffffff' }"
+                                :invalid="!isWallpaperColorValid" />
                         </InputGroup>
                     </div>
                 </Fieldset>
@@ -188,8 +196,11 @@
                                                 style="--p-colorpicker-preview-focus-ring-color :none" />
                                         </div>
                                     </InputGroupAddon>
-                                    <InputText v-model="buttonBgColorLocal" :invalid="!buttonBgColorLocal"
-                                        style="--p-inputtext-focus-border-color:white" />
+                                    <InputText v-model="buttonBgColorLocal"
+                                        @input="buttonBgColorLocal = buttonBgColorLocal.toUpperCase()"
+                                        style="--p-inputtext-focus-border-color:white" @blur="validateButtonBgColor"
+                                        maxlength="7" :style="{ color: !isButtonBgColorValid ? '#f87171' : '#ffffff' }"
+                                        :invalid="!isButtonBgColorValid" />
                                 </InputGroup>
                                 <InputGroup class="flex-1" @click="openPicker(buttonTextColorPicker, 'buttonText')">
                                     <InputGroupAddon style="--p-inputgroup-addon-color:white">
@@ -200,8 +211,12 @@
                                                 style="--p-colorpicker-preview-focus-ring-color :none" />
                                         </div>
                                     </InputGroupAddon>
-                                    <InputText v-model="buttonTextColorLocal" :invalid="!buttonTextColorLocal"
-                                        style="--p-inputtext-focus-border-color:white" />
+                                    <InputText v-model="buttonTextColorLocal"
+                                        @input="buttonTextColorLocal = buttonTextColorLocal.toUpperCase()"
+                                        style="--p-inputtext-focus-border-color:white" @blur="validateButtonTextColor"
+                                        maxlength="7"
+                                        :style="{ color: !isButtonTextColorValid ? '#f87171' : '#ffffff' }"
+                                        :invalid="!isButtonTextColorValid" />
                                 </InputGroup>
                             </div>
                         </div>
@@ -292,18 +307,26 @@ const {
     'textColor',
     design,
     designStore,
-    { defaultValue: 'ffffff' }
+    { defaultValue: 'FFFFFF' }
 )
 
-const { localValue: descriptionColorLocal } = useDebouncedColor(
+const {
+    localValue: descriptionColorLocal,
+    validateValue: validateDescriptionColor,
+    isValid: isDescriptionColorValid,
+} = useDebouncedColor(
     'bio_style',
     'textColor',
     design,
     designStore,
-    { defaultValue: 'd4d4d8' }
+    { defaultValue: 'D4D4D8' }
 )
 
-const { localValue: buttonTextColorLocal } = useDebouncedColor(
+const {
+    localValue: buttonTextColorLocal,
+    validateValue: validateButtonTextColor,
+    isValid: isButtonTextColorValid
+} = useDebouncedColor(
     'button_style',
     'textColor',
     design,
@@ -311,15 +334,23 @@ const { localValue: buttonTextColorLocal } = useDebouncedColor(
     { defaultValue: '000000' }
 )
 
-const { localValue: buttonBgColorLocal } = useDebouncedColor(
+const {
+    localValue: buttonBgColorLocal,
+    validateValue: validateButtonBgColor,
+    isValid: isButtonBgColorValid
+} = useDebouncedColor(
     'button_style',
     'backgroundColor',
     design,
     designStore,
-    { defaultValue: 'ffffff' }
+    { defaultValue: 'FFFFFF' }
 )
 
-const { localValue: wallpaperColorLocal } = useDebouncedColor(
+const {
+    localValue: wallpaperColorLocal,
+    validateValue: validateWallpaperColor,
+    isValid: isWallpaperColorValid
+} = useDebouncedColor(
     'wallpaper_style',
     'backgroundColor',
     design,
