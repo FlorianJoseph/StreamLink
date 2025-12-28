@@ -11,14 +11,14 @@ export function useDebouncedColor(
     designStore,
     {
         delay = 1200,
-        defaultValue = 'ffffff',
+        defaultValue = 'FFFFFF',
         validate = isValidHexColor
     } = {}
 ) {
     const localValue = ref(
         (design.value?.[section]?.[property] ?? defaultValue).toUpperCase()
     )
-
+    const isValid = computed(() => validate(normalizeHexColor(localValue.value)))
     let timeout = null
 
     // Sync depuis le store
@@ -33,6 +33,7 @@ export function useDebouncedColor(
     // Sync vers le store de la nouvelle valeur (debounced)
     watch(localValue, (value) => {
         clearTimeout(timeout)
+        if (!isValid.value) return
 
         timeout = setTimeout(() => {
             const clean = normalizeHexColor(value)?.toUpperCase()
@@ -55,9 +56,7 @@ export function useDebouncedColor(
     return {
         localValue,
         validateValue,
-        isValid: computed(() =>
-            validate(normalizeHexColor(localValue.value))
-        ),
+        isValid
     }
 }
 
