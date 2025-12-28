@@ -4,17 +4,17 @@ export const THEME_PRESETS = {
         badge: 'Par défaut',
         username_style: {
             size: 'normal',
-            textColor: 'ffffff',
+            textColor: 'FFFFFF',
         },
         bio_style: {
-            textColor: 'd4d4d8',
+            textColor: 'D4D4D8',
         },
         wallpaper_style: {
             backgroundColor: '18181B',
         },
         button_style: {
             variant: 'filled',
-            backgroundColor: 'ffffff',
+            backgroundColor: 'FFFFFF',
             textColor: '000000',
             borderRadius: 'rounded-lg',
         },
@@ -24,18 +24,18 @@ export const THEME_PRESETS = {
         label: 'Purple',
         username_style: {
             size: 'medium',
-            textColor: 'ffffff',
+            textColor: 'FFFFFF',
         },
         bio_style: {
-            textColor: 'd4d4d8',
+            textColor: 'D4D4D8',
         },
         wallpaper_style: {
-            backgroundColor: '0f0b1f',
+            backgroundColor: '0F0B1F',
         },
         button_style: {
             variant: 'filled',
             backgroundColor: '9146FF',
-            textColor: 'ffffff',
+            textColor: 'FFFFFF',
             borderRadius: 'rounded-xl',
         },
     },
@@ -50,11 +50,11 @@ export const THEME_PRESETS = {
             textColor: '374151',
         },
         wallpaper_style: {
-            backgroundColor: 'eceef1',
+            backgroundColor: 'ECEEF1',
         },
         button_style: {
             variant: 'filled',
-            backgroundColor: 'ffffff',
+            backgroundColor: 'FFFFFF',
             textColor: '111827',
             borderRadius: 'rounded-lg',
         },
@@ -64,18 +64,18 @@ export const THEME_PRESETS = {
         label: 'Café',
         username_style: {
             size: 'normal',
-            textColor: '1f2937',
+            textColor: '1F2937',
         },
         bio_style: {
-            textColor: '4b5563',
+            textColor: '4B5563',
         },
         wallpaper_style: {
-            backgroundColor: 'f5f1ee',
+            backgroundColor: 'F5F1EE',
         },
         button_style: {
             variant: 'outlined',
-            backgroundColor: 'a16207',
-            textColor: '3f2a1d',
+            backgroundColor: 'A16207',
+            textColor: '3F2A1D',
             borderRadius: 'rounded-full',
         },
     },

@@ -102,14 +102,14 @@ const usernameSizeClass = computed(() => {
 })
 
 const usernameColor = computed(() => {
-    const color = design.value?.username_style?.textColor ?? 'ffffff'
-    return color ? `#${color}` : '#ffffff'
+    const color = design.value?.username_style?.textColor ?? 'FFFFFF'
+    return color ? `#${color}` : '#FFFFFF'
 })
 
 // Style de la description dynamique
 const descriptionColor = computed(() => {
-    const color = design.value?.bio_style?.textColor ?? 'd4d4d8'
-    return color ? `#${color}` : '#d4d4d8'
+    const color = design.value?.bio_style?.textColor ?? 'D4D4D8'
+    return color ? `#${color}` : '#D4D4D8'
 })
 
 // Style des boutons dynamique
@@ -130,7 +130,7 @@ const buttonClass = computed(() => {
 
 const buttonBorderColor = computed(() => {
     const variant = design.value?.button_style?.variant
-    const color = design.value?.button_style?.backgroundColor ?? 'ffffff'
+    const color = design.value?.button_style?.backgroundColor ?? 'FFFFFF'
 
     if (variant === 'outlined') {
         return `#${color}`
@@ -141,7 +141,7 @@ const buttonBorderColor = computed(() => {
 
 const buttonBackgroundColor = computed(() => {
     const variant = design.value?.button_style?.variant
-    const color = design.value?.button_style?.backgroundColor ?? 'ffffff'
+    const color = design.value?.button_style?.backgroundColor ?? 'FFFFFF'
 
     if (variant === 'filled') {
         return `#${color}`
