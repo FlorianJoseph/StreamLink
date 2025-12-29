@@ -1,5 +1,12 @@
-const normalizeHexColor = (val) =>
-    val?.replace('#', '').slice(0, 6)
+const normalizeHexColor = (val) => {
+    if (!val) return ''
+    let hex = val.replace('#', '').toUpperCase().slice(0, 6)
+    // Si c'est un code sur 3 caractères, on le convertit en 6
+    if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
+    }
+    return hex
+}
 
 const isValidHexColor = (val) =>
     /^([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(val)
@@ -15,9 +22,11 @@ export function useDebouncedColor(
         validate = isValidHexColor
     } = {}
 ) {
-    const localValue = ref(
+    const lastValidValue = ref(
         (design.value?.[section]?.[property] ?? defaultValue).toUpperCase()
     )
+
+    const localValue = ref(lastValidValue.value)
     const isValid = computed(() => validate(normalizeHexColor(localValue.value)))
     let timeout = null
 
@@ -50,7 +59,7 @@ export function useDebouncedColor(
         const clean = normalizeHexColor(localValue.value)?.toUpperCase()
         localValue.value = validate(clean)
             ? clean
-            : defaultValue
+            : (design.value?.[section]?.[property] ?? defaultValue).toUpperCase()
     }
 
     return {

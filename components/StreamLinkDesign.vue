@@ -232,6 +232,9 @@ const { updateSection } = designStore
 const { undo, redo, saveDesign, resetDesign } = designStore
 const { history, future, isDirty, design } = storeToRefs(designStore)
 
+// Vérification de l'état actif des options de design
+const { isActive, isThemeActive } = useDesignActive(design)
+
 // Conversion entre labels et valeurs des coins
 const radiusToValue = {
     'rounded-none': 0,
@@ -364,8 +367,6 @@ const {
 //     return `#${color}`
 // })
 
-// Vérification de l'état actif des options de design
-const { isActive, isThemeActive } = useDesignActive(design)
 
 const isUsernameNormal = isActive('username_style', 'size', 'normal')
 const isUsernameMedium = isActive('username_style', 'size', 'medium')
