@@ -43,7 +43,8 @@
                                             class="w-8.5 h-8.5 object-contain rounded flex-shrink-0" />
                                     </template>
                                     <template v-else>
-                                        <Icon :name="link.icon" size="20" class="flex-shrink-0" />
+                                        <Icon :name="link.icon" size="20" class="flex-shrink-0"
+                                            :style="{ color: buttonTextColor }" />
                                     </template>
                                 </div>
                                 <!-- Texte centré -->
@@ -100,7 +101,6 @@ const usernameSizeClass = computed(() => {
     const size = design.value?.username_style?.size ?? 'normal'
     return size === 'medium' ? 'text-2xl' : 'text-lg'
 })
-
 const usernameColor = computed(() => {
     const color = design.value?.username_style?.textColor ?? 'FFFFFF'
     return color ? `#${color}` : '#FFFFFF'
@@ -113,41 +113,32 @@ const descriptionColor = computed(() => {
 })
 
 // Style des boutons dynamique
-const buttonClass = computed(() => {
-    const variant = design.value?.button_style?.variant
+const buttonVariant = computed(() => design.value?.button_style?.variant ?? 'filled')
 
-    if (variant === 'outlined') {
+const buttonClass = computed(() => {
+
+    if (buttonVariant.value === 'outlined') {
         return [
             'bg-transparent',
             `border border-2`,
-            'hover:bg-gray-100/10',
         ]
     }
 
     // filled
-    return ['hover:bg-gray-100/10']
+    return [
+        'border-none',
+        'hover:brightness-90',
+    ]
 })
 
 const buttonBorderColor = computed(() => {
-    const variant = design.value?.button_style?.variant
     const color = design.value?.button_style?.backgroundColor ?? 'FFFFFF'
-
-    if (variant === 'outlined') {
-        return `#${color}`
-    }
-
-    return null
+    return buttonVariant.value === 'outlined' ? `#${color}` : null
 })
 
 const buttonBackgroundColor = computed(() => {
-    const variant = design.value?.button_style?.variant
     const color = design.value?.button_style?.backgroundColor ?? 'FFFFFF'
-
-    if (variant === 'filled') {
-        return `#${color}`
-    }
-
-    return null // transparent pour outlined
+    return buttonVariant.value === 'filled' ? `#${color}` : 'transparent'
 })
 
 const buttonTextColor = computed(() => {
@@ -159,6 +150,7 @@ const buttonRadiusClass = computed(() => {
     return design.value?.button_style?.borderRadius ?? 'rounded-lg'
 })
 
+// Style du fond dynamique
 const wallpaperColor = computed(() => {
     const color = design.value?.wallpaper_style?.backgroundColor ?? '18181B'
     return `#${color}`

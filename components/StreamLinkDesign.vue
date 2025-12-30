@@ -416,7 +416,7 @@ const {
 //     return `#${color}`
 // })
 
-
+// Vérification des options actives
 const isUsernameNormal = isActive('username_style', 'size', 'normal')
 const isUsernameMedium = isActive('username_style', 'size', 'medium')
 const isFilled = isActive('button_style', 'variant', 'filled')
