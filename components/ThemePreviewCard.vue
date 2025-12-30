@@ -1,5 +1,5 @@
 <template>
-    <div class="relative w-32 h-42 rounded-xl overflow-hidden cursor-pointer transition 
+    <div class="relative w-30 sm:w-36 h-42 rounded-xl overflow-hidden cursor-pointer transition 
     hover:ring-2 hover:ring-white hover:ring-2 hover:ring-white border-2 border-black "
         :style="{ backgroundColor: '#' + theme.wallpaper_style.backgroundColor }" :class="{
             'ring-2 ring-white': isSelected
@@ -42,6 +42,9 @@
 <script setup>
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
+
+const defaultAvatar =
+    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 
 const props = defineProps({
     theme: {

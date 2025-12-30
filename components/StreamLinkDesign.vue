@@ -1,5 +1,5 @@
     <template>
-        <div class="flex flex-col gap-4 ">
+        <div class="flex flex-col gap-4">
             <!-- En-tête -->
             <div class="py-4">
                 <div class="flex flex-col lg:items-start items-center justify-end">
@@ -8,34 +8,46 @@
                         Personnaliser mon StreamLink
                     </h1>
                     <!-- Sous-titre -->
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl" id="header">
                         Choisissez vos couleurs, polices et styles pour refléter votre identité
                     </p>
                 </div>
             </div>
             <!-- Barre d'outils -->
-            <Menubar class="sticky top-20 z-10">
+            <Menubar class="lg:sticky lg:top-13 z-60 w-full lg:w-lg xl:w-2xl 2xl:w-2xl mx-auto">
                 <template #start>
                     <Button severity="secondary" :disabled="!isDirty" @click="resetDesign">
-                        <Icon name="lucide:rotate-ccw" size="20" />
-                        <span>Annuler les modifications</span>
+                        <Icon name="lucide:rotate-ccw" size="18" />
+                        <span
+                            class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base whitespace-nowrap">Annuler
+                            les
+                            modifications</span>
                     </Button>
                 </template>
                 <template #end>
-                    <div class="flex items-center gap-2 sticky top-16 z-10">
+                    <div class="flex items-center gap-1 sm:gap-2">
                         <Button severity="secondary" :disabled="!history.length" @click="undo">
-                            <Icon name="lucide:undo" size="20" />
+                            <Icon name="lucide:undo" size="18" />
                         </Button>
                         <Button severity="secondary" :disabled="!future.length" @click="redo">
-                            <Icon name="lucide:redo" size="20" />
+                            <Icon name="lucide:redo" size="18" />
                         </Button>
                         <Button severity="contrast" :disabled="!isDirty" @click="saveDesign">
-                            <Icon name="lucide:save" size="20" />
-                            <span>Sauvegarder</span>
+                            <Icon name="lucide:save" size="18" />
+                            <span
+                                class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Sauvegarder</span>
                         </Button>
                     </div>
                 </template>
             </Menubar>
+            <!-- <Menu :model="items" class="fixed top-45 left-5 z-50 2xl:block hidden">
+                <template #item="{ item, props }">
+                    <div v-bind="props.action" @click="scrollToSection(item.anchor)">
+                        <Icon :name="item.icon" size="20" />
+                        <span>{{ item.label }}</span>
+                    </div>
+                </template>
+            </Menu> -->
             <!-- Header -->
             <div class="flex justify-center gap-4 flex-col w-full lg:w-lg xl:w-2xl 2xl:w-2xl">
                 <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
@@ -56,12 +68,12 @@
                                 <Button variant="outlined" severity="contrast" class="flex-1 transition"
                                     :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isUsernameNormal }"
                                     @click="updateSection('username_style', { size: 'normal' })">
-                                    Normale
+                                    <span class="text-sm sm:text-base">Normal</span>
                                 </Button>
                                 <Button variant="outlined" severity="contrast" class="flex-1 transition"
                                     :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isUsernameMedium }"
                                     @click="updateSection('username_style', { size: 'medium' })">
-                                    Moyen
+                                    <span class="text-sm sm:text-base">Moyen</span>
                                 </Button>
                             </div>
                         </div>
@@ -71,7 +83,7 @@
                                 <InputGroup class="flex-1" @click="openPicker(usernameColorPicker, 'username')">
                                     <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                         <div class="flex items-center gap-2">
-                                            <span>Pseudo</span>
+                                            <span class="text-sm sm:text-base lg:text-sm xl:text-base">Pseudo</span>
                                             <ColorPicker ref="usernameColorPicker" v-model="usernameColorLocal"
                                                 format="hex" @click.stop
                                                 style="--p-colorpicker-preview-focus-ring-color :none" />
@@ -86,7 +98,8 @@
                                 <InputGroup class="flex-1" @click="openPicker(descriptionColorPicker, 'description')">
                                     <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                         <div class="flex items-center gap-2">
-                                            <span>Description</span>
+                                            <span
+                                                class="text-sm sm:text-base lg:text-sm xl:text-base">Description</span>
                                             <ColorPicker ref="descriptionColorPicker" v-model="descriptionColorLocal"
                                                 format="hex" @click.stop
                                                 style="--p-colorpicker-preview-focus-ring-color :none" />
@@ -104,20 +117,22 @@
                     </div>
                 </Fieldset>
                 <!-- Thème -->
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
+                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem" id="theme">
                     <template #legend>
                         <div class="flex items-center gap-2">
                             <Icon name="lucide:panels-top-left" size="24" />
                             <span class="font-semibold">Thème</span>
                         </div>
                     </template>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div
+                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4 justify-items-center">
                         <ThemePreviewCard v-for="(theme, key) in THEME_PRESETS" :key="key" :theme="theme"
                             @click="designStore.applyTheme(theme)" :isSelected="isThemeActive(theme).value" />
                     </div>
                 </Fieldset>
                 <!-- Arrière-plan -->
-                <Fieldset style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
+                <Fieldset style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem"
+                    id="background">
                     <template #legend>
                         <div class="flex items-center gap-2">
                             <Icon name="lucide:images" size="24" />
@@ -128,7 +143,7 @@
                         <InputGroup class="flex-1" @click="openPicker(wallpaperColorPicker, 'wallpaper')">
                             <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                 <div class="flex items-center gap-2">
-                                    <span>Couleur</span>
+                                    <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
                                     <ColorPicker ref="wallpaperColorPicker" v-model="wallpaperColorLocal" format="hex"
                                         @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
                                 </div>
@@ -142,7 +157,8 @@
                     </div>
                 </Fieldset>
                 <!-- Boutons -->
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
+                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem"
+                    id="buttons">
                     <template #legend>
                         <div class="flex items-center gap-2">
                             <Icon name="lucide:stretch-horizontal" size="24" />
@@ -156,20 +172,20 @@
                                 <Button severity="contrast" class="flex-1 transition"
                                     :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isFilled }"
                                     @click="updateSection('button_style', { variant: 'filled' })">
-                                    Plein
+                                    <span class="text-sm sm:text-base">Plein</span>
                                 </Button>
                                 <Button variant="outlined" severity="contrast" class="flex-1 transition"
                                     :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isOutlined }"
                                     @click="updateSection('button_style', { variant: 'outlined' })">
-                                    Bordure
+                                    <span class="text-sm sm:text-base">Bordure</span>
                                 </Button>
                             </div>
                         </div>
                         <Divider />
-                        <div class="flex flex-row items-center gap-8 justify-between">
+                        <div class="flex flex-col sm:flex-row items-center gap-8 justify-between w-full">
                             <p class="font-semibold">Corners</p>
-                            <div class="flex items-center gap-6 w-2/3">
-                                <span>Carré</span>
+                            <div class="flex items-center gap-6 w-full sm:w-2/3">
+                                <span class="text-sm sm:text-base">Carré</span>
                                 <div class="relative w-full">
                                     <!-- Label au-dessus du curseur -->
                                     <span
@@ -180,7 +196,7 @@
                                     <Slider v-model="cornerValue" :step="25" :min="0" :max="100" class="w-full"
                                         style="--p-slider-handle-focus-ring-color: none;--p-slider-range-background: #fff" />
                                 </div>
-                                <span>Arrondi</span>
+                                <span class="text-sm sm:text-base">Arrondi</span>
                             </div>
                         </div>
                         <Divider />
@@ -190,7 +206,7 @@
                                 <InputGroup class="flex-1" @click="openPicker(buttonBgColorPicker, 'buttonBg')">
                                     <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                         <div class="flex items-center gap-2">
-                                            <span>Bouton</span>
+                                            <span class="text-sm sm:text-base lg:text-sm xl:text-base">Bouton</span>
                                             <ColorPicker ref="buttonBgColorPicker" v-model="buttonBgColorLocal"
                                                 format="hex" @click.stop
                                                 style="--p-colorpicker-preview-focus-ring-color :none" />
@@ -205,7 +221,7 @@
                                 <InputGroup class="flex-1" @click="openPicker(buttonTextColorPicker, 'buttonText')">
                                     <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                         <div class="flex items-center gap-2">
-                                            <span>Texte</span>
+                                            <span class="text-sm sm:text-base lg:text-sm xl:text-base">Texte</span>
                                             <ColorPicker ref="buttonTextColorPicker" v-model="buttonTextColorLocal"
                                                 format="hex" @click.stop
                                                 style="--p-colorpicker-preview-focus-ring-color :none" />
@@ -234,6 +250,39 @@ const { history, future, isDirty, design } = storeToRefs(designStore)
 
 // Vérification de l'état actif des options de design
 const { isActive, isThemeActive } = useDesignActive(design)
+
+// Items de la barre latérale
+// const items = ref([
+//     {
+//         label: 'En-tête',
+//         icon: 'lucide:square-user',
+//         anchor: 'header'
+//     },
+//     {
+//         label: 'Thème',
+//         icon: 'lucide:panels-top-left',
+//         anchor: 'theme'
+//     },
+//     {
+//         label: 'Arrière-plan',
+//         icon: 'lucide:images',
+//         anchor: 'background'
+
+//     },
+//     {
+//         label: 'Boutons',
+//         icon: 'lucide:stretch-horizontal',
+//         anchor: 'buttons'
+
+//     },
+// ])
+
+// const scrollToSection = (id) => {
+//     const el = document.getElementById(id)
+//     if (el) {
+//         el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+//     }
+// }
 
 // Conversion entre labels et valeurs des coins
 const radiusToValue = {

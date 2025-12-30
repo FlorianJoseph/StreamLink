@@ -1,7 +1,8 @@
 <template>
     <!-- Boutton -->
     <Button variant="outlined" severity="contrast" @click="openModal">
-        <Icon name="lucide:pencil" size="18" />Modifier l'avatar
+        <Icon name="lucide:pencil" size="18" />
+        <span class="text-xs sm:text-base">Modifier l'avatar</span>
     </Button>
     <!-- Modal -->
     <Dialog v-model:visible="visible" dismissableMask modal header="Modifier l’avatar" :style="{ width: '30rem' }">
