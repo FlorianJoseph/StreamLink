@@ -107,7 +107,7 @@
             </p>
 
             <!-- Bouton CTA -->
-            <NuxtLink :to="'/admin'">
+            <NuxtLink :to="'/admin/links'">
                 <Button severity="contrast">
                     <Icon name="lucide:plus" size="20" />
                     <span class="font-semibold">Créez votre page StreamLink</span>
