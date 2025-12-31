@@ -8,23 +8,25 @@
     <Card class="min-h-full w-full sm:w-2xl sm:p-2 fade-in" v-else-if="streamer"
         :style="{ '--p-card-background': wallpaperColor }">
         <template #title>
-            <div class="mb-8">
-                <div class="flex items-center justify-between">
-                    <NuxtLink v-ripple :to="'/'">
-                        <Button rounded severity="secondary">
-                            <Icon name="lucide:home" size="24" />
-                        </Button>
-                    </NuxtLink>
-                    <Button rounded :severity="copied ? 'success' : 'secondary'" @click="copyText"
-                        class="transition-all duration-300">
-                        <Icon v-if="!copied" name="lucide:files" size="24" />
-                        <Icon v-else name="lucide:check" size="24" />
-                        <span>{{ copied ? 'Copié !' : 'Copier le StreamLink' }}</span>
-                    </Button>
-                </div>
+            <div class="flex items-center justify-between">
+                <NuxtLink v-ripple :to="'/'">
+                    <button class="flex items-center p-3 rounded-full transition-all "
+                        :class="[fixedButtonColor, fixedButtonBg]">
+                        <Icon name="lucide:home" size="20" />
+                    </button>
+                </NuxtLink>
+                <button @click="copyText" class="flex items-center px-3 py-2.5 rounded-full transition-all gap-2"
+                    :class="copied
+                        ? 'bg-green-400 text-black'
+                        : [fixedButtonBg, fixedButtonColor]
+                        ">
+                    <Icon v-if="!copied" name="lucide:files" size="20" />
+                    <Icon v-else name="lucide:check" size="20" />
+                    <span class="text-sm sm:text-base">{{ copied ? 'Copié !' : 'Copier le StreamLink' }}</span>
+                </button>
             </div>
 
-            <div class="flex items-center text-center flex-col mx-auto my-6">
+            <div class="flex items-center text-center flex-col mx-auto my-4">
                 <img :src="streamer?.avatar_url || defaultAvatar" alt="Avatar"
                     class="w-24 h-24 rounded-full object-cover mb-4 mt-4" />
                 <span :class="['font-bold', usernameSizeClass]" :style="{ color: usernameColor }">
@@ -78,7 +80,7 @@
             </div>
             <!-- Footer infos -->
             <div class="flex flex-col items-center gap-3 pb-10 text-xs">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2" :style="{ color: footerTextColor }">
                     <NuxtLink to="/contact" class="hover:underline font-medium">
                         Contact
                     </NuxtLink>
@@ -212,6 +214,31 @@ const wallpaperColor = computed(() => {
     const color = design.value?.wallpaper_style?.backgroundColor ?? '18181B'
     return `#${color}`
 })
+
+// Fonction pour déterminer si le texte du footer et les boutons doivent être clairs ou sombres
+function isColorDark(hex) {
+    if (!hex) return true
+    const c = hex.startsWith('#') ? hex.substring(1) : hex
+    const r = parseInt(c.substr(0, 2), 16)
+    const g = parseInt(c.substr(2, 2), 16)
+    const b = parseInt(c.substr(4, 2), 16)
+    // Perception de la luminosité
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000
+    return brightness < 128
+}
+
+const fixedButtonColor = computed(() => {
+    return isColorDark(wallpaperColor.value) ? 'text-white' : 'text-black'
+})
+
+const fixedButtonBg = computed(() => {
+    return isColorDark(wallpaperColor.value) ? 'bg-zinc-800 hover:bg-zinc-700/70' : 'bg-white hover:bg-zinc-200'
+})
+
+const footerTextColor = computed(() => {
+    return isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000'
+})
+
 </script>
 
 <style scoped>

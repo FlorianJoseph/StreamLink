@@ -64,7 +64,7 @@
                 </div>
                 <!-- Footer infos -->
                 <div class="flex flex-col items-center gap-3 pb-6 text-xs">
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2" :style="{ color: footerTextColor }">
                         <p class="hover:underline font-medium">Contact</p>
                         <span>•</span>
                         <p class="hover:underline font-medium">Confidentialité</p>
@@ -155,4 +155,29 @@ const wallpaperColor = computed(() => {
     const color = design.value?.wallpaper_style?.backgroundColor ?? '18181B'
     return `#${color}`
 })
+
+// Fonction pour déterminer si le texte du footer et les boutons doivent être clairs ou sombres
+function isColorDark(hex) {
+    if (!hex) return true
+    const c = hex.startsWith('#') ? hex.substring(1) : hex
+    const r = parseInt(c.substr(0, 2), 16)
+    const g = parseInt(c.substr(2, 2), 16)
+    const b = parseInt(c.substr(4, 2), 16)
+    // Perception de la luminosité
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000
+    return brightness < 128
+}
+
+const fixedButtonColor = computed(() => {
+    return isColorDark(wallpaperColor.value) ? 'text-white' : 'text-black'
+})
+
+const fixedButtonBg = computed(() => {
+    return isColorDark(wallpaperColor.value) ? 'bg-black/20 hover:bg-black/30' : 'bg-white/20 hover:bg-white/30'
+})
+
+const footerTextColor = computed(() => {
+    return isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000'
+})
+
 </script>
