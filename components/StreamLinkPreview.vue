@@ -16,6 +16,17 @@
         <Card class="flex flex-col w-full h-160 sm:w-sm overflow-auto"
             :style="{ '--p-card-background': wallpaperColor }">
             <template #title>
+                <div class="flex items-center justify-between">
+                    <button class="flex items-center p-2 rounded-full transition-all "
+                        :class="[fixedButtonColor, fixedButtonBg]">
+                        <Icon name="lucide:home" size="18" />
+                    </button>
+                    <button class="flex items-center px-2 py-1.5 rounded-full transition-all gap-2"
+                        :class="[fixedButtonBg, fixedButtonColor]">
+                        <Icon name="lucide:files" size="18" />
+                        <span class="text-xs sm:text-sm">Copier le StreamLink</span>
+                    </button>
+                </div>
                 <div class="flex items-center text-center flex-col w-full my-6">
                     <Avatar :image="streamer?.avatar_url || defaultAvatar" shape="circle" size="xlarge" class="mb-2" />
                     <span :class="['font-semibold', usernameSizeClass]" :style="{ color: usernameColor }">
@@ -173,7 +184,7 @@ const fixedButtonColor = computed(() => {
 })
 
 const fixedButtonBg = computed(() => {
-    return isColorDark(wallpaperColor.value) ? 'bg-black/20 hover:bg-black/30' : 'bg-white/20 hover:bg-white/30'
+    return isColorDark(wallpaperColor.value) ? 'bg-zinc-800 hover:bg-zinc-700/70' : 'bg-white hover:bg-zinc-200'
 })
 
 const footerTextColor = computed(() => {
