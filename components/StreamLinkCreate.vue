@@ -1,9 +1,13 @@
 <template>
     <div class="flex flex-col gap-4">
         <div class="py-4">
-            <div class="flex flex-col items-center h-12 justify-end">
-                <h1 class="text-3xl font-bold">Créer mon StreamLink</h1>
-                <p class="text-center lg:text-left">
+            <div class="flex flex-col items-center justify-end">
+                <!-- Titre -->
+                <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
+                    Créer mon StreamLink
+                </h1>
+                <!-- Sous-titre -->
+                <p class="text-sm sm:text-base text-center max-w-xl sm:whitespace-nowrap">
                     Créez votre page de liens personnalisée à partager avec votre audience
                 </p>
             </div>
