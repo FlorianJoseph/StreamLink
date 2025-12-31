@@ -21,7 +21,7 @@
 
 <script setup>
 const STORAGE_KEY = 'new'
-const visible = ref(true)
+const visible = ref(false)
 
 const closeBanner = () => {
     visible.value = false
