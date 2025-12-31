@@ -151,7 +151,7 @@ onMounted(async () => {
     streamerStore.loading = true
     const data = await streamerStore.fetchStreamerByUsername(username)
     await linkStore.fetchLinksByStreamerId(data.id)
-    await designStore.fetchDesign(data.id)
+    await designStore.fetchPublicDesign(data.id)
     streamerStore.loading = false
 })
 
