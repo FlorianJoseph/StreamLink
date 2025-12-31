@@ -10,7 +10,7 @@
                     <span class="hidden lg:flex leading-normal">
                         Personnalisez votre StreamLink avec notre toute nouvelle page de
                     </span>
-                    <NuxtLink to="/admin/links" class="text-surface-0 underline font-bold">Design
+                    <NuxtLink to="/admin/design" class="text-surface-0 underline font-bold">Design
                     </NuxtLink>
                 </div>
             </div>
