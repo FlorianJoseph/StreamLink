@@ -6,7 +6,7 @@
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
     <Card class="min-h-full w-full sm:w-2xl sm:p-2 fade-in" v-else-if="streamer"
-        :style="{ '--p-card-background': wallpaperColor }">
+        :style="{ '--p-card-background': wallpaperColor, boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }">
         <template #title>
             <div class="flex items-center justify-between">
                 <NuxtLink v-ripple :to="'/'">

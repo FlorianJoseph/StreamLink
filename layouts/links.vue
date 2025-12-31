@@ -35,8 +35,8 @@ function deriveBackgroundColor(hex) {
         h /= 6
     }
 
-    s = Math.max(0, s - 0.15) // désaturation
-    l = Math.max(0, l - 0.18) // assombrissement
+    s = Math.max(0, s - 0.08) // désaturation
+    l = Math.max(l - 0.05, 0.18) // assombrissement
 
     // back to RGB
     function hue2rgb(p, q, t) {
