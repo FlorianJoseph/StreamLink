@@ -73,7 +73,7 @@ const menuItems = ref([
     },
     {
         label: 'Mon StreamLink',
-        icon: 'lucide:link',
+        icon: 'lucide:grid-2x2-plus',
         badge: 'Nouveau',
         items: [
             {
