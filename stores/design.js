@@ -50,6 +50,16 @@ export const useDesignStore = defineStore('design', () => {
         future.value = []
     }
 
+    const fetchPublicDesign = async (streamerId) => {
+        const { data } = await supabase
+            .from('Design')
+            .select('*')
+            .eq('streamer_id', streamerId)
+            .single()
+
+        design.value = data ?? null
+    }
+
     // Mettre à jour une section du design avec gestion de l'historique
     const updateSection = (section, payload) => {
         if (!design.value) return
@@ -164,6 +174,7 @@ export const useDesignStore = defineStore('design', () => {
     return {
         design,
         fetchDesign,
+        fetchPublicDesign,
         updateSection,
         applyTheme,
         saveDesign,

@@ -72,7 +72,7 @@
 
         <template #footer>
             <div class="flex justify-center my-12">
-                <NuxtLink :to="'/admin'">
+                <NuxtLink :to="'/admin/links'">
                     <Button severity="contrast">
                         <span class="font-semibold font-sm">Rejoignez {{ streamer?.username }} sur StreamLink</span>
                     </Button>
@@ -107,7 +107,7 @@
             </p>
 
             <!-- Bouton CTA -->
-            <NuxtLink :to="'/admin'">
+            <NuxtLink :to="'/admin/links'">
                 <Button severity="contrast">
                     <Icon name="lucide:plus" size="20" />
                     <span class="font-semibold">Créez votre page StreamLink</span>
@@ -151,7 +151,7 @@ onMounted(async () => {
     streamerStore.loading = true
     const data = await streamerStore.fetchStreamerByUsername(username)
     await linkStore.fetchLinksByStreamerId(data.id)
-    await designStore.fetchDesign(data.id)
+    await designStore.fetchPublicDesign(data.id)
     streamerStore.loading = false
 })
 
