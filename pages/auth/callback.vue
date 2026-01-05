@@ -37,7 +37,11 @@ onMounted(async () => {
                 }
             })
             if (updateError) throw updateError
-            await supabase.auth.refreshSession()
+            const user = useSupabaseUser()
+            if (user.value?.user_metadata) {
+                user.value.user_metadata.terms_version = CURRENT_TERMS_VERSION
+                user.value.user_metadata.privacy_version = CURRENT_PRIVACY_VERSION
+            }
             router.replace(redirect)
             return
         }

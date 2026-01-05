@@ -83,7 +83,11 @@ async function acceptTerms() {
                 privacy_version: CURRENT_PRIVACY_VERSION
             }
         })
-        await supabase.auth.refreshSession()
+        const user = useSupabaseUser()
+        if (user.value?.user_metadata) {
+            user.value.user_metadata.terms_version = CURRENT_TERMS_VERSION
+            user.value.user_metadata.privacy_version = CURRENT_PRIVACY_VERSION
+        }
 
         const redirect = route.query.redirect ? decodeURIComponent(route.query.redirect) : '/'
         router.replace(redirect)
