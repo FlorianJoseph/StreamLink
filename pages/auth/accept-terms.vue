@@ -65,16 +65,18 @@ async function acceptTerms() {
     }
 
     try {
-        // Stocke CGU + Privacy
+        // Crée un streamer s'il n'existe pas
         if (!streamer.value) {
             await streamerStore.createStreamer()
         }
 
         const streamerId = streamer.value?.id
 
+        // Stocke CGU + Privacy
         await accept('terms', streamerId)
         await accept('privacy', streamerId)
 
+        // Met à jour les métadonnées avec la dernière version
         await supabase.auth.updateUser({
             data: {
                 terms_version: CURRENT_TERMS_VERSION,

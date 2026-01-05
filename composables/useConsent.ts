@@ -4,6 +4,7 @@ import type { UserConsent } from '~/types/userConsent'
 export function useConsent() {
     const supabase = useSupabaseClient()
 
+    // Vérifie que l'utilisateur à accepté les bonnes versions 
     const hasAccepted = async (policy: 'terms' | 'privacy', uid?: string) => {
         const userId = uid
         if (!userId) throw new Error('User ID non défini')
@@ -22,6 +23,7 @@ export function useConsent() {
         return !!data
     }
 
+    // L'utilisateur accepte la version actuelle
     const accept = async (policy: 'terms' | 'privacy', uid?: string) => {
         const userId = uid
         if (!userId) throw new Error('User ID non défini')
