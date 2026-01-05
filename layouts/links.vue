@@ -61,7 +61,7 @@ function deriveBackgroundColor(hex) {
 }
 
 const wallpaperColor = computed(() => {
-    const color = design.value?.wallpaper_style?.backgroundColor ?? '#121212'
+    const color = design.value?.wallpaper_style?.backgroundColor ?? '2E2E2E'
     return `#${color}`
 })
 

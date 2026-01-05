@@ -138,14 +138,6 @@ const paginatedStreamers = computed(() => {
     return filteredStreamers.value.slice(start, end)
 })
 
-import { Funnel } from 'lucide-vue-next';
-
-const selectedTri = ref();
-const tri = ref([
-    { name: 'Followers', code: 'FO' },
-    { name: 'Viewers', code: 'VI' },
-    { name: 'Plus récents', code: 'PR' }
-]);
 </script>
 
 <style scoped>

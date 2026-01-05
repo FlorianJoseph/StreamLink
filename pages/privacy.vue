@@ -4,7 +4,7 @@
         <div class="flex flex-col items-center sm:h-12 justify-end">
             <!-- Titre -->
             <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
-                Avis de confidentialité et Mentions légales
+                Avis de confidentialité et Mentions légales - {{ CURRENT_PRIVACY_VERSION }}
             </h1>
             <!-- Sous-titre -->
             <p class="text-sm sm:text-base text-center max-w-xl">
@@ -359,7 +359,9 @@
 </template>
 
 <script setup>
-const updatedAt = "28 Octobre 2025"
+const updatedAt = "05 Janvier 2026"
+
+import { CURRENT_PRIVACY_VERSION } from '~/constants/legal'
 
 definePageMeta({
     layout: 'auth'

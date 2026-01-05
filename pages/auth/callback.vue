@@ -10,10 +10,11 @@
 </template>
 
 <script setup>
-const user = useSupabaseUser()
 const router = useRouter()
 const route = useRoute()
 const supabase = useSupabaseClient()
+const { hasAccepted } = useConsent()
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from '~/constants/legal'
 
 onMounted(async () => {
     try {
@@ -23,29 +24,27 @@ onMounted(async () => {
         if (!session?.user) throw new Error('Utilisateur non authentifié')
 
         const redirect = route.query.redirect ? decodeURIComponent(route.query.redirect) : '/'
-        const accept = route.query.accept === 'true'
 
-        // Si on vient d'accepter les conditions
-        if (accept) {
+        // Vérifie si l'utilisateur a accepté les CGU en base
+        const termsOk = await hasAccepted('terms', session.user.id)
+        const privacyOk = await hasAccepted('privacy', session.user.id)
+
+        if (termsOk && privacyOk) {
             const { error: updateError } = await supabase.auth.updateUser({
-                data: { terms_accepted: true }
+                data: {
+                    terms_version: CURRENT_TERMS_VERSION,
+                    privacy_version: CURRENT_PRIVACY_VERSION
+                }
             })
             if (updateError) throw updateError
             await supabase.auth.refreshSession()
-            // Attends juste un petit délai pour que Supabase mette à jour la session côté client
-            setTimeout(() => {
-                router.replace(redirect)
-            }, 300)
-
+            router.replace(redirect)
             return
         }
 
-        // Si l'utilisateur a déjà accepté
-        if (session.user.user_metadata?.terms_accepted) {
-            router.replace(redirect)
-        } else {
-            router.replace(`/auth/accept-terms?redirect=${encodeURIComponent(redirect)}`)
-        }
+        // Pas accepté → accept-terms
+        router.replace(`/auth/accept-terms?redirect=${encodeURIComponent(redirect)}`)
+
     } catch (err) {
         console.error(err)
         router.replace('/auth/login')

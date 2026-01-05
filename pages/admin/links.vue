@@ -6,10 +6,7 @@
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
     <div v-else>
-        <div v-if="!streamer">
-            <StreamLinkCreate />
-        </div>
-        <div v-else
+        <div
             class="flex flex-col lg:flex-row sm:max-w-4xl lg:max-w-5xl xl:max-w-full sm:gap-6 lg:gap-12 xl:gap-24 2xl:gap-42 fade-in">
             <ConfirmPopup></ConfirmPopup>
             <!-- Édition du streamlink -->
@@ -33,7 +30,7 @@
 <script setup>
 // Stores
 const streamerStore = useStreamerStore()
-const { streamer, loading } = storeToRefs(streamerStore)
+const { loading } = storeToRefs(streamerStore)
 const user = useSupabaseUser()
 
 watch(user, async (val) => {
