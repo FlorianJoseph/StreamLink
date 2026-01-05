@@ -18,10 +18,11 @@ export const useStreamerStore = defineStore('streamer', () => {
             .from('Streamer')
             .select('*')
             .eq('id', user.value.sub)
-            .single()
+            .maybeSingle()
 
-        if (!error) streamer.value = data
         loading.value = false
+        if (data) streamer.value = data
+        return { data, error }
     }
 
     //Récupère tous les streamers
@@ -61,12 +62,21 @@ export const useStreamerStore = defineStore('streamer', () => {
     }
 
     // Créer un streamer
-    const createStreamer = async (payload) => {
-        const { data, error } = await supabase
+    const createStreamer = async () => {
+
+        // Vérifie si le streamer existe déjà
+        const { data, error } = await fetchStreamer()
+
+        if (error) throw error
+
+        if (data) return data
+
+        // Création si pas trouvé
+        const { data: newStreamer, error: insertError } = await supabase
             .from('Streamer')
             .insert({
                 id: user.value.sub,
-                username: payload.username,
+                username: user.value?.user_metadata.nickname,
                 bio: '',
                 avatar_url: '',
                 updated_at: new Date(),
@@ -74,8 +84,8 @@ export const useStreamerStore = defineStore('streamer', () => {
             .select()
             .single()
 
-        if (!error) streamer.value = data
-        return { data, error }
+        if (!insertError) streamer.value = newStreamer
+        return { newStreamer, insertError }
     }
 
     // Mettre à jour le streamer

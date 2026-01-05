@@ -51,6 +51,12 @@ const checked = ref(false)
 const error = ref(null)
 const router = useRouter()
 const route = useRoute()
+const streamerStore = useStreamerStore()
+const { streamer } = storeToRefs(streamerStore)
+const { accept } = useConsent()
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from '~/constants/legal'
 
 async function acceptTerms() {
     if (!checked.value) {
@@ -58,9 +64,37 @@ async function acceptTerms() {
         return
     }
 
-    const redirect = route.query.redirect ? decodeURIComponent(route.query.redirect) : '/'
-    router.push(`/auth/callback?redirect=${encodeURIComponent(redirect)}&accept=true`)
+    try {
+        // Stocke CGU + Privacy
+        if (!streamer.value) {
+            await streamerStore.createStreamer()
+        }
+
+        const streamerId = streamer.value?.id
+
+        await accept('terms', streamerId)
+        await accept('privacy', streamerId)
+
+        await supabase.auth.updateUser({
+            data: {
+                terms_version: CURRENT_TERMS_VERSION,
+                privacy_version: CURRENT_PRIVACY_VERSION
+            }
+        })
+        await supabase.auth.refreshSession()
+
+        const redirect = route.query.redirect ? decodeURIComponent(route.query.redirect) : '/'
+        router.replace(redirect)
+    } catch (e) {
+        console.error('Erreur lors de l’acceptation :', e?.message || e)
+        error.value = "Impossible d'enregistrer votre consentement. Réessayez."
+    }
 }
+
+onMounted(async () => {
+    console.log(user.value.user_metadata?.terms_version);
+    console.log(user.value.user_metadata?.privacy_version);
+})
 
 definePageMeta({
     layout: 'auth'
