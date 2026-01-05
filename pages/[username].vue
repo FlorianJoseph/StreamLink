@@ -72,7 +72,7 @@
 
         <template #footer>
             <div class="flex justify-center my-12">
-                <NuxtLink :to="'/admin/links'">
+                <NuxtLink :to="'/admin/links'" external>
                     <Button severity="contrast">
                         <span class="font-semibold font-sm">Rejoignez {{ streamer?.username }} sur StreamLink</span>
                     </Button>
