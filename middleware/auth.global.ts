@@ -44,10 +44,4 @@ export default defineNuxtRouteMiddleware(async (to) => {
             `/auth/accept-terms?redirect=${encodeURIComponent(to.fullPath)}`
         )
     }
-
-    // // Nettoie le code OAuth si présent
-    // if (to.query.code) {
-    //     const { code, ...query } = to.query
-    //     return navigateTo({ path: to.path, query }, { replace: true })
-    // }
 })
