@@ -55,7 +55,7 @@ const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
 const { accept } = useConsent()
 const supabase = useSupabaseClient()
-const user = useSupabaseUser()
+
 import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from '~/constants/legal'
 
 async function acceptTerms() {
@@ -92,11 +92,6 @@ async function acceptTerms() {
         error.value = "Impossible d'enregistrer votre consentement. Réessayez."
     }
 }
-
-onMounted(async () => {
-    console.log(user.value.user_metadata?.terms_version);
-    console.log(user.value.user_metadata?.privacy_version);
-})
 
 definePageMeta({
     layout: 'auth'

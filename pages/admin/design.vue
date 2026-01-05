@@ -6,10 +6,7 @@
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
     <div v-else>
-        <div v-if="!streamer">
-            <StreamLinkCreate />
-        </div>
-        <div v-else
+        <div
             class="flex flex-col lg:flex-row sm:max-w-4xl lg:max-w-5xl xl:max-w-full sm:gap-6 lg:gap-12 xl:gap-24 2xl:gap-42 fade-in">
             <!-- Édition du streamlink -->
             <div class="flex-1 lg:flex-[2] min-w-0">
@@ -32,7 +29,7 @@
 <script setup>
 // Stores
 const streamerStore = useStreamerStore()
-const { streamer, loading } = storeToRefs(streamerStore)
+const { loading } = storeToRefs(streamerStore)
 const user = useSupabaseUser()
 
 watch(user, async (val) => {
@@ -40,39 +37,6 @@ watch(user, async (val) => {
         await streamerStore.fetchStreamer(val.sub)
     }
 }, { immediate: true })
-
-const items = ref([
-    {
-        label: 'En-tête',
-        icon: 'lucide:square-user',
-        key: 'header'
-    },
-    {
-        label: 'Texte',
-        icon: 'lucide:case-sensitive',
-        key: 'text'
-    },
-    {
-        label: 'Boutons',
-        icon: 'lucide:stretch-horizontal',
-        key: 'buttons'
-    },
-    {
-        label: 'Arrière-plan',
-        icon: 'lucide:images',
-        key: 'background'
-    },
-    {
-        label: 'Thème',
-        icon: 'lucide:panels-top-left',
-        key: 'theme'
-    },
-    {
-        label: 'Couleurs',
-        icon: 'lucide:palette',
-        key: 'colors'
-    }
-])
 
 </script>
 
