@@ -37,9 +37,10 @@ export function useConsent() {
                 user_id: userId,
                 policy,
                 version,
+                accepted_at: new Date().toISOString()
             }, {
                 onConflict: ['user_id', 'policy'],
-                update: { version }
+                update: { version, accepted_at: new Date().toISOString() }
             })
 
         if (error) throw new Error(error.message)
