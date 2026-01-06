@@ -1,7 +1,7 @@
 import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from '~/constants/legal'
 import type { UserConsent } from '~/types/userConsent'
 
-export function useConsent() {
+export const useConsent = () => {
     const supabase = useSupabaseClient()
 
     // Vérifie que l'utilisateur à accepté les bonnes versions 
