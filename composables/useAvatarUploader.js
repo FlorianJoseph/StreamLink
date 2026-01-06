@@ -1,4 +1,4 @@
-export function useAvatarUploader(streamer) {
+export const useAvatarUploader = (streamer) => {
     const supabase = useSupabaseClient()
     const streamerStore = useStreamerStore()
 
