@@ -42,6 +42,8 @@ onMounted(async () => {
                 user.value.user_metadata.terms_version = CURRENT_TERMS_VERSION
                 user.value.user_metadata.privacy_version = CURRENT_PRIVACY_VERSION
             }
+            await supabase.auth.refreshSession()
+
             router.replace(redirect)
             return
         }
