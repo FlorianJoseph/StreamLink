@@ -56,17 +56,18 @@
                 </div>
             </template>
         </Card>
-
         <Card class="w-full mx-auto">
             <template #title>
-                <div class="flex flex-row justify-between items-center">
-                    <div class="flex flex-col">
-                        <span class="font-semibold">Supprimer pour toujours</span>
-                        <span class="text-sm text-gray-400">
-                            Supprimez définitivement votre profil StreamLink.
-                        </span>
-                    </div>
-                    <ConfirmDialog></ConfirmDialog>
+                <div class="flex flex-col">
+                    <span class="font-semibold">Supprimer pour toujours</span>
+                    <span class="text-sm text-gray-400">
+                        Supprimez définitivement votre profil StreamLink.
+                    </span>
+                </div>
+            </template>
+            <template #content>
+                <div class="flex flex-col items-center mt-4">
+                    <ConfirmDialog />
                     <Button @click="confirmDelete()" severity="danger" variant="outlined" label="Supprimer le compte" />
                 </div>
             </template>

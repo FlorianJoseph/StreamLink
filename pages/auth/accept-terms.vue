@@ -50,7 +50,8 @@
            --p-checkbox-checked-hover-background: #f0f0f0;" />
                         <div class="flex-1 sm:text-sm text-xs">
                             <p>Je souhaite recevoir les nouveautés, mises à jour et offres exclusives de StreamLink.</p>
-                            <small class="text-gray-400">(Facultatif, je peux me désabonner à tout moment)</small>
+                            <small class="text-gray-400">(Facultatif, vous pouvez modifier à tout moment depuis votre
+                                profil de compte)</small>
                         </div>
                     </label>
                 </div>
