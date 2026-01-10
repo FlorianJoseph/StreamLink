@@ -44,9 +44,9 @@
             <template #title>
                 <div class="flex flex-row justify-between items-center">
                     <div class="flex flex-col">
-                        <span class="font-semibold">Newsletter</span>
+                        <span class="font-semibold">Notifications</span>
                         <span class="text-sm text-gray-400">
-                            Recevoir les nouveautés et mises à jour de StreamLink
+                            Recevoir les mises à jour importantes et nouveautés de StreamLink
                         </span>
                     </div>
                     <Button @click="newsletterStore.toggle"

@@ -49,7 +49,7 @@
            --p-checkbox-checked-hover-border-color: #f0f0f0;
            --p-checkbox-checked-hover-background: #f0f0f0;" />
                         <div class="flex-1 sm:text-sm text-xs">
-                            <p>Je souhaite recevoir les nouveautés, mises à jour et offres exclusives de StreamLink.</p>
+                            <p> Je souhaite recevoir les mises à jour importantes et nouveautés liées à StreamLink.</p>
                             <small class="text-gray-400">(Facultatif, vous pouvez modifier à tout moment depuis votre
                                 profil de compte)</small>
                         </div>
