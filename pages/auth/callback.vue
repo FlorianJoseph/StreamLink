@@ -1,7 +1,9 @@
 <template>
     <div class="flex flex-col justify-center items-center min-h-full text-center">
-        <ProgressSpinner style="width: 60px; height: 60px" strokeWidth="5" fill="transparent" animationDuration=".5s"
-            aria-label="Chargement..." />
+        <ProgressSpinner
+            style="width: 50px; height: 50px;--p-progressspinner-color-one
+:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
+            strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Chargement..." />
         <h2 class="text-lg font-medium mt-4">Connexion en cours...</h2>
         <p class="text-gray-400 text-sm">
             Ne fermez pas cette page, vous allez être redirigé automatiquement.
@@ -42,6 +44,8 @@ onMounted(async () => {
                 user.value.user_metadata.terms_version = CURRENT_TERMS_VERSION
                 user.value.user_metadata.privacy_version = CURRENT_PRIVACY_VERSION
             }
+            await supabase.auth.refreshSession()
+
             router.replace(redirect)
             return
         }

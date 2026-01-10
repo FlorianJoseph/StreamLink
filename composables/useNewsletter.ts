@@ -1,17 +1,14 @@
+
 export const useNewsletter = () => {
     const supabase = useSupabaseClient()
-    const user = useSupabaseUser()
 
-    const subscribe = async (streamerId: string) => {
-        if (!user.value?.email) {
-            throw new Error('Email utilisateur introuvable')
-        }
+    const subscribe = async (uid: string) => {
+        const userId = uid
 
         const { error } = await supabase
             .from('NewsletterSubscriptions')
             .upsert({
-                user_id: streamerId,
-                email: user.value.email,
+                user_id: userId,
                 subscribed: true,
                 subscribed_at: new Date().toISOString(),
                 unsubscribed_at: null
@@ -22,23 +19,27 @@ export const useNewsletter = () => {
         if (error) throw error
     }
 
-    const unsubscribe = async (streamerId: string) => {
+    const unsubscribe = async (uid: string) => {
+        const userId = uid
+
         const { error } = await supabase
             .from('NewsletterSubscriptions')
             .update({
                 subscribed: false,
                 unsubscribed_at: new Date().toISOString()
             })
-            .eq('user_id', streamerId)
+            .eq('user_id', userId)
 
         if (error) throw error
     }
 
-    const isSubscribed = async (streamerId: string) => {
+    const isSubscribed = async (uid: string): Promise<boolean> => {
+        const userId = uid
+
         const { data, error } = await supabase
             .from('NewsletterSubscriptions')
             .select('subscribed')
-            .eq('user_id', streamerId)
+            .eq('user_id', userId)
             .maybeSingle()
 
         if (error) throw error

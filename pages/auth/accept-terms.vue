@@ -43,14 +43,15 @@
                     </label>
                     <label
                         class="flex items-start gap-3 w-full cursor-pointer hover:bg-gray-400/10 rounded-lg p-3 transition-all "
-                        :class="email && 'bg-gray-400/5 border-gray-300'">
-                        <Checkbox v-model="email" binary style="--p-checkbox-checked-background: #f0f0f0;
+                        :class="newsletter && 'bg-gray-400/5 border-gray-300'">
+                        <Checkbox v-model="newsletter" binary style="--p-checkbox-checked-background: #f0f0f0;
            --p-checkbox-checked-border-color: #f0f0f0;
            --p-checkbox-checked-hover-border-color: #f0f0f0;
            --p-checkbox-checked-hover-background: #f0f0f0;" />
                         <div class="flex-1 sm:text-sm text-xs">
-                            <p>Je souhaite recevoir les nouveautés, mises à jour et offres exclusives de StreamLink.</p>
-                            <small class="text-gray-400">(Facultatif, je peux me désabonner à tout moment)</small>
+                            <p> Je souhaite recevoir les mises à jour importantes et nouveautés liées à StreamLink.</p>
+                            <small class="text-gray-400">(Facultatif, vous pouvez modifier à tout moment depuis votre
+                                profil de compte)</small>
                         </div>
                     </label>
                 </div>
@@ -65,7 +66,7 @@
 
 <script setup>
 const privacy = ref(false)
-const email = ref(false)
+const newsletter = ref(false)
 const error = ref(null)
 const router = useRouter()
 const route = useRoute()
@@ -73,6 +74,8 @@ const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
 const { accept } = useConsent()
 const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+const { subscribe } = useNewsletter()
 
 import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from '~/constants/legal'
 
@@ -90,9 +93,18 @@ async function acceptTerms() {
 
         const streamerId = streamer.value?.id
 
-        // Stocke CGU + Privacy
+        // Stocke CGU + Privacy (obligatoire)
         await accept('terms', streamerId)
         await accept('privacy', streamerId)
+
+        // Newsletter (optionnelle)
+        if (newsletter.value === true) {
+            try {
+                await subscribe(streamerId)
+            } catch (e) {
+                console.warn('Newsletter non enregistrée', e)
+            }
+        }
 
         // Met à jour les métadonnées avec la dernière version
         await supabase.auth.updateUser({
@@ -101,11 +113,11 @@ async function acceptTerms() {
                 privacy_version: CURRENT_PRIVACY_VERSION
             }
         })
-        const user = useSupabaseUser()
         if (user.value?.user_metadata) {
             user.value.user_metadata.terms_version = CURRENT_TERMS_VERSION
             user.value.user_metadata.privacy_version = CURRENT_PRIVACY_VERSION
         }
+        await supabase.auth.refreshSession()
 
         const redirect = route.query.redirect ? decodeURIComponent(route.query.redirect) : '/'
         router.replace(redirect)
