@@ -1,4 +1,4 @@
-export function useVignetteUploader(linkRef) {
+export const useVignetteUploader = (linkRef) => {
     const supabase = useSupabaseClient()
     const linkStore = useLinkStore()
 

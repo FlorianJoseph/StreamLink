@@ -7,7 +7,7 @@ const shallowEqual = (a = {}, b = {}) => {
     return aKeys.every(key => a[key] === b[key])
 }
 
-export function useDesignActive(design) {
+export const useDesignActive = (design) => {
     const isActive = (section, key, value) =>
         computed(() => design.value?.[section]?.[key] === value)
 

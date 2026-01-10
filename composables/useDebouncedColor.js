@@ -11,7 +11,7 @@ const normalizeHexColor = (val) => {
 const isValidHexColor = (val) =>
     /^([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(val)
 
-export function useDebouncedColor(
+export const useDebouncedColor = (
     section,
     property,
     design,
@@ -21,7 +21,7 @@ export function useDebouncedColor(
         defaultValue = 'FFFFFF',
         validate = isValidHexColor
     } = {}
-) {
+) => {
     const lastValidValue = ref(
         (design.value?.[section]?.[property] ?? defaultValue).toUpperCase()
     )

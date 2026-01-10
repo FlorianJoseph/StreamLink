@@ -1,5 +1,11 @@
 <template>
-    <div class="flex flex-col gap-4 w-full lg:w-3xl">
+    <div v-if="loading" class="flex justify-center items-center pt-100 w-full">
+        <ProgressSpinner
+            style="width: 50px; height: 50px;--p-progressspinner-color-one
+:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
+            strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+    </div>
+    <div v-else class="flex flex-col gap-4 w-full lg:w-3xl">
         <!-- En-tête -->
         <div class="py-4">
             <div class="flex flex-col items-center h-12 justify-end">
@@ -14,7 +20,7 @@
             </div>
         </div>
 
-        <Card class="w-full mx-auto overflow-hidden" v-if="user">
+        <Card class="w-full mx-auto" v-if="user">
             <template #title>
                 <p class="font-semibold">Mes informations</p>
             </template>
@@ -33,7 +39,24 @@
                 </div>
             </template>
         </Card>
-        <Card>
+
+        <Card class="w-full mx-auto">
+            <template #title>
+                <div class="flex flex-row justify-between items-center">
+                    <div class="flex flex-col">
+                        <span class="font-semibold">Notifications</span>
+                        <span class="text-sm text-gray-400">
+                            Recevoir les mises à jour importantes et nouveautés de StreamLink
+                        </span>
+                    </div>
+                    <Button @click="newsletterStore.toggle"
+                        :severity="newsletterStore.subscribed ? 'secondary' : 'contrast'">
+                        {{ newsletterStore.subscribed ? 'Se désabonner' : 'S’abonner' }}
+                    </Button>
+                </div>
+            </template>
+        </Card>
+        <Card class="w-full mx-auto">
             <template #title>
                 <div class="flex flex-col">
                     <span class="font-semibold">Supprimer pour toujours</span>
@@ -43,8 +66,8 @@
                 </div>
             </template>
             <template #content>
-                <div class="flex justify-center mt-4">
-                    <ConfirmDialog></ConfirmDialog>
+                <div class="flex flex-col items-center mt-4">
+                    <ConfirmDialog />
                     <Button @click="confirmDelete()" severity="danger" variant="outlined" label="Supprimer le compte" />
                 </div>
             </template>
@@ -59,6 +82,10 @@ const confirm = useConfirm();
 const router = useRouter();
 const streamerStore = useStreamerStore()
 const supabase = useSupabaseClient();
+const newsletterStore = useNewsletterStore()
+const { loading } = storeToRefs(newsletterStore)
+
+onMounted(() => newsletterStore.fetchStatus())
 
 const confirmDelete = () => {
     confirm.require({

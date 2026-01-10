@@ -1,7 +1,9 @@
 <template>
     <div class="flex flex-col justify-center items-center min-h-full text-center">
-        <ProgressSpinner style="width: 60px; height: 60px" strokeWidth="5" fill="transparent" animationDuration=".5s"
-            aria-label="Chargement..." />
+        <ProgressSpinner
+            style="width: 50px; height: 50px;--p-progressspinner-color-one
+:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
+            strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Chargement..." />
         <h2 class="text-lg font-medium mt-4">Connexion en cours...</h2>
         <p class="text-gray-400 text-sm">
             Ne fermez pas cette page, vous allez être redirigé automatiquement.
@@ -10,10 +12,11 @@
 </template>
 
 <script setup>
-const user = useSupabaseUser()
 const router = useRouter()
 const route = useRoute()
 const supabase = useSupabaseClient()
+const { hasAccepted } = useConsent()
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from '~/constants/legal'
 
 onMounted(async () => {
     try {
@@ -23,29 +26,33 @@ onMounted(async () => {
         if (!session?.user) throw new Error('Utilisateur non authentifié')
 
         const redirect = route.query.redirect ? decodeURIComponent(route.query.redirect) : '/'
-        const accept = route.query.accept === 'true'
 
-        // Si on vient d'accepter les conditions
-        if (accept) {
+        // Vérifie si l'utilisateur a accepté les CGU en base
+        const termsOk = await hasAccepted('terms', session.user.id)
+        const privacyOk = await hasAccepted('privacy', session.user.id)
+
+        if (termsOk && privacyOk) {
             const { error: updateError } = await supabase.auth.updateUser({
-                data: { terms_accepted: true }
+                data: {
+                    terms_version: CURRENT_TERMS_VERSION,
+                    privacy_version: CURRENT_PRIVACY_VERSION
+                }
             })
             if (updateError) throw updateError
+            const user = useSupabaseUser()
+            if (user.value?.user_metadata) {
+                user.value.user_metadata.terms_version = CURRENT_TERMS_VERSION
+                user.value.user_metadata.privacy_version = CURRENT_PRIVACY_VERSION
+            }
             await supabase.auth.refreshSession()
-            // Attends juste un petit délai pour que Supabase mette à jour la session côté client
-            setTimeout(() => {
-                router.replace(redirect)
-            }, 300)
 
+            router.replace(redirect)
             return
         }
 
-        // Si l'utilisateur a déjà accepté
-        if (session.user.user_metadata?.terms_accepted) {
-            router.replace(redirect)
-        } else {
-            router.replace(`/auth/accept-terms?redirect=${encodeURIComponent(redirect)}`)
-        }
+        // Pas accepté → accept-terms
+        router.replace(`/auth/accept-terms?redirect=${encodeURIComponent(redirect)}`)
+
     } catch (err) {
         console.error(err)
         router.replace('/auth/login')
