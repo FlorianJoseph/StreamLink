@@ -1,8 +1,6 @@
-import type { NewsletterSubscription } from '~/types/newsletterSubscription'
 
 export const useNewsletter = () => {
     const supabase = useSupabaseClient()
-    const user = useSupabaseUser()
 
     const subscribe = async (uid: string) => {
         const userId = uid
