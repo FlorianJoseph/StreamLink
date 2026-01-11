@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col min-h-screen" :style="{ backgroundColor: pageBackgroundColor ?? '#121212' }">
         <!-- Contenu principal -->
-        <main class="mx-auto min-h-screen max-w-xl sm:pt-13 flex">
+        <main class="mx-auto min-h-screen max-w-xl sm:pt-13 flex w-full">
             <slot />
         </main>
     </div>
