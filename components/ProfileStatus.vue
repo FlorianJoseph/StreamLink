@@ -1,0 +1,90 @@
+<template>
+    <Card class="border border-zinc-700">
+        <template #header>
+            <div class="flex items-center justify-between p-4">
+                <div class="flex flex-col">
+                    <h2 class="text-xl font-semibold">Visibilité du profil</h2>
+                    <p class="text-sm text-gray-400">
+                        <span v-if="completionPercentage === 100">
+                            Ton profil est maintenant visible !
+                        </span>
+                        <span v-else>
+                            Complète ton profil pour apparaître sur la page découverte
+                        </span>
+                    </p>
+                </div>
+                <Icon :name="completionPercentage === 100 ? 'lucide:circle-check' : 'lucide:circle-alert'"
+                    :class="completionPercentage === 100 ? 'text-green-400' : 'text-yellow-400'" size="24" />
+            </div>
+        </template>
+        <template #content>
+            <!-- Barre de progression -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm text-gray-400">Complétion</span>
+                    <span class="text-sm font-semibold ">{{ completionPercentage }}%</span>
+                </div>
+                <ProgressBar :value="completionPercentage" :showValue="false"
+                    style="--p-progressbar-value-background: linear-gradient(to right, #8b5cf6, #ec4899)" />
+            </div>
+
+            <!-- Liste des items de complétion -->
+            <div class="space-y-3 mb-6">
+                <div v-for="(item, index) in completionItems" :key="index" class="flex items-center gap-3">
+                    <div :class="[
+                        'flex items-center justify-center',
+                        item.completed ? 'text-green-400' : 'text-yellow-400/60'
+                    ]">
+                        <Icon :name="item.completed ? 'lucide:circle-check' : 'lucide:circle-alert'" size="18" />
+                    </div>
+                    <NuxtLink v-if="!item.completed" :to="item.to" class="hover:underline text-gray-500">
+                        <span>{{ item.label }}</span>
+                    </NuxtLink>
+                    <span v-else class="text-gray-300">{{ item.label }}</span>
+                </div>
+            </div>
+
+            <!-- Bouton vers design -->
+            <div class="space-y-3">
+                <!-- Bouton principal : Compléter le profil -->
+                <NuxtLink to="/admin/links" class="block">
+                    <Button class="w-full" severity="contrast">
+                        <Icon name="lucide:link" size="18" />
+                        <span>Gérer mes liens</span>
+                    </Button>
+                </NuxtLink>
+
+                <!-- Bouton secondaire : Design -->
+                <NuxtLink to="/admin/design" class="block">
+                    <Button class="w-full" severity="secondary" outlined>
+                        <Icon name="lucide:brush" size="18" />
+                        <span>Personnaliser mon design</span>
+                    </Button>
+                </NuxtLink>
+            </div>
+        </template>
+    </Card>
+</template>
+
+<script setup>
+const streamerStore = useStreamerStore()
+const { streamer } = storeToRefs(streamerStore)
+const linkStore = useLinkStore()
+const { links } = storeToRefs(linkStore)
+
+// Items de complétion du profil
+const completionItems = computed(() => [
+    { label: 'Ajouter une photo de profil', completed: !!streamer.value?.avatar_url, to: '/admin/design' },
+    { label: 'Rédiger une description', completed: !!streamer.value?.bio, to: '/admin/links' },
+    { label: 'Ajouter au moins un lien', completed: (links.value?.length || 0) > 0, to: '/admin/links' },
+])
+
+// Pourcentage de complétion
+const completionPercentage = computed(() => {
+    const completed = completionItems.value.filter(item => item.completed).length
+    return Math.round((completed / completionItems.value.length) * 100)
+})
+
+const defaultAvatar =
+    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
+</script>
