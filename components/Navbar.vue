@@ -74,12 +74,12 @@ const menuItems = ref([
     {
         label: 'Dashboard',
         icon: 'lucide:grid',
-        route: '/dashboard'
+        route: '/dashboard',
+        badge: 'Nouveau',
     },
     {
         label: 'Mon StreamLink',
         icon: 'lucide:grid-2x2-plus',
-        badge: 'Nouveau',
         items: [
             {
                 route: '/admin/links',
@@ -89,8 +89,7 @@ const menuItems = ref([
             {
                 route: '/admin/design',
                 label: 'Design',
-                icon: 'lucide:brush',
-                badge: 'Nouveau'
+                icon: 'lucide:brush'
             },
         ]
     },
