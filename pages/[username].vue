@@ -20,7 +20,7 @@
                         ? 'bg-green-400 text-black'
                         : [fixedButtonBg, fixedButtonColor]
                         ">
-                    <Icon v-if="!copied" name="lucide:files" size="20" />
+                    <Icon v-if="!copied" name="lucide:copy" size="20" />
                     <Icon v-else name="lucide:check" size="20" />
                     <span class="text-sm sm:text-base">{{ copied ? 'Copié !' : 'Copier le StreamLink' }}</span>
                 </button>

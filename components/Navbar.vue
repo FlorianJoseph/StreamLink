@@ -30,7 +30,7 @@
                     <button
                         class="flex flex-row items-center gap-2 px-3 py-2 text-lg bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                         <Icon name="lucide:twitch" size="20" />
-                        <span class="text-base font-semibold">Se connecter avec Twitch</span>
+                        <span class="text-xs sm:text-base font-semibold">Se connecter avec Twitch</span>
                     </button>
                 </NuxtLink>
             </div>
@@ -48,12 +48,12 @@
                 <template #item="{ item, props }">
                     <NuxtLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
                         <a v-ripple :href="href" v-bind="props.action" @click="navigate">
-                            <span v-if="svgIcons[item.icon]" v-html="svgIcons[item.icon]" />
+                            <Icon :name="item.icon" size="24" />
                             <span>{{ item.label }}</span>
                         </a>
                     </NuxtLink>
                     <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
-                        <span v-if="svgIcons[item.icon]" v-html="svgIcons[item.icon]" />
+                        <Icon :name="item.icon" size="20" />
                         <span>{{ item.label }}</span>
                     </a>
                 </template>
@@ -72,9 +72,14 @@ const menuItems = ref([
         route: '/discover'
     },
     {
+        label: 'Dashboard',
+        icon: 'lucide:grid',
+        route: '/dashboard',
+        badge: 'Nouveau',
+    },
+    {
         label: 'Mon StreamLink',
         icon: 'lucide:grid-2x2-plus',
-        badge: 'Nouveau',
         items: [
             {
                 route: '/admin/links',
@@ -84,17 +89,11 @@ const menuItems = ref([
             {
                 route: '/admin/design',
                 label: 'Design',
-                icon: 'lucide:brush',
-                badge: 'Nouveau'
+                icon: 'lucide:palette'
             },
         ]
     },
 ]);
-
-const svgIcons = {
-    User: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
-    LogOut: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>',
-};
 
 const menu = ref();
 const popoverItems = ref([
@@ -102,12 +101,12 @@ const popoverItems = ref([
         items: [
             {
                 label: 'Compte',
-                icon: 'User',
+                icon: 'lucide:user',
                 route: '/admin/account'
             },
             {
                 label: 'Déconnexion',
-                icon: 'LogOut',
+                icon: 'lucide:log-out',
                 command: () => {
                     logOut();
                 }

@@ -44,14 +44,15 @@
             <template #title>
                 <div class="flex flex-row justify-between items-center">
                     <div class="flex flex-col">
-                        <span class="font-semibold">Notifications</span>
+                        <span class="font-semibold">Notifications par email</span>
                         <span class="text-sm text-gray-400">
                             Recevoir les mises à jour importantes et nouveautés de StreamLink
                         </span>
                     </div>
                     <Button @click="newsletterStore.toggle"
-                        :severity="newsletterStore.subscribed ? 'secondary' : 'contrast'">
-                        {{ newsletterStore.subscribed ? 'Se désabonner' : 'S’abonner' }}
+                        :severity="newsletterStore.subscribed ? 'secondary' : 'info'">
+                        <Icon :name="newsletterStore.subscribed ? 'lucide:mail-x' : 'lucide:mail-plus'" size="16" />
+                        {{ newsletterStore.subscribed ? 'Désactiver' : 'Activer' }}
                     </Button>
                 </div>
             </template>

@@ -38,7 +38,7 @@
           <span class="text-purple-500">tous tes besoins</span>
         </div>
         <div class="leading-tight">
-          Conçu pour les petits streamers qui veulent grandir sans se prendre la tête.
+          Conçu pour les streameurs qui veulent grandir sans se prendre la tête.
         </div>
       </div>
       <!-- Boucle -->
@@ -80,7 +80,7 @@ const features = [
   },
   {
     icon: 'lucide:link',
-    title: "Streamlink personnalisé",
+    title: "StreamLink personnalisé",
     description: "Crée ta page personnalisée pour centraliser tous tes liens importants."
   },
   {
