@@ -86,6 +86,4 @@ const completionPercentage = computed(() => {
     return Math.round((completed / completionItems.value.length) * 100)
 })
 
-const defaultAvatar =
-    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 </script>
