@@ -3,7 +3,7 @@
         <template #header>
             <div class="p-3">
                 <h2 class="text-lg font-semibold">Partager ta page</h2>
-                <p class="text-sm text-gray-400">
+                <p class="text-xs sm:text-sm text-gray-400">
                     Diffuse ton lien partout en un clic !
                 </p>
             </div>
@@ -11,12 +11,13 @@
         <template #content>
             <!-- Lien à copier -->
             <div class="mb-4">
-                <div class="flex gap-2">
+                <div class="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2">
                     <InputText type="text" class="flex-1" v-model="shareUrl" readonly
                         style="--p-inputtext-focus-border-color:none" />
                     <Button @click="copyLink" :severity="copied ? 'success' : 'secondary'" outlined>
                         <Icon :name="copied ? 'lucide:check' : 'lucide:copy'" size="18" class="flex-shrink-0" />
-                        <span class="transition-all duration-200">{{ copied ? "Copié !" : "Copier" }}</span>
+                        <span class="text-sm sm:text-base transition-all duration-200">{{ copied ? "Copié !" : "Copier"
+                            }}</span>
                     </Button>
                 </div>
             </div>
@@ -58,7 +59,7 @@ watch([streamer, qrcodeContainer], async ([streamerVal, container]) => {
     if (streamerVal?.username && container) {
         try {
             const canvas = await QRCode.toCanvas(shareUrl.value, {
-                width: 200,
+                width: 180,
                 margin: 2,
                 color: {
                     dark: '#000000',

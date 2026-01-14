@@ -30,7 +30,7 @@
                     <button
                         class="flex flex-row items-center gap-2 px-3 py-2 text-lg bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                         <Icon name="lucide:twitch" size="20" />
-                        <span class="text-base font-semibold">Se connecter avec Twitch</span>
+                        <span class="text-xs sm:text-base font-semibold">Se connecter avec Twitch</span>
                     </button>
                 </NuxtLink>
             </div>
@@ -89,7 +89,7 @@ const menuItems = ref([
             {
                 route: '/admin/design',
                 label: 'Design',
-                icon: 'lucide:brush'
+                icon: 'lucide:palette'
             },
         ]
     },

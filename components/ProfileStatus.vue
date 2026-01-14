@@ -3,8 +3,8 @@
         <template #header>
             <div class="flex items-center justify-between p-4">
                 <div class="flex flex-col">
-                    <h2 class="text-xl font-semibold">Visibilité du profil</h2>
-                    <p class="text-sm text-gray-400">
+                    <h2 class="text-lg font-semibold">Visibilité du profil</h2>
+                    <p class="text-xs sm:text-sm text-gray-400 max-w-9/10 sm:max-w-full">
                         <span v-if="completionPercentage === 100">
                             Ton profil est maintenant visible !
                         </span>
@@ -14,15 +14,16 @@
                     </p>
                 </div>
                 <Icon :name="completionPercentage === 100 ? 'lucide:circle-check' : 'lucide:circle-alert'"
-                    :class="completionPercentage === 100 ? 'text-green-400' : 'text-yellow-400'" size="24" />
+                    :class="completionPercentage === 100 ? 'text-green-400' : 'text-yellow-400'" size="24"
+                    class="flex-shrink-0" />
             </div>
         </template>
         <template #content>
             <!-- Barre de progression -->
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm text-gray-400">Complétion</span>
-                    <span class="text-sm font-semibold ">{{ completionPercentage }}%</span>
+                    <span class="text-xs sm:text-sm text-gray-400">Complétion</span>
+                    <span class="text-xs sm:text-sm font-semibold ">{{ completionPercentage }}%</span>
                 </div>
                 <ProgressBar :value="completionPercentage" :showValue="false"
                     style="--p-progressbar-value-background: linear-gradient(to right, #8b5cf6, #ec4899)" />
@@ -38,9 +39,9 @@
                         <Icon :name="item.completed ? 'lucide:circle-check' : 'lucide:circle-alert'" size="18" />
                     </div>
                     <NuxtLink v-if="!item.completed" :to="item.to" class="hover:underline text-gray-500">
-                        <span>{{ item.label }}</span>
+                        <span class="text-sm sm:text-base">{{ item.label }}</span>
                     </NuxtLink>
-                    <span v-else class="text-gray-300">{{ item.label }}</span>
+                    <span v-else class="text-sm sm:text-base text-gray-300">{{ item.label }}</span>
                 </div>
             </div>
 
@@ -50,15 +51,15 @@
                 <NuxtLink to="/admin/links" class="block">
                     <Button class="w-full" severity="contrast">
                         <Icon name="lucide:link" size="18" />
-                        <span>Gérer mes liens</span>
+                        <span class="text-sm sm:text-base">Gérer mes liens</span>
                     </Button>
                 </NuxtLink>
 
                 <!-- Bouton secondaire : Design -->
                 <NuxtLink to="/admin/design" class="block">
                     <Button class="w-full" severity="secondary" outlined>
-                        <Icon name="lucide:brush" size="18" />
-                        <span>Personnaliser mon design</span>
+                        <Icon name="lucide:palette" size="18" />
+                        <span class="text-sm sm:text-base">Personnaliser mon design</span>
                     </Button>
                 </NuxtLink>
             </div>

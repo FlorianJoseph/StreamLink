@@ -23,7 +23,7 @@
                         <h2 class="text-lg font-semibold">
                             Approfondir ton profil
                         </h2>
-                        <p class="text-sm text-gray-400">
+                        <p class="text-xs sm:text-sm text-gray-400">
                             Optimise ta page pour attirer plus de visiteurs
                         </p>
                     </div>
@@ -31,51 +31,25 @@
 
                 <template #content>
                     <div class="space-y-3">
-                        <!-- Description -->
-                        <NuxtLink to="/admin/links"
-                            class="flex items-center justify-between p-3 rounded-lg border border-zinc-700 hover:border-zinc-500 transition">
+                        <NuxtLink v-for="section in profileSections" :key="section.label" :to="section.to" class="flex items-center justify-between p-3 rounded-lg border border-zinc-700
+           hover:border-zinc-500 transition">
                             <div class="flex items-center gap-3">
-                                <Icon name="lucide:pen-line" size="18" class="text-indigo-400" />
+                                <Icon :name="section.icon" size="18" class="flex-shrink-0" :class="section.color" />
                                 <div>
-                                    <p class="font-medium">Description</p>
-                                    <p class="text-xs text-gray-400">
-                                        Présente ton contenu et ton univers
+                                    <p class="text-sm sm:text-base font-medium">
+                                        {{ section.label }}
                                     </p>
+                                    <p class="text-xs text-gray-400">
+                                        {{ section.description }}
+                                    </p>
+                                    <span v-if="section.premium" class="text-[10px] px-2 py-0.5 rounded-full
+           bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+                                        Premium
+                                    </span>
                                 </div>
                             </div>
-                            <Icon name="lucide:chevron-right" class="text-gray-500" />
+                            <Icon name="lucide:chevron-right" class="text-gray-500 flex-shrink-0" />
                         </NuxtLink>
-
-                        <!-- Liens -->
-                        <NuxtLink to="/admin/links"
-                            class="flex items-center justify-between p-3 rounded-lg border border-zinc-700 hover:border-zinc-500 transition">
-                            <div class="flex items-center gap-3">
-                                <Icon name="lucide:link" size="18" class="text-pink-400" />
-                                <div>
-                                    <p class="font-medium">Liens</p>
-                                    <p class="text-xs text-gray-400">
-                                        Ajoute et organise tes plateformes
-                                    </p>
-                                </div>
-                            </div>
-                            <Icon name="lucide:chevron-right" class="text-gray-500" />
-                        </NuxtLink>
-
-                        <!-- Design -->
-                        <NuxtLink to="/admin/design"
-                            class="flex items-center justify-between p-3 rounded-lg border border-zinc-700 hover:border-zinc-500 transition">
-                            <div class="flex items-center gap-3">
-                                <Icon name="lucide:palette" size="18" class="text-emerald-400" />
-                                <div>
-                                    <p class="font-medium">Design</p>
-                                    <p class="text-xs text-gray-400">
-                                        Personnalise l’apparence de ta page
-                                    </p>
-                                </div>
-                            </div>
-                            <Icon name="lucide:chevron-right" class="text-gray-500" />
-                        </NuxtLink>
-
                     </div>
                 </template>
             </Card>
@@ -88,7 +62,7 @@
                     <div class="p-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                         <div>
                             <h2 class="text-lg font-semibold">Prochainement</h2>
-                            <p class="text-sm text-gray-400">
+                            <p class="text-xs sm:text-sm text-gray-400">
                                 De nouvelles fonctionnalités arrivent bientôt pour rendre ton StreamLink encore plus
                                 puissant !
                             </p>
@@ -123,16 +97,18 @@
                         </div>
                     </div>
                     <!-- CTA Newsletter -->
-                    <div class="mt-4 pt-4 border-t border-zinc-700 px-4">
+                    <div class="mt-4 pt-4 border-t border-zinc-700">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <p class="text-sm text-gray-400">
+                            <p class="text-xs sm:text-sm text-gray-400 text-center">
                                 Sois informé en avant-première des nouvelles fonctionnalités StreamLink
                             </p>
                             <Button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed" severity="info"
                                 class="flex items-center gap-2">
                                 <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'"
                                     size="16" />
-                                {{ newsletterStore.subscribed ? 'Inscrit aux nouveautés' : 'Recevoir les nouveautés' }}
+                                <span class="text-sm sm:text-base">
+                                    {{ newsletterStore.subscribed ? 'Inscrit aux nouveautés' : 'Recevoir les nouveautés'
+                                    }}</span>
                             </Button>
                         </div>
                     </div>
@@ -147,6 +123,37 @@ const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
 const newsletterStore = useNewsletterStore()
 const user = useSupabaseUser()
+
+const profileSections = [
+    {
+        label: 'Description',
+        description: 'Présente ton contenu et ton univers',
+        to: '/admin/links',
+        icon: 'lucide:pen-line',
+        color: 'text-indigo-400'
+    },
+    {
+        label: 'Liens',
+        description: 'Ajoute et organise tes plateformes',
+        to: '/admin/links',
+        icon: 'lucide:link',
+        color: 'text-pink-400'
+    },
+    {
+        label: 'Design',
+        description: 'Personnalise l’apparence de ta page',
+        to: '/admin/design',
+        icon: 'lucide:palette',
+        color: 'text-emerald-400'
+    },
+    // {
+    //     label: 'Statistiques avancées',
+    //     icon: 'lucide:star',
+    //     color: 'text-yellow-400',
+    //     premium: true
+    // }
+]
+
 onMounted(() => newsletterStore.fetchStatus())
 
 const subscribeIfNotYet = async () => {
