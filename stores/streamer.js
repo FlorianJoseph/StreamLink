@@ -28,7 +28,7 @@ export const useStreamerStore = defineStore('streamer', () => {
     //Récupère tous les streamers
     const fetchAllStreamers = async () => {
         const { data, error } = await supabase
-            .from('Streamer')
+            .from('streamer_visible')
             .select('*')
             .order('created_at', { ascending: true })
         if (error) {
