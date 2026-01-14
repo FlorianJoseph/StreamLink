@@ -23,7 +23,7 @@
                     </button>
                     <button class="flex items-center px-2 py-1.5 rounded-full transition-all gap-2"
                         :class="[fixedButtonBg, fixedButtonColor]">
-                        <Icon name="lucide:files" size="18" />
+                        <Icon name="lucide:copy" size="18" />
                         <span class="text-xs sm:text-sm">Copier le StreamLink</span>
                     </button>
                 </div>

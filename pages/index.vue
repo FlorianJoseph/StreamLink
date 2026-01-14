@@ -1,5 +1,4 @@
 <template>
-  <NotificationBanner />
   <div class="relative h-160 lg:min-h-0 flex lg:flex-row flex-col">
     <div class="flex lg:flex lg:flex-row flex-col justify-center md:justify-normal h-full flex-1">
       <div class="relative flex-1 z-20 flex items-center justify-center">
@@ -38,7 +37,7 @@
           <span class="text-purple-500">tous tes besoins</span>
         </div>
         <div class="leading-tight">
-          Conçu pour les petits streamers qui veulent grandir sans se prendre la tête.
+          Conçu pour les streameurs qui veulent grandir sans se prendre la tête.
         </div>
       </div>
       <!-- Boucle -->
@@ -80,7 +79,7 @@ const features = [
   },
   {
     icon: 'lucide:link',
-    title: "Streamlink personnalisé",
+    title: "StreamLink personnalisé",
     description: "Crée ta page personnalisée pour centraliser tous tes liens importants."
   },
   {

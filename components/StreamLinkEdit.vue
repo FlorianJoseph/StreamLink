@@ -14,7 +14,7 @@
             </div>
         </div>
         <!-- Avatar et bouton de modification -->
-        <div class="flex flex-row gap-4 items-center max-w-2xl">
+        <div class="flex flex-row gap-4 items-center max-w-2xl lg:w-lg xl:w-2xl">
             <AvatarUploader />
             <div class="min-w-0">
                 <div class="flex flex-col" @click="openStreamerModal()">
