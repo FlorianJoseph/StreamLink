@@ -72,8 +72,8 @@ const menuItems = ref([
         route: '/discover'
     },
     {
-        label: 'Dashboard',
-        icon: 'lucide:grid',
+        label: 'Tableau de bord',
+        icon: 'lucide:layout-dashboard',
         route: '/dashboard',
         badge: 'Nouveau',
     },
