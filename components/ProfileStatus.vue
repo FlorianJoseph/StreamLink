@@ -5,17 +5,16 @@
                 <div class="flex flex-col">
                     <h2 class="text-lg font-semibold">Visibilité du profil</h2>
                     <p class="text-xs sm:text-sm text-gray-400 max-w-9/10 sm:max-w-full">
-                        <span v-if="completionPercentage === 100">
+                        <span v-if="profileVisible">
                             Ton profil est maintenant visible !
                         </span>
                         <span v-else>
-                            Complète ton profil pour apparaître sur la page découverte
+                            Complète au moins 2 des 3 quêtes pour apparaître sur la page découverte
                         </span>
                     </p>
                 </div>
-                <Icon :name="completionPercentage === 100 ? 'lucide:circle-check' : 'lucide:circle-alert'"
-                    :class="completionPercentage === 100 ? 'text-green-400' : 'text-yellow-400'" size="24"
-                    class="flex-shrink-0" />
+                <Icon :name="profileVisible ? 'lucide:circle-check' : 'lucide:circle-alert'"
+                    :class="profileVisible ? 'text-green-400' : 'text-yellow-400'" size="24" class="flex-shrink-0" />
             </div>
         </template>
         <template #content>
@@ -23,10 +22,11 @@
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-xs sm:text-sm text-gray-400">Complétion</span>
-                    <span class="text-xs sm:text-sm font-semibold ">{{ completionPercentage }}%</span>
+                    <span class="text-xs sm:text-sm font-semibold ">{{ completedQuests }}/{{ totalQuests }} quêtes
+                        complétées</span>
                 </div>
                 <ProgressBar :value="completionPercentage" :showValue="false"
-                    style="--p-progressbar-value-background: linear-gradient(to right, #8b5cf6, #ec4899)" />
+                    style="--p-progressbar-value-background: linear-gradient(to right, #10b981, #059669)" />
             </div>
 
             <!-- Liste des items de complétion -->
@@ -80,10 +80,14 @@ const completionItems = computed(() => [
     { label: 'Ajouter au moins un lien', completed: (links.value?.length || 0) > 0, to: '/admin/links' },
 ])
 
+const totalQuests = completionItems.value.length
 // Pourcentage de complétion
-const completionPercentage = computed(() => {
-    const completed = completionItems.value.filter(item => item.completed).length
-    return Math.round((completed / completionItems.value.length) * 100)
-})
+const completionPercentage = computed(() => Math.round((completedQuests.value / completionItems.value.length) * 100))
+
+// Profil visible si au moins 2/3
+const profileVisible = computed(() => completedQuests.value >= 2)
+
+// Nombre de quêtes complétées
+const completedQuests = computed(() => completionItems.value.filter(i => i.completed).length)
 
 </script>
