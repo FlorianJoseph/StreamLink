@@ -1,5 +1,5 @@
 <template>
-    <Menubar :model="menuItems" class="h-13 fixed top-0 left-0 right-0 z-50" style="--p-menubar-border-radius:0">
+    <Menubar :model="menuItems" class="h-13 fixed top-0 left-0 right-0 z-100" style="--p-menubar-border-radius:0">
         <template #start>
             <NuxtLink v-ripple :to="'/'">
                 <Home />
@@ -60,6 +60,7 @@
             </Menu>
         </template>
     </Menubar>
+    <NotificationBanner />
 </template>
 
 <script setup>
