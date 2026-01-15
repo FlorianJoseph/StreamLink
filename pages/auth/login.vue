@@ -86,12 +86,13 @@ function goBack() {
 async function twitchAuth() {
     try {
         error.value = null
+        const target = route.query.redirect ? route.query.redirect : '/dashboard';
+        localStorage.setItem('post_auth_redirect', target);
+        const callback = `${window.location.origin}/auth/callback`;
         const { data, error: authError } = await supabase.auth.signInWithOAuth({
             provider: 'twitch',
             options: {
-                redirectTo: route.query.redirect
-                    ? `${window.location.origin}/auth/callback?redirect=${route.query.redirect}`
-                    : `${window.location.origin}/auth/callback`
+                redirectTo: callback
             }
         })
         if (authError) throw authError
