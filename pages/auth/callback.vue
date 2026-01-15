@@ -25,7 +25,23 @@ onMounted(async () => {
         if (error) throw error
         if (!session?.user) throw new Error('Utilisateur non authentifié')
 
-        const redirect = route.query.redirect ? decodeURIComponent(route.query.redirect) : '/'
+        const rawRedirect = (() => {
+            try { return localStorage.getItem('post_auth_redirect'); } catch (e) { return null; }
+        })();
+        const validateRedirect = (r) => {
+            if (!r) return '/';
+            try {
+                const url = new URL(r, window.location.origin);
+                if (url.origin !== window.location.origin) return '/';
+                return (url.pathname + url.search + url.hash) || '/';
+            }
+            catch (e) {
+                return '/';
+            }
+        };
+
+        const redirect = validateRedirect(rawRedirect);
+        try { localStorage.removeItem('post_auth_redirect'); } catch (e) { /* ignore */ }
 
         // Vérifie si l'utilisateur a accepté les CGU en base
         const termsOk = await hasAccepted('terms', session.user.id)
