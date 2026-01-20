@@ -187,7 +187,7 @@ watch(user, async (val) => {
 }, { immediate: true })
 
 definePageMeta({
-    layout: 'dashboard'
+    layout: 'fullscreen'
 })
 </script>
 

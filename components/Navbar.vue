@@ -94,6 +94,11 @@ const menuItems = ref([
             },
         ]
     },
+    {
+        label: 'Planning',
+        icon: 'lucide:calendar',
+        route: '/schedule'
+    },
 ]);
 
 const menu = ref();
