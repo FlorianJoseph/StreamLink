@@ -17,25 +17,26 @@ export const useScheduleStore = defineStore('schedule', () => {
     const loading = ref(false)
     const schedule = ref<Schedule | null>(null)
 
+    // Récupère le planning de l'utilisateur
     async function fetchSchedule(): Promise<{ data: Schedule | null; error: any | null }> {
         if (!user.value) return { data: null, error: 'No user' }
         loading.value = true
-        try {
-            const { data, error } = await supabase
-                .from('Schedule')
-                .select('*')
-                .eq('user_id', user.value.sub)
-                .maybeSingle()
 
-            loading.value = false
-            if (error) return { data: null, error }
-            schedule.value = data || null
-            return { data: schedule.value, error: null }
-        } catch (error) {
+        const { data, error } = await supabase
+            .from('Schedule')
+            .select('*')
+            .eq('user_id', user.value.sub)
+            .maybeSingle()
+
+        loading.value = false
+
+        if (error) {
             console.error('Erreur de récupération du planning:', error)
-            loading.value = false
-            return { data: null, error }
+            return { data: null, error: error.message }
         }
+
+        schedule.value = data ?? null
+        return { data: schedule.value, error: null }
     }
 
     // Crée un planning si l'utilisateur n'en a pas
@@ -43,46 +44,45 @@ export const useScheduleStore = defineStore('schedule', () => {
         if (!user.value) return { data: null, error: 'No user' }
         loading.value = true
 
-        try {
-            const { data, error } = await supabase
-                .from('Schedule')
-                .insert([{ user_id: user.value.sub, ...payload }])
-                .select()
-                .single()
+        const { data, error } = await supabase
+            .from('Schedule')
+            .insert([{ user_id: user.value.sub, ...payload }])
+            .select()
+            .single()
 
-            schedule.value = data
-            loading.value = false
-            return { data: schedule.value, error: null }
-        } catch (error) {
+        loading.value = false
+
+        if (error) {
             console.error('Erreur de création du planning:', error)
-            loading.value = false
-            return { data: null, error }
+            return { data: null, error: error.message }
         }
+
+        schedule.value = data
+        return { data: schedule.value, error: null }
     }
 
     // Met à jour le planning existant
-    // async function updateSchedule(payload: Partial<Schedule>): Promise<{ data: Schedule | null; error: any | null }> {
-    //     if (!schedule.value) return { data: null, error: 'No schedule' }
-    //     loading.value = true
+    async function updateSchedule(payload: Partial<Schedule>): Promise<{ data: Schedule | null; error: any | null }> {
+        if (!schedule.value) return { data: null, error: 'Pas de planning' }
 
-    //     try {
-    //         const { data, error } = await supabase
-    //             .from('Schedule')
-    //             .update(payload)
-    //             .eq('id', schedule.value.id)
-    //             .select()
-    //             .single()
+        const { data, error } = await supabase
+            .from('Schedule')
+            .update(payload)
+            .eq('id', schedule.value.id)
+            .select()
+            .single()
 
-    //         schedule.value = data
-    //         loading.value = false
-    //         return { data: schedule.value, error: null }
-    //     } catch (error) {
-    //         console.error('Erreur de mise à jour du planning:', error)
-    //         loading.value = false
-    //         return { data: null, error }
-    //     }
-    // }
 
+        if (error) {
+            console.error('Erreur de mise à jour du planning:', error)
+            return { data: null, error: error.message }
+        }
+
+        schedule.value = data
+        return { data: schedule.value, error: null }
+    }
+
+    // Génère le sous-titre pour la semaine en cours
     function getCurrentWeekSubtitle(): string {
         const today = new Date()
 
@@ -104,22 +104,25 @@ export const useScheduleStore = defineStore('schedule', () => {
         return `Du ${mondayStr} au ${sundayStr}`
     }
 
+    // Récupère le planning ou en crée un nouveau s'il n'existe pas
     async function getOrCreateSchedule() {
         if (!user.value) return null
 
         loading.value = true
         const { data } = await fetchSchedule()
         if (data) {
+            loading.value = false
             return data
         } else {
             const { data: newSchedule } = await createSchedule({
-                title: 'Mon planning',
+                title: 'Mon planning de stream',
                 subtitle: getCurrentWeekSubtitle(),
                 style: {}
             })
+            loading.value = false
             return newSchedule
         }
     }
 
-    return { loading, fetchSchedule, createSchedule, getOrCreateSchedule, schedule }
+    return { loading, fetchSchedule, updateSchedule, createSchedule, getOrCreateSchedule, schedule }
 })
