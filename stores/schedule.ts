@@ -9,7 +9,6 @@ type Result<T> = { data: T | null; error: string | null }
 
 export const useScheduleStore = defineStore('schedule', () => {
     const supabase = useSupabaseClient()
-
     const user = useSupabaseUser()
     const uid = computed(() => user.value?.sub ?? user.value?.id ?? null)
     const loading = ref(true)
