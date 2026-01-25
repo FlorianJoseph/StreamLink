@@ -108,151 +108,22 @@
                         </template>
                     </Menubar>
                     <!-- Planning hebdomadaire -->
-                    <Card class="p-4 relative" :style="{ backgroundColor: schedule?.style?.bgColor || '' }">
-                        <template #header>
-                            <div class="flex items-center gap-4">
-                                <div class="flex flex-col">
-
-                                    <!-- TITLE -->
-                                    <template v-if="editing.field === 'title'">
-                                        <input :ref="el => inputRefs['title'] = el" v-model="editing.value"
-                                            @blur="saveEdit" @keyup.enter="saveEdit"
-                                            @keyup.esc.prevent.stop="cancelEdit"
-                                            class="text-4xl font-bold bg-transparent border-none focus:outline-none w-full truncate" />
-                                    </template>
-                                    <template v-else>
-                                        <div class="flex items-center gap-2 hover:cursor-pointer"
-                                            @click="editField('title')">
-                                            <h1 class="text-4xl font-bold">
-                                                {{ schedule?.title }}
-                                            </h1>
-                                            <Icon name="lucide:pencil" size="34" class="transition" />
-                                        </div>
-                                    </template>
-
-                                    <!-- SUBTITLE -->
-                                    <template v-if="editing.field === 'subtitle'">
-                                        <input :ref="el => inputRefs['subtitle'] = el" v-model="editing.value"
-                                            @blur="saveEdit" @keyup.enter="saveEdit"
-                                            @keyup.esc.prevent.stop="cancelEdit"
-                                            class="text-base font-semibold bg-transparent border-none focus:outline-none w-full truncate" />
-                                    </template>
-                                    <template v-else>
-                                        <div class="flex items-center gap-2 hover:cursor-pointer"
-                                            @click="editField('subtitle')">
-                                            <div class="text-base font-semibold">
-                                                {{ schedule?.subtitle }}
-                                            </div>
-                                            <Icon name="lucide:pencil" size="18" class="transition" />
-                                        </div>
-                                    </template>
-
-                                </div>
-                            </div>
-                        </template>
-                        <template #content>
-                            <div class="flex gap-2 p-3">
-                                <div v-for="day in days" :key="day" class="flex-1" @click="visible = true">
-                                    <div class="flex gap-2 p-3">
-                                        <div class="flex-1 text-center rounded-lg font-bold text-lg">
-                                            {{ day }}
-                                        </div>
-                                    </div>
-                                    <Card
-                                        class="h-110 border border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition">
-                                        <template #content>
-                                            <div class="border-zinc-700 ">
-                                                <Icon name="lucide:plus" size="32" />
-                                            </div>
-                                        </template>
-
-                                    </Card>
-                                </div>
-                            </div>
-                        </template>
-                        <template #footer>
-                            <div
-                                class="absolute bottom-3 right-3 text-xs text-zinc-400/60 select-none pointer-events-none">
-                                Fait avec <span class="font-semibold">StreamLink</span>
-                            </div>
-                        </template>
-                    </Card>
+                    <ScheduleView />
                 </div>
             </div>
         </div>
     </div>
-    <Dialog v-model:visible="visible" modal :header="`Ajouter un créneau – ${selectedDay}`" :style="{ width: '25rem' }">
-        <InputText type="text" v-model="game" />
-        <div class="flex justify-end gap-2">
-            <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
-            <Button type="button" label="Save" @click="visible = false"></Button>
-        </div>
-    </Dialog>
 </template>
 
 <script setup lang="ts">
+
 const scheduleStore = useScheduleStore()
-const { schedule, loading } = storeToRefs(scheduleStore)
+const { loading } = storeToRefs(scheduleStore)
 
-// Édition du titre et du sous-titre
-const editing = ref<{
-    field: 'title' | 'subtitle' | null
-    value: string
-}>({
-    field: null,
-    value: ''
-})
-
-const inputRefs = ref<Record<string, HTMLInputElement | null>>({})
-
-// Démarre l’édition du titre ou du sous-titre
-function editField(field: 'title' | 'subtitle') {
-    if (!schedule.value) return
-
-    editing.value = {
-        field,
-        value: schedule.value[field] ?? ''
-    }
-
-    nextTick(() => {
-        inputRefs.value[field]?.focus()
-    })
-}
-// Sauvegarde les modifications apportées au titre ou au sous-titre
-async function saveEdit() {
-    if (!schedule.value || !editing.value.field) return
-
-    const field = editing.value.field
-    const newValue = editing.value.value
-
-    if (newValue === schedule.value[field]) {
-        editing.value.field = null
-        return
-    }
-
-    await scheduleStore.updateSchedule({
-        [field]: newValue
-    })
-
-    editing.value.field = null
-}
-
-function cancelEdit() {
-    editing.value.field = null
-    editing.value.value = ''
-}
-
-const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
 const bgColorLocal = ref('FFFFFF')
-const visible = ref(false)
-
-const selectedDay = ref('')
-const game = ref('')
 
 onMounted(async () => {
-    loading.value = true
     await scheduleStore.getOrCreateSchedule()
-    loading.value = false
 })
 
 definePageMeta({

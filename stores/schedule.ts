@@ -1,38 +1,33 @@
 import { defineStore } from 'pinia'
+import type { Tables, TablesInsert, TablesUpdate } from '~/types/database.types'
 
-export interface Schedule {
-    id?: string
-    user_id: string
-    title: string
-    subtitle?: string
-    style?: Record<string, any>
-    created_at?: string
-    updated_at?: string
-}
+type Schedule = Tables<'Schedule'>
+type ScheduleInsert = TablesInsert<'Schedule'>
+type ScheduleInsertPayload = Omit<ScheduleInsert, 'user_id'>
+type ScheduleUpdate = TablesUpdate<'Schedule'>
+type Result<T> = { data: T | null; error: string | null }
 
 export const useScheduleStore = defineStore('schedule', () => {
     const supabase = useSupabaseClient()
-    const user = useSupabaseUser()
 
-    const loading = ref(false)
-    const schedule = ref<Schedule | null>(null)
+    const user = useSupabaseUser()
+    const uid = computed(() => user.value?.sub ?? user.value?.id ?? null)
+    const loading = ref(true)
+    const schedule = shallowRef<Schedule | null>(null)
 
     // Récupère le planning de l'utilisateur
-    async function fetchSchedule(): Promise<{ data: Schedule | null; error: any | null }> {
-        if (!user.value) return { data: null, error: 'No user' }
-        loading.value = true
+    async function fetchSchedule(): Promise<Result<Schedule>> {
+        if (!uid.value) return { data: null, error: 'Aucun utilisateur connecté.' }
 
         const { data, error } = await supabase
             .from('Schedule')
             .select('*')
-            .eq('user_id', user.value.sub)
+            .eq('user_id', uid.value)
             .maybeSingle()
-
-        loading.value = false
 
         if (error) {
             console.error('Erreur de récupération du planning:', error)
-            return { data: null, error: error.message }
+            return { data: null, error: error.message ?? String(error) }
         }
 
         schedule.value = data ?? null
@@ -40,21 +35,18 @@ export const useScheduleStore = defineStore('schedule', () => {
     }
 
     // Crée un planning si l'utilisateur n'en a pas
-    async function createSchedule(payload: Partial<Schedule>): Promise<{ data: Schedule | null; error: any | null }> {
-        if (!user.value) return { data: null, error: 'No user' }
-        loading.value = true
+    async function createSchedule(payload: ScheduleInsertPayload): Promise<Result<Schedule>> {
+        if (!uid.value) return { data: null, error: 'Aucun utilisateur connecté.' }
 
         const { data, error } = await supabase
             .from('Schedule')
-            .insert([{ user_id: user.value.sub, ...payload }])
+            .insert([{ user_id: uid.value, ...payload }])
             .select()
             .single()
 
-        loading.value = false
-
         if (error) {
             console.error('Erreur de création du planning:', error)
-            return { data: null, error: error.message }
+            return { data: null, error: error.message ?? String(error) }
         }
 
         schedule.value = data
@@ -62,8 +54,8 @@ export const useScheduleStore = defineStore('schedule', () => {
     }
 
     // Met à jour le planning existant
-    async function updateSchedule(payload: Partial<Schedule>): Promise<{ data: Schedule | null; error: any | null }> {
-        if (!schedule.value) return { data: null, error: 'Pas de planning' }
+    async function updateSchedule(payload: ScheduleUpdate): Promise<Result<Schedule>> {
+        if (!schedule.value) return { data: null, error: 'Pas de planning à mettre à jour.' }
 
         const { data, error } = await supabase
             .from('Schedule')
@@ -72,10 +64,9 @@ export const useScheduleStore = defineStore('schedule', () => {
             .select()
             .single()
 
-
         if (error) {
             console.error('Erreur de mise à jour du planning:', error)
-            return { data: null, error: error.message }
+            return { data: null, error: error.message ?? String(error) }
         }
 
         schedule.value = data
@@ -83,15 +74,15 @@ export const useScheduleStore = defineStore('schedule', () => {
     }
 
     // Génère le sous-titre pour la semaine en cours
-    function getCurrentWeekSubtitle(): string {
+    function getCurrentWeekSubtitle() {
         const today = new Date()
 
         // Jour de la semaine (0 = dimanche, 1 = lundi, ..., 6 = samedi)
         const day = today.getDay()
 
-        // Calcul du lundi et vendredi de la semaine en cours
+        // Calcul du lundi et dimanche de la semaine en cours
         const monday = new Date(today)
-        monday.setDate(today.getDate() - ((day + 6) % 7)) // si aujourd'hui dimanche, lundi = -6
+        monday.setDate(today.getDate() - ((day + 6) % 7))
 
         const sunday = new Date(monday)
         sunday.setDate(monday.getDate() + 6)
@@ -105,22 +96,22 @@ export const useScheduleStore = defineStore('schedule', () => {
     }
 
     // Récupère le planning ou en crée un nouveau s'il n'existe pas
-    async function getOrCreateSchedule() {
-        if (!user.value) return null
-
+    async function getOrCreateSchedule(): Promise<Schedule | null> {
+        if (!uid.value) return null
         loading.value = true
-        const { data } = await fetchSchedule()
-        if (data) {
-            loading.value = false
-            return data
-        } else {
+        try {
+            const { data } = await fetchSchedule()
+            if (data) return data
+
             const { data: newSchedule } = await createSchedule({
                 title: 'Mon planning de stream',
                 subtitle: getCurrentWeekSubtitle(),
-                style: {}
+                style: { bgColor: '18181B', textColor: 'FFFFFF' }
             })
-            loading.value = false
             return newSchedule
+        }
+        finally {
+            loading.value = false
         }
     }
 
