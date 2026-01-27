@@ -225,10 +225,9 @@ function openSlotModal(day: string, slot?: any) {
         editingSlot.value = slot
         title.value = slot.title
         game.value = slot.game
-        startTime.value = slot.start_at.slice(11, 16)
-        endTime.value = slot.end_at.slice(11, 16)
+        startTime.value = formatTimeForInput(slot.start_at)
+        endTime.value = formatTimeForInput(slot.end_at)
         selectedDays.value = daysOptions.find(d => d.label === slot.day)
-
     } else {
         // Nouveau slot
         editingSlot.value = null
@@ -239,6 +238,13 @@ function openSlotModal(day: string, slot?: any) {
         endTime.value = '14:00'
     }
     visible.value = true
+}
+
+function formatTimeForInput(ts: string) {
+    const d = new Date(ts)
+    const hours = d.getHours().toString().padStart(2, '0')
+    const minutes = d.getMinutes().toString().padStart(2, '0')
+    return `${hours}:${minutes}`
 }
 
 function toTimestamptz(time: string) {
