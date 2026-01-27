@@ -58,7 +58,7 @@
                                 <!-- Zone + en haut -->
                                 <Card
                                     class="h-6 border border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition w-full"
-                                    @click="openSlotModal(day.label)">
+                                    @click="openSlotModal(day.label, undefined, 'before')">
                                     <template #content>
                                         <Icon name="lucide:plus" size="14" />
                                     </template>
@@ -73,17 +73,17 @@
                                                 <div class="font-semibold truncate">{{ slot.title }}</div>
                                                 <div class="text-sm text-zinc-500 truncate">{{ slot.game }}</div>
                                                 <div class="text-sm text-zinc-500">
-                                                    {{ formatTime(slot.start_at) }} - {{ formatTime(slot.end_at) }}
+                                                    {{ slot.start_at }} - {{ slot.end_at }}
                                                 </div>
                                                 <!-- Icônes hover -->
                                                 <div
                                                     class="absolute flex opacity-0 hover:opacity-100 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-xl">
                                                     <button @click.prevent="openSlotModal(day.label, slot)"
-                                                        class="p-1 rounded hover:bg-black/30 flex-1 h-full transition rounded-xl">
+                                                        class="p-1 hover:bg-black/30 flex-1 h-full transition rounded-xl">
                                                         <Icon name="lucide:edit-2" size="20" />
                                                     </button>
                                                     <button @click.prevent="deleteSlot(slot)"
-                                                        class="p-1 rounded hover:bg-black/30 flex-1 h-full transition rounded-xl">
+                                                        class="p-1 hover:bg-black/30 flex-1 h-full transition rounded-xl">
                                                         <Icon name="lucide:trash-2" size="20" />
                                                     </button>
                                                 </div>
@@ -95,7 +95,7 @@
                                 <!-- Zone + en bas -->
                                 <Card
                                     class="h-6 border border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition w-full"
-                                    @click="openSlotModal(day.label)">
+                                    @click="openSlotModal(day.label, undefined, 'after')">
                                     <template #content>
                                         <Icon name="lucide:plus" size="14" />
                                     </template>
@@ -151,6 +151,8 @@ const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
 const { schedule } = storeToRefs(scheduleStore)
 
+const slots = ref([])
+
 // Édition du titre et du sous-titre
 const editing = ref({ field: null as 'title' | 'subtitle' | null, value: '' })
 const inputRefs = ref<Record<string, HTMLInputElement | null>>({})
@@ -181,115 +183,19 @@ function cancelEdit() {
     editing.value.value = ''
 }
 
-// Modal d’ajout de créneau
-const visible = ref(false)
-const game = ref('Jeu vidéo')
-const title = ref('Titre du stream')
-const daysOptions = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map(label => ({ label }))
-const selectedDays = ref([...daysOptions])
-const startTime = ref('12:00')
-const endTime = ref('14:00')
-
-// Slots
-const slots = ref([])
-
+// Charge les slots
 async function loadSlots() {
     if (!schedule.value) return
     const { data } = await scheduleSlotStore.fetchSlots(schedule.value.id)
     if (data) slots.value = data
 }
 
+// Trie les slots pour un jour donné
 function slotsForDay(day: string) {
     return slots.value.filter(slot => slot.day.includes(day))
 }
 
-// Assure que endTime >= startTime
-watch(startTime, (newStart) => {
-    const [h, m] = newStart.split(':').map(Number)
-    let endH = h + 1
-    let endM = m
-
-    // Gestion du dépassement de 24h
-    if (endH >= 24) endH -= 24
-
-    // Formatage en "HH:MM"
-    const pad = (n: number) => n.toString().padStart(2, '0')
-    endTime.value = `${pad(endH)}:${pad(endM)}`
-})
-
-const editingSlot = ref(null)
-
-function openSlotModal(day: string, slot?: any) {
-    if (slot) {
-        // Edition d'un slot existant
-        editingSlot.value = slot
-        title.value = slot.title
-        game.value = slot.game
-        startTime.value = formatTimeForInput(slot.start_at)
-        endTime.value = formatTimeForInput(slot.end_at)
-        selectedDays.value = daysOptions.find(d => d.label === slot.day)
-    } else {
-        // Nouveau slot
-        editingSlot.value = null
-        selectedDays.value = [{ label: day }]
-        game.value = 'Jeu vidéo'
-        title.value = 'Titre du stream'
-        startTime.value = '12:00'
-        endTime.value = '14:00'
-    }
-    visible.value = true
-}
-
-function formatTimeForInput(ts: string) {
-    const d = new Date(ts)
-    const hours = d.getHours().toString().padStart(2, '0')
-    const minutes = d.getMinutes().toString().padStart(2, '0')
-    return `${hours}:${minutes}`
-}
-
-function toTimestamptz(time: string) {
-    const d = new Date()
-    const [h, m] = time.split(':').map(Number)
-    d.setHours(h, m, 0, 0)
-    return d.toISOString()
-}
-
-async function saveSlot() {
-    if (!schedule.value) return
-
-    const dayValue = Array.isArray(selectedDays.value)
-        ? selectedDays.value.map(d => (typeof d === 'string' ? d : d.label))
-        : [selectedDays.value.label]
-
-    const slotData = {
-        schedule_id: schedule.value.id!,
-        title: title.value,
-        game: game.value,
-        start_at: toTimestamptz(startTime.value),
-        end_at: toTimestamptz(endTime.value),
-        day: dayValue[0]
-    }
-
-    if (editingSlot.value) {
-        // Mise à jour
-        await scheduleSlotStore.updateSlot(editingSlot.value.id, slotData)
-    } else {
-        // Création de nouveaux slots
-        for (const d of selectedDays.value.map(d => d.label)) {
-            await scheduleSlotStore.createSlot({ ...slotData, day: d })
-        }
-    }
-    await loadSlots()
-    visible.value = false
-}
-
-function formatTime(ts: string) {
-    return new Date(ts).toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit'
-    })
-}
-
+// Supprime un slot
 async function deleteSlot(slot: any) {
     if (!schedule.value) return
     const confirmed = confirm(`Es-tu sûr de vouloir supprimer le créneau "${slot.title}" ?`)
@@ -297,6 +203,20 @@ async function deleteSlot(slot: any) {
     await scheduleSlotStore.deleteSlot(slot.id)
     await loadSlots()
 }
+
+// Gestion de la modal de créneau
+const {
+    visible,
+    game,
+    title,
+    startTime,
+    endTime,
+    selectedDays,
+    daysOptions,
+    openSlotModal,
+    editingSlot,
+    saveSlot,
+} = useSlotModal(schedule.value.id, slots, scheduleSlotStore)
 
 onMounted(async () => {
     await loadSlots()
