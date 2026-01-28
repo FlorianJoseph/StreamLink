@@ -145,7 +145,16 @@
         <div class="flex flex-col gap-4 mb-4">
             <div class="flex flex-col gap-2">
                 <span class="font-semibold">Nom du jeu</span>
-                <InputText type="text" v-model="game" />
+                <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames" field="label"
+                    :dropdown="true" class="w-full" placeholder="Rechercher un jeu vidéo">
+                    <template #option="slotProps">
+                        <div class="flex items-center gap-2">
+                            <img v-if="slotProps.option.cover" :src="slotProps.option.cover" alt=""
+                                class="w-8 h-8 object-contain rounded" />
+                            <span>{{ slotProps.option.label }}</span>
+                        </div>
+                    </template>
+                </AutoComplete>
             </div>
             <div class="flex flex-col gap-2">
                 <span class="font-semibold">Titre du stream</span>
@@ -235,7 +244,7 @@ async function deleteSlot(slot: any) {
 // Gestion de la modal de créneau
 const {
     visible,
-    game,
+    selectedGame,
     title,
     startTime,
     endTime,
@@ -244,6 +253,8 @@ const {
     openSlotModal,
     editingSlot,
     saveSlot,
+    searchGames,
+    gameSuggestions
 } = useSlotModal(schedule.value.id, slots, scheduleSlotStore, loadSlots)
 
 onMounted(async () => {

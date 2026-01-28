@@ -4,13 +4,23 @@ type ScheduleSlot = Tables<'ScheduleSlot'>
 
 export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, scheduleSlotStore: any, loadSlots: () => Promise<void>) => {
     const visible = ref(false)
-    const game = ref('Jeu vidéo')
+    const selectedGame = ref<{ label: string; cover_url?: string } | null>(null)
+    const gameSuggestions = ref<{ label: string; cover_url?: string }[]>([])
     const title = ref('Titre du stream')
     const daysOptions = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map(label => ({ label }))
     const selectedDays = ref<{ label: string }[]>([...daysOptions])
     const startTime = ref('12:00')
     const endTime = ref('14:00')
     const editingSlot = ref<ScheduleSlot | null>(null)
+
+    async function searchGames(event: { query: string }) {
+        if (!event.query) {
+            gameSuggestions.value = []
+            return
+        }
+        const res = await $fetch('/api/IGDBgames', { params: { search: event.query } })
+        gameSuggestions.value = res
+    }
 
     // Watch pour s'assurer que endTime >= startTime
     watch(startTime, (newStart) => {
@@ -43,14 +53,14 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         if (slot) {
             editingSlot.value = slot
             title.value = slot.title
-            game.value = slot.game
+            selectedGame.value = selectedGame.value = { label: slot.game, cover_url: slot.cover || undefined }
             startTime.value = slot.start_at
             endTime.value = slot.end_at
             selectedDays.value = daysOptions.find(d => d.label === slot.day)
         } else {
             editingSlot.value = null
             selectedDays.value = [{ label: day }]
-            game.value = 'Jeu vidéo'
+            selectedGame.value = null
             title.value = 'Titre du stream'
 
             if (!daySlots.length) {
@@ -81,7 +91,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         const slotData = {
             schedule_id: scheduleId,
             title: title.value,
-            game: game.value,
+            game: selectedGame.value ? selectedGame.value.label : '',
             start_at: startTime.value,
             end_at: endTime.value,
             day: dayValue[0]
@@ -102,7 +112,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
 
     return {
         visible,
-        game,
+        selectedGame,
         title,
         startTime,
         endTime,
@@ -113,5 +123,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         saveSlot,
         addMinutes,
         subMinutes,
+        searchGames,
+        gameSuggestions
     }
 }
