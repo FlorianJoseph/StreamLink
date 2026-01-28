@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'
         },
-        body: `fields name,cover.url; search "${search}"; limit 10;`
+        body: `fields name,cover.url; search "${search}";`
     })
 
     const data = await response.json()

@@ -145,16 +145,23 @@
         <div class="flex flex-col gap-4 mb-4">
             <div class="flex flex-col gap-2">
                 <span class="font-semibold">Nom du jeu</span>
-                <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
-                    optionLabel="label" placeholder="Rechercher un jeu vidéo">
-                    <template #option="slotProps">
-                        <div class="flex items-center gap-2">
-                            <img v-if="slotProps.option.cover" :src="slotProps.option.cover" alt=""
-                                class="w-8 h-8 object-contain rounded" />
-                            <span>{{ slotProps.option.label }}</span>
-                        </div>
-                    </template>
-                </AutoComplete>
+                <IconField>
+                    <div>
+                        <InputIcon>
+                            <Icon name="lucide:search" size="18" />
+                        </InputIcon>
+                        <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
+                            optionLabel="label" placeholder="Rechercher un jeu vidéo" fluid forceSelection>
+                            <template #option="slotProps">
+                                <div class="flex items-center gap-2">
+                                    <img v-if="slotProps.option.cover" :src="slotProps.option.cover" alt=""
+                                        class="w-8 h-10 rounded border border-black" />
+                                    <span>{{ slotProps.option.label }}</span>
+                                </div>
+                            </template>
+                        </AutoComplete>
+                    </div>
+                </IconField>
             </div>
             <div class="flex flex-col gap-2">
                 <span class="font-semibold">Titre du stream</span>
