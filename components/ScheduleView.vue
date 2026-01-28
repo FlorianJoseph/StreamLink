@@ -78,7 +78,7 @@
                                             <div class="flex flex-col justify-between h-full">
                                                 <!-- Titre et jeu -->
                                                 <div class="font-semibold line-clamp-2">{{ slot.title }}</div>
-                                                <div class="text-xs text-zinc-400 truncate">{{ slot.game }}</div>
+                                                <div class="text-xs text-zinc-400 truncate">{{ slot.game.label }}</div>
                                                 <!-- Horaire -->
                                                 <div class="text-sm font-medium text-zinc-300 flex items-center gap-1">
                                                     <Icon name="lucide:clock" size="14" />
@@ -145,8 +145,8 @@
         <div class="flex flex-col gap-4 mb-4">
             <div class="flex flex-col gap-2">
                 <span class="font-semibold">Nom du jeu</span>
-                <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames" field="label"
-                    :dropdown="true" class="w-full" placeholder="Rechercher un jeu vidéo">
+                <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
+                    optionLabel="label" placeholder="Rechercher un jeu vidéo">
                     <template #option="slotProps">
                         <div class="flex items-center gap-2">
                             <img v-if="slotProps.option.cover" :src="slotProps.option.cover" alt=""

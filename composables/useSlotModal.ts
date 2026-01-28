@@ -4,9 +4,9 @@ type ScheduleSlot = Tables<'ScheduleSlot'>
 
 export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, scheduleSlotStore: any, loadSlots: () => Promise<void>) => {
     const visible = ref(false)
-    const selectedGame = ref<{ label: string; cover_url?: string } | null>(null)
-    const gameSuggestions = ref<{ label: string; cover_url?: string }[]>([])
-    const title = ref('Titre du stream')
+    const selectedGame = ref<{ label: string; cover?: string } | null>({ label: '', cover: '' })
+    const gameSuggestions = ref<{ label: string; cover?: string }[]>([])
+    const title = ref('')
     const daysOptions = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map(label => ({ label }))
     const selectedDays = ref<{ label: string }[]>([...daysOptions])
     const startTime = ref('12:00')
@@ -53,15 +53,15 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         if (slot) {
             editingSlot.value = slot
             title.value = slot.title
-            selectedGame.value = selectedGame.value = { label: slot.game, cover_url: slot.cover || undefined }
+            selectedGame.value = slot.game
             startTime.value = slot.start_at
             endTime.value = slot.end_at
             selectedDays.value = daysOptions.find(d => d.label === slot.day)
         } else {
             editingSlot.value = null
             selectedDays.value = [{ label: day }]
-            selectedGame.value = null
-            title.value = 'Titre du stream'
+            selectedGame.value = { label: '', cover: '' }
+            title.value = ''
 
             if (!daySlots.length) {
                 startTime.value = '12:00'
@@ -90,8 +90,8 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
 
         const slotData = {
             schedule_id: scheduleId,
-            title: title.value,
-            game: selectedGame.value ? selectedGame.value.label : '',
+            title: title.value || selectedGame.value?.label || 'Titre du stream',
+            game: selectedGame.value,
             start_at: startTime.value,
             end_at: endTime.value,
             day: dayValue[0]
