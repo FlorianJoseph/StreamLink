@@ -28,6 +28,6 @@ export default defineEventHandler(async (event) => {
 
     return data.map((g: any) => ({
         label: g.name,
-        cover: g.cover?.url || null
+        cover: g.cover?.url.replace('t_thumb', 't_original') || null
     }))
 })

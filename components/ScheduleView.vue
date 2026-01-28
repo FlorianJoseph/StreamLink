@@ -73,17 +73,24 @@
                                 <!-- Créneaux -->
                                 <div class="flex flex-col gap-1 overflow-hidden w-full">
                                     <Card v-for="slot in slotsForDay(day.label)" :key="slot.id"
-                                        class="border-2 border-zinc-600 rounded flex-1 min-h-0 w-full relative group hover:border-zinc-500 transition-all">
+                                        class="border-2 border-zinc-600 rounded flex-1 min-h-0 w-full relative group hover:border-zinc-500 transition-all "
+                                        :style="slot.game.cover
+                                            ? { backgroundImage: `url(${slot.game.cover})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
+                                            : {}">
                                         <template #content>
+                                            <!-- Overlay sombre -->
+                                            <div class="absolute inset-0 bg-black/30 z-0 rounded-xl"></div>
+                                            <!-- Contenu -->
                                             <div class="flex flex-col justify-between h-full">
-                                                <!-- Titre et jeu -->
-                                                <div class="font-semibold line-clamp-2">{{ slot.title }}</div>
-                                                <div class="text-xs text-zinc-400 truncate">{{ slot.game.label }}</div>
-                                                <!-- Horaire -->
-                                                <div class="text-sm font-medium text-zinc-300 flex items-center gap-1">
-                                                    <Icon name="lucide:clock" size="14" />
-                                                    <span>{{ slot.start_at }} - {{ slot.end_at }}</span>
+                                                <!-- Tag titre -->
+                                                <div
+                                                    class="absolute bottom-0 left-0 bg-black/80 text-white text-sm font-semibold px-2 py-1 rounded-b-xl z-10 w-full">
+                                                    {{ slot.title }}
                                                 </div>
+                                                <!-- Heure -->
+                                                <Tag severity="secondary" class="absolute top-0 left-0 m-1 z-10">
+                                                    {{ formatTime(slot.start_at) }} - {{ formatTime(slot.end_at) }}
+                                                </Tag>
                                                 <!-- Actions visibles sur mobile, overlay sur desktop -->
                                                 <div class="flex gap-1 mt-1 lg:hidden">
                                                     <button @click.prevent="openSlotModal(day.label, slot)"
@@ -144,28 +151,26 @@
     <Dialog v-model:visible="visible" modal header="Ajouter un stream" :style="{ width: '25rem' }">
         <div class="flex flex-col gap-4 mb-4">
             <div class="flex flex-col gap-2">
-                <span class="font-semibold">Nom du jeu</span>
-                <IconField>
-                    <div>
-                        <InputIcon>
-                            <Icon name="lucide:search" size="18" />
-                        </InputIcon>
-                        <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
-                            optionLabel="label" placeholder="Rechercher un jeu vidéo" fluid forceSelection>
-                            <template #option="slotProps">
-                                <div class="flex items-center gap-2">
-                                    <img v-if="slotProps.option.cover" :src="slotProps.option.cover" alt=""
-                                        class="w-8 h-10 rounded border border-black" />
-                                    <span>{{ slotProps.option.label }}</span>
-                                </div>
-                            </template>
-                        </AutoComplete>
-                    </div>
-                </IconField>
+                <span class="font-semibold">Catégorie Twitch</span>
+                <InputGroup>
+                    <InputGroupAddon>
+                        <Icon name="lucide:gamepad-2" size="20" class="text-zinc-500" />
+                    </InputGroupAddon>
+                    <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
+                        optionLabel="label" placeholder="Rechercher un jeu vidéo" fluid forceSelection>
+                        <template #option="slotProps">
+                            <div class="flex items-center gap-2">
+                                <img v-if="slotProps.option.cover" :src="slotProps.option.cover" alt=""
+                                    class="w-8 h-10 rounded border border-black" />
+                                <span>{{ slotProps.option.label }}</span>
+                            </div>
+                        </template>
+                    </AutoComplete>
+                </InputGroup>
             </div>
             <div class="flex flex-col gap-2">
                 <span class="font-semibold">Titre du stream</span>
-                <InputText type="text" v-model="title" />
+                <InputText type="text" v-model="title" placeholder="Entrez le titre du stream" />
             </div>
             <div class="flex flex-col">
                 <span class="font-semibold">Sélectionne les jours de stream</span>
@@ -246,6 +251,12 @@ async function deleteSlot(slot: any) {
     // if (!confirmed) return
     await scheduleSlotStore.deleteSlot(slot.id)
     await loadSlots()
+}
+
+function formatTime(time: string) {
+    if (!time) return ''
+    const [h, m] = time.split(':')
+    return `${h}h${m}`
 }
 
 // Gestion de la modal de créneau
