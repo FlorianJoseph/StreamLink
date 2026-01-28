@@ -1,9 +1,8 @@
-import { ref, watch } from 'vue'
 import type { Tables } from '~/types/database.types'
 
 type ScheduleSlot = Tables<'ScheduleSlot'>
 
-export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, scheduleSlotStore: any) => {
+export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, scheduleSlotStore: any, loadSlots: () => Promise<void>) => {
     const visible = ref(false)
     const game = ref('Jeu vidéo')
     const title = ref('Titre du stream')
@@ -73,6 +72,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         visible.value = true
     }
 
+    // Sauvegarde le slot (création ou mise à jour)
     async function saveSlot() {
         const dayValue = Array.isArray(selectedDays.value)
             ? selectedDays.value.map(d => d.label)
@@ -94,6 +94,9 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
                 await scheduleSlotStore.createSlot({ ...slotData, day: d })
             }
         }
+
+        // Recharger les slots pour actualiser l'affichage
+        await loadSlots()
         visible.value = false
     }
 

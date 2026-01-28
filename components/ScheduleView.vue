@@ -41,15 +41,20 @@
             <div class="grid lg:grid-cols-7 gap-4 w-full">
                 <div v-for="day in daysOptions" :key="day.label" class="flex flex-col gap-1 min-w-0">
                     <div class="flex flex-col items-center w-full">
+                        <!-- Jour -->
                         <div class="font-semibold mb-2 text-center">{{ day.label }}</div>
+                        <!-- Créneaux -->
                         <div class="grid grid-rows-[auto_1fr_auto] gap-2 lg:h-110 w-full">
 
                             <!-- CAS : aucun créneau -->
                             <Card v-if="slotsForDay(day.label).length === 0"
-                                class="row-span-3 border border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition h-full w-full"
+                                class="row-span-3 border-2 border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition-all h-full w-full"
                                 @click="openSlotModal(day.label)">
                                 <template #content>
-                                    <Icon name="lucide:plus" size="18" />
+                                    <div class="flex flex-col items-center justify-center gap-1 ">
+                                        <Icon name="lucide:plus" size="18" class="text-zinc-400" />
+                                        <span class="text-zinc-400 text-center text-xs">Ajouter un stream</span>
+                                    </div>
                                 </template>
                             </Card>
 
@@ -57,35 +62,56 @@
                             <template v-else>
                                 <!-- Zone + en haut -->
                                 <Card
-                                    class="h-6 border border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition w-full"
-                                    @click="openSlotModal(day.label, undefined, 'before')">
+                                    class="h-8 border-2 border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition-all w-full"
+                                    @click="openSlotModal(day.label, undefined, 'before')"
+                                    v-tooltip.bottom="{ value: `Ajouter un stream avant`, pt: { text: '!text-sm' } }">
                                     <template #content>
-                                        <Icon name="lucide:plus" size="14" />
+                                        <Icon name="lucide:plus" size="14" class="text-zinc-400" />
                                     </template>
                                 </Card>
 
                                 <!-- Créneaux -->
                                 <div class="flex flex-col gap-1 overflow-hidden w-full">
                                     <Card v-for="slot in slotsForDay(day.label)" :key="slot.id"
-                                        class="border border-zinc-600 rounded flex-1 min-h-0 w-full relative">
+                                        class="border-2 border-zinc-600 rounded flex-1 min-h-0 w-full relative group hover:border-zinc-500 transition-all">
                                         <template #content>
                                             <div class="flex flex-col justify-between h-full">
-                                                <div class="font-semibold truncate">{{ slot.title }}</div>
-                                                <div class="text-sm text-zinc-500 truncate">{{ slot.game }}</div>
-                                                <div class="text-sm text-zinc-500">
-                                                    {{ slot.start_at }} - {{ slot.end_at }}
+                                                <!-- Titre et jeu -->
+                                                <div class="font-semibold line-clamp-2">{{ slot.title }}</div>
+                                                <div class="text-xs text-zinc-400 truncate">{{ slot.game }}</div>
+                                                <!-- Horaire -->
+                                                <div class="text-sm font-medium text-zinc-300 flex items-center gap-1">
+                                                    <Icon name="lucide:clock" size="14" />
+                                                    <span>{{ slot.start_at }} - {{ slot.end_at }}</span>
                                                 </div>
-                                                <!-- Icônes hover -->
-                                                <div
-                                                    class="absolute flex opacity-0 hover:opacity-100 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-xl">
+                                                <!-- Actions visibles sur mobile, overlay sur desktop -->
+                                                <div class="flex gap-1 mt-1 lg:hidden">
                                                     <button @click.prevent="openSlotModal(day.label, slot)"
-                                                        class="p-1 hover:bg-black/30 flex-1 h-full transition rounded-xl">
-                                                        <Icon name="lucide:edit-2" size="20" />
+                                                        class="flex-1 px-2 py-1.5 bg-zinc-700 hover:bg-zinc-600 rounded text-xs transition flex items-center justify-center gap-1"
+                                                        :aria-label="`Modifier ${slot.title}`">
+                                                        <Icon name="lucide:edit-2" size="14" />
+                                                        <span>Modifier</span>
                                                     </button>
                                                     <button @click.prevent="deleteSlot(slot)"
-                                                        class="p-1 hover:bg-black/30 flex-1 h-full transition rounded-xl">
-                                                        <Icon name="lucide:trash-2" size="20" />
+                                                        class="flex-1 px-2 py-1.5 bg-red-900/30 hover:bg-red-900/50 rounded text-xs transition flex items-center justify-center gap-1"
+                                                        :aria-label="`Supprimer ${slot.title}`">
+                                                        <Icon name="lucide:trash-2" size="14" />
+                                                        <span>Supprimer</span>
                                                     </button>
+                                                </div>
+                                                <!-- Overlay desktop uniquement -->
+                                                <div
+                                                    class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-lg gap-2">
+                                                    <Button @click.prevent="openSlotModal(day.label, slot)"
+                                                        class="p-4 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-all justify-center flex items-center"
+                                                        v-tooltip.bottom="`Modifier`" severity="info">
+                                                        <Icon name="lucide:edit-2" size="20" />
+                                                    </Button>
+                                                    <Button @click.prevent="deleteSlot(slot)"
+                                                        class="p-4 bg-red-900 hover:bg-red-800 rounded-lg transition-all justify-center flex items-center"
+                                                        v-tooltip.bottom="`Supprimer`" severity="danger">
+                                                        <Icon name="lucide:trash-2" size="20" />
+                                                    </Button>
                                                 </div>
                                             </div>
                                         </template>
@@ -94,10 +120,11 @@
 
                                 <!-- Zone + en bas -->
                                 <Card
-                                    class="h-6 border border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition w-full"
-                                    @click="openSlotModal(day.label, undefined, 'after')">
+                                    class="h-8 border-2 border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition-all w-full"
+                                    @click="openSlotModal(day.label, undefined, 'after')"
+                                    v-tooltip.bottom="{ value: `Ajouter un stream après`, pt: { text: '!text-sm' } }">
                                     <template #content>
-                                        <Icon name="lucide:plus" size="14" />
+                                        <Icon name="lucide:plus" size="14" class="text-zinc-400" />
                                     </template>
                                 </Card>
                             </template>
@@ -126,7 +153,7 @@
             </div>
             <div class="flex flex-col">
                 <span class="font-semibold">Sélectionne les jours de stream</span>
-                <span class="text-sm text-zinc-500">Tu peux ajouter le même créneau à plusieurs jours en même
+                <span class="text-sm text-zinc-500">Tu peux ajouter le même stream à plusieurs jours en même
                     temps.</span>
             </div>
             <SelectButton v-model="selectedDays" :options="daysOptions" optionLabel="label" :multiple="!editingSlot"
@@ -192,14 +219,15 @@ async function loadSlots() {
 
 // Trie les slots pour un jour donné
 function slotsForDay(day: string) {
-    return slots.value.filter(slot => slot.day.includes(day))
+    return slots.value
+        .filter(slot => slot.day.includes(day))
 }
 
 // Supprime un slot
 async function deleteSlot(slot: any) {
-    if (!schedule.value) return
-    const confirmed = confirm(`Es-tu sûr de vouloir supprimer le créneau "${slot.title}" ?`)
-    if (!confirmed) return
+    // if (!schedule.value) return
+    // const confirmed = confirm(`Es-tu sûr de vouloir supprimer le stream "${slot.title}" ?`)
+    // if (!confirmed) return
     await scheduleSlotStore.deleteSlot(slot.id)
     await loadSlots()
 }
@@ -216,7 +244,7 @@ const {
     openSlotModal,
     editingSlot,
     saveSlot,
-} = useSlotModal(schedule.value.id, slots, scheduleSlotStore)
+} = useSlotModal(schedule.value.id, slots, scheduleSlotStore, loadSlots)
 
 onMounted(async () => {
     await loadSlots()
