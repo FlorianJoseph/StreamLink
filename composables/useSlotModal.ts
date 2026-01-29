@@ -1,4 +1,5 @@
 import type { Tables } from '~/types/database.types'
+import { Vibrant } from 'node-vibrant/browser'
 
 type ScheduleSlot = Tables<'ScheduleSlot'>
 
@@ -7,12 +8,14 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
     const selectedGame = ref<{ label: string; cover?: string } | null>({ label: '', cover: '' })
     const gameSuggestions = ref<{ label: string; cover?: string }[]>([])
     const title = ref('')
+    const slotColor = ref<string>('636370')
     const daysOptions = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map(label => ({ label }))
     const selectedDays = ref<{ label: string }[]>([...daysOptions])
     const startTime = ref('12:00')
     const endTime = ref('14:00')
     const editingSlot = ref<ScheduleSlot | null>(null)
 
+    // Recherche de jeux via l'API IGDB
     async function searchGames(event: { query: string }) {
         if (!event.query) {
             gameSuggestions.value = []
@@ -46,6 +49,43 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         return addMinutes(time, -minutes)
     }
 
+    // Watch pour extraire la couleur dominante de l'image de couverture du jeu sélectionné
+    watch(selectedGame, async (game) => {
+        if (!game?.cover) return
+
+        try {
+            const url = game.cover.startsWith('//')
+                ? 'https:' + game.cover
+                : game.cover
+
+            const palette = await Vibrant.from(url).getPalette()
+
+            slotColor.value =
+                palette.Vibrant?.hex ||
+                palette.Muted?.hex ||
+                '636370'
+        } catch {
+            slotColor.value = '636370'
+        }
+    })
+
+    // Réinitialise la couleur du slot à partir de l'image de couverture du jeu sélectionné
+    function resetColor() {
+        if (!selectedGame.value?.cover) return
+        // On remet la couleur automatique extraite du jeu
+        const url = selectedGame.value.cover.startsWith('//')
+            ? 'https:' + selectedGame.value.cover
+            : selectedGame.value.cover
+        Vibrant.from(url)
+            .getPalette()
+            .then(palette => {
+                slotColor.value = palette.Vibrant?.hex || palette.Muted?.hex || '636370'
+            })
+            .catch(() => {
+                slotColor.value = '636370'
+            })
+    }
+
     // Ouvre la modal pour ajouter ou éditer un slot
     function openSlotModal(day: string, slot?: ScheduleSlot, position?: 'before' | 'after') {
         const daySlots = slots.value.filter(s => s.day === day)
@@ -53,6 +93,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         if (slot) {
             editingSlot.value = slot
             title.value = slot.title
+            slotColor.value = slot.color || '636370'
             selectedGame.value = slot.game
             startTime.value = slot.start_at
             endTime.value = slot.end_at
@@ -62,6 +103,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
             selectedDays.value = [{ label: day }]
             selectedGame.value = { label: '', cover: '' }
             title.value = ''
+            slotColor.value = '636370'
 
             if (!daySlots.length) {
                 startTime.value = '12:00'
@@ -91,6 +133,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         const slotData = {
             schedule_id: scheduleId,
             title: title.value || selectedGame.value?.label || 'Titre du stream',
+            color: slotColor.value,
             game: selectedGame.value,
             start_at: startTime.value,
             end_at: endTime.value,
@@ -114,6 +157,8 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         visible,
         selectedGame,
         title,
+        slotColor,
+        resetColor,
         startTime,
         endTime,
         selectedDays,

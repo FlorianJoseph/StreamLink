@@ -75,7 +75,7 @@
                                     <Card v-for="slot in slotsForDay(day.label)" :key="slot.id"
                                         class="border-2 border-zinc-600 rounded flex-1 min-h-0 w-full relative group hover:border-zinc-500 transition-all "
                                         :style="slot.game.cover
-                                            ? { backgroundImage: `url(${slot.game.cover})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
+                                            ? { borderColor: slot.color || 'border-zinc-600', backgroundImage: `url(${slot.game.cover})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
                                             : {}">
                                         <template #content>
                                             <!-- Overlay sombre -->
@@ -84,13 +84,17 @@
                                             <div class="flex flex-col justify-between h-full">
                                                 <!-- Tag titre -->
                                                 <div
-                                                    class="absolute bottom-0 left-0 bg-black/80 text-white text-sm font-semibold px-2 py-1 rounded-b-xl z-10 w-full">
+                                                    class="absolute bottom-0 left-0 bg-black/80 text-white text-sm font-semibold px-2 py-1 rounded-b-lg z-10 w-full">
                                                     {{ slot.title }}
                                                 </div>
-                                                <!-- Heure -->
-                                                <Tag severity="secondary" class="absolute top-0 left-0 m-1 z-10">
-                                                    {{ formatTime(slot.start_at) }} - {{ formatTime(slot.end_at) }}
-                                                </Tag>
+                                                <div severity="secondary"
+                                                    class="absolute top-0 left-0 z-10 px-2 py-1 text-white text-sm font-semibold rounded-br-lg rounded-tl-lg"
+                                                    :style="slot.game.cover
+                                                        ? { backgroundColor: slot.color || 'rgba(0, 0, 0, 0.7)' }
+                                                        : {}">
+                                                    {{ formatTime(slot.start_at) }}
+                                                </div>
+
                                                 <!-- Actions visibles sur mobile, overlay sur desktop -->
                                                 <div class="flex gap-1 mt-1 lg:hidden">
                                                     <button @click.prevent="openSlotModal(day.label, slot)"
@@ -108,7 +112,7 @@
                                                 </div>
                                                 <!-- Overlay desktop uniquement -->
                                                 <div
-                                                    class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-lg gap-2">
+                                                    class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-lg gap-2">
                                                     <Button @click.prevent="openSlotModal(day.label, slot)"
                                                         class="p-4 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-all justify-center flex items-center"
                                                         v-tooltip.bottom="`Modifier`" severity="info">
@@ -154,10 +158,11 @@
                 <span class="font-semibold">Catégorie Twitch</span>
                 <InputGroup>
                     <InputGroupAddon>
-                        <Icon name="lucide:gamepad-2" size="20" class="text-zinc-500" />
+                        <Icon name="lucide:search" size="20" class="text-zinc-500" />
                     </InputGroupAddon>
                     <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
-                        optionLabel="label" placeholder="Rechercher un jeu vidéo" fluid forceSelection>
+                        optionLabel="label" placeholder="Rechercher un jeu vidéo" fluid forceSelection
+                        style="--p-inputtext-focus-border-color:white">
                         <template #option="slotProps">
                             <div class="flex items-center gap-2">
                                 <img v-if="slotProps.option.cover" :src="slotProps.option.cover" alt=""
@@ -170,12 +175,38 @@
             </div>
             <div class="flex flex-col gap-2">
                 <span class="font-semibold">Titre du stream</span>
-                <InputText type="text" v-model="title" placeholder="Entrez le titre du stream" />
+                <InputText type="text" v-model="title" placeholder="Entrez le titre du stream"
+                    style="--p-inputtext-focus-border-color:white" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <div class="flex flex-col">
+                    <span class="font-semibold">Couleur du créneau</span>
+                    <span class="text-sm text-zinc-500">Suggérée à partir du jeu sélectionné.</span>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <InputGroup class="flex-1">
+                        <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
+                                <ColorPicker ref="bgColorPicker" v-model="slotColor" format="hex" @click.stop
+                                    style="--p-colorpicker-preview-focus-ring-color :none" />
+                            </div>
+                        </InputGroupAddon>
+                        <InputText v-model="slotColor" @input="slotColor = slotColor.toUpperCase()"
+                            style="--p-inputtext-focus-border-color:white" maxlength="7" />
+                        <InputGroupAddon v-tooltip.bottom="'Réinitialiser la couleur'" class="cursor-pointer"
+                            @click="resetColor">
+                            <Icon name="lucide:rotate-ccw" size="20" />
+                        </InputGroupAddon>
+                    </InputGroup>
+                </div>
             </div>
             <div class="flex flex-col">
-                <span class="font-semibold">Sélectionne les jours de stream</span>
-                <span class="text-sm text-zinc-500">Tu peux ajouter le même stream à plusieurs jours en même
-                    temps.</span>
+                <span class="font-semibold">Jours de stream</span>
+                <span class="text-sm text-zinc-500">
+                    {{ editingSlot ? 'Tu peux modifier le jour.'
+                        : 'Tu peux sélectionner plusieurs jours.' }}
+                </span>
             </div>
             <SelectButton v-model="selectedDays" :options="daysOptions" optionLabel="label" :multiple="!editingSlot"
                 aria-labelledby="multiple" class="flex flex-wrap gap-1 rounded" />
@@ -194,7 +225,6 @@
 </template>
 
 <script setup lang="ts">
-
 const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
 const { schedule } = storeToRefs(scheduleStore)
@@ -264,6 +294,8 @@ const {
     visible,
     selectedGame,
     title,
+    slotColor,
+    resetColor,
     startTime,
     endTime,
     selectedDays,
