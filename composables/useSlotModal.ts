@@ -8,7 +8,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
     const selectedGame = ref<{ label: string; cover?: string } | null>({ label: '', cover: '' })
     const gameSuggestions = ref<{ label: string; cover?: string }[]>([])
     const title = ref('')
-    const slotColor = ref<string>('636370')
+    const slotColor = ref('636370')
     const daysOptions = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map(label => ({ label }))
     const selectedDays = ref<{ label: string }[]>([...daysOptions])
     const startTime = ref('12:00')
