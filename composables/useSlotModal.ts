@@ -8,7 +8,8 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
     const selectedGame = ref<{ label: string; cover?: string } | null>({ label: '', cover: '' })
     const gameSuggestions = ref<{ label: string; cover?: string }[]>([])
     const title = ref('')
-    const slotColor = ref('636370')
+    const slotColor = ref('')
+    const isAutoColor = ref(true)
     const daysOptions = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map(label => ({ label }))
     const selectedDays = ref<{ label: string }[]>([...daysOptions])
     const startTime = ref('12:00')
@@ -51,6 +52,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
 
     // Watch pour extraire la couleur dominante de l'image de couverture du jeu sélectionné
     watch(selectedGame, async (game) => {
+        if (!isAutoColor.value) return
         if (!game?.cover) return
 
         try {
@@ -60,10 +62,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
 
             const palette = await Vibrant.from(url).getPalette()
 
-            slotColor.value =
-                palette.Vibrant?.hex ||
-                palette.Muted?.hex ||
-                '636370'
+            slotColor.value = (palette.Vibrant?.hex || palette.Muted?.hex || '636370').replace('#', '').toUpperCase()
         } catch {
             slotColor.value = '636370'
         }
@@ -72,6 +71,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
     // Réinitialise la couleur du slot à partir de l'image de couverture du jeu sélectionné
     function resetColor() {
         if (!selectedGame.value?.cover) return
+        isAutoColor.value = true
         // On remet la couleur automatique extraite du jeu
         const url = selectedGame.value.cover.startsWith('//')
             ? 'https:' + selectedGame.value.cover
@@ -79,12 +79,49 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         Vibrant.from(url)
             .getPalette()
             .then(palette => {
-                slotColor.value = palette.Vibrant?.hex || palette.Muted?.hex || '636370'
+                slotColor.value = (palette.Vibrant?.hex || palette.Muted?.hex || '636370').replace('#', '').toUpperCase()
             })
             .catch(() => {
                 slotColor.value = '636370'
             })
     }
+
+    // Validation de la couleur hexadécimale
+    const HEX_REGEX = /^[0-9A-F]{6}$/
+
+    // Expansion d'une couleur hex 3 caractères en 6 caractères
+    function expandHex3(hex: string) {
+        return hex
+            .split('')
+            .map(c => c + c)
+            .join('')
+    }
+
+    // Input de la couleur avec validation
+    const colorInput = ref(slotColor.value)
+    const isColorInvalid = ref(false)
+
+    // Watch pour valider et synchroniser l'input de couleur
+    watch(colorInput, (val) => {
+        let clean = val.replace('#', '').toUpperCase().slice(0, 6)
+
+        // 3 chars → expansion immédiate
+        if (clean.length === 3) {
+            clean = expandHex3(clean)
+        }
+
+        if (HEX_REGEX.test(clean)) {
+            isColorInvalid.value = false
+            slotColor.value = clean
+        } else {
+            isColorInvalid.value = true
+        }
+    })
+
+    // Watch pour synchroniser la couleur du slot avec l'input
+    watch(slotColor, (val) => {
+        colorInput.value = val
+    })
 
     // Ouvre la modal pour ajouter ou éditer un slot
     function openSlotModal(day: string, slot?: ScheduleSlot, position?: 'before' | 'after') {
@@ -93,17 +130,40 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         if (slot) {
             editingSlot.value = slot
             title.value = slot.title
-            slotColor.value = slot.color || '636370'
             selectedGame.value = slot.game
             startTime.value = slot.start_at
             endTime.value = slot.end_at
             selectedDays.value = daysOptions.find(d => d.label === slot.day)
+
+            // Couleur auto si aucune couleur, sinon manuel par défaut
+            if (isAutoColor.value) {
+                // pas de couleur => auto
+                slotColor.value = slot.color || '636370'
+                colorInput.value = slotColor.value
+
+                // essayer de générer la couleur auto depuis le jeu
+                if (slot.game?.cover) {
+                    const url = slot.game.cover.startsWith('//') ? 'https:' + slot.game.cover : slot.game.cover
+                    Vibrant.from(url).getPalette().then(palette => {
+                        const autoColor = (palette.Vibrant?.hex || palette.Muted?.hex || '636370').replace('#', '').toUpperCase()
+                        slotColor.value = autoColor
+                        colorInput.value = autoColor
+                    })
+                }
+            } else {
+                // couleur manuelle => ne pas toucher
+                isAutoColor.value = false
+                slotColor.value = slot.color
+                colorInput.value = slotColor.value
+            }
+
         } else {
             editingSlot.value = null
             selectedDays.value = [{ label: day }]
             selectedGame.value = { label: '', cover: '' }
             title.value = ''
             slotColor.value = '636370'
+            isAutoColor.value = true
 
             if (!daySlots.length) {
                 startTime.value = '12:00'
@@ -133,7 +193,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         const slotData = {
             schedule_id: scheduleId,
             title: title.value || selectedGame.value?.label || 'Titre du stream',
-            color: slotColor.value,
+            color: slotColor.value.replace('#', '').toUpperCase(),
             game: selectedGame.value,
             start_at: startTime.value,
             end_at: endTime.value,
@@ -158,6 +218,9 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         selectedGame,
         title,
         slotColor,
+        colorInput,
+        isColorInvalid,
+        isAutoColor,
         resetColor,
         startTime,
         endTime,

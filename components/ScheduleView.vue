@@ -75,7 +75,7 @@
                                     <Card v-for="slot in slotsForDay(day.label)" :key="slot.id"
                                         class="border-2 border-zinc-600 rounded flex-1 min-h-0 w-full relative group hover:border-zinc-500 transition-all "
                                         :style="slot.game.cover
-                                            ? { borderColor: slot.color || 'border-zinc-600', backgroundImage: `url(${slot.game.cover})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
+                                            ? { borderColor: `#${slot.color}`, backgroundImage: `url(${slot.game.cover})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
                                             : {}">
                                         <template #content>
                                             <!-- Overlay sombre -->
@@ -87,10 +87,9 @@
                                                     class="absolute bottom-0 left-0 bg-black/80 text-white text-sm font-semibold px-2 py-1 rounded-b-lg z-10 w-full">
                                                     {{ slot.title }}
                                                 </div>
-                                                <div severity="secondary"
-                                                    class="absolute top-0 left-0 z-10 px-2 py-1 text-white text-sm font-semibold rounded-br-lg rounded-tl-lg"
+                                                <div class="absolute top-0 left-0 z-10 px-2 py-1 text-white text-sm font-semibold rounded-br-lg rounded-tl-lg"
                                                     :style="slot.game.cover
-                                                        ? { backgroundColor: slot.color || 'rgba(0, 0, 0, 0.7)' }
+                                                        ? { backgroundColor: `#${slot.color}` || 'rgba(0, 0, 0, 0.7)' }
                                                         : {}">
                                                     {{ formatTime(slot.start_at) }}
                                                 </div>
@@ -188,12 +187,15 @@
                         <InputGroupAddon style="--p-inputgroup-addon-color:white">
                             <div class="flex items-center gap-2">
                                 <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
-                                <ColorPicker ref="bgColorPicker" v-model="slotColor" format="hex" @click.stop
+                                <ColorPicker ref="slotColorPicker" v-model="colorInput" format="hex" @click.stop
+                                    @change="isAutoColor = false"
                                     style="--p-colorpicker-preview-focus-ring-color :none" />
                             </div>
                         </InputGroupAddon>
-                        <InputText v-model="slotColor" @input="slotColor = slotColor.toUpperCase()"
-                            style="--p-inputtext-focus-border-color:white" maxlength="7" />
+                        <InputText v-model="colorInput" @blur="colorInput = slotColor"
+                            @input="colorInput = colorInput.toUpperCase(); isAutoColor = false"
+                            style="--p-inputtext-focus-border-color:white" maxlength="7"
+                            :style="{ color: isColorInvalid ? '#f87171' : '#ffffff' }" />
                         <InputGroupAddon v-tooltip.bottom="'Réinitialiser la couleur'" class="cursor-pointer"
                             @click="resetColor">
                             <Icon name="lucide:rotate-ccw" size="20" />
@@ -219,7 +221,8 @@
         </div>
         <div class="flex justify-end gap-2 w-full">
             <Button type="button" label="Annuler" severity="secondary" @click="visible = false" class="flex-1"></Button>
-            <Button type="button" label="Enregistrer" severity="contrast" @click="saveSlot" class="flex-1"></Button>
+            <Button type="button" label="Enregistrer" severity="contrast" @click="saveSlot" :disabled="isColorInvalid"
+                class="flex-1"></Button>
         </div>
     </Dialog>
 </template>
@@ -295,6 +298,9 @@ const {
     selectedGame,
     title,
     slotColor,
+    colorInput,
+    isColorInvalid,
+    isAutoColor,
     resetColor,
     startTime,
     endTime,
