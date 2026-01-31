@@ -151,79 +151,155 @@
     </Card>
 
     <!-- Modal d'ajout de créneau -->
-    <Dialog v-model:visible="visible" modal header="Ajouter un stream" :style="{ width: '25rem' }">
-        <div class="flex flex-col gap-4 mb-4">
+    <Dialog v-model:visible="visible" modal :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'"
+        :style="{ width: '30rem' }" :draggable="false">
+        <div class="flex flex-col gap-5">
+
+            <!-- Catégorie Twitch -->
             <div class="flex flex-col gap-2">
-                <span class="font-semibold">Catégorie Twitch</span>
+                <label for="game-search" class="font-semibold text-sm flex items-center gap-2">
+                    <Icon name="lucide:gamepad-2" size="18" />
+                    Catégorie Twitch
+                    <span>
+                        <Icon name="lucide:asterisk" size="14" class="text-red-500"
+                            v-tooltip.bottom="'La catégorie Twitch correspond généralement au jeu vidéo que tu vas streamer. Choisis-en une pour que tes spectateurs sachent à quoi s\'attendre !'" />
+                    </span>
+                </label>
                 <InputGroup>
                     <InputGroupAddon>
                         <Icon name="lucide:search" size="20" class="text-zinc-500" />
                     </InputGroupAddon>
                     <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
-                        optionLabel="label" placeholder="Rechercher un jeu vidéo" fluid forceSelection
-                        style="--p-inputtext-focus-border-color:white">
+                        optionLabel="label" placeholder="Ex: League of Legends, Valorant..." fluid forceSelection
+                        style="--p-inputtext-focus-border-color:white" id="game-search">
                         <template #option="slotProps">
                             <div class="flex items-center gap-2">
-                                <img v-if="slotProps.option.cover" :src="slotProps.option.cover" alt=""
-                                    class="w-8 h-10 rounded border border-black" />
+                                <img v-if="slotProps.option.cover" :src="slotProps.option.cover"
+                                    :alt="slotProps.option.label"
+                                    class="w-8 h-10 rounded border border-zinc-700 flex-shrink-0" />
+                                <div v-else
+                                    class="w-8 h-10 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center flex-shrink-0">
+                                    <Icon name="lucide:image-off" size="20" class="text-zinc-600" />
+                                </div>
                                 <span>{{ slotProps.option.label }}</span>
                             </div>
+                        </template>
+                        <template #empty>
+                            Aucun jeu trouvé
                         </template>
                     </AutoComplete>
                 </InputGroup>
             </div>
-            <div class="flex flex-col gap-2">
-                <span class="font-semibold">Titre du stream</span>
-                <InputText type="text" v-model="title" placeholder="Entrez le titre du stream"
-                    style="--p-inputtext-focus-border-color:white" />
-            </div>
-            <div class="flex flex-col gap-2">
-                <div class="flex flex-col">
-                    <span class="font-semibold">Couleur du créneau</span>
-                    <span class="text-sm text-zinc-500">Suggérée à partir du jeu sélectionné.</span>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <InputGroup class="flex-1">
-                        <InputGroupAddon style="--p-inputgroup-addon-color:white">
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
-                                <ColorPicker ref="slotColorPicker" v-model="colorInput" format="hex" @click.stop
-                                    @change="isAutoColor = false"
-                                    style="--p-colorpicker-preview-focus-ring-color :none" />
-                            </div>
-                        </InputGroupAddon>
-                        <InputText v-model="colorInput" @blur="colorInput = slotColor"
-                            @input="colorInput = colorInput.toUpperCase(); isAutoColor = false"
-                            style="--p-inputtext-focus-border-color:white" maxlength="7"
-                            :style="{ color: isColorInvalid ? '#f87171' : '#ffffff' }" />
-                        <InputGroupAddon v-tooltip.bottom="'Réinitialiser la couleur'" class="cursor-pointer"
-                            @click="resetColor">
-                            <Icon name="lucide:rotate-ccw" size="20" />
-                        </InputGroupAddon>
-                    </InputGroup>
+
+            <!-- Titre du stream -->
+            <div class="flex flex-col gap-2 relative">
+                <label for="stream-title" class="font-semibold text-sm flex items-center gap-2">
+                    <Icon name="lucide:type" size="18" />
+                    Titre du stream
+                </label>
+                <InputText id="stream-title" type="text" v-model="title" placeholder="Ex: On monte Diamant ce soir !"
+                    maxlength="60" style="--p-inputtext-focus-border-color:white" />
+                <div class="flex justify-between items-center absolute bottom-1 right-2">
+                    <small class="text-zinc-500 text-xs ml-auto">
+                        {{ title.length }}/60
+                    </small>
                 </div>
             </div>
-            <div class="flex flex-col">
-                <span class="font-semibold">Jours de stream</span>
-                <span class="text-sm text-zinc-500">
-                    {{ editingSlot ? 'Tu peux modifier le jour.'
-                        : 'Tu peux sélectionner plusieurs jours.' }}
+
+            <!-- Couleur du créneau -->
+            <div class="flex flex-col gap-2">
+                <div class="flex items-start justify-between">
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold text-sm flex items-center gap-2">
+                            <Icon name="lucide:palette" size="18" />
+                            Couleur du créneau
+                        </label>
+                        <span class="text-xs text-zinc-500">
+                            {{ useGameColor ? 'Suggérée automatiquement en fonction du jeu sélectionné mais modifiable.'
+                                :
+                                'Personnalisée' }}
+                        </span>
+                    </div>
+                    <div v-if="!useGameColor"
+                        class="px-2 py-1 bg-zinc-700 text-white text-xs rounded-full flex items-center gap-1">
+                        <Icon name="lucide:wand-2" size="12" />
+                        Modifiée
+                    </div>
+                </div>
+
+                <InputGroup>
+                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                        <ColorPicker ref="slotColorPicker" v-model="colorInput" format="hex" @click.stop
+                            style="--p-colorpicker-preview-focus-ring-color :none" @change="useGameColor = false" />
+                    </InputGroupAddon>
+                    <InputText v-model="colorInput" @blur="colorInput = slotColor"
+                        @input="colorInput = colorInput.toUpperCase(); useGameColor = false"
+                        style="--p-inputtext-focus-border-color:white" maxlength="7"
+                        :style="{ color: isColorInvalid ? '#f87171' : '#ffffff' }" />
+                    <InputGroupAddon v-tooltip.bottom="'Réinitialiser en couleur automatique'"
+                        class="cursor-pointer flex items-center gap-1" @click="resetColor">
+                        <Icon name="lucide:rotate-ccw" size="16" />
+                        <span>Réinitialiser</span>
+                    </InputGroupAddon>
+                </InputGroup>
+            </div>
+
+            <!-- Jours de stream -->
+            <div class="flex flex-col gap-2">
+                <label class="font-semibold text-sm flex items-center gap-2">
+                    <Icon name="lucide:calendar-days" size="18" />
+                    Jours de stream
+                    <span class="text-red-500">*</span>
+                </label>
+                <span class="text-xs text-zinc-500">
+                    {{ editingSlot
+                        ? 'Sélectionne un nouveau jour pour déplacer ce créneau'
+                        : 'Sélectionne un ou plusieurs jours pour ce créneau' }}
                 </span>
+                <SelectButton v-model="selectedDays" :options="daysOptions" optionLabel="label" :multiple="!editingSlot"
+                    aria-labelledby="multiple" class="flex flex-wrap gap-1" />
             </div>
-            <SelectButton v-model="selectedDays" :options="daysOptions" optionLabel="label" :multiple="!editingSlot"
-                aria-labelledby="multiple" class="flex flex-wrap gap-1 rounded" />
-            <div class="flex gap-2">
-                <span class="flex items-center">Horaire :</span>
-                <InputText type="time" v-model="startTime" />
-                <span class="flex items-center">-></span>
-                <InputText type="time" v-model="endTime" />
+
+            <!-- Horaires -->
+            <div class="flex flex-col gap-2">
+                <label class="font-semibold text-sm flex items-center gap-2">
+                    <Icon name="lucide:clock" size="18" />
+                    Horaires
+                    <span class="text-red-500">*</span>
+                </label>
+                <div class="grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
+                    <div class="flex flex-col gap-1">
+                        <label for="start-time" class="text-xs text-zinc-500">Début</label>
+                        <InputText id="start-time" type="time" v-model="startTime"
+                            style="--p-inputtext-focus-border-color:white" />
+                    </div>
+                    <Icon name="lucide:arrow-right" size="20" class="text-zinc-500 mt-5" />
+                    <div class="flex flex-col gap-1">
+                        <label for="end-time" class="text-xs text-zinc-500">Fin</label>
+                        <InputText id="end-time" type="time" v-model="endTime"
+                            style="--p-inputtext-focus-border-color:white" />
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="flex justify-end gap-2 w-full">
-            <Button type="button" label="Annuler" severity="secondary" @click="visible = false" class="flex-1"></Button>
-            <Button type="button" label="Enregistrer" severity="contrast" @click="saveSlot" :disabled="isColorInvalid"
-                class="flex-1"></Button>
-        </div>
+        <template #footer>
+            <div class="flex gap-2 w-full">
+                <Button type="button" label="Annuler" severity="secondary" @click="visible = false" outlined
+                    class="flex-1">
+                    <template #icon>
+                        <Icon name="lucide:x" size="18" />
+                    </template>
+                </Button>
+                <Button type="button" :label="editingSlot ? 'Mettre à jour' : 'Enregistrer'" severity="contrast"
+                    @click="saveSlot"
+                    :disabled="isColorInvalid || !selectedGame?.label || !startTime || !endTime || selectedDays.length === 0"
+                    class="flex-1">
+                    <template #icon>
+                        <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="18" />
+                    </template>
+                </Button>
+            </div>
+        </template>
     </Dialog>
 </template>
 
@@ -300,7 +376,7 @@ const {
     slotColor,
     colorInput,
     isColorInvalid,
-    isAutoColor,
+    useGameColor,
     resetColor,
     startTime,
     endTime,
