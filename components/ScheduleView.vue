@@ -1,6 +1,7 @@
 <template>
-    <Card class="p-4 relative lg:h-160 export-footer" :style="{ backgroundColor: schedule?.style?.bgColor || '' }" id="scheduleCard">
-        <template #header>
+    <div class="p-4 relative lg:h-160 bg-zinc-900 rounded-lg export-footer"
+        :style="{ backgroundColor: schedule?.style?.bgColor || '' }" id="scheduleCard">
+        <div class="flex flex-col gap-6">
             <div class="flex items-center gap-4">
                 <div class="flex flex-col">
 
@@ -31,13 +32,12 @@
                     </template>
                 </div>
             </div>
-        </template>
-        <template #content>
+
             <div class="grid lg:grid-cols-7 gap-4 w-full">
                 <div v-for="day in daysOptions" :key="day.label" class="flex flex-col items-center w-full">
 
                     <!-- Jour -->
-                    <div class="font-semibold mb-2 text-center">{{ day.label }}</div>
+                    <div class="font-semibold mb-2 text-center text-xl">{{ day.label }}</div>
 
                     <!-- Créneaux -->
                     <div class="lg:h-110 w-full">
@@ -105,13 +105,11 @@
                     </div>
                 </div>
             </div>
-        </template>
-        <template #footer>
-            <div class="absolute bottom-3 right-3 text-lg text-zinc-400/60 select-none pointer-events-none">
-                Fait avec <span class="font-semibold">StreamLink</span>
-            </div>
-        </template>
-    </Card>
+        </div>
+        <div class="absolute bottom-3 right-3 text-lg text-zinc-400/80 select-none pointer-events-none ignore-export">
+            Fait avec <span class="font-semibold">StreamLink</span>
+        </div>
+    </div>
 
     <!-- Modal d'ajout de créneau -->
     <Dialog v-model:visible="visible" modal :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'"

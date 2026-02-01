@@ -34,9 +34,9 @@ export const useScheduleScreenshot = () => {
                     const footer = document.createElement('div')
                     footer.textContent = 'Fait avec StreamLink'
                     footer.style.position = 'absolute'
-                    footer.style.bottom = '12px'
+                    footer.style.bottom = '14px'
                     footer.style.right = '12px'
-                    footer.style.fontSize = '1rem'
+                    footer.style.fontSize = '1.12rem'
                     footer.style.opacity = '0.6'
                     footer.style.pointerEvents = 'none'
                     footer.style.userSelect = 'none'
