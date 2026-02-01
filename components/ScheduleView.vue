@@ -1,5 +1,5 @@
 <template>
-    <Card class="p-4 relative lg:h-160" :style="{ backgroundColor: schedule?.style?.bgColor || '' }">
+    <Card class="p-4 relative lg:h-160" :style="{ backgroundColor: schedule?.style?.bgColor || '' }" id="scheduleCard">
         <template #header>
             <div class="flex items-center gap-4">
                 <div class="flex flex-col">
@@ -12,10 +12,8 @@
                     </template>
                     <template v-else>
                         <div class="flex items-center gap-2 hover:cursor-pointer" @click="editField('title')">
-                            <h1 class="text-4xl font-bold">
-                                {{ schedule?.title }}
-                            </h1>
-                            <Icon name="lucide:pencil" size="34" class="transition" />
+                            <h1 class="text-4xl font-bold"> {{ schedule?.title }} </h1>
+                            <Icon name="lucide:pencil" size="34" class="transition ignore-export" />
                         </div>
                     </template>
 
@@ -27,118 +25,83 @@
                     </template>
                     <template v-else>
                         <div class="flex items-center gap-2 hover:cursor-pointer" @click="editField('subtitle')">
-                            <div class="text-base font-semibold">
-                                {{ schedule?.subtitle }}
-                            </div>
-                            <Icon name="lucide:pencil" size="18" class="transition" />
+                            <div class="text-base font-semibold"> {{ schedule?.subtitle }} </div>
+                            <Icon name="lucide:pencil" size="18" class="transition ignore-export" />
                         </div>
                     </template>
-
                 </div>
             </div>
         </template>
         <template #content>
             <div class="grid lg:grid-cols-7 gap-4 w-full">
-                <div v-for="day in daysOptions" :key="day.label" class="flex flex-col gap-1 min-w-0">
-                    <div class="flex flex-col items-center w-full">
-                        <!-- Jour -->
-                        <div class="font-semibold mb-2 text-center">{{ day.label }}</div>
-                        <!-- Créneaux -->
-                        <div class="grid grid-rows-[auto_1fr_auto] gap-2 lg:h-110 w-full">
+                <div v-for="day in daysOptions" :key="day.label" class="flex flex-col items-center w-full">
 
-                            <!-- CAS : aucun créneau -->
-                            <Card v-if="slotsForDay(day.label).length === 0"
-                                class="row-span-3 border-2 border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition-all h-full w-full"
-                                @click="openSlotModal(day.label)">
-                                <template #content>
-                                    <div class="flex flex-col items-center justify-center gap-1 ">
-                                        <Icon name="lucide:plus" size="18" class="text-zinc-400" />
-                                        <span class="text-zinc-400 text-center text-xs">Ajouter un stream</span>
-                                    </div>
-                                </template>
-                            </Card>
+                    <!-- Jour -->
+                    <div class="font-semibold mb-2 text-center">{{ day.label }}</div>
 
-                            <!-- CAS : il y a des créneaux -->
-                            <template v-else>
+                    <!-- Créneaux -->
+                    <div class="lg:h-110 w-full">
+
+                        <!-- CAS : aucun créneau -->
+                        <div v-if="slotsForDay(day.label).length === 0"
+                            class="border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-zinc-500 hover:border-zinc-300 transition-all h-full w-full ignore-export"
+                            @click="openSlotModal(day.label)">
+                            <div class="flex flex-col items-center justify-center gap-1 ">
+                                <Icon name="lucide:plus" size="18" class="text-zinc-400" />
+                                <span class="text-center text-xs text-zinc-400">Ajouter un
+                                    stream</span>
+                            </div>
+                        </div>
+
+                        <!-- CAS : il y a des créneaux -->
+                        <template v-else>
+                            <div class="grid grid-rows-[auto_1fr_auto] gap-2 h-full">
                                 <!-- Zone + en haut -->
-                                <Card
-                                    class="h-8 border-2 border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition-all w-full"
+                                <div class="h-6 border-2 border-dashed border-zinc-500 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-300 transition-all w-full row-span-1 ignore-export"
                                     @click="openSlotModal(day.label, undefined, 'before')"
                                     v-tooltip.bottom="{ value: `Ajouter un stream avant`, pt: { text: '!text-sm' } }">
-                                    <template #content>
-                                        <Icon name="lucide:plus" size="14" class="text-zinc-400" />
-                                    </template>
-                                </Card>
+                                    <Icon name="lucide:plus" size="14" class="text-zinc-400" />
+                                </div>
 
                                 <!-- Créneaux -->
-                                <div class="flex flex-col gap-1 overflow-hidden w-full">
-                                    <Card v-for="slot in slotsForDay(day.label)" :key="slot.id"
-                                        class="border-2 border-zinc-600 rounded flex-1 min-h-0 w-full relative group hover:border-zinc-500 transition-all "
-                                        :style="slot.game.cover
-                                            ? { borderColor: `#${slot.color}`, backgroundImage: `url(${slot.game.cover})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
-                                            : {}">
-                                        <template #content>
-                                            <!-- Overlay sombre -->
-                                            <div class="absolute inset-0 bg-black/30 z-0 rounded-xl"></div>
-                                            <!-- Contenu -->
-                                            <div class="flex flex-col justify-between h-full">
-                                                <!-- Tag titre -->
-                                                <div
-                                                    class="absolute bottom-0 left-0 bg-black/80 text-white text-sm font-semibold px-2 py-1 rounded-b-lg z-10 w-full">
-                                                    {{ slot.title }}
-                                                </div>
-                                                <div class="absolute top-0 left-0 z-10 px-2 py-1 text-white text-sm font-semibold rounded-br-lg rounded-tl-lg"
-                                                    :style="slot.game.cover
-                                                        ? { backgroundColor: `#${slot.color}` || 'rgba(0, 0, 0, 0.7)' }
-                                                        : {}">
-                                                    {{ formatTime(slot.start_at) }}
-                                                </div>
-
-                                                <!-- Actions visibles sur mobile, overlay sur desktop -->
-                                                <div class="flex gap-1 mt-1 lg:hidden">
-                                                    <button @click.prevent="openSlotModal(day.label, slot)"
-                                                        class="flex-1 px-2 py-1.5 bg-zinc-700 hover:bg-zinc-600 rounded text-xs transition flex items-center justify-center gap-1"
-                                                        :aria-label="`Modifier ${slot.title}`">
-                                                        <Icon name="lucide:edit-2" size="14" />
-                                                        <span>Modifier</span>
-                                                    </button>
-                                                    <button @click.prevent="deleteSlot(slot)"
-                                                        class="flex-1 px-2 py-1.5 bg-red-900/30 hover:bg-red-900/50 rounded text-xs transition flex items-center justify-center gap-1"
-                                                        :aria-label="`Supprimer ${slot.title}`">
-                                                        <Icon name="lucide:trash-2" size="14" />
-                                                        <span>Supprimer</span>
-                                                    </button>
-                                                </div>
-                                                <!-- Overlay desktop uniquement -->
-                                                <div
-                                                    class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-lg gap-2">
-                                                    <Button @click.prevent="openSlotModal(day.label, slot)"
-                                                        class="p-4 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-all justify-center flex items-center"
-                                                        v-tooltip.bottom="`Modifier`" severity="info">
-                                                        <Icon name="lucide:edit-2" size="20" />
-                                                    </Button>
-                                                    <Button @click.prevent="deleteSlot(slot)"
-                                                        class="p-4 bg-red-900 hover:bg-red-800 rounded-lg transition-all justify-center flex items-center"
-                                                        v-tooltip.bottom="`Supprimer`" severity="danger">
-                                                        <Icon name="lucide:trash-2" size="20" />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </template>
-                                    </Card>
+                                <div class="flex flex-col gap-1 overflow-hidden w-full export-day-column-content">
+                                    <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
+                                        class="border-2 rounded-lg flex-1 min-h-0 w-full relative group transition-all"
+                                        :style="slotStyle(slot)">
+                                        <!-- Tag titre -->
+                                        <div
+                                            class="absolute bottom-0 left-0 bg-black/80 text-sm font-semibold px-2 py-1 rounded-b-md z-100 w-full">
+                                            {{ slot.title }}
+                                        </div>
+                                        <div class="absolute top-0 left-0 z-100 px-2 py-1 text-sm font-semibold rounded-br-md rounded-tl-sm"
+                                            :style="slot.game.cover
+                                                ? { backgroundColor: `#${slot.color}` || 'rgba(0, 0, 0, 0.7)' }
+                                                : {}">
+                                            {{ formatTime(slot.start_at) }}
+                                        </div>
+                                        <!-- Overlay desktop uniquement -->
+                                        <div
+                                            class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-sm gap-2">
+                                            <Button @click.prevent="openSlotModal(day.label, slot)"
+                                                v-tooltip.bottom="`Modifier`" severity="info">
+                                                <Icon name="lucide:edit-2" size="20" />
+                                            </Button>
+                                            <Button @click.prevent="deleteSlot(slot)" v-tooltip.bottom="`Supprimer`"
+                                                severity="danger">
+                                                <Icon name="lucide:trash-2" size="20" />
+                                            </Button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Zone + en bas -->
-                                <Card
-                                    class="h-8 border-2 border-dashed border-zinc-600 flex items-center justify-center cursor-pointer hover:border-zinc-400 transition-all w-full"
+                                <div class="h-6 border-2 border-dashed border-zinc-500 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-300 transition-all w-full row-span-1 ignore-export"
                                     @click="openSlotModal(day.label, undefined, 'after')"
                                     v-tooltip.bottom="{ value: `Ajouter un stream après`, pt: { text: '!text-sm' } }">
-                                    <template #content>
-                                        <Icon name="lucide:plus" size="14" class="text-zinc-400" />
-                                    </template>
-                                </Card>
-                            </template>
-                        </div>
+                                    <Icon name="lucide:plus" size="14" class="text-zinc-400" />
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -149,6 +112,14 @@
             </div>
         </template>
     </Card>
+    <div>
+        <Button @click="previewSchedule" class="mr-2">
+            Aperçu
+        </Button>
+        <Button @click="exportSchedule">
+            Exporter le planning
+        </Button>
+    </div>
 
     <!-- Modal d'ajout de créneau -->
     <Dialog v-model:visible="visible" modal :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'"
@@ -301,6 +272,11 @@
             </div>
         </template>
     </Dialog>
+    <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: '65vw' }" :draggable="false">
+        <template #container="{ closeCallback }">
+            <img v-if="previewDataUrl" :src="previewDataUrl" class="w-full h-auto" />
+        </template>
+    </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -388,6 +364,27 @@ const {
     searchGames,
     gameSuggestions
 } = useSlotModal(schedule.value.id, slots, scheduleSlotStore, loadSlots)
+
+// Fonction pour générer le style d'un slot
+const slotStyle = (slot: any) => {
+    if (slot.game.cover) {
+        return {
+            borderColor: `#${slot.color}`,
+            backgroundImage: `url(${slot.game.cover})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+        }
+    }
+    return {}
+}
+
+const {
+    previewDataUrl,
+    showPreview,
+    previewSchedule,
+    exportSchedule
+} = useScheduleScreenshot()
 
 onMounted(async () => {
     await loadSlots()

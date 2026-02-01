@@ -21,6 +21,7 @@
     "cookie": "1.1.1",
     "cookies": "0.9.1",
     "lucide-vue-next": "^0.562.0",
+    "modern-screenshot": "^4.6.8",
     "node-vibrant": "^4.0.4",
     "nuxt": "^4.2.2",
     "pinia": "^3.0.4",
