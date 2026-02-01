@@ -2,10 +2,11 @@
     <div class="p-4 relative lg:h-160 bg-zinc-900 rounded-lg export-footer"
         :style="{ backgroundColor: schedule?.style?.bgColor || '' }" id="scheduleCard">
         <div class="flex flex-col gap-6">
+
+            <!-- En-tête du planning -->
             <div class="flex items-center gap-4">
                 <div class="flex flex-col">
-
-                    <!-- TITLE -->
+                    <!-- Titre -->
                     <template v-if="editing.field === 'title'">
                         <input :ref="el => inputRefs['title'] = el" v-model="editing.value" @blur="saveEdit"
                             @keyup.enter="saveEdit" @keyup.esc.prevent.stop="cancelEdit"
@@ -17,8 +18,7 @@
                             <Icon name="lucide:pencil" size="34" class="transition ignore-export" />
                         </div>
                     </template>
-
-                    <!-- SUBTITLE -->
+                    <!-- Sous-titre -->
                     <template v-if="editing.field === 'subtitle'">
                         <input :ref="el => inputRefs['subtitle'] = el" v-model="editing.value" @blur="saveEdit"
                             @keyup.enter="saveEdit" @keyup.esc.prevent.stop="cancelEdit"
@@ -33,25 +33,25 @@
                 </div>
             </div>
 
+            <!-- Contenu du planning -->
             <div class="grid lg:grid-cols-7 gap-4 w-full">
                 <div v-for="day in daysOptions" :key="day.label" class="flex flex-col items-center w-full">
-
                     <!-- Jour -->
                     <div class="font-semibold mb-2 text-center text-xl">{{ day.label }}</div>
-
                     <!-- Créneaux -->
                     <div class="lg:h-110 w-full">
 
                         <!-- CAS : aucun créneau -->
-                        <div v-if="slotsForDay(day.label).length === 0"
-                            class="border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-zinc-500 hover:border-zinc-300 transition-all h-full w-full ignore-export"
-                            @click="openSlotModal(day.label)">
-                            <div class="flex flex-col items-center justify-center gap-1 ">
-                                <Icon name="lucide:plus" size="18" class="text-zinc-400" />
-                                <span class="text-center text-xs text-zinc-400">Ajouter un
-                                    stream</span>
+                        <template v-if="slotsForDay(day.label).length === 0">
+                            <div class="border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-zinc-500 hover:border-zinc-300 
+                            transition-all h-full w-full day-slot-empty" @click="openSlotModal(day.label)">
+                                <div class="flex flex-col items-center justify-center gap-1 ">
+                                    <Icon name="lucide:plus" size="18" class="text-zinc-400" />
+                                    <span class="text-center text-xs text-zinc-400">Ajouter un
+                                        stream</span>
+                                </div>
                             </div>
-                        </div>
+                        </template>
 
                         <!-- CAS : il y a des créneaux -->
                         <template v-else>
@@ -62,7 +62,6 @@
                                     v-tooltip.bottom="{ value: `Ajouter un stream avant`, pt: { text: '!text-sm' } }">
                                     <Icon name="lucide:plus" size="14" class="text-zinc-400" />
                                 </div>
-
                                 <!-- Créneaux -->
                                 <div class="flex flex-col gap-1 overflow-hidden w-full export-day-column-content">
                                     <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
@@ -93,7 +92,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- Zone + en bas -->
                                 <div class="h-6 border-2 border-dashed border-zinc-500 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-300 transition-all w-full row-span-1 ignore-export"
                                     @click="openSlotModal(day.label, undefined, 'after')"
@@ -106,14 +104,16 @@
                 </div>
             </div>
         </div>
+        <!-- Footer -->
         <div class="absolute bottom-3 right-3 text-lg text-zinc-400/80 select-none pointer-events-none ignore-export">
             Fait avec <span class="font-semibold">StreamLink</span>
         </div>
     </div>
 
     <!-- Modal d'ajout de créneau -->
-    <Dialog v-model:visible="visible" modal :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'"
-        :style="{ width: '30rem' }" :draggable="false">
+    <Dialog v-model:visible="visible" dismissable-mask modal
+        :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'" :style="{ width: '30rem' }"
+        :draggable="false">
         <div class="flex flex-col gap-5">
 
             <!-- Catégorie Twitch -->

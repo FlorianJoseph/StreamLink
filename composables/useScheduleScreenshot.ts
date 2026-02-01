@@ -24,6 +24,25 @@ export const useScheduleScreenshot = () => {
                     cloned.style.height = '100%'
                 }
 
+                // Gérer les jours off
+                if (cloned.classList.contains('day-slot-empty')) {
+                    // remplace le contenu par exemple par "Jour off"
+                    cloned.innerHTML = `
+      <div style="
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        height:100%;
+        color:#a1a1aa;
+        font-size:1.5rem;
+        gap:4px;
+        font-weight:800;
+      ">
+        <span>OFF</span>
+      </div>
+    `}
+
                 // Injecter le footer même s'il n'existe plus
                 if (
                     cloned.classList.contains('export-footer') &&
