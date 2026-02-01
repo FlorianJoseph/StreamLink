@@ -66,11 +66,11 @@
                                 <!-- Créneaux -->
                                 <div class="flex flex-col gap-1 overflow-hidden w-full export-day-column-content">
                                     <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
-                                        class="border-2 rounded-lg flex-1 min-h-0 w-full relative group transition-all"
+                                        class="border-2 rounded-lg flex-1 min-h-0 w-full relative h-full flex flex-col group transition-all"
                                         :style="slotStyle(slot)">
+                                        <div class="flex-1"></div>
                                         <!-- Tag titre -->
-                                        <div
-                                            class="absolute bottom-0 left-0 bg-black/80 text-sm font-semibold px-2 py-1 rounded-b-md z-100 w-full">
+                                        <div class="bg-black/80 text-sm font-semibold px-2 py-1 rounded-b-md z-100">
                                             {{ slot.title }}
                                         </div>
                                         <div class="absolute top-0 left-0 z-100 px-2 py-1 text-sm font-semibold rounded-br-md rounded-tl-sm"
