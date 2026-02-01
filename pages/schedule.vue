@@ -86,7 +86,7 @@
                     <!-- Barre d'outils -->
                     <Menubar>
                         <template #start>
-                            <Button severity="secondary">
+                            <Button severity="secondary" @click="previewSchedule">
                                 <Icon name="lucide:eye" size="18" />
                                 <span
                                     class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base whitespace-nowrap">Voir
@@ -100,7 +100,7 @@
                                     <span
                                         class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Partager</span>
                                 </Button>
-                                <Button severity="contrast">
+                                <Button severity="contrast" @click="exportSchedule">
                                     <Icon name="lucide:download" size="18" />
                                     <span class="text-xs md:text-base lg:text-xs xl:text-base">Télécharger</span>
                                 </Button>
@@ -113,6 +113,12 @@
             </div>
         </div>
     </div>
+
+    <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: '65vw' }" :draggable="false">
+        <template #container="{ closeCallback }">
+            <img v-if="previewDataUrl" :src="previewDataUrl" class="w-full h-auto" />
+        </template>
+    </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -129,6 +135,14 @@ onMounted(async () => {
 definePageMeta({
     layout: 'fullscreen'
 })
+
+const {
+    previewSchedule,
+    exportSchedule,
+    previewDataUrl,
+    showPreview
+} = useScheduleScreenshot()
+
 </script>
 
 <style scoped>

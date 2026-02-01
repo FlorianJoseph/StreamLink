@@ -1,5 +1,5 @@
 <template>
-    <Card class="p-4 relative lg:h-160" :style="{ backgroundColor: schedule?.style?.bgColor || '' }" id="scheduleCard">
+    <Card class="p-4 relative lg:h-160 export-footer" :style="{ backgroundColor: schedule?.style?.bgColor || '' }" id="scheduleCard">
         <template #header>
             <div class="flex items-center gap-4">
                 <div class="flex flex-col">
@@ -112,14 +112,6 @@
             </div>
         </template>
     </Card>
-    <div>
-        <Button @click="previewSchedule" class="mr-2">
-            Aperçu
-        </Button>
-        <Button @click="exportSchedule">
-            Exporter le planning
-        </Button>
-    </div>
 
     <!-- Modal d'ajout de créneau -->
     <Dialog v-model:visible="visible" modal :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'"
@@ -272,11 +264,6 @@
             </div>
         </template>
     </Dialog>
-    <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: '65vw' }" :draggable="false">
-        <template #container="{ closeCallback }">
-            <img v-if="previewDataUrl" :src="previewDataUrl" class="w-full h-auto" />
-        </template>
-    </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -378,13 +365,6 @@ const slotStyle = (slot: any) => {
     }
     return {}
 }
-
-const {
-    previewDataUrl,
-    showPreview,
-    previewSchedule,
-    exportSchedule
-} = useScheduleScreenshot()
 
 onMounted(async () => {
     await loadSlots()

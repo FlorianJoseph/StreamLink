@@ -7,6 +7,7 @@ export const useScheduleScreenshot = () => {
     const renderSchedule = async (scale?: number): Promise<string | null> => {
         const node = document.querySelector<HTMLElement>('#scheduleCard')
         if (!node) return null
+        let footerInjected = false
 
         return domToPng(node, {
             scale,
@@ -21,6 +22,33 @@ export const useScheduleScreenshot = () => {
                 if (cloned.classList.contains('export-day-column-content')) {
                     cloned.style.gridRow = '1 / -1'
                     cloned.style.height = '100%'
+                }
+
+                // Injecter le footer même s'il n'existe plus
+                if (
+                    cloned.classList.contains('export-footer') &&
+                    !footerInjected
+                ) {
+                    footerInjected = true
+
+                    const footer = document.createElement('div')
+                    footer.textContent = 'Fait avec StreamLink'
+                    footer.style.position = 'absolute'
+                    footer.style.bottom = '12px'
+                    footer.style.right = '12px'
+                    footer.style.fontSize = '1rem'
+                    footer.style.opacity = '0.6'
+                    footer.style.pointerEvents = 'none'
+                    footer.style.userSelect = 'none'
+
+                    const bold = document.createElement('span')
+                    bold.textContent = 'StreamLink'
+                    bold.style.fontWeight = '600'
+
+                    footer.innerHTML = 'Fait avec '
+                    footer.appendChild(bold)
+
+                    cloned.appendChild(footer)
                 }
             },
         })
