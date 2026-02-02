@@ -34,10 +34,11 @@
             </div>
 
             <!-- Contenu du planning -->
-            <div class="grid lg:grid-cols-7 gap-4 w-full">
-                <div v-for="day in daysOptions" :key="day.label" class="flex flex-col items-center w-full">
+            <div class="flex gap-4 w-full">
+                <div v-for="day in daysOptions" :key="day.label" :style="dayColumnStyle(day.label)"
+                    class="flex flex-col items-center transition-all duration-500 ease-out">
                     <!-- Jour -->
-                    <div class="font-semibold mb-2 text-center text-xl">{{ day.label }}</div>
+                    <div class=" font-semibold mb-2 text-center text-xl">{{ day.label }}</div>
                     <!-- Créneaux -->
                     <div class="lg:h-110 w-full">
 
@@ -47,8 +48,8 @@
                             transition-all h-full w-full day-slot-empty" @click="openSlotModal(day.label)">
                                 <div class="flex flex-col items-center justify-center gap-1 ">
                                     <Icon name="lucide:plus" size="18" class="text-zinc-400" />
-                                    <span class="text-center text-xs text-zinc-400">Ajouter un
-                                        stream</span>
+                                    <!-- <span class="text-center text-xs text-zinc-400">Ajouter un
+                                        stream</span> -->
                                 </div>
                             </div>
                         </template>
@@ -367,4 +368,42 @@ const slotStyle = (slot: any) => {
 onMounted(async () => {
     await loadSlots()
 })
+
+const dayColumnStyle = (dayLabel: any) => {
+    const hasSlots = slotsForDay(dayLabel).length > 0;
+    const totalDaysWithSlots = daysOptions.filter(day => slotsForDay(day.label).length > 0).length;
+
+    if (hasSlots) {
+        // Jour ON : prend l'espace disponible
+        return {
+            flex: '1 1 0%',
+            minWidth: '0',
+            maxWidth: '26rem'
+        };
+    } else {
+        if (totalDaysWithSlots === 0) {
+            // Tous les jours sont OFF : partager l'espace équitablement
+            return {
+                flex: '1 1 0%',
+                minWidth: '0',
+                maxWidth: '12rem',
+            };
+        }
+        else if (totalDaysWithSlots === 1) {
+            // Un seul jour ON : les OFF s'étendent un peu pour équilibrer
+            return {
+                flex: '1 1 0%',
+                minWidth: '6rem',
+                maxWidth: '8rem'
+            };
+        } else {
+            // Plusieurs jours ON : OFF fixes
+            return {
+                flex: '0 0 6rem',
+                minWidth: '6rem',
+                maxWidth: '6rem'
+            };
+        }
+    }
+};
 </script>
