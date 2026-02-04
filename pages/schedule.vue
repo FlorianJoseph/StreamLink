@@ -20,8 +20,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div class="lg:col-span-1">
+            <div class="flex flex-col lg:flex-row gap-6">
+                <div class="w-full lg:w-[420px] shrink-0">
                     <!-- Design du planning -->
                     <Fieldset
                         style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem; margin-top: -1.3rem;">
@@ -167,10 +167,10 @@
                         </Accordion>
                     </Fieldset>
                 </div>
-                <div class="lg:col-span-3 flex flex-col gap-4">
+                <div class="flex-1 min-w-0 flex flex-col gap-4">
 
                     <!-- Barre d'outils -->
-                    <Menubar>
+                    <Menubar class="w-full">
                         <template #start>
                             <Button severity="secondary" @click="previewSchedule">
                                 <Icon name="lucide:eye" size="18" />
@@ -195,122 +195,134 @@
                     </Menubar>
 
                     <!-- Planning hebdomadaire -->
-                    <div class="p-4 relative lg:h-160 rounded-lg export-footer"
-                        :style="{ backgroundColor: scheduleBgColor, color: scheduleTextColor }" id="scheduleCard">
-                        <div class="flex flex-col gap-6">
+                    <div ref="viewportRef" class="relative w-full">
+                        <div class="absolute top-0 left-0" :style="scalerStyle">
+                            <div class="p-4 relative rounded-lg export-footer " :style="{
+                                backgroundColor: scheduleBgColor, color: scheduleTextColor, width: '1280px',
+                                height: '720px',
+                            }" id="scheduleCard">
+                                <div class="flex flex-col gap-6">
 
-                            <!-- En-tête du planning -->
-                            <div class="flex items-center gap-4">
-                                <div class="flex flex-col">
-                                    <!-- Titre -->
-                                    <template v-if="editing.field === 'title'">
-                                        <input :ref="el => inputRefs['title'] = el" v-model="editing.value"
-                                            @blur="saveEdit" @keyup.enter="saveEdit"
-                                            @keyup.esc.prevent.stop="cancelEdit"
-                                            class="text-4xl font-bold bg-transparent border-none focus:outline-none w-full truncate" />
-                                    </template>
-                                    <template v-else>
-                                        <div class="flex items-center gap-2 hover:cursor-pointer"
-                                            @click="editField('title')">
-                                            <h1 class="text-4xl font-bold"> {{ schedule?.title }} </h1>
-                                            <Icon name="lucide:pencil" size="34" class="transition ignore-export" />
+                                    <!-- En-tête du planning -->
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex flex-col">
+                                            <!-- Titre -->
+                                            <template v-if="editing.field === 'title'">
+                                                <input :ref="el => inputRefs['title'] = el" v-model="editing.value"
+                                                    @blur="saveEdit" @keyup.enter="saveEdit"
+                                                    @keyup.esc.prevent.stop="cancelEdit"
+                                                    class="text-4xl font-bold bg-transparent border-none focus:outline-none w-full truncate" />
+                                            </template>
+                                            <template v-else>
+                                                <div class="flex items-center gap-2 hover:cursor-pointer"
+                                                    @click="editField('title')">
+                                                    <h1 class="text-4xl font-bold"> {{ schedule?.title }} </h1>
+                                                    <Icon name="lucide:pencil" size="34"
+                                                        class="transition ignore-export" />
+                                                </div>
+                                            </template>
+                                            <!-- Sous-titre -->
+                                            <template v-if="editing.field === 'subtitle'">
+                                                <input :ref="el => inputRefs['subtitle'] = el" v-model="editing.value"
+                                                    @blur="saveEdit" @keyup.enter="saveEdit"
+                                                    @keyup.esc.prevent.stop="cancelEdit"
+                                                    class="text-base font-semibold bg-transparent border-none focus:outline-none w-full truncate" />
+                                            </template>
+                                            <template v-else>
+                                                <div class="flex items-center gap-2 hover:cursor-pointer"
+                                                    @click="editField('subtitle')">
+                                                    <div class="text-base font-semibold"> {{ schedule?.subtitle }}
+                                                    </div>
+                                                    <Icon name="lucide:pencil" size="18"
+                                                        class="transition ignore-export" />
+                                                </div>
+                                            </template>
                                         </div>
-                                    </template>
-                                    <!-- Sous-titre -->
-                                    <template v-if="editing.field === 'subtitle'">
-                                        <input :ref="el => inputRefs['subtitle'] = el" v-model="editing.value"
-                                            @blur="saveEdit" @keyup.enter="saveEdit"
-                                            @keyup.esc.prevent.stop="cancelEdit"
-                                            class="text-base font-semibold bg-transparent border-none focus:outline-none w-full truncate" />
-                                    </template>
-                                    <template v-else>
-                                        <div class="flex items-center gap-2 hover:cursor-pointer"
-                                            @click="editField('subtitle')">
-                                            <div class="text-base font-semibold"> {{ schedule?.subtitle }} </div>
-                                            <Icon name="lucide:pencil" size="18" class="transition ignore-export" />
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
+                                    </div>
 
-                            <!-- Contenu du planning -->
-                            <div class="flex gap-4 w-full">
-                                <div v-for="day in daysOptions" :key="day.label" :style="dayColumnStyle(day.label)"
-                                    class="flex flex-col items-center transition-all duration-500 ease-out">
-                                    <!-- Jour -->
-                                    <div class=" font-semibold mb-2 text-center text-xl">{{ day.label }}</div>
-                                    <!-- Créneaux -->
-                                    <div class="lg:h-110 w-full">
+                                    <!-- Contenu du planning -->
+                                    <div class="flex gap-4 w-full">
+                                        <div v-for="day in daysOptions" :key="day.label"
+                                            :style="dayColumnStyle(day.label)"
+                                            class="flex flex-col items-center transition-all duration-500 ease-out">
+                                            <!-- Jour -->
+                                            <div class=" font-semibold mb-2 text-center text-xl">{{ day.label }}</div>
+                                            <!-- Créneaux -->
+                                            <div class="lg:h-110 w-full">
 
-                                        <!-- CAS : aucun créneau -->
-                                        <template v-if="slotsForDay(day.label).length === 0">
-                                            <div class="border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-zinc-500 hover:border-zinc-300 
+                                                <!-- CAS : aucun créneau -->
+                                                <template v-if="slotsForDay(day.label).length === 0">
+                                                    <div class="border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-zinc-500 hover:border-zinc-300 
                             transition-all h-full w-full day-slot-empty" @click="openSlotModal(day.label)">
-                                                <div class="flex flex-col items-center justify-center gap-1 ">
-                                                    <Icon name="lucide:plus" size="18" class="text-zinc-400" />
-                                                    <!-- <span class="text-center text-xs text-zinc-400">Ajouter un
+                                                        <div class="flex flex-col items-center justify-center gap-1 ">
+                                                            <Icon name="lucide:plus" size="18" class="text-zinc-400" />
+                                                            <!-- <span class="text-center text-xs text-zinc-400">Ajouter un
                                         stream</span> -->
-                                                </div>
-                                            </div>
-                                        </template>
-
-                                        <!-- CAS : il y a des créneaux -->
-                                        <template v-else>
-                                            <div class="grid grid-rows-[auto_1fr_auto] gap-2 h-full">
-                                                <!-- Zone + en haut -->
-                                                <div class="h-6 border-2 border-dashed border-zinc-500 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-300 transition-all w-full row-span-1 ignore-export"
-                                                    @click="openSlotModal(day.label, undefined, 'before')"
-                                                    v-tooltip.bottom="{ value: `Ajouter un stream avant`, pt: { text: '!text-sm' } }">
-                                                    <Icon name="lucide:plus" size="14" class="text-zinc-400" />
-                                                </div>
-                                                <!-- Créneaux -->
-                                                <div
-                                                    class="flex flex-col gap-1 overflow-hidden w-full export-day-column-content">
-                                                    <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
-                                                        class="border-2 rounded-lg flex-1 min-h-0 w-full relative h-full flex flex-col group transition-all"
-                                                        :style="slotStyle(slot)">
-                                                        <div class="flex-1"></div>
-                                                        <!-- Tag titre -->
-                                                        <div
-                                                            class="bg-black/80 text-sm font-semibold px-2 py-1 rounded-b-md z-100">
-                                                            {{ slot.title }}
-                                                        </div>
-                                                        <div class="absolute top-0 left-0 z-100 px-2 py-1 text-sm font-semibold rounded-br-md rounded-tl-sm"
-                                                            :style="slot.game.cover
-                                                                ? { backgroundColor: `#${slot.color}` || 'rgba(0, 0, 0, 0.7)' }
-                                                                : {}">
-                                                            {{ formatTime(slot.start_at) }}
-                                                        </div>
-                                                        <!-- Overlay desktop uniquement -->
-                                                        <div
-                                                            class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-sm gap-2">
-                                                            <Button @click.prevent="openSlotModal(day.label, slot)"
-                                                                v-tooltip.bottom="`Modifier`" severity="info">
-                                                                <Icon name="lucide:edit-2" size="20" />
-                                                            </Button>
-                                                            <Button @click.prevent="deleteSlot(slot)"
-                                                                v-tooltip.bottom="`Supprimer`" severity="danger">
-                                                                <Icon name="lucide:trash-2" size="20" />
-                                                            </Button>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <!-- Zone + en bas -->
-                                                <div class="h-6 border-2 border-dashed border-zinc-500 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-300 transition-all w-full row-span-1 ignore-export"
-                                                    @click="openSlotModal(day.label, undefined, 'after')"
-                                                    v-tooltip.bottom="{ value: `Ajouter un stream après`, pt: { text: '!text-sm' } }">
-                                                    <Icon name="lucide:plus" size="14" class="text-zinc-400" />
-                                                </div>
+                                                </template>
+
+                                                <!-- CAS : il y a des créneaux -->
+                                                <template v-else>
+                                                    <div class="grid grid-rows-[auto_1fr_auto] gap-2 h-full">
+                                                        <!-- Zone + en haut -->
+                                                        <div class="h-6 border-2 border-dashed border-zinc-500 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-300 transition-all w-full row-span-1 ignore-export"
+                                                            @click="openSlotModal(day.label, undefined, 'before')"
+                                                            v-tooltip.bottom="{ value: `Ajouter un stream avant`, pt: { text: '!text-sm' } }">
+                                                            <Icon name="lucide:plus" size="14" class="text-zinc-400" />
+                                                        </div>
+                                                        <!-- Créneaux -->
+                                                        <div
+                                                            class="flex flex-col gap-1 overflow-hidden w-full export-day-column-content">
+                                                            <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
+                                                                class="border-2 rounded-lg flex-1 min-h-0 w-full relative h-full flex flex-col group transition-all"
+                                                                :style="slotStyle(slot)">
+                                                                <div class="flex-1"></div>
+                                                                <!-- Tag titre -->
+                                                                <div
+                                                                    class="bg-black/80 text-sm font-semibold px-2 py-1 rounded-b-md z-100">
+                                                                    {{ slot.title }}
+                                                                </div>
+                                                                <div class="absolute top-0 left-0 z-100 px-2 py-1 text-sm font-semibold rounded-br-md rounded-tl-sm"
+                                                                    :style="slot.game.cover
+                                                                        ? { backgroundColor: `#${slot.color}` || 'rgba(0, 0, 0, 0.7)' }
+                                                                        : {}">
+                                                                    {{ formatTime(slot.start_at) }}
+                                                                </div>
+                                                                <!-- Overlay desktop uniquement -->
+                                                                <div
+                                                                    class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-sm gap-2">
+                                                                    <Button
+                                                                        @click.prevent="openSlotModal(day.label, slot)"
+                                                                        v-tooltip.bottom="`Modifier`" severity="info">
+                                                                        <Icon name="lucide:edit-2" size="20" />
+                                                                    </Button>
+                                                                    <Button @click.prevent="deleteSlot(slot)"
+                                                                        v-tooltip.bottom="`Supprimer`"
+                                                                        severity="danger">
+                                                                        <Icon name="lucide:trash-2" size="20" />
+                                                                    </Button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Zone + en bas -->
+                                                        <div class="h-6 border-2 border-dashed border-zinc-500 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-300 transition-all w-full row-span-1 ignore-export"
+                                                            @click="openSlotModal(day.label, undefined, 'after')"
+                                                            v-tooltip.bottom="{ value: `Ajouter un stream après`, pt: { text: '!text-sm' } }">
+                                                            <Icon name="lucide:plus" size="14" class="text-zinc-400" />
+                                                        </div>
+                                                    </div>
+                                                </template>
                                             </div>
-                                        </template>
+                                        </div>
                                     </div>
                                 </div>
+                                <!-- Footer -->
+                                <div
+                                    class="absolute bottom-3 right-3 text-lg text-zinc-400/80 select-none pointer-events-none ignore-export">
+                                    Fait avec <span class="font-semibold">StreamLink</span>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Footer -->
-                        <div
-                            class="absolute bottom-3 right-3 text-lg text-zinc-400/80 select-none pointer-events-none ignore-export">
-                            Fait avec <span class="font-semibold">StreamLink</span>
                         </div>
                     </div>
                 </div>
@@ -649,9 +661,43 @@ const {
     gameSuggestions
 } = useSlotModal(scheduleId, slots, scheduleSlotStore, loadSlots)
 
+const viewportRef = ref<HTMLElement | null>(null)
+
+const BASE_WIDTH = 1280
+const BASE_HEIGHT = 720
+const BASE_SCALE = 0.95
+const viewportWidth = ref(0)
+
+onUnmounted(() => {
+    window.removeEventListener('resize', update)
+})
+
+const scale = computed(() => {
+    if (!viewportWidth.value) return BASE_SCALE
+
+    const responsiveScale = viewportWidth.value / BASE_WIDTH
+
+    return Math.min(responsiveScale, BASE_SCALE)
+})
+
+const scalerStyle = computed(() => ({
+    width: `${BASE_WIDTH}px`,
+    height: `${BASE_HEIGHT}px`,
+    transform: `scale(${scale.value})`,
+    transformOrigin: 'top left'
+}))
+
 onMounted(async () => {
     await scheduleStore.getOrCreateSchedule()
     await loadSlots()
+    const update = () => {
+        if (viewportRef.value) {
+            viewportWidth.value = viewportRef.value.clientWidth
+        }
+    }
+
+    update()
+    window.addEventListener('resize', update)
 })
 
 definePageMeta({
