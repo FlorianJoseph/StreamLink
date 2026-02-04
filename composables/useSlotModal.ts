@@ -171,7 +171,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
             : [selectedDays.value.label]
 
         const slotData = {
-            schedule_id: scheduleId,
+            schedule_id: scheduleId.value,
             title: title.value || selectedGame.value?.label || 'Titre du stream',
             color: slotColor.value.replace('#', '').toUpperCase(),
             use_game_color: useGameColor.value,
