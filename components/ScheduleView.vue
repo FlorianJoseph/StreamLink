@@ -1,6 +1,6 @@
 <template>
-    <div class="p-4 relative lg:h-160 bg-zinc-900 rounded-lg export-footer"
-        :style="{ backgroundColor: schedule?.style?.bgColor || '' }" id="scheduleCard">
+    <div class="p-4 relative lg:h-160 rounded-lg export-footer" :style="{ backgroundColor: scheduleBgColor, color: scheduleTextColor }"
+        id="scheduleCard">
         <div class="flex flex-col gap-6">
 
             <!-- En-tête du planning -->
@@ -324,6 +324,7 @@ async function deleteSlot(slot: any) {
     await loadSlots()
 }
 
+// Formate une heure au format HH:mm en HHhmm
 function formatTime(time: string) {
     if (!time) return ''
     const [h, m] = time.split(':')
@@ -369,6 +370,7 @@ onMounted(async () => {
     await loadSlots()
 })
 
+// Fonction pour déterminer le style d'une colonne de jour
 const dayColumnStyle = (dayLabel: any) => {
     const hasSlots = slotsForDay(dayLabel).length > 0;
     const totalDaysWithSlots = daysOptions.filter(day => slotsForDay(day.label).length > 0).length;
@@ -406,4 +408,13 @@ const dayColumnStyle = (dayLabel: any) => {
         }
     }
 };
+
+const scheduleBgColor = computed(() => {
+    return `#${schedule.value?.style?.bgColor || ''}`
+})
+
+const scheduleTextColor = computed(() => {
+    return `#${schedule.value?.style?.textColor || ''}`
+})
+
 </script>

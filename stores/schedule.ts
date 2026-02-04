@@ -56,6 +56,10 @@ export const useScheduleStore = defineStore('schedule', () => {
     async function updateSchedule(payload: ScheduleUpdate): Promise<Result<Schedule>> {
         if (!schedule.value) return { data: null, error: 'Pas de planning à mettre à jour.' }
 
+        if (payload.style) {
+            payload.style = { ...schedule.value.style, ...payload.style }
+        }
+
         const { data, error } = await supabase
             .from('Schedule')
             .update(payload)

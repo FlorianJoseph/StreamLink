@@ -50,12 +50,14 @@
                                 <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                     <div class="flex items-center gap-2">
                                         <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
-                                        <ColorPicker ref="bgColorPicker" v-model="bgColorLocal" format="hex" @click.stop
-                                            style="--p-colorpicker-preview-focus-ring-color :none" />
+                                        <ColorPicker ref="bgColorPicker" v-model="scheduleBgColorLocal" format="hex"
+                                            @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
                                     </div>
                                 </InputGroupAddon>
-                                <InputText v-model="bgColorLocal" @input="bgColorLocal = bgColorLocal.toUpperCase()"
-                                    style="--p-inputtext-focus-border-color:white" maxlength="7" />
+                                <InputText v-model="scheduleBgColorLocal" @blur="onBgColorBlur"
+                                    style="--p-inputtext-focus-border-color:white" maxlength="7"
+                                    :invalid="!isBgColorValid"
+                                    :style="{ color: !isBgColorValid ? '#f87171' : '#ffffff' }" />
                             </InputGroup>
                             <div class="flex flex-col gap-2">
                                 Image de fond
@@ -72,12 +74,14 @@
                                 <InputGroupAddon style="--p-inputgroup-addon-color:white">
                                     <div class="flex items-center gap-2">
                                         <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
-                                        <ColorPicker ref="bgColorPicker" v-model="bgColorLocal" format="hex" @click.stop
-                                            style="--p-colorpicker-preview-focus-ring-color :none" />
+                                        <ColorPicker ref="textColorPicker" v-model="scheduleTextColorLocal" format="hex"
+                                            @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
                                     </div>
                                 </InputGroupAddon>
-                                <InputText v-model="bgColorLocal" @input="bgColorLocal = bgColorLocal.toUpperCase()"
-                                    style="--p-inputtext-focus-border-color:white" maxlength="7" />
+                                <InputText v-model="scheduleTextColorLocal" @blur="onTextColorBlur"
+                                    style="--p-inputtext-focus-border-color:white" maxlength="7"
+                                    :invalid="!isTextColorValid"
+                                    :style="{ color: !isTextColorValid ? '#f87171' : '#ffffff' }" />
                             </InputGroup>
                         </div>
                     </Fieldset>
@@ -126,7 +130,17 @@
 const scheduleStore = useScheduleStore()
 const { loading } = storeToRefs(scheduleStore)
 
-const bgColorLocal = ref('FFFFFF')
+const {
+    value: scheduleBgColorLocal,
+    isValid: isBgColorValid,
+    handleBlur: onBgColorBlur
+} = useScheduleColor(scheduleStore, 'bgColor')
+
+const {
+    value: scheduleTextColorLocal,
+    isValid: isTextColorValid,
+    handleBlur: onTextColorBlur
+} = useScheduleColor(scheduleStore, 'textColor')
 
 onMounted(async () => {
     await scheduleStore.getOrCreateSchedule()
