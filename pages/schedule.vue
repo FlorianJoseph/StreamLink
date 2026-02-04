@@ -21,7 +21,7 @@
             </div>
 
             <div class="flex flex-col lg:flex-row gap-6">
-                <div class="w-full lg:w-[420px] shrink-0">
+                <div class="w-full lg:w-md shrink-0">
                     <!-- Design du planning -->
                     <Fieldset
                         style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem; margin-top: -1.3rem;">
@@ -32,44 +32,28 @@
                             </div>
                         </template>
                         <p class="font-semibold mb-2">Arrière-plan</p>
-
-                        <Tabs value="0">
-                            <TabList>
-                                <Tab value="0">Couleur</Tab>
-                                <Tab value="1">Image</Tab>
-                            </TabList>
-                            <TabPanels>
-                                <TabPanel value="0">
-                                    <InputGroup class="flex-1">
-                                        <InputGroupAddon style="--p-inputgroup-addon-color:white">
-                                            <div class="flex items-center gap-2">
-                                                <span
-                                                    class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
-                                                <ColorPicker ref="bgColorPicker" v-model="scheduleBgColorLocal"
-                                                    format="hex" @click.stop
-                                                    style="--p-colorpicker-preview-focus-ring-color :none" />
-                                            </div>
-                                        </InputGroupAddon>
-                                        <InputText v-model="scheduleBgColorLocal" @blur="onBgColorBlur"
-                                            style="--p-inputtext-focus-border-color:white" maxlength="7"
-                                            :invalid="!isBgColorValid"
-                                            :style="{ color: !isBgColorValid ? '#f87171' : '#ffffff' }" />
-                                    </InputGroup>
-                                </TabPanel>
-                                <TabPanel value="1">
-                                    <div class="flex flex-col gap-2 mb-4">
-                                        <div class="flex flex-col gap-2">
-                                            Image de fond
-                                            <div>
-                                                <FileUpload mode="basic" name="demo[]" url="/api/upload"
-                                                    accept="image/*" :maxFileSize="1000000" @upload="" :auto="true"
-                                                    chooseLabel="Choisir une image" severity="contrast" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </TabPanel>
-                            </TabPanels>
-                        </Tabs>
+                        <InputGroup class="flex-1">
+                            <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
+                                    <ColorPicker ref="bgColorPicker" v-model="scheduleBgColorLocal" format="hex"
+                                        @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
+                                </div>
+                            </InputGroupAddon>
+                            <InputText v-model="scheduleBgColorLocal" @blur="onBgColorBlur"
+                                style="--p-inputtext-focus-border-color:white" maxlength="7" :invalid="!isBgColorValid"
+                                :style="{ color: !isBgColorValid ? '#f87171' : '#ffffff' }" />
+                        </InputGroup>
+                        <div class="flex flex-col gap-2 mb-4">
+                            <div class="flex flex-col gap-2">
+                                Image de fond
+                                <div>
+                                    <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*"
+                                        :maxFileSize="1000000" @upload="" :auto="true" chooseLabel="Choisir une image"
+                                        severity="contrast" />
+                                </div>
+                            </div>
+                        </div>
                         <p class="font-semibold mb-2">Texte</p>
                         <div class="flex flex-col gap-2 mb-4">
                             <InputGroup class="flex-1">
@@ -89,17 +73,28 @@
                         <div class="flex flex-col gap-2">
                             <div class="flex justify-between items-center">
                                 <span>Afficher les titres</span>
-                                <ToggleSwitch v-model="titleVisible" />
+                                <ToggleSwitch v-model="titleVisible"
+                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                    @click="toggleTitleVisibility" />
                             </div>
                             <div class="flex justify-between items-center">
                                 <span>Afficher l'heure de fin</span>
-                                <ToggleSwitch v-model="endTimeVisible" />
+                                <ToggleSwitch v-model="endTimeVisible"
+                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                    @click="toggleEndTimeVisibility" />
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Afficher les jours sans stream</span>
+                                <ToggleSwitch v-model="daysWithoutStreamVisible"
+                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                    @click="toggleDaysWithoutStreamVisibility" />
                             </div>
                         </div>
                     </Fieldset>
 
                     <!-- Configuration du planning -->
-                    <Fieldset style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem;">
+                    <Fieldset style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem;"
+                        class="overflow-auto">
                         <template #legend>
                             <div class="flex items-center gap-2">
                                 <Icon name="lucide:settings" size="24" />
@@ -196,16 +191,16 @@
 
                     <!-- Planning hebdomadaire -->
                     <div ref="viewportRef" class="relative w-full">
-                        <div class="absolute top-0 left-0" :style="scalerStyle">
-                            <div class="p-4 relative rounded-lg export-footer " :style="{
-                                backgroundColor: scheduleBgColor, color: scheduleTextColor, width: '1280px',
+                        <div class="absolute top-0 left-0" :style="scalerStyle" id="scheduleCard">
+                            <div class="p-4 relative rounded-lg export-footer" :style="{
+                                backgroundColor: scheduleBgColor, width: '1280px',
                                 height: '720px',
-                            }" id="scheduleCard">
+                            }">
                                 <div class="flex flex-col gap-6">
 
                                     <!-- En-tête du planning -->
                                     <div class="flex items-center gap-4">
-                                        <div class="flex flex-col">
+                                        <div class="flex flex-col" :style="{ color: scheduleTextColor }">
                                             <!-- Titre -->
                                             <template v-if="editing.field === 'title'">
                                                 <input :ref="el => inputRefs['title'] = el" v-model="editing.value"
@@ -246,7 +241,9 @@
                                             :style="dayColumnStyle(day.label)"
                                             class="flex flex-col items-center transition-all duration-500 ease-out">
                                             <!-- Jour -->
-                                            <div class=" font-semibold mb-2 text-center text-xl">{{ day.label }}</div>
+                                            <div class=" font-semibold mb-2 text-center text-xl"
+                                                :style="{ color: scheduleTextColor }">
+                                                {{ day.label }}</div>
                                             <!-- Créneaux -->
                                             <div class="lg:h-110 w-full">
 
@@ -279,8 +276,8 @@
                                                                 :style="slotStyle(slot)">
                                                                 <div class="flex-1"></div>
                                                                 <!-- Tag titre -->
-                                                                <div
-                                                                    class="bg-black/80 text-sm font-semibold px-2 py-1 rounded-b-md z-100">
+                                                                <div class="bg-black/80 text-sm font-semibold px-2 py-1 rounded-b-md z-25"
+                                                                    v-if="titleVisible">
                                                                     {{ slot.title }}
                                                                 </div>
                                                                 <div class="absolute top-0 left-0 z-100 px-2 py-1 text-sm font-semibold rounded-br-md rounded-tl-sm"
@@ -288,6 +285,9 @@
                                                                         ? { backgroundColor: `#${slot.color}` || 'rgba(0, 0, 0, 0.7)' }
                                                                         : {}">
                                                                     {{ formatTime(slot.start_at) }}
+                                                                    <span v-if="endTimeVisible">
+                                                                        - {{ formatTime(slot.end_at) }}
+                                                                    </span>
                                                                 </div>
                                                                 <!-- Overlay desktop uniquement -->
                                                                 <div
@@ -629,8 +629,45 @@ const scheduleTextColor = computed(() => {
     return `#${schedule.value?.style?.textColor || ''}`
 })
 
-const titleVisible = ref(false)
+const titleVisible = ref(true)
 const endTimeVisible = ref(false)
+const daysWithoutStreamVisible = ref(true)
+
+// Watch pour mettre à jour dès que schedule est défini
+watch(schedule, (newSchedule) => {
+    if (!newSchedule?.style) return
+    titleVisible.value = newSchedule.style.showTitle ?? true
+    endTimeVisible.value = newSchedule.style.showEndTime ?? false
+    daysWithoutStreamVisible.value = newSchedule.style.showDaysWithoutStream ?? true
+}, { immediate: true })
+
+async function updateStyle(newStyle: any) {
+    if (!schedule.value) return
+
+    // Merge l'ancien style avec le nouveau pour ne pas écraser les autres options
+    const updatedStyle = { ...schedule.value.style, ...newStyle }
+
+    // Met à jour le store / BDD
+    await scheduleStore.updateSchedule({ style: updatedStyle })
+
+    // Met à jour les refs locales
+    titleVisible.value = updatedStyle.showTitle ?? true
+    endTimeVisible.value = updatedStyle.showEndTime ?? false
+    daysWithoutStreamVisible.value = updatedStyle.showDaysWithoutStream ?? true
+}
+
+// Toggle pour chaque option
+function toggleTitleVisibility() {
+    updateStyle({ showTitle: !titleVisible.value })
+}
+
+function toggleEndTimeVisibility() {
+    updateStyle({ showEndTime: !endTimeVisible.value })
+}
+
+function toggleDaysWithoutStreamVisibility() {
+    updateStyle({ showDaysWithoutStream: !daysWithoutStreamVisible.value })
+}
 
 const {
     previewSchedule,
@@ -668,6 +705,12 @@ const BASE_HEIGHT = 720
 const BASE_SCALE = 0.95
 const viewportWidth = ref(0)
 
+const update = () => {
+    if (viewportRef.value) {
+        viewportWidth.value = viewportRef.value.clientWidth
+    }
+}
+
 onUnmounted(() => {
     window.removeEventListener('resize', update)
 })
@@ -690,11 +733,6 @@ const scalerStyle = computed(() => ({
 onMounted(async () => {
     await scheduleStore.getOrCreateSchedule()
     await loadSlots()
-    const update = () => {
-        if (viewportRef.value) {
-            viewportWidth.value = viewportRef.value.clientWidth
-        }
-    }
 
     update()
     window.addEventListener('resize', update)
