@@ -1,4 +1,4 @@
-import { normalizeHexColor, isValidHexColor, normalizeAndValidateHex } from '~/utils/colors'
+import { normalizeHexColor, isValidHexColor } from '~/utils/colors'
 
 type StyleKey = 'bgColor' | 'textColor'
 
@@ -20,7 +20,6 @@ export function useScheduleColor(scheduleStore: any, key: StyleKey,) {
         storeValue,
         (newColor) => {
             const clean = normalizeHexColor(newColor)
-            if (!clean) return
             if (isValidHexColor(clean)) {
                 lastValidValue.value = clean
                 localValue.value = clean

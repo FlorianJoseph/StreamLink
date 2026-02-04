@@ -84,6 +84,16 @@
                                     :style="{ color: !isTextColorValid ? '#f87171' : '#ffffff' }" />
                             </InputGroup>
                         </div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between items-center">
+                                <span>Afficher les titres</span>
+                                <ToggleSwitch v-model="titleVisible" />
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Afficher l'heure de fin</span>
+                                <ToggleSwitch v-model="endTimeVisible" />
+                            </div>
+                        </div>
                     </Fieldset>
                 </div>
                 <div class="lg:col-span-3 flex flex-col gap-4">
@@ -126,7 +136,6 @@
 </template>
 
 <script setup lang="ts">
-
 const scheduleStore = useScheduleStore()
 const { loading } = storeToRefs(scheduleStore)
 
@@ -141,6 +150,9 @@ const {
     isValid: isTextColorValid,
     handleBlur: onTextColorBlur
 } = useScheduleColor(scheduleStore, 'textColor')
+
+const titleVisible = ref(false)
+const endTimeVisible = ref(false)
 
 onMounted(async () => {
     await scheduleStore.getOrCreateSchedule()
