@@ -31,9 +31,11 @@
                                 <span class="font-semibold">Design</span>
                             </div>
                         </template>
-                        <div class="flex flex-col gap-2 mb-4">
-                            <div>
-                                <p class="font-semibold mb-2">Arrière-plan</p>
+                        <div class="flex flex-col space-y-6">
+
+                            <!-- Section Arrière-plan -->
+                            <div class="space-y-3">
+                                <p class="font-semibold text-sm">Arrière-plan</p>
                                 <div class="flex flex-row gap-2 items-center">
                                     <InputGroup class="flex-1">
                                         <InputGroupAddon style="--p-inputgroup-addon-color:white">
@@ -57,48 +59,88 @@
                                             :disabled="isLoadingBackground" />
                                     </template>
                                     <template v-else>
-                                        <Button severity="danger" @click="removeBackgroundImage" :disabled="isLoading">
-                                            <Icon name="lucide:trash-2" size="20px" />
-                                            <span>Supprimer l’image</span>
+                                        <Button severity="danger" @click="removeBackgroundImage"
+                                            :disabled="isLoadingBackground" size="small" outlined>
+                                            <Icon name="lucide:trash-2" size="18" />
+                                            <span class="hidden sm:inline">Supprimer l’image</span>
                                         </Button>
                                     </template>
                                 </div>
                             </div>
-                        </div>
-                        <p class="font-semibold mb-2">Texte</p>
-                        <div class="flex flex-col gap-2 mb-4">
-                            <InputGroup class="flex-1">
-                                <InputGroupAddon style="--p-inputgroup-addon-color:white">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
-                                        <ColorPicker ref="textColorPicker" v-model="scheduleTextColorLocal" format="hex"
-                                            @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
-                                    </div>
-                                </InputGroupAddon>
-                                <InputText v-model="scheduleTextColorLocal" @blur="onTextColorBlur"
-                                    style="--p-inputtext-focus-border-color:white" maxlength="7"
-                                    :invalid="!isTextColorValid"
-                                    :style="{ color: !isTextColorValid ? '#f87171' : '#ffffff' }" />
-                            </InputGroup>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex justify-between items-center">
-                                <span>Afficher les titres</span>
-                                <ToggleSwitch v-model="titleVisible"
-                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
-                                    @click="toggleTitleVisibility" />
+                            <div class="flex flex-row w-full gap-3 items-center" v-if="schedule?.style?.backgroundUrl">
+                                <span class="font-semibold text-sm min-w-16">Opacité</span>
+                                <InputNumber v-model="backgroundOpacity" :min="0" :max="100" fluid
+                                    @change="updateBackgroundOpacity(backgroundOpacity)" showButtons
+                                    buttonLayout="horizontal">
+                                    <template #incrementbuttonicon>
+                                        <Icon name="lucide:plus" size="18" />
+                                    </template>
+                                    <template #decrementbuttonicon>
+                                        <Icon name="lucide:minus" size="18" />
+                                    </template>
+                                </InputNumber>
                             </div>
-                            <div class="flex justify-between items-center">
-                                <span>Afficher l'heure de fin</span>
-                                <ToggleSwitch v-model="endTimeVisible"
-                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
-                                    @click="toggleEndTimeVisibility" />
+
+                            <!-- Section Texte -->
+                            <div class="space-y-3">
+                                <p class="font-semibold text-sm">Texte</p>
+                                <InputGroup class="flex-1">
+                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
+                                            <ColorPicker ref="textColorPicker" v-model="scheduleTextColorLocal"
+                                                format="hex" @click.stop
+                                                style="--p-colorpicker-preview-focus-ring-color :none" />
+                                        </div>
+                                    </InputGroupAddon>
+                                    <InputText v-model="scheduleTextColorLocal" @blur="onTextColorBlur"
+                                        style="--p-inputtext-focus-border-color:white" maxlength="7"
+                                        :invalid="!isTextColorValid"
+                                        :style="{ color: !isTextColorValid ? '#f87171' : '#ffffff' }" />
+                                </InputGroup>
                             </div>
-                            <div class="flex justify-between items-center">
-                                <span>Afficher les jours sans stream</span>
-                                <ToggleSwitch v-model="daysWithoutStreamVisible"
-                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
-                                    @click="toggleDaysWithoutStreamVisibility" />
+                            <Divider />
+
+                            <!-- Section Options -->
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-2">
+                                    <Icon name="lucide:settings-2" size="16" class="text-gray-400" />
+                                    <p class="font-semibold text-xs uppercase tracking-wider text-gray-400">
+                                        Options d'affichage
+                                    </p>
+                                </div>
+                                <div class="space-y-1">
+                                    <!-- Avec séparateur subtil -->
+                                    <label for="toggle-title" class="flex justify-between items-center px-3 py-2.5">
+                                        <div class="flex items-center gap-2">
+                                            <Icon name="lucide:type" size="18" class="text-gray-400" />
+                                            <span class="text-sm">Afficher les titres</span>
+                                        </div>
+                                        <ToggleSwitch id="toggle-title" v-model="titleVisible"
+                                            style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                            @click="toggleTitleVisibility" />
+                                    </label>
+
+                                    <label for="toggle-endtime" class="flex justify-between items-center px-3 py-2.5">
+                                        <div class="flex items-center gap-2">
+                                            <Icon name="lucide:clock" size="18" class="text-gray-400" />
+                                            <span class="text-sm">Afficher l'heure de fin</span>
+                                        </div>
+                                        <ToggleSwitch id="toggle-endtime" v-model="endTimeVisible"
+                                            style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                            @click="toggleEndTimeVisibility" />
+                                    </label>
+
+                                    <label for="toggle-days" class="flex justify-between items-center px-3 py-2.5">
+                                        <div class="flex items-center gap-2">
+                                            <Icon name="lucide:calendar-off" size="18" class="text-gray-400" />
+                                            <span class="text-sm">Afficher les jours sans stream</span>
+                                        </div>
+                                        <ToggleSwitch id="toggle-days" v-model="daysWithoutStreamVisible"
+                                            style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                            @click="toggleDaysWithoutStreamVisibility" />
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </Fieldset>
@@ -211,10 +253,13 @@
                                 width: '1280px',
                                 height: '720px',
                             }">
+                                <div class="absolute inset-0 z-10" v-if="schedule?.style?.backgroundUrl"
+                                    :style="{ backgroundColor: `rgba(0,0,0,${1 - backgroundOpacity / 100})` }">
+                                </div>
                                 <div class="flex flex-col gap-6 w-full">
 
                                     <!-- En-tête du planning -->
-                                    <div class="flex items-center gap-4 truncate">
+                                    <div class="flex items-center gap-4 truncate z-20">
                                         <div class="flex flex-col w-full" :style="{ color: scheduleTextColor }">
                                             <!-- Titre -->
                                             <template v-if="editing.field === 'title'">
@@ -253,7 +298,7 @@
                                     </div>
 
                                     <!-- Contenu du planning -->
-                                    <div class="flex gap-4 w-full">
+                                    <div class="flex gap-4 w-full z-20">
                                         <template v-for="day in daysOptions" :key="day.label">
                                             <div v-if="slotsForDay(day.label).length > 0 || daysWithoutStreamVisible"
                                                 :style="dayColumnStyle(day.label)"
@@ -344,7 +389,7 @@
                                 </div>
                                 <!-- Footer -->
                                 <div
-                                    class="absolute bottom-3 right-3 text-lg text-zinc-400/80 select-none pointer-events-none ignore-export">
+                                    class="absolute bottom-3 right-3 text-lg text-zinc-400/80 select-none pointer-events-none ignore-export z-20">
                                     Fait avec <span class="font-semibold">StreamLink</span>
                                 </div>
                             </div>
@@ -366,10 +411,7 @@
                 <label for="game-search" class="font-semibold text-sm flex items-center gap-2">
                     <Icon name="lucide:gamepad-2" size="18" />
                     Catégorie Twitch
-                    <span>
-                        <Icon name="lucide:asterisk" size="14" class="text-red-500"
-                            v-tooltip.bottom="'La catégorie Twitch correspond généralement au jeu vidéo que tu vas streamer. Choisis-en une pour que tes spectateurs sachent à quoi s\'attendre !'" />
-                    </span>
+                    <span class="text-red-500">*</span>
                 </label>
                 <InputGroup>
                     <InputGroupAddon>
@@ -517,10 +559,13 @@
 </template>
 
 <script setup lang="ts">
+import { I } from 'vue-router/dist/router-CWoNjPRp.mjs'
+
 const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
-const { loading, schedule } = storeToRefs(scheduleStore)
+const { schedule } = storeToRefs(scheduleStore)
 const supabase = useSupabaseClient()
+const loading = ref(true)
 
 // Édition du titre et du sous-titre
 const editing = ref({ field: null as 'title' | 'subtitle' | null, value: '' })
@@ -813,12 +858,33 @@ const removeBackgroundImage = async () => {
     await scheduleStore.updateSchedule({ style: { backgroundUrl: '' } })
 }
 
+// Opacité de l'arrière-plan pour améliorer la lisibilité du planning
+const backgroundOpacity = ref(100)
+
+watch(
+    () => schedule.value?.style?.backgroundOpacity,
+    (val) => {
+        if (val !== undefined) {
+            backgroundOpacity.value = val
+        }
+    },
+    { immediate: true }
+)
+
+const updateBackgroundOpacity = async (value: number) => {
+    backgroundOpacity.value = value
+    if (!schedule.value) return
+    await scheduleStore.updateSchedule({ style: { backgroundOpacity: value } })
+}
+
 onMounted(async () => {
+    loading.value = true
     await scheduleStore.getOrCreateSchedule()
     await loadSlots()
 
     update()
     window.addEventListener('resize', update)
+    loading.value = false
 })
 
 onUnmounted(() => {

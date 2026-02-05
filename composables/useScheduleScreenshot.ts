@@ -59,6 +59,7 @@ export const useScheduleScreenshot = () => {
                     footer.style.opacity = '0.6'
                     footer.style.pointerEvents = 'none'
                     footer.style.userSelect = 'none'
+                    footer.style.zIndex = '20'
 
                     const bold = document.createElement('span')
                     bold.textContent = 'StreamLink'
