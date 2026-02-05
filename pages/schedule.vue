@@ -31,26 +31,37 @@
                                 <span class="font-semibold">Design</span>
                             </div>
                         </template>
-                        <p class="font-semibold mb-2">Arrière-plan</p>
-                        <InputGroup class="flex-1">
-                            <InputGroupAddon style="--p-inputgroup-addon-color:white">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
-                                    <ColorPicker ref="bgColorPicker" v-model="scheduleBgColorLocal" format="hex"
-                                        @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
-                                </div>
-                            </InputGroupAddon>
-                            <InputText v-model="scheduleBgColorLocal" @blur="onBgColorBlur"
-                                style="--p-inputtext-focus-border-color:white" maxlength="7" :invalid="!isBgColorValid"
-                                :style="{ color: !isBgColorValid ? '#f87171' : '#ffffff' }" />
-                        </InputGroup>
                         <div class="flex flex-col gap-2 mb-4">
-                            <div class="flex flex-col gap-2">
-                                Image de fond
-                                <div>
-                                    <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*"
-                                        :maxFileSize="1000000" @upload="" :auto="true" chooseLabel="Choisir une image"
-                                        severity="contrast" />
+                            <div>
+                                <p class="font-semibold mb-2">Arrière-plan</p>
+                                <div class="flex flex-row gap-2 items-center">
+                                    <InputGroup class="flex-1">
+                                        <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                                            <div class="flex items-center gap-2">
+                                                <span
+                                                    class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
+                                                <ColorPicker ref="bgColorPicker" v-model="scheduleBgColorLocal"
+                                                    format="hex" @click.stop
+                                                    style="--p-colorpicker-preview-focus-ring-color :none" />
+                                            </div>
+                                        </InputGroupAddon>
+                                        <InputText v-model="scheduleBgColorLocal" @blur="onBgColorBlur"
+                                            style="--p-inputtext-focus-border-color:white" maxlength="7"
+                                            :invalid="!isBgColorValid"
+                                            :style="{ color: !isBgColorValid ? '#f87171' : '#ffffff' }" />
+                                    </InputGroup>
+                                    <template v-if="!schedule?.style?.backgroundUrl">
+                                        <FileUpload mode="basic" @select="onFileSelect" auto
+                                            :chooseLabel="isLoadingBackground ? 'Chargement...' : 'Choisir une image'"
+                                            class="p-button-contrast" accept="image/*"
+                                            :disabled="isLoadingBackground" />
+                                    </template>
+                                    <template v-else>
+                                        <Button severity="danger" @click="removeBackgroundImage" :disabled="isLoading">
+                                            <Icon name="lucide:trash-2" size="20px" />
+                                            <span>Supprimer l’image</span>
+                                        </Button>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +109,7 @@
                         <template #legend>
                             <div class="flex items-center gap-2">
                                 <Icon name="lucide:settings" size="24" />
-                                <span class="font-semibold">Configuration</span>
+                                <span class="font-semibold">Configuration rapide</span>
                             </div>
                         </template>
                         <Button label="Ajouter un créneau" severity="contrast" @click="openSlotModal('Lundi')"
@@ -193,7 +204,11 @@
                     <div ref="viewportRef" class="relative w-full">
                         <div class="absolute top-0 left-0" :style="scalerStyle" id="scheduleCard">
                             <div class="p-4 relative rounded-lg export-footer" :style="{
-                                backgroundColor: scheduleBgColor, width: '1280px',
+                                backgroundColor: scheduleBgColor,
+                                backgroundImage: schedule?.style?.backgroundUrl ? `url(${schedule.style.backgroundUrl})` : undefined,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                width: '1280px',
                                 height: '720px',
                             }">
                                 <div class="flex flex-col gap-6 w-full">
@@ -389,8 +404,8 @@
                     Titre du stream
                 </label>
                 <InputText id="stream-title" type="text" v-model="title"
-                    :placeholder="`${selectedGame?.label || 'Ex: Gameplay, collaboration...'}`" fluid
-                    maxlength="35" style="--p-inputtext-focus-border-color:white" />
+                    :placeholder="`${selectedGame?.label || 'Ex: Gameplay, collaboration...'}`" fluid maxlength="35"
+                    style="--p-inputtext-focus-border-color:white" />
                 <div class="flex justify-between items-center absolute bottom-1 right-2">
                     <small class="text-zinc-500 text-xs ml-auto">
                         {{ title.length }}/30
@@ -505,6 +520,7 @@
 const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
 const { loading, schedule } = storeToRefs(scheduleStore)
+const supabase = useSupabaseClient()
 
 // Édition du titre et du sous-titre
 const editing = ref({ field: null as 'title' | 'subtitle' | null, value: '' })
@@ -620,6 +636,7 @@ function formatTime(time: string) {
     return `${h}h${m}`
 }
 
+// Gestion des couleurs du planning
 const {
     value: scheduleBgColorLocal,
     isValid: isBgColorValid,
@@ -640,6 +657,7 @@ const scheduleTextColor = computed(() => {
     return `#${schedule.value?.style?.textColor || ''}`
 })
 
+// Gestion de l'affichage des éléments du planning
 const titleVisible = ref(true)
 const endTimeVisible = ref(false)
 const daysWithoutStreamVisible = ref(true)
@@ -656,7 +674,7 @@ async function updateStyle(newStyle: any) {
     if (!schedule.value) return
 
     // Merge l'ancien style avec le nouveau pour ne pas écraser les autres options
-    const updatedStyle = { ...schedule.value.style, ...newStyle }
+    const updatedStyle = { ...newStyle }
 
     // Met à jour le store / BDD
     await scheduleStore.updateSchedule({ style: updatedStyle })
@@ -680,6 +698,7 @@ function toggleDaysWithoutStreamVisibility() {
     updateStyle({ showDaysWithoutStream: !daysWithoutStreamVisible.value })
 }
 
+// Gestion de la génération d'aperçu et de l'export du planning
 const {
     previewSchedule,
     exportSchedule,
@@ -709,6 +728,7 @@ const {
     gameSuggestions
 } = useSlotModal(scheduleId, slots, scheduleSlotStore, loadSlots)
 
+// Gestion du redimensionnement et du scaling du planning
 const viewportRef = ref<HTMLElement | null>(null)
 
 const BASE_WIDTH = 1280
@@ -716,16 +736,14 @@ const BASE_HEIGHT = 720
 const BASE_SCALE = 0.95
 const viewportWidth = ref(0)
 
+// Met à jour la largeur du viewport pour recalculer le scale
 const update = () => {
     if (viewportRef.value) {
         viewportWidth.value = viewportRef.value.clientWidth
     }
 }
 
-onUnmounted(() => {
-    window.removeEventListener('resize', update)
-})
-
+// Calcule le scale à appliquer au planning pour qu'il rentre dans le viewport
 const scale = computed(() => {
     if (!viewportWidth.value) return BASE_SCALE
 
@@ -734,6 +752,7 @@ const scale = computed(() => {
     return Math.min(responsiveScale, BASE_SCALE)
 })
 
+// Style à appliquer au conteneur du planning pour le redimensionner et le scaler
 const scalerStyle = computed(() => ({
     width: `${BASE_WIDTH}px`,
     height: `${BASE_HEIGHT}px`,
@@ -741,12 +760,69 @@ const scalerStyle = computed(() => ({
     transformOrigin: 'top left'
 }))
 
+// Gestion de l'upload d'image d'arrière-plan
+const imageUrl = ref<string | null>(null)
+const isLoadingBackground = ref(false)
+
+// Lorsqu'une image est sélectionnée, on affiche un aperçu immédiat et on lance l'upload
+const onFileSelect = async (event: any) => {
+    const file = event.files?.[0]
+    if (!file) return
+
+    isLoadingBackground.value = true
+    imageUrl.value = URL.createObjectURL(file) // preview
+
+    try {
+        await replaceBackgroundImage(file)
+    } finally {
+        isLoadingBackground.value = false
+    }
+}
+
+// Sauvegarde de la nouvelle image d'arrière-plan
+const replaceBackgroundImage = async (file: File) => {
+    if (!file) return
+
+    const filePath = `Schedule/${crypto.randomUUID()}.png`
+
+    const { error } = await supabase.storage
+        .from('Streamlink')
+        .upload(filePath, file, { upsert: true })
+
+    if (error) {
+        console.error('Erreur upload:', error)
+        return
+    }
+
+    const publicUrl = supabase.storage
+        .from('Streamlink')
+        .getPublicUrl(filePath).data.publicUrl
+
+    await removeBackgroundImage()
+    await scheduleStore.updateSchedule({ style: { backgroundUrl: publicUrl } })
+
+    imageUrl.value = publicUrl
+}
+
+// Supprimer l'image d'arrière-plan actuelle
+const removeBackgroundImage = async () => {
+    if (!schedule.value?.style?.backgroundUrl) return
+
+    const oldBackgroundPath = schedule.value.style.backgroundUrl.split('/Schedule/')[1]
+    await supabase.storage.from('Streamlink').remove([`Schedule/${oldBackgroundPath}`])
+    await scheduleStore.updateSchedule({ style: { backgroundUrl: '' } })
+}
+
 onMounted(async () => {
     await scheduleStore.getOrCreateSchedule()
     await loadSlots()
 
     update()
     window.addEventListener('resize', update)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', update)
 })
 
 definePageMeta({
