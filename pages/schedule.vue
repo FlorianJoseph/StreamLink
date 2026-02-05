@@ -281,9 +281,13 @@
                                 <div class="absolute inset-0 z-10" v-if="schedule?.style?.backgroundUrl"
                                     :style="{ backgroundColor: `rgba(0,0,0,${1 - backgroundOpacity / 100})` }">
                                 </div>
+                                <div class="absolute inset-0 z-10" v-if="schedule?.style?.backgroundUrl"
+                                    :style="{ backgroundColor: `rgba(0,0,0,${1 - backgroundOpacity / 100})` }">
+                                </div>
                                 <div class="flex flex-col gap-6 w-full">
 
                                     <!-- En-tête du planning -->
+                                    <div class="flex items-center gap-4 truncate z-20">
                                     <div class="flex items-center gap-4 truncate z-20">
                                         <div class="flex flex-col w-full" :style="{ color: scheduleTextColor }">
                                             <!-- Titre -->
