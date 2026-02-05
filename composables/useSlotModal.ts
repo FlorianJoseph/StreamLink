@@ -151,11 +151,11 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
                 // Après le dernier créneau
                 const last = daySlots[daySlots.length - 1]
                 startTime.value = last.end_at
-                endTime.value = addMinutes(last.end_at, 60)
+                endTime.value = addMinutes(last.end_at, 120)
             } else {
                 // Avant le premier créneau
                 const first = daySlots[0]
-                startTime.value = subMinutes(first.start_at, 60)
+                startTime.value = subMinutes(first.start_at, 120)
                 endTime.value = first.start_at
             }
         }

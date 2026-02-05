@@ -196,17 +196,18 @@
                                 backgroundColor: scheduleBgColor, width: '1280px',
                                 height: '720px',
                             }">
-                                <div class="flex flex-col gap-6">
+                                <div class="flex flex-col gap-6 w-full">
 
                                     <!-- En-tête du planning -->
-                                    <div class="flex items-center gap-4">
-                                        <div class="flex flex-col" :style="{ color: scheduleTextColor }">
+                                    <div class="flex items-center gap-4 truncate">
+                                        <div class="flex flex-col w-full" :style="{ color: scheduleTextColor }">
                                             <!-- Titre -->
                                             <template v-if="editing.field === 'title'">
                                                 <input :ref="el => inputRefs['title'] = el" v-model="editing.value"
                                                     @blur="saveEdit" @keyup.enter="saveEdit"
                                                     @keyup.esc.prevent.stop="cancelEdit"
-                                                    class="text-4xl font-bold bg-transparent border-none focus:outline-none w-full truncate" />
+                                                    class="text-4xl font-bold bg-transparent border-none focus:outline-none"
+                                                    maxlength="70" />
                                             </template>
                                             <template v-else>
                                                 <div class="flex items-center gap-2 hover:cursor-pointer"
@@ -221,7 +222,8 @@
                                                 <input :ref="el => inputRefs['subtitle'] = el" v-model="editing.value"
                                                     @blur="saveEdit" @keyup.enter="saveEdit"
                                                     @keyup.esc.prevent.stop="cancelEdit"
-                                                    class="text-base font-semibold bg-transparent border-none focus:outline-none w-full truncate" />
+                                                    class="text-base font-semibold bg-transparent border-none focus:outline-none w-full"
+                                                    maxlength="100" />
                                             </template>
                                             <template v-else>
                                                 <div class="flex items-center gap-2 hover:cursor-pointer"
@@ -277,15 +279,15 @@
                                                                 class="flex flex-col gap-1 overflow-hidden w-full export-day-column-content">
                                                                 <div v-for="slot in slotsForDay(day.label)"
                                                                     :key="slot.id"
-                                                                    class="border-2 rounded-lg flex-1 min-h-0 w-full relative h-full flex flex-col group transition-all"
+                                                                    class="border-4 rounded-lg flex-1 min-h-0 w-full relative h-full flex flex-col group transition-all"
                                                                     :style="slotStyle(slot)">
                                                                     <div class="flex-1"></div>
                                                                     <!-- Tag titre -->
-                                                                    <div class="bg-black/80 text-sm font-semibold px-2 py-1 rounded-b-md z-25"
+                                                                    <div class="bg-black/80 text-sm font-bold px-2 py-1 rounded-b-md z-25 line-clamp-1"
                                                                         v-if="titleVisible">
                                                                         {{ slot.title }}
                                                                     </div>
-                                                                    <div class="absolute top-0 left-0 z-100 px-2 py-1 text-sm font-semibold rounded-br-md rounded-tl-sm"
+                                                                    <div class="absolute top-[-1px] left-[-1px] z-100 px-2 py-1 text-base font-semibold rounded-br-md rounded-tl-sm"
                                                                         :style="slot.game.cover
                                                                             ? { backgroundColor: `#${slot.color}` || 'rgba(0, 0, 0, 0.7)' }
                                                                             : {}">
@@ -386,11 +388,12 @@
                     <Icon name="lucide:type" size="18" />
                     Titre du stream
                 </label>
-                <InputText id="stream-title" type="text" v-model="title" placeholder="Ex: On monte Diamant ce soir !"
-                    maxlength="60" style="--p-inputtext-focus-border-color:white" />
+                <InputText id="stream-title" type="text" v-model="title"
+                    :placeholder="`${selectedGame?.label || 'Ex: Gameplay, collaboration...'}`" fluid
+                    maxlength="35" style="--p-inputtext-focus-border-color:white" />
                 <div class="flex justify-between items-center absolute bottom-1 right-2">
                     <small class="text-zinc-500 text-xs ml-auto">
-                        {{ title.length }}/60
+                        {{ title.length }}/30
                     </small>
                 </div>
             </div>
