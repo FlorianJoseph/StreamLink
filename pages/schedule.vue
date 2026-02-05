@@ -60,10 +60,13 @@
                                                         :invalid="!isBgColorValid"
                                                         :style="{ color: !isBgColorValid ? '#f87171' : '#ffffff' }" />
                                                 </InputGroup>
-                                                <FileUpload mode="basic" @select="onFileSelect" auto
-                                                    :chooseLabel="isLoadingBackground ? 'Chargement...' : 'Choisir une image'"
-                                                    class="p-button-contrast" accept="image/*"
-                                                    :disabled="isLoadingBackground" />
+                                                <input ref="fileInput" type="file" accept="image/*" class="hidden"
+                                                    @change="onFileSelect" />
+                                                <Button severity="contrast" :disabled="isLoadingBackground"
+                                                    @click="fileInput?.click()">
+                                                    <Icon name="lucide:image" size="18" />
+                                                    <span class="hidden sm:inline">Choisir une image</span>
+                                                </Button>
                                             </div>
                                         </template>
                                         <template v-else="schedule?.style?.backgroundUrl">
@@ -75,8 +78,10 @@
                                                     <div class="absolute inset-0 bg-black/20"></div>
                                                 </div>
                                                 <div class="flex flex-row gap-2">
-                                                    <Button severity="contrast" :disabled="isLoadingBackground"
-                                                        outlined>
+                                                    <input ref="fileInput" type="file" accept="image/*" class="hidden"
+                                                        @change="onFileSelect" />
+                                                    <Button severity="contrast" :disabled="isLoadingBackground" outlined
+                                                        @click="fileInput?.click()">
                                                         <Icon name="lucide:refresh-cw" size="18" />
                                                         <span class="hidden sm:inline">Remplacer</span>
                                                     </Button>
@@ -213,7 +218,7 @@
                                                         <div class="flex flex-col min-w-0 flex-1">
                                                             <span class="font-semibold truncate max-w-[16rem]">{{
                                                                 slot.title
-                                                            }}</span>
+                                                                }}</span>
                                                             <div class="flex items-center gap-2 text-sm text-white/70">
                                                                 {{ formatTime(slot.start_at) }} - {{
                                                                     formatTime(slot.end_at) }}
@@ -836,19 +841,21 @@ const scalerStyle = computed(() => ({
 // Gestion de l'upload d'image d'arrière-plan
 const imageUrl = ref<string | null>(null)
 const isLoadingBackground = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
 
-// Lorsqu'une image est sélectionnée, on affiche un aperçu immédiat et on lance l'upload
-const onFileSelect = async (event: any) => {
-    const file = event.files?.[0]
+const onFileSelect = async (event: Event) => {
+    const input = event.target as HTMLInputElement
+    const file = input.files?.[0]
     if (!file) return
 
     isLoadingBackground.value = true
-    imageUrl.value = URL.createObjectURL(file) // preview
+    imageUrl.value = URL.createObjectURL(file)
 
     try {
         await replaceBackgroundImage(file)
     } finally {
         isLoadingBackground.value = false
+        input.value = '' // permet de re-sélectionner le même fichier
     }
 }
 
