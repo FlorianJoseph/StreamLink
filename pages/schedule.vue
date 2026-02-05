@@ -592,8 +592,6 @@
 </template>
 
 <script setup lang="ts">
-import { I } from 'vue-router/dist/router-CWoNjPRp.mjs'
-
 const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
 const { schedule } = storeToRefs(scheduleStore)

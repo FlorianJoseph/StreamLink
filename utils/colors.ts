@@ -1,4 +1,3 @@
-
 // Fonctions pour normaliser les couleurs hexa en majuscules et sans le #
 export const normalizeHexColor = (val: string): string => {
     if (!val) return ''
