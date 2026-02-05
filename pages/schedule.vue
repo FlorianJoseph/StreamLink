@@ -22,156 +22,223 @@
 
             <div class="flex flex-col lg:flex-row gap-6">
                 <div class="w-full lg:w-md shrink-0">
-                    <!-- Design du planning -->
-                    <Fieldset
-                        style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem; margin-top: -1.3rem;">
-                        <template #legend>
-                            <div class="flex items-center gap-2">
+                    <Tabs value="0"
+                        style="--p-tabs-active-bar-background : white;--p-tabs-tab-active-color:white;--p-tabs-tab-active-border-color: white"
+                        class="border border-zinc-700 rounded-lg">
+                        <TabList>
+                            <Tab value="0" as="div" class="flex items-center gap-2">
                                 <Icon name="lucide:palette" size="24" />
                                 <span class="font-semibold">Design</span>
-                            </div>
-                        </template>
-                        <div class="flex flex-col gap-2 mb-4">
-                            <div>
-                                <p class="font-semibold mb-2">Arrière-plan</p>
-                                <div class="flex flex-row gap-2 items-center">
-                                    <InputGroup class="flex-1">
-                                        <InputGroupAddon style="--p-inputgroup-addon-color:white">
-                                            <div class="flex items-center gap-2">
-                                                <span
-                                                    class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
-                                                <ColorPicker ref="bgColorPicker" v-model="scheduleBgColorLocal"
-                                                    format="hex" @click.stop
-                                                    style="--p-colorpicker-preview-focus-ring-color :none" />
-                                            </div>
-                                        </InputGroupAddon>
-                                        <InputText v-model="scheduleBgColorLocal" @blur="onBgColorBlur"
-                                            style="--p-inputtext-focus-border-color:white" maxlength="7"
-                                            :invalid="!isBgColorValid"
-                                            :style="{ color: !isBgColorValid ? '#f87171' : '#ffffff' }" />
-                                    </InputGroup>
-                                    <template v-if="!schedule?.style?.backgroundUrl">
-                                        <FileUpload mode="basic" @select="onFileSelect" auto
-                                            :chooseLabel="isLoadingBackground ? 'Chargement...' : 'Choisir une image'"
-                                            class="p-button-contrast" accept="image/*"
-                                            :disabled="isLoadingBackground" />
-                                    </template>
-                                    <template v-else>
-                                        <Button severity="danger" @click="removeBackgroundImage" :disabled="isLoading">
-                                            <Icon name="lucide:trash-2" size="20px" />
-                                            <span>Supprimer l’image</span>
-                                        </Button>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="font-semibold mb-2">Texte</p>
-                        <div class="flex flex-col gap-2 mb-4">
-                            <InputGroup class="flex-1">
-                                <InputGroupAddon style="--p-inputgroup-addon-color:white">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
-                                        <ColorPicker ref="textColorPicker" v-model="scheduleTextColorLocal" format="hex"
-                                            @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
-                                    </div>
-                                </InputGroupAddon>
-                                <InputText v-model="scheduleTextColorLocal" @blur="onTextColorBlur"
-                                    style="--p-inputtext-focus-border-color:white" maxlength="7"
-                                    :invalid="!isTextColorValid"
-                                    :style="{ color: !isTextColorValid ? '#f87171' : '#ffffff' }" />
-                            </InputGroup>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex justify-between items-center">
-                                <span>Afficher les titres</span>
-                                <ToggleSwitch v-model="titleVisible"
-                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
-                                    @click="toggleTitleVisibility" />
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span>Afficher l'heure de fin</span>
-                                <ToggleSwitch v-model="endTimeVisible"
-                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
-                                    @click="toggleEndTimeVisibility" />
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span>Afficher les jours sans stream</span>
-                                <ToggleSwitch v-model="daysWithoutStreamVisible"
-                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
-                                    @click="toggleDaysWithoutStreamVisibility" />
-                            </div>
-                        </div>
-                    </Fieldset>
-
-                    <!-- Configuration du planning -->
-                    <Fieldset style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem;"
-                        class="overflow-auto">
-                        <template #legend>
-                            <div class="flex items-center gap-2">
+                            </Tab>
+                            <Tab value="1" as="div" class="flex items-center gap-2">
                                 <Icon name="lucide:settings" size="24" />
                                 <span class="font-semibold">Configuration rapide</span>
-                            </div>
-                        </template>
-                        <Button label="Ajouter un créneau" severity="contrast" @click="openSlotModal('Lundi')"
-                            class="w-full">
-                            <Icon name="lucide:plus" size="18" />
-                            <span>Ajouter un créneau</span>
-                        </Button>
-                        <Accordion value="0" v-for="day in daysOptions" :key="day.label">
-                            <AccordionPanel :value="slotsForDay(day.label).length"
-                                v-if="slotsForDay(day.label).length > 0">
-                                <AccordionHeader>
-                                    <span class="flex items-center gap-2 w-full">
-                                        <Icon name="lucide:calendar-days" size="18" />
-                                        <span class="font-bold whitespace-nowrap">{{ day.label }}</span>
-                                        <Badge :value="slotsForDay(day.label).length" class="ml-auto mr-2"
-                                            severity="contrast" />
-                                    </span>
-                                </AccordionHeader>
-                                <AccordionContent>
-                                    <div class="flex flex-col gap-2">
-                                        <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
-                                            class="group flex items-center justify-between p-3 border border-white/20 rounded-lg hover:border-white/40 hover:cursor-pointer transition-all"
-                                            :style="{ borderLeftWidth: '4px', borderLeftColor: `#${slot.color}` }"
-                                            @click="openSlotModal(day.label, slot)">
-                                            <!-- Informations du créneau -->
-                                            <div class="flex items-center gap-3 flex-1 min-w-0">
-                                                <!-- Image du jeu -->
-                                                <div class="flex-shrink-0">
-                                                    <img v-if="slot.game.cover" :src="slot.game.cover"
-                                                        :alt="slot.game.label"
-                                                        class="w-10 h-14 rounded object-fill border border-white/10" />
-                                                    <div v-else
-                                                        class="w-10 h-14 rounded bg-white/5 border border-white/10 flex items-center justify-center">
-                                                        <Icon name="lucide:gamepad-2" size="20" class="text-white/30" />
-                                                    </div>
-                                                </div>
+                            </Tab>
+                        </TabList>
+                        <TabPanels>
+                            <TabPanel value="0" as="p" class="m-0">
+                                <!-- Design du planning -->
+                                <div class="flex flex-col space-y-6">
 
-                                                <!-- Détails -->
-                                                <div class="flex flex-col min-w-0 flex-1">
-                                                    <span class="font-semibold truncate">{{ slot.title }}</span>
-                                                    <div class="flex items-center gap-2 text-sm text-white/70">
-                                                        {{ formatTime(slot.start_at) }} - {{ formatTime(slot.end_at) }}
-                                                    </div>
-                                                    <!-- <span class="text-xs text-white/50 truncate">{{ slot.title
-                                                    }}</span> -->
+                                    <!-- Section Arrière-plan -->
+                                    <div class="space-y-3">
+                                        <p class="font-semibold text-sm">Arrière-plan</p>
+                                        <template v-if="!schedule?.style?.backgroundUrl">
+                                            <div class="flex flex-row gap-2 items-center">
+                                                <InputGroup class="flex-1">
+                                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                                                        <div class="flex items-center gap-2">
+                                                            <span
+                                                                class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
+                                                            <ColorPicker ref="bgColorPicker"
+                                                                v-model="scheduleBgColorLocal" format="hex" @click.stop
+                                                                style="--p-colorpicker-preview-focus-ring-color :none" />
+                                                        </div>
+                                                    </InputGroupAddon>
+                                                    <InputText v-model="scheduleBgColorLocal" @blur="onBgColorBlur"
+                                                        style="--p-inputtext-focus-border-color:white" maxlength="7"
+                                                        :invalid="!isBgColorValid"
+                                                        :style="{ color: !isBgColorValid ? '#f87171' : '#ffffff' }" />
+                                                </InputGroup>
+                                                <FileUpload mode="basic" @select="onFileSelect" auto
+                                                    :chooseLabel="isLoadingBackground ? 'Chargement...' : 'Choisir une image'"
+                                                    class="p-button-contrast" accept="image/*"
+                                                    :disabled="isLoadingBackground" />
+                                            </div>
+                                        </template>
+                                        <template v-else="schedule?.style?.backgroundUrl">
+                                            <div class="flex flex-row gap-2 items-center justify-between">
+                                                <div
+                                                    class="relative rounded w-24 aspect-[16/9] overflow-hidden border border-white/20">
+                                                    <img :src="schedule.style.backgroundUrl"
+                                                        class="w-full h-full object-cover" />
+                                                    <div class="absolute inset-0 bg-black/20"></div>
+                                                </div>
+                                                <div class="flex flex-row gap-2">
+                                                    <Button severity="contrast" :disabled="isLoadingBackground"
+                                                        outlined>
+                                                        <Icon name="lucide:refresh-cw" size="18" />
+                                                        <span class="hidden sm:inline">Remplacer</span>
+                                                    </Button>
+                                                    <Button severity="danger" @click="removeBackgroundImage"
+                                                        :disabled="isLoadingBackground" outlined>
+                                                        <Icon name="lucide:trash-2" size="18" />
+                                                        <span class="hidden sm:inline">Supprimer</span>
+                                                    </Button>
                                                 </div>
                                             </div>
+                                        </template>
+                                    </div>
+                                    <div class="flex flex-row w-full gap-3 items-center"
+                                        v-if="schedule?.style?.backgroundUrl">
+                                        <span class="font-semibold text-sm min-w-16">Opacité</span>
+                                        <InputNumber v-model="backgroundOpacity" :min="0" :max="100" fluid
+                                            @change="updateBackgroundOpacity(backgroundOpacity)" showButtons
+                                            buttonLayout="horizontal">
+                                            <template #incrementbuttonicon>
+                                                <Icon name="lucide:plus" size="18" />
+                                            </template>
+                                            <template #decrementbuttonicon>
+                                                <Icon name="lucide:minus" size="18" />
+                                            </template>
+                                        </InputNumber>
+                                    </div>
 
-                                            <!-- Actions -->
-                                            <div
-                                                class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <Button size="small" severity="danger" text @click="deleteSlot(slot)"
-                                                    v-tooltip.bottom="'Supprimer'">
-                                                    <Icon name="lucide:trash-2" size="16" />
-                                                </Button>
-                                            </div>
+                                    <!-- Section Texte -->
+                                    <div class="space-y-3">
+                                        <p class="font-semibold text-sm">Texte</p>
+                                        <InputGroup class="flex-1">
+                                            <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                                                <div class="flex items-center gap-2">
+                                                    <span
+                                                        class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
+                                                    <ColorPicker ref="textColorPicker" v-model="scheduleTextColorLocal"
+                                                        format="hex" @click.stop
+                                                        style="--p-colorpicker-preview-focus-ring-color :none" />
+                                                </div>
+                                            </InputGroupAddon>
+                                            <InputText v-model="scheduleTextColorLocal" @blur="onTextColorBlur"
+                                                style="--p-inputtext-focus-border-color:white" maxlength="7"
+                                                :invalid="!isTextColorValid"
+                                                :style="{ color: !isTextColorValid ? '#f87171' : '#ffffff' }" />
+                                        </InputGroup>
+                                    </div>
+                                    <Divider />
+
+                                    <!-- Section Options -->
+                                    <div class="space-y-3">
+                                        <div class="flex items-center gap-2">
+                                            <Icon name="lucide:settings-2" size="16" class="text-gray-400" />
+                                            <p class="font-semibold text-xs uppercase tracking-wider text-gray-400">
+                                                Options d'affichage
+                                            </p>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <!-- Avec séparateur subtil -->
+                                            <label for="toggle-title"
+                                                class="flex justify-between items-center px-3 py-2.5">
+                                                <div class="flex items-center gap-2">
+                                                    <Icon name="lucide:type" size="18" class="text-gray-400" />
+                                                    <span class="text-sm">Afficher les titres</span>
+                                                </div>
+                                                <ToggleSwitch id="toggle-title" v-model="titleVisible"
+                                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                                    @click="toggleTitleVisibility" />
+                                            </label>
+
+                                            <label for="toggle-endtime"
+                                                class="flex justify-between items-center px-3 py-2.5">
+                                                <div class="flex items-center gap-2">
+                                                    <Icon name="lucide:clock" size="18" class="text-gray-400" />
+                                                    <span class="text-sm">Afficher l'heure de fin</span>
+                                                </div>
+                                                <ToggleSwitch id="toggle-endtime" v-model="endTimeVisible"
+                                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                                    @click="toggleEndTimeVisibility" />
+                                            </label>
+
+                                            <label for="toggle-days"
+                                                class="flex justify-between items-center px-3 py-2.5">
+                                                <div class="flex items-center gap-2">
+                                                    <Icon name="lucide:calendar-off" size="18" class="text-gray-400" />
+                                                    <span class="text-sm">Afficher les jours sans stream</span>
+                                                </div>
+                                                <ToggleSwitch id="toggle-days" v-model="daysWithoutStreamVisible"
+                                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                                    @click="toggleDaysWithoutStreamVisibility" />
+                                            </label>
                                         </div>
                                     </div>
-                                </AccordionContent>
-                            </AccordionPanel>
-                        </Accordion>
-                    </Fieldset>
+                                </div>
+                            </TabPanel>
+                            <TabPanel value="1" as="p" class="m-0">
+                                <!-- Configuration du planning -->
+                                <Button label="Ajouter un créneau" severity="contrast" @click="openSlotModal('Lundi')"
+                                    class="w-full">
+                                    <Icon name="lucide:plus" size="18" />
+                                    <span>Ajouter un créneau</span>
+                                </Button>
+                                <Accordion value="0" v-for="day in daysOptions" :key="day.label" class="overflow-auto">
+                                    <AccordionPanel :value="slotsForDay(day.label).length"
+                                        v-if="slotsForDay(day.label).length > 0">
+                                        <AccordionHeader>
+                                            <span class="flex items-center gap-2 w-full">
+                                                <Icon name="lucide:calendar-days" size="18" />
+                                                <span class="font-bold whitespace-nowrap">{{ day.label }}</span>
+                                                <Badge :value="slotsForDay(day.label).length" class="ml-auto mr-2"
+                                                    severity="contrast" />
+                                            </span>
+                                        </AccordionHeader>
+                                        <AccordionContent>
+                                            <div class="flex flex-col gap-2">
+                                                <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
+                                                    class="group flex items-center justify-between p-3 border border-white/20 rounded-lg hover:border-white/40 hover:cursor-pointer transition-all"
+                                                    :style="{ borderLeftWidth: '4px', borderLeftColor: `#${slot.color}` }"
+                                                    @click="openSlotModal(day.label, slot)">
+                                                    <!-- Informations du créneau -->
+                                                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                                                        <!-- Image du jeu -->
+                                                        <div class="flex-shrink-0">
+                                                            <img v-if="slot.game.cover" :src="slot.game.cover"
+                                                                :alt="slot.game.label"
+                                                                class="w-10 h-14 rounded object-fill border border-white/10" />
+                                                            <div v-else
+                                                                class="w-10 h-14 rounded bg-white/5 border border-white/10 flex items-center justify-center">
+                                                                <Icon name="lucide:gamepad-2" size="20"
+                                                                    class="text-white/30" />
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Détails -->
+                                                        <div class="flex flex-col min-w-0 flex-1">
+                                                            <span class="font-semibold truncate max-w-[16rem]">{{
+                                                                slot.title
+                                                            }}</span>
+                                                            <div class="flex items-center gap-2 text-sm text-white/70">
+                                                                {{ formatTime(slot.start_at) }} - {{
+                                                                    formatTime(slot.end_at) }}
+                                                            </div>
+                                                            <!-- <span class="text-xs text-white/50 truncate">{{ slot.title
+                                                    }}</span> -->
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Actions -->
+                                                    <div
+                                                        class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <Button size="small" severity="danger" text
+                                                            @click="deleteSlot(slot)" v-tooltip.bottom="'Supprimer'">
+                                                            <Icon name="lucide:trash-2" size="16" />
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionPanel>
+                                </Accordion>
+                            </TabPanel>
+                        </TabPanels>
+                    </Tabs>
                 </div>
                 <div class="flex-1 min-w-0 flex flex-col gap-4">
 
@@ -211,10 +278,13 @@
                                 width: '1280px',
                                 height: '720px',
                             }">
+                                <div class="absolute inset-0 z-10" v-if="schedule?.style?.backgroundUrl"
+                                    :style="{ backgroundColor: `rgba(0,0,0,${1 - backgroundOpacity / 100})` }">
+                                </div>
                                 <div class="flex flex-col gap-6 w-full">
 
                                     <!-- En-tête du planning -->
-                                    <div class="flex items-center gap-4 truncate">
+                                    <div class="flex items-center gap-4 truncate z-20">
                                         <div class="flex flex-col w-full" :style="{ color: scheduleTextColor }">
                                             <!-- Titre -->
                                             <template v-if="editing.field === 'title'">
@@ -253,7 +323,7 @@
                                     </div>
 
                                     <!-- Contenu du planning -->
-                                    <div class="flex gap-4 w-full">
+                                    <div class="flex gap-4 w-full z-20">
                                         <template v-for="day in daysOptions" :key="day.label">
                                             <div v-if="slotsForDay(day.label).length > 0 || daysWithoutStreamVisible"
                                                 :style="dayColumnStyle(day.label)"
@@ -344,7 +414,7 @@
                                 </div>
                                 <!-- Footer -->
                                 <div
-                                    class="absolute bottom-3 right-3 text-lg text-zinc-400/80 select-none pointer-events-none ignore-export">
+                                    class="absolute bottom-3 right-3 text-lg text-zinc-400/80 select-none pointer-events-none ignore-export z-20">
                                     Fait avec <span class="font-semibold">StreamLink</span>
                                 </div>
                             </div>
@@ -366,10 +436,7 @@
                 <label for="game-search" class="font-semibold text-sm flex items-center gap-2">
                     <Icon name="lucide:gamepad-2" size="18" />
                     Catégorie Twitch
-                    <span>
-                        <Icon name="lucide:asterisk" size="14" class="text-red-500"
-                            v-tooltip.bottom="'La catégorie Twitch correspond généralement au jeu vidéo que tu vas streamer. Choisis-en une pour que tes spectateurs sachent à quoi s\'attendre !'" />
-                    </span>
+                    <span class="text-red-500">*</span>
                 </label>
                 <InputGroup>
                     <InputGroupAddon>
@@ -517,10 +584,13 @@
 </template>
 
 <script setup lang="ts">
+import { I } from 'vue-router/dist/router-CWoNjPRp.mjs'
+
 const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
-const { loading, schedule } = storeToRefs(scheduleStore)
+const { schedule } = storeToRefs(scheduleStore)
 const supabase = useSupabaseClient()
+const loading = ref(true)
 
 // Édition du titre et du sous-titre
 const editing = ref({ field: null as 'title' | 'subtitle' | null, value: '' })
@@ -813,12 +883,33 @@ const removeBackgroundImage = async () => {
     await scheduleStore.updateSchedule({ style: { backgroundUrl: '' } })
 }
 
+// Opacité de l'arrière-plan pour améliorer la lisibilité du planning
+const backgroundOpacity = ref(100)
+
+watch(
+    () => schedule.value?.style?.backgroundOpacity,
+    (val) => {
+        if (val !== undefined) {
+            backgroundOpacity.value = val
+        }
+    },
+    { immediate: true }
+)
+
+const updateBackgroundOpacity = async (value: number) => {
+    backgroundOpacity.value = value
+    if (!schedule.value) return
+    await scheduleStore.updateSchedule({ style: { backgroundOpacity: value } })
+}
+
 onMounted(async () => {
+    loading.value = true
     await scheduleStore.getOrCreateSchedule()
     await loadSlots()
 
     update()
     window.addEventListener('resize', update)
+    loading.value = false
 })
 
 onUnmounted(() => {
