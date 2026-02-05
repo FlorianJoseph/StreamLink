@@ -206,9 +206,9 @@
                                                         <div class="flex-shrink-0">
                                                             <img v-if="slot.game.cover" :src="slot.game.cover"
                                                                 :alt="slot.game.label"
-                                                                class="w-10 h-14 rounded object-fill border border-white/10" />
+                                                                class="w-10 h-14 rounded object-contain border border-zinc-700" />
                                                             <div v-else
-                                                                class="w-10 h-14 rounded bg-white/5 border border-white/10 flex items-center justify-center">
+                                                                class="w-10 h-14 rounded bg-white/5 border border-zinc-700 flex items-center justify-center">
                                                                 <Icon name="lucide:gamepad-2" size="20"
                                                                     class="text-white/30" />
                                                             </div>
@@ -223,8 +223,6 @@
                                                                 {{ formatTime(slot.start_at) }} - {{
                                                                     formatTime(slot.end_at) }}
                                                             </div>
-                                                            <!-- <span class="text-xs text-white/50 truncate">{{ slot.title
-                                                    }}</span> -->
                                                         </div>
                                                     </div>
 
@@ -232,7 +230,8 @@
                                                     <div
                                                         class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                         <Button size="small" severity="danger" text
-                                                            @click="deleteSlot(slot)" v-tooltip.bottom="'Supprimer'">
+                                                            @click.stop="showDeleteConfirmation = true; slotToDelete = slot"
+                                                            v-tooltip.bottom="'Supprimer'">
                                                             <Icon name="lucide:trash-2" size="16" />
                                                         </Button>
                                                     </div>
@@ -398,7 +397,8 @@
                                                                             severity="info">
                                                                             <Icon name="lucide:edit-2" size="20" />
                                                                         </Button>
-                                                                        <Button @click.prevent="deleteSlot(slot)"
+                                                                        <Button
+                                                                            @click.prevent="showDeleteConfirmation = true; slotToDelete = slot"
                                                                             v-tooltip.bottom="`Supprimer`"
                                                                             severity="danger">
                                                                             <Icon name="lucide:trash-2" size="20" />
@@ -584,9 +584,32 @@
         </template>
     </Dialog>
 
+    <!-- Modal d'aperçu de planning -->
     <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: '65vw' }" :draggable="false">
         <template #container="{ closeCallback }">
             <img v-if="previewDataUrl" :src="previewDataUrl" class="w-full h-auto" />
+        </template>
+    </Dialog>
+
+    <!-- Modal d'aperçu de confirmation de suppression -->
+    <Dialog v-model:visible="showDeleteConfirmation" modal :draggable="false">
+        <template #container="{ closeCallback }">
+            <div class="flex flex-col items-center space-y-4 p-6">
+                <h2 class="text-xl font-bold">Confirmer la suppression</h2>
+                <p class="text-center text-zinc-500">
+                    Es-tu sûr de vouloir supprimer le stream de <strong>{{ slotToDelete?.game.label }}</strong> le
+                    <strong>{{ slotToDelete?.day }}</strong> à <strong>{{ formatTime(slotToDelete?.start_at) }}</strong>
+                    ?
+                </p>
+                <div class="flex gap-2 w-full items-center justify-center">
+                    <Button severity="secondary" @click="showDeleteConfirmation = false" class="flex-1">
+                        Annuler
+                    </Button>
+                    <Button severity="danger" @click="confirmDeleteSlot" class="flex-1">
+                        Supprimer
+                    </Button>
+                </div>
+            </div>
         </template>
     </Dialog>
 </template>
@@ -696,13 +719,19 @@ const slotStyle = (slot: any) => {
     return {}
 }
 
-// Supprime un slot
-async function deleteSlot(slot: any) {
-    // if (!schedule.value) return
-    // const confirmed = confirm(`Es-tu sûr de vouloir supprimer le stream "${slot.title}" ?`)
-    // if (!confirmed) return
-    await scheduleSlotStore.deleteSlot(slot.id)
-    await loadSlots()
+// Affiche la confirmation de suppression d'un slot
+const showDeleteConfirmation = ref(false)
+const slotToDelete = ref<any>(null)
+
+// Confirme la suppression d'un créneau
+async function confirmDeleteSlot() {
+    showDeleteConfirmation.value = true
+    if (slotToDelete.value) {
+        await scheduleSlotStore.deleteSlot(slotToDelete.value.id)
+        await loadSlots()
+        slotToDelete.value = null
+    }
+    showDeleteConfirmation.value = false
 }
 
 // Formate une heure au format HH:mm en HHhmm
