@@ -1,3 +1,4 @@
+import { normalizeHexColor, isValidHexColor } from '~/utils/colors'
 import type { Tables } from '~/types/database.types'
 import { Vibrant } from 'node-vibrant/browser'
 
@@ -83,27 +84,11 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         }
     }
 
-    // Validation de la couleur hexadécimale
-    const HEX_REGEX = /^[0-9A-F]{6}$/
-
-    // Expansion d'une couleur hex 3 caractères en 6 caractères
-    function expandHex3(hex: string) {
-        return hex
-            .split('')
-            .map(c => c + c)
-            .join('')
-    }
-
     // Watch pour valider et synchroniser l'input de couleur
     watch(colorInput, (val) => {
-        let clean = val.replace('#', '').toUpperCase().slice(0, 6)
+        let clean = normalizeHexColor(val)
 
-        // 3 chars → expansion immédiate
-        if (clean.length === 3) {
-            clean = expandHex3(clean)
-        }
-
-        if (HEX_REGEX.test(clean)) {
+        if (isValidHexColor(clean)) {
             isColorInvalid.value = false
             slotColor.value = clean
         } else {
@@ -114,7 +99,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
     // Watch pour synchroniser la couleur du slot avec l'input
     watch(slotColor, (val) => {
         colorInput.value = val
-    })
+    }, { immediate: true })
 
     // Ouvre la modal pour ajouter ou éditer un slot
     async function openSlotModal(day: string, slot?: ScheduleSlot, position?: 'before' | 'after') {
