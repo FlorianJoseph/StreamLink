@@ -21,7 +21,7 @@
             </div>
 
             <div class="flex flex-col lg:flex-row gap-6">
-                <div class="w-full lg:w-md shrink-0 h-[46rem]">
+                <div class="w-full lg:w-md shrink-0 lg:h-[46.1rem]">
                     <Tabs value="0"
                         style="--p-tabs-active-bar-background : white;--p-tabs-tab-active-color:white;--p-tabs-tab-active-border-color: white"
                         class="border border-zinc-700 rounded-lg h-full">
@@ -99,7 +99,7 @@
                                         <span class="font-semibold text-sm min-w-16">Opacité</span>
                                         <InputNumber v-model="backgroundOpacity" :min="0" :max="100" fluid
                                             @change="updateBackgroundOpacity(backgroundOpacity)" showButtons
-                                            buttonLayout="horizontal">
+                                            buttonLayout="horizontal" style="--p-inputtext-focus-border-color: white">
                                             <template #incrementbuttonicon>
                                                 <Icon name="lucide:plus" size="18" />
                                             </template>
@@ -249,19 +249,19 @@
                     <!-- Barre d'outils -->
                     <Menubar class="w-full">
                         <template #start>
-                            <Button severity="secondary" @click="previewSchedule">
-                                <Icon name="lucide:eye" size="18" />
-                                <span
-                                    class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base whitespace-nowrap">Voir
-                                    le rendu final</span>
-                            </Button>
                         </template>
                         <template #end>
                             <div class="flex items-center gap-1 sm:gap-2">
-                                <Button severity="secondary">
+                                <!-- <Button severity="secondary">
                                     <Icon name="lucide:share" size="18" />
                                     <span
-                                        class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Partager</span>
+                                    class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Partager</span>
+                                </Button> -->
+                                <Button severity="secondary" @click="previewSchedule">
+                                    <Icon name="lucide:eye" size="18" />
+                                    <span
+                                        class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base whitespace-nowrap">Aperçu
+                                        du planning</span>
                                 </Button>
                                 <Button severity="contrast" @click="exportSchedule">
                                     <Icon name="lucide:download" size="18" />
@@ -272,8 +272,8 @@
                     </Menubar>
 
                     <!-- Planning hebdomadaire -->
-                    <div ref="viewportRef" class="relative w-full">
-                        <div class="absolute top-0 left-0" :style="scalerStyle" id="scheduleCard">
+                    <div ref="viewportRef" class="relative w-full flex justify-center">
+                        <div class="absolute" :style="scalerStyle" id="scheduleCard">
                             <div class="p-4 relative rounded-lg export-footer" :style="{
                                 backgroundColor: scheduleBgColor,
                                 backgroundImage: schedule?.style?.backgroundUrl ? `url(${schedule.style.backgroundUrl})` : undefined,
@@ -282,9 +282,6 @@
                                 width: '1280px',
                                 height: '720px',
                             }">
-                                <div class="absolute inset-0 z-10" v-if="schedule?.style?.backgroundUrl"
-                                    :style="{ backgroundColor: `rgba(0,0,0,${1 - backgroundOpacity / 100})` }">
-                                </div>
                                 <div class="absolute inset-0 z-10" v-if="schedule?.style?.backgroundUrl"
                                     :style="{ backgroundColor: `rgba(0,0,0,${1 - backgroundOpacity / 100})` }">
                                 </div>
@@ -838,7 +835,7 @@ const viewportRef = ref<HTMLElement | null>(null)
 
 const BASE_WIDTH = 1280
 const BASE_HEIGHT = 720
-const BASE_SCALE = 0.95
+const BASE_SCALE = 0.92
 const viewportWidth = ref(0)
 
 // Met à jour la largeur du viewport pour recalculer le scale
@@ -862,7 +859,7 @@ const scalerStyle = computed(() => ({
     width: `${BASE_WIDTH}px`,
     height: `${BASE_HEIGHT}px`,
     transform: `scale(${scale.value})`,
-    transformOrigin: 'top left'
+    transformOrigin: 'center top'
 }))
 
 // Gestion de l'upload d'image d'arrière-plan
