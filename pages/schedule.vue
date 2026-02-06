@@ -806,6 +806,8 @@ const {
     showPreview
 } = useScheduleScreenshot()
 
+const scheduleId = computed(() => schedule.value?.id)
+
 // Gestion de la modal de créneau
 const {
     visible,
@@ -825,7 +827,7 @@ const {
     saveSlot,
     searchGames,
     gameSuggestions
-} = useSlotModal(schedule.value?.id, slots, scheduleSlotStore, loadSlots)
+} = useSlotModal(scheduleId, slots, scheduleSlotStore, loadSlots)
 
 // Gestion du redimensionnement et du scaling du planning
 const viewportRef = ref<HTMLElement | null>(null)

@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'
         },
-        body: `fields name,cover.url; search "${search}";`
+        body: `fields name,cover.url; search "${search}"; where game_type = 0; limit 10;`
     })
 
     const data = await response.json()
@@ -31,3 +31,21 @@ export default defineEventHandler(async (event) => {
         cover: g.cover?.url.replace('t_thumb', 't_original') || null
     }))
 })
+
+//    const response = await fetch('https://api.igdb.com/v4/games', {
+//         method: 'POST',
+//         headers: {
+//             'Client-ID': process.env.TWITCH_CLIENT_ID!,
+//             'Authorization': `Bearer ${token}`,
+//             'Accept': 'application/json'
+//         },
+//         body: `fields name,cover.url; search "${search}"; where game_type = 0; limit 10;`
+//     })
+
+//     const data = await response.json()
+
+//     return data.map((g: any) => ({
+//         label: g.name,
+//         cover: g.cover?.url.replace('t_thumb', 't_original') || null
+//     }))
+// })
