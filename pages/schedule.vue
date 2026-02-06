@@ -35,7 +35,7 @@
                                 <span class="font-semibold">Configuration rapide</span>
                             </Tab>
                         </TabList>
-                        <TabPanels class="flex-1 overflow-y-auto">
+                        <TabPanels class="flex-1 overflow-y-auto tab-panels-scroll">
                             <TabPanel value="0" as="p" class="m-0">
                                 <!-- Design du planning -->
                                 <div class="flex flex-col space-y-6">
@@ -966,5 +966,11 @@ definePageMeta({
     to {
         opacity: 1;
     }
+}
+
+.tab-panels-scroll {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #9F9F9F transparent;
 }
 </style>
