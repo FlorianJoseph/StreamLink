@@ -5,7 +5,7 @@
 :#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
-    <div v-else>
+    <template v-else>
         <div class="flex flex-col gap-4 fade-in">
             <div class="py-4">
                 <div class="flex flex-col lg:items-start items-center">
@@ -21,11 +21,11 @@
             </div>
 
             <div class="flex flex-col lg:flex-row gap-6">
-                <div class="w-full lg:w-md shrink-0">
+                <div class="w-full lg:w-md shrink-0 h-[46rem]">
                     <Tabs value="0"
                         style="--p-tabs-active-bar-background : white;--p-tabs-tab-active-color:white;--p-tabs-tab-active-border-color: white"
-                        class="border border-zinc-700 rounded-lg">
-                        <TabList>
+                        class="border border-zinc-700 rounded-lg h-full">
+                        <TabList class="shrink-0">
                             <Tab value="0" as="div" class="flex items-center gap-2">
                                 <Icon name="lucide:palette" size="24" />
                                 <span class="font-semibold">Design</span>
@@ -35,7 +35,7 @@
                                 <span class="font-semibold">Configuration rapide</span>
                             </Tab>
                         </TabList>
-                        <TabPanels>
+                        <TabPanels class="flex-1 overflow-y-auto">
                             <TabPanel value="0" as="p" class="m-0">
                                 <!-- Design du planning -->
                                 <div class="flex flex-col space-y-6">
@@ -218,7 +218,7 @@
                                                         <div class="flex flex-col min-w-0 flex-1">
                                                             <span class="font-semibold truncate max-w-[16rem]">{{
                                                                 slot.title
-                                                                }}</span>
+                                                            }}</span>
                                                             <div class="flex items-center gap-2 text-sm text-white/70">
                                                                 {{ formatTime(slot.start_at) }} - {{
                                                                     formatTime(slot.end_at) }}
@@ -431,7 +431,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </template>
 
     <!-- Modal d'ajout de créneau -->
     <Dialog v-model:visible="visible" dismissable-mask modal
