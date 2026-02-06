@@ -98,7 +98,7 @@
                                         v-if="schedule?.style?.backgroundUrl">
                                         <span class="font-semibold text-sm min-w-16">Opacité</span>
                                         <InputNumber v-model="backgroundOpacity" :min="0" :max="100" fluid
-                                            @change="updateBackgroundOpacity(backgroundOpacity)" showButtons
+                                            @input="updateBackgroundOpacity(backgroundOpacity)" showButtons
                                             buttonLayout="horizontal" style="--p-inputtext-focus-border-color: white">
                                             <template #incrementbuttonicon>
                                                 <Icon name="lucide:plus" size="18" />
@@ -614,9 +614,8 @@
 <script setup lang="ts">
 const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
-const { schedule } = storeToRefs(scheduleStore)
+const { loading, schedule } = storeToRefs(scheduleStore)
 const supabase = useSupabaseClient()
-const loading = ref(true)
 
 // Édition du titre et du sous-titre
 const editing = ref({ field: null as 'title' | 'subtitle' | null, value: '' })
@@ -808,7 +807,6 @@ const {
     showPreview
 } = useScheduleScreenshot()
 
-const scheduleId = computed(() => schedule.value?.id)
 // Gestion de la modal de créneau
 const {
     visible,
@@ -828,7 +826,7 @@ const {
     saveSlot,
     searchGames,
     gameSuggestions
-} = useSlotModal(scheduleId, slots, scheduleSlotStore, loadSlots)
+} = useSlotModal(schedule.value?.id, slots, scheduleSlotStore, loadSlots)
 
 // Gestion du redimensionnement et du scaling du planning
 const viewportRef = ref<HTMLElement | null>(null)
@@ -918,32 +916,36 @@ const removeBackgroundImage = async () => {
 }
 
 // Opacité de l'arrière-plan pour améliorer la lisibilité du planning
-const backgroundOpacity = ref(100)
+const backgroundOpacity = ref(100) // valeur par défaut
 
 watch(
     () => schedule.value?.style?.backgroundOpacity,
-    (val) => {
-        if (val !== undefined) {
+    (val, oldVal) => {
+        if (val !== undefined && val !== oldVal && val !== backgroundOpacity.value) {
             backgroundOpacity.value = val
         }
     },
     { immediate: true }
 )
 
-const updateBackgroundOpacity = async (value: number) => {
+let timeout: ReturnType<typeof setTimeout> | null = null
+
+const updateBackgroundOpacity = (value: number) => {
     backgroundOpacity.value = value
     if (!schedule.value) return
-    await scheduleStore.updateSchedule({ style: { backgroundOpacity: value } })
+
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => {
+        scheduleStore.updateSchedule({ style: { backgroundOpacity: value } })
+    }, 300)
 }
 
 onMounted(async () => {
-    loading.value = true
     await scheduleStore.getOrCreateSchedule()
     await loadSlots()
 
     update()
     window.addEventListener('resize', update)
-    loading.value = false
 })
 
 onUnmounted(() => {
