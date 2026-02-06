@@ -1,74 +1,58 @@
 import { normalizeHexColor, isValidHexColor } from '~/utils/colors'
+import type { Tables } from '~/types/database.types'
 
-type StyleKey = 'bgColor' | 'textColor'
+type Schedule = Tables<'Schedule'>
+type StyleKey = keyof Tables<'Schedule'>['style']
 
-export function useScheduleColor(scheduleStore: any, key: StyleKey,) {
+export const useScheduleColor = (scheduleStore: Schedule, key: StyleKey,) => {
     const storeValue = computed(
         () => scheduleStore.schedule?.style?.[key] || ''
     )
+    const lastValidValue = ref(storeValue.value.toUpperCase())
 
-    const localValue = ref('')
-    const lastValidValue = ref('')
-    let timeout: number | null = null
-
+    const localValue = ref(lastValidValue.value)
     const isValid = computed(() =>
         isValidHexColor(normalizeHexColor(localValue.value))
     )
+    let timeout: any = null
 
-    // Sync store → local
+
+    // Sync depuis le store
     watch(
-        storeValue,
+        () => storeValue.value,
         (newColor) => {
-            const clean = normalizeHexColor(newColor)
-            if (isValidHexColor(clean)) {
-                lastValidValue.value = clean
-                localValue.value = clean
-            }
+            localValue.value = (newColor ?? '').toUpperCase()
         },
         { immediate: true }
     )
 
-    // Sync local → store (debounced)
+    // Sync vers le store de la nouvelle valeur (debounced)
     watch(localValue, (value) => {
         if (timeout) clearTimeout(timeout)
+        if (!isValid.value) return
 
-        const clean = normalizeHexColor(value)
-        if (!isValidHexColor(clean)) return
+        localValue.value = value.toUpperCase()
+        timeout = setTimeout(() => {
+            const clean = normalizeHexColor(value)?.toUpperCase()
+            if (!isValidHexColor(clean)) return
 
-        timeout = window.setTimeout(async () => {
-            const { error } = await scheduleStore.updateSchedule({
+            scheduleStore.updateSchedule({
                 style: { [key]: clean }
             })
-
-            if (error) {
-                console.error(`Erreur update ${key} :`, error)
-                // rollback visuel
-                localValue.value = lastValidValue.value
-            } else {
-                // confirmation BDD
-                lastValidValue.value = clean
-            }
-        }, 500)
+        }, 1200)
     })
 
-    // --- Handler blur générique ---
-    const handleBlur = () => {
-        if (!isValid.value) {
-            localValue.value = lastValidValue.value
-        }
+    // Validation de la valeur locale
+    const validateValue = () => {
+        const clean = normalizeHexColor(localValue.value)?.toUpperCase()
+        localValue.value = isValidHexColor(clean)
+            ? clean
+            : (storeValue.value ?? '').toUpperCase()
     }
 
-    // --- Force majuscules automatiquement ---
-    watch(localValue, (val) => {
-        if (val && val !== val.toUpperCase()) {
-            localValue.value = val.toUpperCase()
-        }
-    })
-
     return {
-        value: localValue,
+        localValue,
         isValid,
-        lastValidValue,
-        handleBlur
+        validateValue
     }
 }

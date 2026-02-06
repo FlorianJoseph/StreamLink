@@ -55,7 +55,7 @@
                                                                 style="--p-colorpicker-preview-focus-ring-color :none" />
                                                         </div>
                                                     </InputGroupAddon>
-                                                    <InputText v-model="scheduleBgColorLocal" @blur="onBgColorBlur"
+                                                    <InputText v-model="scheduleBgColorLocal" @blur="validateBgColor"
                                                         style="--p-inputtext-focus-border-color:white" maxlength="7"
                                                         :invalid="!isBgColorValid"
                                                         :style="{ color: !isBgColorValid ? '#f87171' : '#ffffff' }" />
@@ -122,7 +122,7 @@
                                                         style="--p-colorpicker-preview-focus-ring-color :none" />
                                                 </div>
                                             </InputGroupAddon>
-                                            <InputText v-model="scheduleTextColorLocal" @blur="onTextColorBlur"
+                                            <InputText v-model="scheduleTextColorLocal" @blur="validateTextColor"
                                                 style="--p-inputtext-focus-border-color:white" maxlength="7"
                                                 :invalid="!isTextColorValid"
                                                 :style="{ color: !isTextColorValid ? '#f87171' : '#ffffff' }" />
@@ -511,8 +511,7 @@
                         <ColorPicker ref="slotColorPicker" v-model="colorInput" format="hex" @click.stop
                             style="--p-colorpicker-preview-focus-ring-color :none" @change="useGameColor = false" />
                     </InputGroupAddon>
-                    <InputText v-model="colorInput" @blur="colorInput = slotColor"
-                        @input="colorInput = colorInput.toUpperCase(); useGameColor = false"
+                    <InputText v-model="colorInput" @blur="colorInput = slotColor" @input="useGameColor = false"
                         style="--p-inputtext-focus-border-color:white" maxlength="7"
                         :style="{ color: isColorInvalid ? '#f87171' : '#ffffff' }" />
                     <InputGroupAddon v-tooltip.bottom="'Réinitialiser en couleur automatique'"
@@ -739,15 +738,15 @@ function formatTime(time: string) {
 
 // Gestion des couleurs du planning
 const {
-    value: scheduleBgColorLocal,
+    localValue: scheduleBgColorLocal,
+    validateValue: validateBgColor,
     isValid: isBgColorValid,
-    handleBlur: onBgColorBlur
 } = useScheduleColor(scheduleStore, 'bgColor')
 
 const {
-    value: scheduleTextColorLocal,
+    localValue: scheduleTextColorLocal,
+    validateValue: validateTextColor,
     isValid: isTextColorValid,
-    handleBlur: onTextColorBlur
 } = useScheduleColor(scheduleStore, 'textColor')
 
 const scheduleBgColor = computed(() => {
