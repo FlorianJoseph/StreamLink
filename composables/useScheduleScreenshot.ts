@@ -47,32 +47,36 @@ export const useScheduleScreenshot = () => {
       </div>
     `}
 
-                // Injecter le footer même s'il n'existe plus
-                if (
-                    cloned.classList.contains('export-footer') &&
-                    !footerInjected
-                ) {
+                // Version avec gradient et icône
+                if (cloned.classList.contains('export-footer') && !footerInjected) {
                     footerInjected = true
 
-                    const footer = document.createElement('div')
-                    footer.textContent = 'Fait avec StreamLink'
-                    footer.style.position = 'absolute'
-                    footer.style.bottom = '14px'
-                    footer.style.right = '12px'
-                    footer.style.fontSize = '1.12rem'
-                    footer.style.opacity = '0.6'
-                    footer.style.pointerEvents = 'none'
-                    footer.style.userSelect = 'none'
-                    footer.style.zIndex = '20'
+                    const wrapper = document.createElement('div')
+                    wrapper.style.position = 'absolute'
+                    wrapper.style.bottom = '12px'
+                    wrapper.style.right = '16px'
+                    wrapper.style.zIndex = '20'
+                    wrapper.style.pointerEvents = 'none'
 
-                    const bold = document.createElement('span')
-                    bold.textContent = 'StreamLink'
-                    bold.style.fontWeight = '600'
+                    const box = document.createElement('div')
+                    box.style.background = '#1F2428'
+                    box.style.border = '1px solid #2F3437'
+                    box.style.borderRadius = '6px'
+                    box.style.padding = '5px 16px'
+                    box.style.display = 'flex'
+                    box.style.alignItems = 'center'
 
-                    footer.innerHTML = 'Fait avec '
-                    footer.appendChild(bold)
+                    // Texte
+                    const text = document.createElement('span')
+                    text.textContent = 'StreamLink'
+                    text.style.fontSize = '14px'
+                    text.style.fontWeight = '700'
+                    text.style.color = '#ffffff'
+                    text.style.fontFamily = 'Inter, sans-serif'
 
-                    cloned.appendChild(footer)
+                    box.appendChild(text)
+                    wrapper.appendChild(box)
+                    cloned.appendChild(wrapper)
                 }
             },
         })
