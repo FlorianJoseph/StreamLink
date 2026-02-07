@@ -31,11 +31,16 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Planning (en cours)
 
 ## État du produit
-- ~100 utilisateurs, ~50 profils actifs, newsletter active (~30 inscrits)
+- ~100 utilisateurs, ~50 profils actifs, newsletter active (~30 inscrits) 20 janvier 2026
+- ~150 utilisateurs, ~65 profils actifs, newsletter active (~65 inscrits) 07 février 2026
+
+## Roadmap déjà sorti
 - En production depuis le 19 octobre 2025
-- Découverte sorti 05 novembre 2025
-- Design sorti 31 décembre 2025
-- Dashboard sorti 14 janvier 2026
+- Confidentialité 28 octobre 2025
+- Découverte 05 novembre 2025
+- Design 31 décembre 2025
+- Newletter 10 janvier 2026
+- Dashboard 14 janvier 2026
 
 ## Roadmap court terme – Consolider l’usage (priorité)
 1. Planning V1 (création + affichage public)

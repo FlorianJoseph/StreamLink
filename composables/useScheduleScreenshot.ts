@@ -1,4 +1,6 @@
 import { domToPng } from 'modern-screenshot'
+const BASE_WIDTH = 1280
+const BASE_HEIGHT = 720
 
 export const useScheduleScreenshot = () => {
     const previewDataUrl = ref<string | null>(null)
@@ -11,6 +13,8 @@ export const useScheduleScreenshot = () => {
 
         return domToPng(node, {
             scale,
+            width: BASE_WIDTH,
+            height: BASE_HEIGHT,
             onCloneEachNode: (cloned) => {
                 if (!(cloned instanceof HTMLElement)) return
 
