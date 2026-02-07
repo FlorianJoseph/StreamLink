@@ -188,7 +188,7 @@
                                 <!-- Configuration du planning -->
                                 <Button label="Ajouter un créneau" severity="contrast" @click="openSlotModal('Lundi')"
                                     class="w-full">
-                                    <Icon name="lucide:plus" size="18" class="shrink-0"/>
+                                    <Icon name="lucide:plus" size="18" class="shrink-0" />
                                     <span class="text-sm sm:text-base">Ajouter un créneau</span>
                                 </Button>
                                 <!-- État vide si aucun créneau -->
@@ -203,23 +203,24 @@
                                         v-if="slotsForDay(day.label).length > 0">
                                         <AccordionHeader>
                                             <span class="flex items-center gap-2 w-full mr-2">
-                                                <Icon name="lucide:calendar-days" size="18" class="shrink-0"/>
-                                                <span class="font-bold whitespace-nowrap text-sm sm:text-base">{{ day.label }}</span>
+                                                <Icon name="lucide:calendar-days" size="18" class="shrink-0" />
+                                                <span class="font-bold whitespace-nowrap text-sm sm:text-base">{{
+                                                    day.label }}</span>
                                                 <Badge :value="slotsForDay(day.label).length" class="ml-auto"
-                                                    severity="contrast"/>
+                                                    severity="contrast" />
                                                 <Button size="small" text severity="secondary"
                                                     @click.stop="openSlotModal(day.label)" v-tooltip.left="{
                                                         value: `Ajouter un créneau ` + day.label, pt:
                                                             { text: '!text-sm' }
                                                     }">
-                                                    <Icon name="lucide:plus" size="18" class="shrink-0"/>
+                                                    <Icon name="lucide:plus" size="18" class="shrink-0" />
                                                 </Button>
                                             </span>
                                         </AccordionHeader>
                                         <AccordionContent>
                                             <div class="flex flex-col gap-2">
                                                 <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
-                                                    class="group flex items-center justify-between p-3 border border-white/20 rounded-lg hover:border-white/40 hover:cursor-pointer transition-all"
+                                                    class="group flex items-center justify-between py-3 px-2 sm:p-3 border border-white/20 rounded-lg hover:border-white/40 hover:cursor-pointer transition-all"
                                                     :style="{ borderLeftWidth: '4px', borderLeftColor: `#${slot.color}` }"
                                                     @click="openSlotModal(day.label, slot)">
                                                     <!-- Informations du créneau -->
@@ -238,10 +239,12 @@
 
                                                         <!-- Détails -->
                                                         <div class="flex flex-col min-w-0 flex-1">
-                                                            <span class="font-semibold truncate max-w-[8rem] sm:max-w-[16rem] text-xs sm:text-base">
+                                                            <span
+                                                                class="font-semibold truncate max-w-[8rem] sm:max-w-[16rem] text-xs sm:text-base">
                                                                 {{ slot.title }}
                                                             </span>
-                                                            <div class="flex items-center gap-2 text-xs sm:text-sm text-white/70">
+                                                            <div
+                                                                class="flex items-center gap-2 text-xs sm:text-sm text-white/70">
                                                                 {{ formatTime(slot.start_at) }} -
                                                                 {{ formatTime(slot.end_at) }}
                                                             </div>
@@ -250,11 +253,11 @@
 
                                                     <!-- Actions -->
                                                     <div
-                                                        class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        class="flex items-center gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
                                                         <Button size="small" severity="danger" text
                                                             @click.stop="showDeleteConfirmation = true; slotToDelete = slot"
                                                             v-tooltip.bottom="{ value: 'Supprimer', pt: { text: '!text-sm' } }">
-                                                            <Icon name="lucide:trash-2" size="18" />
+                                                            <Icon name="lucide:trash-2" size="18" class="shrink-0" />
                                                         </Button>
                                                     </div>
                                                 </div>
@@ -467,14 +470,14 @@
 
     <!-- Modal d'ajout de créneau -->
     <Dialog v-model:visible="visible" dismissable-mask modal
-        :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'" :style="{ width: '30rem' }"
+        :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'" :style="{ width: '30rem', margin: '1rem' }"
         :draggable="false">
         <div class="flex flex-col gap-5">
 
             <!-- Catégorie Twitch -->
             <div class="flex flex-col gap-2">
-                <label for="game-search" class="font-semibold text-sm flex items-center gap-2">
-                    <Icon name="lucide:gamepad-2" size="18" />
+                <label for="game-search" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                    <Icon name="lucide:gamepad-2" size="18" class="shrink-0" />
                     Catégorie Twitch
                     <span class="text-red-500">*</span>
                 </label>
@@ -492,7 +495,7 @@
                                     class="w-8 h-10 rounded border border-zinc-700 flex-shrink-0" />
                                 <div v-else
                                     class="w-8 h-10 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center flex-shrink-0">
-                                    <Icon name="lucide:image-off" size="20" class="text-zinc-600" />
+                                    <Icon name="lucide:image-off" size="20" class="text-zinc-600 shrink-0" />
                                 </div>
                                 <span>{{ slotProps.option.label }}</span>
                             </div>
@@ -514,8 +517,8 @@
 
             <!-- Titre du stream -->
             <div class="flex flex-col gap-2 relative">
-                <label for="stream-title" class="font-semibold text-sm flex items-center gap-2">
-                    <Icon name="lucide:type" size="18" />
+                <label for="stream-title" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                    <Icon name="lucide:type" size="18" class="shrink-0" />
                     Titre du stream
                 </label>
                 <InputText id="stream-title" type="text" v-model="title"
@@ -532,8 +535,8 @@
             <div class="flex flex-col gap-2">
                 <div class="flex items-start justify-between">
                     <div class="flex flex-col gap-1">
-                        <label class="font-semibold text-sm flex items-center gap-2">
-                            <Icon name="lucide:palette" size="18" />
+                        <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <Icon name="lucide:palette" size="18" class="shrink-0" />
                             Couleur du créneau
                         </label>
                         <span class="text-xs text-zinc-500">
@@ -544,7 +547,7 @@
                     </div>
                     <div v-if="!useGameColor"
                         class="px-2 py-1 bg-zinc-700 text-white text-xs rounded-full flex items-center gap-1">
-                        <Icon name="lucide:wand-2" size="12" />
+                        <Icon name="lucide:wand-2" size="12" class="shrink-0" />
                         Modifiée
                     </div>
                 </div>
@@ -559,7 +562,7 @@
                         :style="{ color: isColorInvalid ? '#f87171' : '#ffffff' }" />
                     <InputGroupAddon v-tooltip.bottom="'Réinitialiser en couleur automatique'"
                         class="cursor-pointer flex items-center gap-1" @click="resetColor">
-                        <Icon name="lucide:rotate-ccw" size="16" />
+                        <Icon name="lucide:rotate-ccw" size="16" class="shrink-0" />
                         <span class="text-sm sm:text-base">Réinitialiser</span>
                     </InputGroupAddon>
                 </InputGroup>
@@ -567,8 +570,8 @@
 
             <!-- Jours de stream -->
             <div class="flex flex-col gap-2">
-                <label class="font-semibold text-sm flex items-center gap-2">
-                    <Icon name="lucide:calendar-days" size="18" />
+                <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                    <Icon name="lucide:calendar-days" size="18" class="shrink-0" />
                     Jours de stream
                     <span class="text-red-500">*</span>
                 </label>
@@ -578,12 +581,18 @@
                         : 'Sélectionne un ou plusieurs jours pour ce créneau' }}
                 </span>
                 <SelectButton v-model="selectedDays" :options="daysOptions" optionLabel="label" :multiple="!editingSlot"
-                    aria-labelledby="multiple" class="flex flex-wrap gap-1" />
+                    aria-labelledby="multiple" :pt="{
+                        root: { class: 'flex gap-1 w-full flex-wrap' },
+                        pcToggleButton: {
+                            root: { class: 'flex-1 min-w-[80px] sm:min-w-[90px] !rounded-lg' },
+                            label: { class: 'text-xs sm:text-base' }
+                        }
+                    }" />
             </div>
 
             <!-- Horaires -->
             <div class="flex flex-col gap-2">
-                <label class="font-semibold text-sm flex items-center gap-2">
+                <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
                     <Icon name="lucide:clock" size="18" />
                     Horaires
                     <span class="text-red-500">*</span>
@@ -594,7 +603,7 @@
                         <InputText id="start-time" type="time" v-model="startTime"
                             style="--p-inputtext-focus-border-color:white" />
                     </div>
-                    <Icon name="lucide:arrow-right" size="20" class="text-zinc-500 mt-5" />
+                    <Icon name="lucide:arrow-right" size="20" class="text-zinc-500 mt-5 shrink-0" />
                     <div class="flex flex-col gap-1">
                         <label for="end-time" class="text-xs text-zinc-500">Fin</label>
                         <InputText id="end-time" type="time" v-model="endTime"
@@ -608,14 +617,14 @@
                 <Button type="button" label="Annuler" severity="secondary" @click="visible = false" outlined
                     class="flex-1">
                     <Icon name="lucide:x" size="18" class="shrink-0" />
-                    <span class="text-sm sm:text-base">Annuler</span>
+                    <span class="text-xs sm:text-base shrink-0">Annuler</span>
                 </Button>
                 <Button type="button" :label="editingSlot ? 'Mettre à jour' : 'Enregistrer'" severity="contrast"
                     @click="saveSlot"
                     :disabled="isColorInvalid || !selectedGame?.label || !startTime || !endTime || selectedDays.length === 0"
                     class="flex-1">
                     <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="18" class="shrink-0" />
-                    <span class="text-sm sm:text-base">{{ editingSlot ? 'Mettre à jour' : 'Enregistrer' }}</span>
+                    <span class="text-xs sm:text-base shrink-0">{{ editingSlot ? 'Mettre à jour' : 'Enregistrer' }}</span>
                 </Button>
             </div>
         </template>
@@ -629,11 +638,11 @@
     </Dialog>
 
     <!-- Modal d'aperçu de confirmation de suppression -->
-    <Dialog v-model:visible="showDeleteConfirmation" dismissableMask modal :draggable="false">
+    <Dialog v-model:visible="showDeleteConfirmation" dismissableMask modal :draggable="false" :style="{ margin: '1rem' }">
         <template #container="{ closeCallback }">
-            <div class="flex flex-col items-center space-y-4 p-6">
-                <h2 class="text-xl font-bold">Confirmer la suppression</h2>
-                <p class="text-center text-zinc-500">
+            <div class="flex flex-col items-center space-y-4 p-6 ">
+                <h2 class="text-md sm:text-xl font-bold text-center">Confirmer la suppression</h2>
+                <p class="text-center text-zinc-500 text-xs sm:text-base">
                     Es-tu sûr de vouloir supprimer le stream de <strong>{{ slotToDelete?.game.label }}</strong> le
                     <strong>{{ slotToDelete?.day }}</strong> à <strong>{{ formatTime(slotToDelete?.start_at) }}</strong>
                     ?
