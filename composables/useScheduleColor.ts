@@ -39,7 +39,7 @@ export const useScheduleColor = (scheduleStore: Schedule, key: StyleKey,) => {
             scheduleStore.updateSchedule({
                 style: { [key]: clean }
             })
-        }, 1200)
+        }, 300)
     })
 
     // Validation de la valeur locale
