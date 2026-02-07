@@ -624,7 +624,8 @@
                     :disabled="isColorInvalid || !selectedGame?.label || !startTime || !endTime || selectedDays.length === 0"
                     class="flex-1">
                     <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="18" class="shrink-0" />
-                    <span class="text-xs sm:text-base shrink-0">{{ editingSlot ? 'Mettre à jour' : 'Enregistrer' }}</span>
+                    <span class="text-xs sm:text-base shrink-0">
+                        {{ editingSlot ? 'Mettre à jour' : 'Enregistrer' }}</span>
                 </Button>
             </div>
         </template>
@@ -638,7 +639,8 @@
     </Dialog>
 
     <!-- Modal d'aperçu de confirmation de suppression -->
-    <Dialog v-model:visible="showDeleteConfirmation" dismissableMask modal :draggable="false" :style="{ margin: '1rem' }">
+    <Dialog v-model:visible="showDeleteConfirmation" dismissableMask modal :draggable="false"
+        :style="{ margin: '1rem' }">
         <template #container="{ closeCallback }">
             <div class="flex flex-col items-center space-y-4 p-6 ">
                 <h2 class="text-md sm:text-xl font-bold text-center">Confirmer la suppression</h2>
