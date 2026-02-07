@@ -216,12 +216,12 @@
 
                                                         <!-- Détails -->
                                                         <div class="flex flex-col min-w-0 flex-1">
-                                                            <span class="font-semibold truncate max-w-[16rem]">{{
-                                                                slot.title
-                                                                }}</span>
+                                                            <span class="font-semibold truncate max-w-[16rem]">
+                                                                {{ slot.title }}
+                                                            </span>
                                                             <div class="flex items-center gap-2 text-sm text-white/70">
-                                                                {{ formatTime(slot.start_at) }} - {{
-                                                                    formatTime(slot.end_at) }}
+                                                                {{ formatTime(slot.start_at) }} -
+                                                                {{ formatTime(slot.end_at) }}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -478,7 +478,7 @@
                     Titre du stream
                 </label>
                 <InputText id="stream-title" type="text" v-model="title"
-                    :placeholder="`${selectedGame?.label || 'Ex: Gameplay, collaboration...'}`" fluid maxlength="35"
+                    :placeholder="`${selectedGame?.label || 'Ex: Gameplay, collaboration...'}`" fluid maxlength="30"
                     style="--p-inputtext-focus-border-color:white" />
                 <div class="flex justify-between items-center absolute bottom-1 right-2">
                     <small class="text-zinc-500 text-xs ml-auto">
