@@ -309,7 +309,8 @@
 
                                         <!-- En-tête du planning -->
                                         <div class="flex items-center gap-4 truncate z-20">
-                                            <div class="flex flex-col w-full" :style="{ color: scheduleTextColor }">
+                                            <div class="flex flex-col w-full"
+                                                :style="{ color: scheduleTextColor, textShadow: '0 0 2px rgba(0,0,0,0.8)' }">
                                                 <!-- Titre -->
                                                 <template v-if="editing.field === 'title'">
                                                     <input :ref="el => inputRefs['title'] = el" v-model="editing.value"
@@ -354,7 +355,7 @@
                                                     class="flex flex-col items-center transition-all duration-500 ease-out">
                                                     <!-- Jour -->
                                                     <div class=" font-semibold mb-2 text-center text-xl"
-                                                        :style="{ color: scheduleTextColor }">
+                                                        :style="{ color: scheduleTextColor, textShadow: '0 0 2px rgba(0,0,0,0.8)' }">
                                                         {{ day.label }}</div>
                                                     <!-- Créneaux -->
                                                     <div class="h-130 w-full">
@@ -363,7 +364,7 @@
                                                         <template v-if="slotsForDay(day.label).length === 0">
                                                             <div
                                                                 class="day-slot-empty h-full w-full bg-black/30 rounded-lg">
-                                                                <div class="border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-zinc-500 hover:border-zinc-300 
+                                                                <div class="border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-zinc-400 hover:border-zinc-200 
                             transition-all h-full w-full " @click="openSlotModal(day.label)">
                                                                     <div
                                                                         class="flex flex-col items-center justify-center gap-1 ">
@@ -382,7 +383,7 @@
                                                                 <div
                                                                     class="grid grid-rows-[auto_1fr_auto] gap-2 h-full export-day-column">
                                                                     <!-- Zone + en haut -->
-                                                                    <div class="h-6 border-2 border-dashed border-zinc-500 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-300 transition-all w-full row-span-1 ignore-export"
+                                                                    <div class="h-6 border-2 border-dashed border-zinc-400 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-200 transition-all w-full row-span-1 ignore-export"
                                                                         @click="openSlotModal(day.label, undefined, 'before')"
                                                                         v-tooltip.bottom="{ value: `Ajouter un stream avant`, pt: { text: '!text-sm' } }">
                                                                         <Icon name="lucide:plus" size="14"
@@ -431,7 +432,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <!-- Zone + en bas -->
-                                                                    <div class="h-6 border-2 border-dashed border-zinc-500 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-300 transition-all w-full row-span-1 ignore-export"
+                                                                    <div class="h-6 border-2 border-dashed border-zinc-400 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-200 transition-all w-full row-span-1 ignore-export"
                                                                         @click="openSlotModal(day.label, undefined, 'after')"
                                                                         v-tooltip.bottom="{ value: `Ajouter un stream après`, pt: { text: '!text-sm' } }">
                                                                         <Icon name="lucide:plus" size="14"
