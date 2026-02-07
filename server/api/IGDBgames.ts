@@ -1,20 +1,9 @@
-async function getTwitchToken() {
-    const clientId = process.env.TWITCH_CLIENT_ID
-    const clientSecret = process.env.TWITCH_CLIENT_SECRET
-
-    const res = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`, {
-        method: 'POST'
-    })
-
-    const data = await res.json()
-    return data.access_token
-}
-
+import { getCachedTwitchToken } from '~/server/utils/twitchToken'
 import { resolveCategoryCover } from '~/utils/covers'
 
 export default defineEventHandler(async (event) => {
     const { search } = getQuery(event)
-    const token = await getTwitchToken()
+    const token = await getCachedTwitchToken()
 
     const twitchRes = await fetch(
         `https://api.twitch.tv/helix/search/categories?query=${search}`,
@@ -40,7 +29,7 @@ export default defineEventHandler(async (event) => {
     fields name, cover.url, external_games.uid, external_games.external_game_source;
     where external_games.external_game_source = 14
     & external_games.uid = (${quotedTwitchIds});
-    limit 50;
+    limit 5;
   `
     })
 
