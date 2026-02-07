@@ -28,11 +28,11 @@
                         <TabList class="shrink-0">
                             <Tab value="0" as="div" class="flex items-center gap-2">
                                 <Icon name="lucide:palette" size="24" />
-                                <span class="font-semibold">Design</span>
+                                <span class="font-semibold text-sm sm:text-base">Design</span>
                             </Tab>
                             <Tab value="1" as="div" class="flex items-center gap-2">
                                 <Icon name="lucide:settings" size="24" />
-                                <span class="font-semibold">Configuration rapide</span>
+                                <span class="font-semibold text-sm sm:text-base">Configuration rapide</span>
                             </Tab>
                         </TabList>
                         <TabPanels class="flex-1 overflow-y-auto tab-panels-scroll">
@@ -138,7 +138,7 @@
                                     <!-- Section Options -->
                                     <div class="space-y-3">
                                         <div class="flex items-center gap-2">
-                                            <Icon name="lucide:settings-2" size="16" class="text-gray-400" />
+                                            <Icon name="lucide:settings-2" size="16" class="text-gray-400 shrink-0" />
                                             <p class="font-semibold text-xs uppercase tracking-wider text-gray-400">
                                                 Options d'affichage
                                             </p>
@@ -148,8 +148,8 @@
                                             <label for="toggle-title"
                                                 class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
-                                                    <Icon name="lucide:type" size="18" class="text-gray-400" />
-                                                    <span class="text-sm">Afficher les titres</span>
+                                                    <Icon name="lucide:type" size="18" class="text-gray-400 shrink-0" />
+                                                    <span class="text-xs sm:text-sm">Afficher les titres</span>
                                                 </div>
                                                 <ToggleSwitch id="toggle-title" v-model="titleVisible"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
@@ -159,8 +159,9 @@
                                             <label for="toggle-endtime"
                                                 class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
-                                                    <Icon name="lucide:clock" size="18" class="text-gray-400" />
-                                                    <span class="text-sm">Afficher l'heure de fin</span>
+                                                    <Icon name="lucide:clock" size="18"
+                                                        class="text-gray-400 shrink-0" />
+                                                    <span class="text-xs sm:text-sm">Afficher l'heure de fin</span>
                                                 </div>
                                                 <ToggleSwitch id="toggle-endtime" v-model="endTimeVisible"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
@@ -170,8 +171,10 @@
                                             <label for="toggle-days"
                                                 class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
-                                                    <Icon name="lucide:calendar-off" size="18" class="text-gray-400" />
-                                                    <span class="text-sm">Afficher les jours sans stream</span>
+                                                    <Icon name="lucide:calendar-off" size="18"
+                                                        class="text-gray-400 shrink-0" />
+                                                    <span class="text-xs sm:text-sm">Afficher les jours sans
+                                                        stream</span>
                                                 </div>
                                                 <ToggleSwitch id="toggle-days" v-model="daysWithoutStreamVisible"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
@@ -185,8 +188,8 @@
                                 <!-- Configuration du planning -->
                                 <Button label="Ajouter un créneau" severity="contrast" @click="openSlotModal('Lundi')"
                                     class="w-full">
-                                    <Icon name="lucide:plus" size="18" />
-                                    <span>Ajouter un créneau</span>
+                                    <Icon name="lucide:plus" size="18" class="shrink-0"/>
+                                    <span class="text-sm sm:text-base">Ajouter un créneau</span>
                                 </Button>
                                 <!-- État vide si aucun créneau -->
                                 <div v-if="!daysOptions.some(day => slotsForDay(day.label).length > 0)"
@@ -200,16 +203,16 @@
                                         v-if="slotsForDay(day.label).length > 0">
                                         <AccordionHeader>
                                             <span class="flex items-center gap-2 w-full mr-2">
-                                                <Icon name="lucide:calendar-days" size="18" />
-                                                <span class="font-bold whitespace-nowrap">{{ day.label }}</span>
+                                                <Icon name="lucide:calendar-days" size="18" class="shrink-0"/>
+                                                <span class="font-bold whitespace-nowrap text-sm sm:text-base">{{ day.label }}</span>
                                                 <Badge :value="slotsForDay(day.label).length" class="ml-auto"
-                                                    severity="contrast" />
+                                                    severity="contrast"/>
                                                 <Button size="small" text severity="secondary"
                                                     @click.stop="openSlotModal(day.label)" v-tooltip.left="{
                                                         value: `Ajouter un créneau ` + day.label, pt:
                                                             { text: '!text-sm' }
                                                     }">
-                                                    <Icon name="lucide:plus" size="18" />
+                                                    <Icon name="lucide:plus" size="18" class="shrink-0"/>
                                                 </Button>
                                             </span>
                                         </AccordionHeader>
@@ -225,9 +228,9 @@
                                                         <div class="flex-shrink-0">
                                                             <img v-if="slot.game.cover" :src="slot.game.cover"
                                                                 :alt="slot.game.label"
-                                                                class="w-10 h-14 rounded object-contain border border-zinc-700" />
+                                                                class="w-6 h-8 sm:w-10 sm:h-14 rounded object-contain border border-zinc-700" />
                                                             <div v-else
-                                                                class="w-10 h-14 rounded bg-white/5 border border-zinc-700 flex items-center justify-center">
+                                                                class=" w-6 h-8 sm:w-10 sm:h-14 rounded bg-white/5 border border-zinc-700 flex items-center justify-center">
                                                                 <Icon name="lucide:gamepad-2" size="20"
                                                                     class="text-white/30" />
                                                             </div>
@@ -235,10 +238,10 @@
 
                                                         <!-- Détails -->
                                                         <div class="flex flex-col min-w-0 flex-1">
-                                                            <span class="font-semibold truncate max-w-[16rem]">
+                                                            <span class="font-semibold truncate max-w-[8rem] sm:max-w-[16rem] text-xs sm:text-base">
                                                                 {{ slot.title }}
                                                             </span>
-                                                            <div class="flex items-center gap-2 text-sm text-white/70">
+                                                            <div class="flex items-center gap-2 text-xs sm:text-sm text-white/70">
                                                                 {{ formatTime(slot.start_at) }} -
                                                                 {{ formatTime(slot.end_at) }}
                                                             </div>
@@ -557,7 +560,7 @@
                     <InputGroupAddon v-tooltip.bottom="'Réinitialiser en couleur automatique'"
                         class="cursor-pointer flex items-center gap-1" @click="resetColor">
                         <Icon name="lucide:rotate-ccw" size="16" />
-                        <span>Réinitialiser</span>
+                        <span class="text-sm sm:text-base">Réinitialiser</span>
                     </InputGroupAddon>
                 </InputGroup>
             </div>
@@ -604,17 +607,15 @@
             <div class="flex gap-2 w-full">
                 <Button type="button" label="Annuler" severity="secondary" @click="visible = false" outlined
                     class="flex-1">
-                    <template #icon>
-                        <Icon name="lucide:x" size="18" />
-                    </template>
+                    <Icon name="lucide:x" size="18" class="shrink-0" />
+                    <span class="text-sm sm:text-base">Annuler</span>
                 </Button>
                 <Button type="button" :label="editingSlot ? 'Mettre à jour' : 'Enregistrer'" severity="contrast"
                     @click="saveSlot"
                     :disabled="isColorInvalid || !selectedGame?.label || !startTime || !endTime || selectedDays.length === 0"
                     class="flex-1">
-                    <template #icon>
-                        <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="18" />
-                    </template>
+                    <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="18" class="shrink-0" />
+                    <span class="text-sm sm:text-base">{{ editingSlot ? 'Mettre à jour' : 'Enregistrer' }}</span>
                 </Button>
             </div>
         </template>
@@ -628,7 +629,7 @@
     </Dialog>
 
     <!-- Modal d'aperçu de confirmation de suppression -->
-    <Dialog v-model:visible="showDeleteConfirmation" modal :draggable="false">
+    <Dialog v-model:visible="showDeleteConfirmation" dismissableMask modal :draggable="false">
         <template #container="{ closeCallback }">
             <div class="flex flex-col items-center space-y-4 p-6">
                 <h2 class="text-xl font-bold">Confirmer la suppression</h2>
@@ -639,10 +640,12 @@
                 </p>
                 <div class="flex gap-2 w-full items-center justify-center">
                     <Button severity="secondary" @click="showDeleteConfirmation = false" class="flex-1">
-                        Annuler
+                        <Icon name="lucide:x" size="18" class="shrink-0" />
+                        <span class="text-sm sm:text-base">Annuler</span>
                     </Button>
                     <Button severity="danger" @click="confirmDeleteSlot" class="flex-1">
-                        Supprimer
+                        <Icon name="lucide:trash-2" size="18" class="shrink-0" />
+                        <span class="text-sm sm:text-base">Supprimer</span>
                     </Button>
                 </div>
             </div>
