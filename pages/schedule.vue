@@ -64,8 +64,13 @@
                                                     @change="onFileSelect" />
                                                 <Button severity="contrast" :disabled="isLoadingBackground"
                                                     @click="fileInput?.click()">
-                                                    <Icon name="lucide:image" size="18" />
-                                                    <span class="hidden sm:inline">Choisir une image</span>
+                                                    <Icon v-if="!isLoadingBackground" name="lucide:image" size="18" />
+                                                    <Icon v-else name="lucide:loader-circle" size="18"
+                                                        class="animate-spin" />
+                                                    <span class="hidden sm:inline">
+                                                        {{ isLoadingBackground ? 'Chargement...' : 'Choisir une image'
+                                                        }}
+                                                    </span>
                                                 </Button>
                                             </div>
                                         </template>
@@ -183,15 +188,29 @@
                                     <Icon name="lucide:plus" size="18" />
                                     <span>Ajouter un créneau</span>
                                 </Button>
+                                <!-- État vide si aucun créneau -->
+                                <div v-if="!daysOptions.some(day => slotsForDay(day.label).length > 0)"
+                                    class="flex flex-col items-center justify-center py-12 text-center">
+                                    <Icon name="lucide:calendar-x" size="48" class="text-white/20 mb-4" />
+                                    <p class="text-white/60 text-sm mb-2">Aucun créneau programmé</p>
+                                    <p class="text-white/40 text-xs">Cliquez sur "Ajouter un créneau" pour commencer</p>
+                                </div>
                                 <Accordion value="0" v-for="day in daysOptions" :key="day.label" class="overflow-auto">
                                     <AccordionPanel :value="slotsForDay(day.label).length"
                                         v-if="slotsForDay(day.label).length > 0">
                                         <AccordionHeader>
-                                            <span class="flex items-center gap-2 w-full">
+                                            <span class="flex items-center gap-2 w-full mr-2">
                                                 <Icon name="lucide:calendar-days" size="18" />
                                                 <span class="font-bold whitespace-nowrap">{{ day.label }}</span>
-                                                <Badge :value="slotsForDay(day.label).length" class="ml-auto mr-2"
+                                                <Badge :value="slotsForDay(day.label).length" class="ml-auto"
                                                     severity="contrast" />
+                                                <Button size="small" text severity="secondary"
+                                                    @click.stop="openSlotModal(day.label)" v-tooltip.left="{
+                                                        value: `Ajouter un créneau ` + day.label, pt:
+                                                            { text: '!text-sm' }
+                                                    }">
+                                                    <Icon name="lucide:plus" size="18" />
+                                                </Button>
                                             </span>
                                         </AccordionHeader>
                                         <AccordionContent>
@@ -231,8 +250,8 @@
                                                         class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                         <Button size="small" severity="danger" text
                                                             @click.stop="showDeleteConfirmation = true; slotToDelete = slot"
-                                                            v-tooltip.bottom="'Supprimer'">
-                                                            <Icon name="lucide:trash-2" size="16" />
+                                                            v-tooltip.bottom="{ value: 'Supprimer', pt: { text: '!text-sm' } }">
+                                                            <Icon name="lucide:trash-2" size="18" />
                                                         </Button>
                                                     </div>
                                                 </div>
@@ -338,7 +357,7 @@
                                                         :style="{ color: scheduleTextColor }">
                                                         {{ day.label }}</div>
                                                     <!-- Créneaux -->
-                                                    <div class="lg:h-130 w-full">
+                                                    <div class="h-130 w-full">
 
                                                         <!-- CAS : aucun créneau -->
                                                         <template v-if="slotsForDay(day.label).length === 0">
