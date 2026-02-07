@@ -98,7 +98,7 @@
                                         v-if="schedule?.style?.backgroundUrl">
                                         <span class="font-semibold text-sm min-w-16">Opacité</span>
                                         <InputNumber v-model="backgroundOpacity" :min="0" :max="100" fluid
-                                            @input="updateBackgroundOpacity(backgroundOpacity)" showButtons
+                                            @update:modelValue="updateBackgroundOpacity" showButtons
                                             buttonLayout="horizontal" style="--p-inputtext-focus-border-color: white">
                                             <template #incrementbuttonicon>
                                                 <Icon name="lucide:plus" size="18" />
@@ -932,8 +932,8 @@ const backgroundOpacity = ref(100) // valeur par défaut
 
 watch(
     () => schedule.value?.style?.backgroundOpacity,
-    (val, oldVal) => {
-        if (val !== undefined && val !== oldVal && val !== backgroundOpacity.value) {
+    (val) => {
+        if (val !== undefined && val !== backgroundOpacity.value) {
             backgroundOpacity.value = val
         }
     },
