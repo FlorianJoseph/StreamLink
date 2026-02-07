@@ -22,14 +22,21 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
 
     let timeout: any = null
     const isSearching = ref(false)
+    const searchCache = new Map<string, any>()
 
     // Recherche de jeux via l'API IGDB
     async function searchGames(event: { query: string }) {
-        const query = event.query.trim()
+        const query = event.query.trim().toLowerCase()
 
         // On attend au moins 3 caractères
         if (query.length < 3) {
             gameSuggestions.value = []
+            return
+        }
+
+        // Vérifie le cache
+        if (searchCache.has(query)) {
+            gameSuggestions.value = searchCache.get(query)
             return
         }
 
@@ -39,6 +46,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         timeout = setTimeout(async () => {
             const res = await $fetch('/api/IGDBgames', { params: { search: query, limit: 5 } })
             gameSuggestions.value = res
+            searchCache.set(query, res) // Sauvegarde en cache
             isSearching.value = false
         }, 200)
     }

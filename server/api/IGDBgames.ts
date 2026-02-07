@@ -1,5 +1,5 @@
 import { getCachedTwitchToken } from '~/server/utils/twitchToken'
-import { resolveCategoryCover } from '~/utils/covers'
+import { CUSTOM_CATEGORY_COVERS, resolveCategoryCover } from '~/utils/covers'
 
 export default defineEventHandler(async (event) => {
     const { search } = getQuery(event)
@@ -46,6 +46,14 @@ export default defineEventHandler(async (event) => {
     )
 
     return twitchData.data
+        .filter((cat: any) => {
+            const hasIgdbCover = igdbGames.some((g: any) =>
+                g.external_games?.some((e: any) => e.uid === cat.id)
+            )
+            const hasCustomCover = CUSTOM_CATEGORY_COVERS[cat.name] !== undefined
+
+            return hasIgdbCover || hasCustomCover
+        })
         .slice(0, 5)
         .map((cat: any) => {
             const igdbCover = igdbByTwitchId[cat.id]
