@@ -15,7 +15,7 @@
                     </h1>
                     <!-- Sous-titre -->
                     <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
-                        Crée et partage ton planning hebdomadaire
+                        Crée, personnalise et partage ton planning de stream
                     </p>
                 </div>
             </div>
@@ -31,8 +31,8 @@
                                 <span class="font-semibold text-sm sm:text-base">Design</span>
                             </Tab>
                             <Tab value="1" as="div" class="flex items-center gap-2">
-                                <Icon name="lucide:settings" size="24" />
-                                <span class="font-semibold text-sm sm:text-base">Configuration rapide</span>
+                                <Icon name="lucide:calendar-days" size="24" />
+                                <span class="font-semibold text-sm sm:text-base">Créneaux</span>
                             </Tab>
                         </TabList>
                         <TabPanels class="flex-1 overflow-y-auto tab-panels-scroll">
@@ -195,7 +195,7 @@
                                 <div v-if="!daysOptions.some(day => slotsForDay(day.label).length > 0)"
                                     class="flex flex-col items-center justify-center py-12 text-center">
                                     <Icon name="lucide:calendar-x" size="48" class="text-white/20 mb-4" />
-                                    <p class="text-white/60 text-sm mb-2">Aucun créneau programmé</p>
+                                    <p class="text-white/60 text-sm mb-2">Aucun stream programmé cette semaine</p>
                                     <p class="text-white/40 text-xs">Cliquez sur "Ajouter un créneau" pour commencer</p>
                                 </div>
                                 <Accordion value="0" v-for="day in daysOptions" :key="day.label" class="overflow-auto">
@@ -213,7 +213,7 @@
                                                         value: `Ajouter un créneau ` + day.label, pt:
                                                             { text: '!text-sm' }
                                                     }">
-                                                    <Icon name="lucide:plus" size="18" class="shrink-0" />
+                                                    <Icon name="lucide:plus" size="18" class="shrink-0 text-zinc-300" />
                                                 </Button>
                                             </span>
                                         </AccordionHeader>
@@ -774,7 +774,6 @@ const slotToDelete = ref<any>(null)
 
 // Confirme la suppression d'un créneau
 async function confirmDeleteSlot() {
-    showDeleteConfirmation.value = true
     if (slotToDelete.value) {
         await scheduleSlotStore.deleteSlot(slotToDelete.value.id)
         await loadSlots()
