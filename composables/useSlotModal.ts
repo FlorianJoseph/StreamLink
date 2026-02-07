@@ -20,14 +20,27 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
     const endTime = ref('14:00')
     const editingSlot = ref<ScheduleSlot | null>(null)
 
+    let timeout: any = null
+    const isSearching = ref(false)
+
     // Recherche de jeux via l'API IGDB
     async function searchGames(event: { query: string }) {
-        if (!event.query) {
+        const query = event.query.trim()
+
+        // On attend au moins 3 caractères
+        if (query.length < 3) {
             gameSuggestions.value = []
             return
         }
-        const res = await $fetch('/api/IGDBgames', { params: { search: event.query } })
-        gameSuggestions.value = res
+
+        if (timeout) clearTimeout(timeout)
+        isSearching.value = true
+
+        timeout = setTimeout(async () => {
+            const res = await $fetch('/api/IGDBgames', { params: { search: query, limit: 5 } })
+            gameSuggestions.value = res
+            isSearching.value = false
+        }, 200)
     }
 
     // Watch pour s'assurer que endTime >= startTime
@@ -182,6 +195,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
     return {
         visible,
         selectedGame,
+        isSearching,
         title,
         slotColor,
         colorInput,

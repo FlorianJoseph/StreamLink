@@ -451,7 +451,7 @@
                     </InputGroupAddon>
                     <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
                         optionLabel="label" placeholder="Ex: League of Legends, Valorant..." fluid forceSelection
-                        style="--p-inputtext-focus-border-color:white" id="game-search">
+                        style="--p-inputtext-focus-border-color:white" id="game-search" showClear>
                         <template #option="slotProps">
                             <div class="flex items-center gap-2">
                                 <img v-if="slotProps.option.cover" :src="slotProps.option.cover"
@@ -465,7 +465,15 @@
                             </div>
                         </template>
                         <template #empty>
-                            Aucun jeu trouvé
+                            <div class="flex justify-center items-center py-2 text-sm text-zinc-400">
+                                <span v-if="isSearching">Recherche en cours...</span>
+                                <span v-else-if="selectedGame.length > 0 && selectedGame.length < 3">
+                                    Tapez au moins 3 caractères…
+                                </span>
+                                <span v-else>
+                                    Aucun jeu trouvé
+                                </span>
+                            </div>
                         </template>
                     </AutoComplete>
                 </InputGroup>
@@ -814,6 +822,7 @@ const scheduleId = computed(() => schedule.value?.id)
 const {
     visible,
     selectedGame,
+    isSearching,
     title,
     slotColor,
     colorInput,
