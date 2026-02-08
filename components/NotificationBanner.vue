@@ -1,38 +1,61 @@
 <template>
     <div v-if="visible" class="relative bg-indigo-600 lg:top-13 w-full z-50 lg:mb-[-20px]">
-        <div class="bg-surface-900 text-surface-100 py-4 px-6 lg:px-20 flex justify-between items-center flex-wrap">
-            <div class="flex inline-flex gap-1 items-center">
-                <Icon name="lucide:star" size="18" class="flex-shrink-0" />
-                <span class="font-bold text-sm sm:text-lg">Nouveauté</span>
-            </div>
-            <div>
-                <div class="inline-flex gap-1 items-center">
-                    <span class="hidden sm:flex leading-normal">
-                        Découvre ton nouveau
-                    </span>
-                    <NuxtLink to="/dashboard" class="text-surface-0 underline font-bold text-sm sm:text-base">tableau de
-                        bord
-                    </NuxtLink>
-                    <span class="hidden lg:flex leading-normal">
-                        et rends ton profil encore plus visible !
-                    </span>
+        <div class="bg-surface-900 text-surface-100 py-3 sm:py-4 px-4 sm:px-6 lg:px-20">
+            <div class="flex items-center justify-between gap-3 sm:gap-4">
+                <!-- Badge Nouveauté -->
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                    <Icon name="lucide:star" size="16" class="sm:w-[18px] sm:h-[18px]" />
+                    <span class="font-bold text-xs sm:text-sm lg:text-base">Nouveauté</span>
                 </div>
-            </div>
-            <div class="flex gap-2">
-                <NuxtLink to="/dashboard"
-                    class="bg-white text-indigo-600 font-semibold px-3 py-2 rounded hover:bg-gray-100 transition hidden sm:block">
-                    Explorer
-                </NuxtLink>
-                <Button @click="closeBanner" rounded severity="contrast" variant="text">
-                    <Icon name="lucide:x" size="20" />
-                </Button>
+
+                <!-- Message central -->
+                <div>
+                    <p class="text-xs sm:text-sm lg:text-base leading-relaxed">
+                        <!-- Mobile -->
+                        <span class="md:hidden">
+                            Découvre notre
+                            <NuxtLink to="/schedule" class="font-bold underline">
+                                <span>éditeur de planning</span>
+                            </NuxtLink>
+                        </span>
+
+                        <!-- Tablet -->
+                        <span class="hidden md:inline lg:hidden">
+                            Planifie tes streams dans notre nouvel
+                            <NuxtLink to="/schedule" class="font-bold underline">
+                                <span>éditeur de planning</span>
+                            </NuxtLink>
+                            !
+                        </span>
+
+                        <!-- Desktop -->
+                        <span class="hidden lg:inline">
+                            Planifie tes streams dans notre nouvel
+                            <NuxtLink to="/schedule" class="font-bold underline">
+                                <span>éditeur de planning</span>
+                            </NuxtLink>
+                            et personnalise le design pour le rendre unique !
+                        </span>
+                    </p>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <NuxtLink to="/schedule"
+                        class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
+                        Essayer maintenant
+                    </NuxtLink>
+                    <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
+                        <Icon name="lucide:x" size="18" class="sm:w-5 sm:h-5" />
+                    </Button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-const STORAGE_KEY = 'dashboard'
+const STORAGE_KEY = 'schedule'
 const visible = ref(false)
 
 
