@@ -454,16 +454,23 @@
                                         </div>
                                     </div>
                                     <!-- Footer -->
-                                    <div class="absolute bottom-3 right-4 z-20 pointer-events-none ignore-export">
-                                        <div
-                                            class="bg-black/80 border border-white/20 rounded-lg px-4 py-2 flex items-center">
-                                            <span class="text-sm font-semibold text-white">StreamLink</span>
+                                    <div class="absolute bottom-4 right-6 z-20 pointer-events-none ignore-export">
+                                        <div class="text-right leading-none select-none">
+                                            <div class="text-[10px] font-light uppercase tracking-widest text-white/70"
+                                                style="text-shadow: 0 1px 3px rgba(0,0,0,0.8)">
+                                                Made with
+                                            </div>
+                                            <div class="text-xs font-semibold uppercase tracking-wide text-white/90"
+                                                style="text-shadow: 0 1px 3px rgba(0,0,0,0.8)">
+                                                StreamLink
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

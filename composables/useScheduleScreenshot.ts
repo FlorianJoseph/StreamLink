@@ -47,35 +47,43 @@ export const useScheduleScreenshot = () => {
       </div>
     `}
 
-                // Version avec gradient et icône
                 if (cloned.classList.contains('export-footer') && !footerInjected) {
                     footerInjected = true
 
                     const wrapper = document.createElement('div')
                     wrapper.style.position = 'absolute'
-                    wrapper.style.bottom = '12px'
-                    wrapper.style.right = '16px'
+                    wrapper.style.bottom = '18px'
+                    wrapper.style.right = '22px'
                     wrapper.style.zIndex = '20'
                     wrapper.style.pointerEvents = 'none'
+                    wrapper.style.userSelect = 'none'
 
-                    const box = document.createElement('div')
-                    box.style.background = '#1F2428'
-                    box.style.border = '1px solid #2F3437'
-                    box.style.borderRadius = '6px'
-                    box.style.padding = '5px 16px'
-                    box.style.display = 'flex'
-                    box.style.alignItems = 'center'
+                    const container = document.createElement('div')
+                    container.style.textAlign = 'right'
+                    container.style.lineHeight = '1.1'
+                    container.style.fontFamily = 'Inter, sans-serif'
 
-                    // Texte
-                    const text = document.createElement('span')
-                    text.textContent = 'StreamLink'
-                    text.style.fontSize = '14px'
-                    text.style.fontWeight = '700'
-                    text.style.color = '#ffffff'
-                    text.style.fontFamily = 'Inter, sans-serif'
+                    // Made with
+                    const madeWith = document.createElement('div')
+                    madeWith.textContent = 'Made with'
+                    madeWith.style.fontSize = '10px'
+                    madeWith.style.fontWeight = '400'
+                    madeWith.style.textTransform = 'uppercase'
+                    madeWith.style.letterSpacing = '0.12em'
+                    madeWith.style.textShadow = '0 1px 3px #000000'
 
-                    box.appendChild(text)
-                    wrapper.appendChild(box)
+                    // StreamLink
+                    const brand = document.createElement('div')
+                    brand.textContent = 'StreamLink'
+                    brand.style.fontSize = '12px'
+                    brand.style.letterSpacing = '0.04em'
+                    brand.style.fontWeight = '600'
+                    brand.style.textTransform = 'uppercase'
+                    brand.style.textShadow = '0 1px 3px #000000'
+
+                    container.appendChild(madeWith)
+                    container.appendChild(brand)
+                    wrapper.appendChild(container)
                     cloned.appendChild(wrapper)
                 }
             },
