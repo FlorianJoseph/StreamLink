@@ -68,7 +68,7 @@ import { Home } from 'lucide-vue-next';
 
 const menuItems = ref([
     {
-        label: 'Découvrir',
+        label: 'Découvrir des streameurs',
         icon: 'lucide:user-search',
         route: '/discover'
     },
@@ -76,7 +76,6 @@ const menuItems = ref([
         label: 'Tableau de bord',
         icon: 'lucide:layout-dashboard',
         route: '/dashboard',
-        badge: 'Nouveau',
     },
     {
         label: 'Mon StreamLink',
@@ -96,8 +95,9 @@ const menuItems = ref([
     },
     {
         label: 'Planning',
-        icon: 'lucide:calendar',
-        route: '/schedule'
+        icon: 'lucide:calendar-days',
+        route: '/schedule',
+        badge: 'Nouveau',
     },
 ]);
 

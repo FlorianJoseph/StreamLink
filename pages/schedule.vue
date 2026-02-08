@@ -27,16 +27,99 @@
                         class="border border-zinc-700 rounded-lg h-full">
                         <TabList class="shrink-0">
                             <Tab value="0" as="div" class="flex items-center gap-2">
-                                <Icon name="lucide:palette" size="24" />
-                                <span class="font-semibold text-sm sm:text-base">Design</span>
-                            </Tab>
-                            <Tab value="1" as="div" class="flex items-center gap-2">
                                 <Icon name="lucide:calendar-days" size="24" />
                                 <span class="font-semibold text-sm sm:text-base">Créneaux</span>
+                            </Tab>
+                            <Tab value="1" as="div" class="flex items-center gap-2">
+                                <Icon name="lucide:palette" size="24" />
+                                <span class="font-semibold text-sm sm:text-base">Design</span>
                             </Tab>
                         </TabList>
                         <TabPanels class="flex-1 overflow-y-auto tab-panels-scroll">
                             <TabPanel value="0" as="p" class="m-0">
+                                <!-- Configuration du planning -->
+                                <Button label="Ajouter un créneau" severity="contrast" @click="openSlotModal('Lundi')"
+                                    class="w-full">
+                                    <Icon name="lucide:plus" size="18" class="shrink-0" />
+                                    <span class="text-sm sm:text-base">Ajouter un créneau</span>
+                                </Button>
+                                <!-- État vide si aucun créneau -->
+                                <div v-if="!daysOptions.some(day => slotsForDay(day.label).length > 0)"
+                                    class="flex flex-col items-center justify-center py-12 text-center">
+                                    <Icon name="lucide:calendar-x" size="48" class="text-white/20 mb-4" />
+                                    <p class="text-white/60 text-sm mb-2">Aucun stream programmé cette semaine</p>
+                                    <p class="text-white/40 text-xs">Clique sur "Ajouter un créneau" ou directement sur
+                                        le planning pour commencer </p>
+                                </div>
+                                <Accordion value="0" v-for="day in daysOptions" :key="day.label" class="overflow-auto">
+                                    <AccordionPanel :value="slotsForDay(day.label).length"
+                                        v-if="slotsForDay(day.label).length > 0">
+                                        <AccordionHeader>
+                                            <span class="flex items-center gap-2 w-full mr-2">
+                                                <Icon name="lucide:calendar-days" size="18" class="shrink-0" />
+                                                <span class="font-bold whitespace-nowrap text-sm sm:text-base">{{
+                                                    day.label }}</span>
+                                                <Badge :value="slotsForDay(day.label).length" class="ml-auto"
+                                                    severity="contrast" />
+                                                <Button size="small" text severity="secondary"
+                                                    @click.stop="openSlotModal(day.label)" v-tooltip.left="{
+                                                        value: `Ajouter un créneau ` + day.label, pt:
+                                                            { text: '!text-sm' }
+                                                    }">
+                                                    <Icon name="lucide:plus" size="18" class="shrink-0 text-zinc-300" />
+                                                </Button>
+                                            </span>
+                                        </AccordionHeader>
+                                        <AccordionContent>
+                                            <div class="flex flex-col gap-2">
+                                                <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
+                                                    class="group flex items-center justify-between py-3 px-2 sm:p-3 border border-white/20 rounded-lg hover:border-white/40 hover:cursor-pointer transition-all"
+                                                    :style="{ borderLeftWidth: '4px', borderLeftColor: `#${slot.color}` }"
+                                                    @click="openSlotModal(day.label, slot)">
+                                                    <!-- Informations du créneau -->
+                                                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                                                        <!-- Image du jeu -->
+                                                        <div class="flex-shrink-0">
+                                                            <img v-if="slot.game.cover" :src="slot.game.cover"
+                                                                :alt="slot.game.label"
+                                                                class="w-6 h-8 sm:w-10 sm:h-14 rounded object-contain border border-zinc-700" />
+                                                            <div v-else
+                                                                class=" w-6 h-8 sm:w-10 sm:h-14 rounded bg-white/5 border border-zinc-700 flex items-center justify-center">
+                                                                <Icon name="lucide:gamepad-2" size="20"
+                                                                    class="text-white/30" />
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Détails -->
+                                                        <div class="flex flex-col min-w-0 flex-1">
+                                                            <span
+                                                                class="font-semibold truncate max-w-[8rem] sm:max-w-[16rem] text-xs sm:text-base">
+                                                                {{ slot.title }}
+                                                            </span>
+                                                            <div
+                                                                class="flex items-center gap-2 text-xs sm:text-sm text-white/70">
+                                                                {{ formatTime(slot.start_at) }} -
+                                                                {{ formatTime(slot.end_at) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Actions -->
+                                                    <div
+                                                        class="flex items-center gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <Button size="small" severity="danger" text
+                                                            @click.stop="showDeleteConfirmation = true; slotToDelete = slot"
+                                                            v-tooltip.bottom="{ value: 'Supprimer', pt: { text: '!text-sm' } }">
+                                                            <Icon name="lucide:trash-2" size="18" class="shrink-0" />
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionPanel>
+                                </Accordion>
+                            </TabPanel>
+                            <TabPanel value="1" as="p" class="m-0">
                                 <!-- Design du planning -->
                                 <div class="flex flex-col space-y-6">
 
@@ -183,88 +266,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </TabPanel>
-                            <TabPanel value="1" as="p" class="m-0">
-                                <!-- Configuration du planning -->
-                                <Button label="Ajouter un créneau" severity="contrast" @click="openSlotModal('Lundi')"
-                                    class="w-full">
-                                    <Icon name="lucide:plus" size="18" class="shrink-0" />
-                                    <span class="text-sm sm:text-base">Ajouter un créneau</span>
-                                </Button>
-                                <!-- État vide si aucun créneau -->
-                                <div v-if="!daysOptions.some(day => slotsForDay(day.label).length > 0)"
-                                    class="flex flex-col items-center justify-center py-12 text-center">
-                                    <Icon name="lucide:calendar-x" size="48" class="text-white/20 mb-4" />
-                                    <p class="text-white/60 text-sm mb-2">Aucun stream programmé cette semaine</p>
-                                    <p class="text-white/40 text-xs">Cliquez sur "Ajouter un créneau" pour commencer</p>
-                                </div>
-                                <Accordion value="0" v-for="day in daysOptions" :key="day.label" class="overflow-auto">
-                                    <AccordionPanel :value="slotsForDay(day.label).length"
-                                        v-if="slotsForDay(day.label).length > 0">
-                                        <AccordionHeader>
-                                            <span class="flex items-center gap-2 w-full mr-2">
-                                                <Icon name="lucide:calendar-days" size="18" class="shrink-0" />
-                                                <span class="font-bold whitespace-nowrap text-sm sm:text-base">{{
-                                                    day.label }}</span>
-                                                <Badge :value="slotsForDay(day.label).length" class="ml-auto"
-                                                    severity="contrast" />
-                                                <Button size="small" text severity="secondary"
-                                                    @click.stop="openSlotModal(day.label)" v-tooltip.left="{
-                                                        value: `Ajouter un créneau ` + day.label, pt:
-                                                            { text: '!text-sm' }
-                                                    }">
-                                                    <Icon name="lucide:plus" size="18" class="shrink-0 text-zinc-300" />
-                                                </Button>
-                                            </span>
-                                        </AccordionHeader>
-                                        <AccordionContent>
-                                            <div class="flex flex-col gap-2">
-                                                <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
-                                                    class="group flex items-center justify-between py-3 px-2 sm:p-3 border border-white/20 rounded-lg hover:border-white/40 hover:cursor-pointer transition-all"
-                                                    :style="{ borderLeftWidth: '4px', borderLeftColor: `#${slot.color}` }"
-                                                    @click="openSlotModal(day.label, slot)">
-                                                    <!-- Informations du créneau -->
-                                                    <div class="flex items-center gap-3 flex-1 min-w-0">
-                                                        <!-- Image du jeu -->
-                                                        <div class="flex-shrink-0">
-                                                            <img v-if="slot.game.cover" :src="slot.game.cover"
-                                                                :alt="slot.game.label"
-                                                                class="w-6 h-8 sm:w-10 sm:h-14 rounded object-contain border border-zinc-700" />
-                                                            <div v-else
-                                                                class=" w-6 h-8 sm:w-10 sm:h-14 rounded bg-white/5 border border-zinc-700 flex items-center justify-center">
-                                                                <Icon name="lucide:gamepad-2" size="20"
-                                                                    class="text-white/30" />
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Détails -->
-                                                        <div class="flex flex-col min-w-0 flex-1">
-                                                            <span
-                                                                class="font-semibold truncate max-w-[8rem] sm:max-w-[16rem] text-xs sm:text-base">
-                                                                {{ slot.title }}
-                                                            </span>
-                                                            <div
-                                                                class="flex items-center gap-2 text-xs sm:text-sm text-white/70">
-                                                                {{ formatTime(slot.start_at) }} -
-                                                                {{ formatTime(slot.end_at) }}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Actions -->
-                                                    <div
-                                                        class="flex items-center gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <Button size="small" severity="danger" text
-                                                            @click.stop="showDeleteConfirmation = true; slotToDelete = slot"
-                                                            v-tooltip.bottom="{ value: 'Supprimer', pt: { text: '!text-sm' } }">
-                                                            <Icon name="lucide:trash-2" size="18" class="shrink-0" />
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </AccordionContent>
-                                    </AccordionPanel>
-                                </Accordion>
                             </TabPanel>
                         </TabPanels>
                     </Tabs>

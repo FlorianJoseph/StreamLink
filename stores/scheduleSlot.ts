@@ -100,5 +100,14 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
         return result
     }
 
-    return { slots, loading, fetchSlots, createSlot, updateSlot, deleteSlot }
+    const fetchTotalSlots = async (): Promise<Result<number>> => {
+        const { count, error } = await supabase
+            .from('ScheduleSlot')
+            .select('*', { count: 'exact', head: true })
+
+        if (error) return { data: null, error: null }
+        return { data: count, error: null }
+    }
+
+    return { slots, loading, fetchSlots, createSlot, updateSlot, deleteSlot, fetchTotalSlots }
 })
