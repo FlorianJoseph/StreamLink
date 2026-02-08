@@ -25,7 +25,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
 
     // Route protégée mais pas connecté → login
-    const protectedRoutes = ['/admin', '/dashboard']
+    const protectedRoutes = ['/admin', '/dashboard', '/schedule']
     if (protectedRoutes.some(route => to.path.startsWith(route)) && !user.value) {
         return navigateTo(
             `/auth/login?redirect=${encodeURIComponent(to.fullPath)}`
