@@ -61,6 +61,20 @@ export const useStreamerStore = defineStore('streamer', () => {
         return data
     }
 
+    // Récupère le nombre total de streamers (pour stats)
+    const fetchTotalStreamers = async () => {
+        const { count, error } = await supabase
+            .from('streamer_visible')
+            .select('*', { count: 'exact', head: true }) // head: true = pas de données, juste le count
+
+        if (error) {
+            console.error('Erreur lors du comptage des streamers :', error)
+            return 0
+        }
+
+        return count
+    }
+
     // Créer un streamer
     const createStreamer = async () => {
 
@@ -174,6 +188,7 @@ export const useStreamerStore = defineStore('streamer', () => {
         fetchStreamer,
         fetchStreamerByUsername,
         fetchAllStreamers,
+        fetchTotalStreamers,
         createStreamer,
         updateStreamer,
         deleteStreamerWithLinks,

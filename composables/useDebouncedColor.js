@@ -1,15 +1,4 @@
-const normalizeHexColor = (val) => {
-    if (!val) return ''
-    let hex = val.replace('#', '').toUpperCase().slice(0, 6)
-    // Si c'est un code sur 3 caractères, on le convertit en 6
-    if (hex.length === 3) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
-    }
-    return hex
-}
-
-const isValidHexColor = (val) =>
-    /^([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(val)
+import { normalizeHexColor, isValidHexColor } from "@/utils/colors"
 
 export const useDebouncedColor = (
     section,
@@ -18,8 +7,7 @@ export const useDebouncedColor = (
     designStore,
     {
         delay = 1200,
-        defaultValue = 'FFFFFF',
-        validate = isValidHexColor
+        defaultValue = 'FFFFFF'
     } = {}
 ) => {
     const lastValidValue = ref(
@@ -27,7 +15,7 @@ export const useDebouncedColor = (
     )
 
     const localValue = ref(lastValidValue.value)
-    const isValid = computed(() => validate(normalizeHexColor(localValue.value)))
+    const isValid = computed(() => isValidHexColor(normalizeHexColor(localValue.value)))
     let timeout = null
 
     // Sync depuis le store
@@ -44,9 +32,10 @@ export const useDebouncedColor = (
         clearTimeout(timeout)
         if (!isValid.value) return
 
+        localValue.value = value.toUpperCase()
         timeout = setTimeout(() => {
             const clean = normalizeHexColor(value)?.toUpperCase()
-            if (!validate(clean)) return
+            if (!isValidHexColor(clean)) return
 
             designStore.updateSection(section, {
                 [property]: clean,
@@ -57,7 +46,7 @@ export const useDebouncedColor = (
     // Validation de la valeur locale
     const validateValue = () => {
         const clean = normalizeHexColor(localValue.value)?.toUpperCase()
-        localValue.value = validate(clean)
+        localValue.value = isValidHexColor(clean)
             ? clean
             : (design.value?.[section]?.[property] ?? defaultValue).toUpperCase()
     }

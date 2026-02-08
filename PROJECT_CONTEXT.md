@@ -1,7 +1,7 @@
 # StreamLink — Contexte du projet
 
 ## Vision
-StreamLink centralise les liens, le planning de live et la visibilité des streamers. Alternative à Linktree, pensée pour les streamers avec des outils concrets de visibilité et d’organisation.
+StreamLink centralise les liens, le planning de live et la visibilité des streamers, dans un seul espace pensé pour être partagé.
 
 Objectif : aider les streamers à mieux se présenter, gagner en visibilité et économiser du temps.
 
@@ -28,21 +28,25 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Liens et design personnalisés
 - Dashboard (activation, guidance)
 - Système de découverte
-- Planning (en cours)
+- Planning hebdomadaire personnalisable
 
 ## État du produit
-- ~100 utilisateurs, ~50 profils actifs, newsletter active (~30 inscrits)
+- ~100 utilisateurs, ~50 profils actifs, newsletter active (~30 inscrits) 20 janvier 2026
+- ~150 utilisateurs, ~65 profils actifs, newsletter active (~65 inscrits) 07 février 2026
+
+## Roadmap déjà sorti
 - En production depuis le 19 octobre 2025
-- Découverte sorti 05 novembre 2025
-- Design sorti 31 décembre 2025
-- Dashboard sorti 14 janvier 2026
+- Confidentialité 28 octobre 2025
+- Découverte 05 novembre 2025
+- Design 31 décembre 2025
+- Newletter 10 janvier 2026
+- Dashboard 14 janvier 2026
 
 ## Roadmap court terme – Consolider l’usage (priorité)
 1. Planning V1 (création + affichage public)
-    - Création + édition des créneaux
     - Affichage public sur le profil
-    - Widget planning dans le dashboard 
-    - Empty states pédagogiques pour les profils sans planning
+    - Diffusion
+    - Widget planning dans le dashboard
 
 3. Notifications in‑app
     - Rappels de complétion de profil
