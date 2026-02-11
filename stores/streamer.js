@@ -29,7 +29,18 @@ export const useStreamerStore = defineStore('streamer', () => {
     const fetchAllStreamers = async () => {
         const { data, error } = await supabase
             .from('streamer_visible')
-            .select('*')
+            .select(`
+            *,
+            Schedule (
+                id,
+                ScheduleSlot (
+                    id,
+                    game,
+                    day,
+                    start_at
+                )
+            )
+        `)
             .order('created_at', { ascending: true })
         if (error) {
             console.error('Erreur lors de la récupération des streamers :', error)

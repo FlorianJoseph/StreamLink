@@ -26,7 +26,7 @@
                         complétées</span>
                 </div>
                 <ProgressBar :value="completionPercentage" :showValue="false"
-                    style="--p-progressbar-value-background: linear-gradient(to right, #10b981, #059669)" />
+                    style="--p-progressbar-value-background: linear-gradient(to right, #10b981, #059669); height: 8px;" />
             </div>
 
             <!-- Liste des items de complétion -->

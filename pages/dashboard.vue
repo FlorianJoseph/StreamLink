@@ -17,8 +17,7 @@
                     </p>
                 </div>
                 <!-- Bannière d'annonce -->
-                <div
-                    class="mt-6 p-4 rounded-lg bg-indigo-900/50 border border-indigo-500/30">
+                <div class="mt-6 p-4 rounded-lg bg-indigo-900/50 border border-indigo-500/30">
                     <div class="flex items-center justify-between gap-4 flex-wrap">
                         <div class="flex items-center gap-3">
                             <Icon name="lucide:sparkles" class="text-indigo-400 shrink-0" size="24" />
@@ -42,17 +41,19 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
                 <!-- Carte Visibilité -->
                 <ProfileStatus />
+
                 <!-- Carte Approfondir -->
                 <Card class="border border-zinc-700">
                     <template #header>
                         <div class="p-3">
                             <h2 class="text-lg font-semibold">
-                                Approfondir ton profil
+                                Mets ton profil en avant sur la page Découverte
                             </h2>
                             <p class="text-xs sm:text-sm text-gray-400">
-                                Optimise ta page publique pour mieux te présenter
+                                Approfondis ton profil pour attirer plus de visiteurs
                             </p>
                         </div>
                     </template>
@@ -293,39 +294,19 @@ const loading = ref(true)
 
 const profileSections = [
     {
-        label: 'Photo de profil',
-        description: 'Change ta photo pour personnaliser ton profil',
+        label: 'Mon StreamLink',
+        description: 'Personnalise ta page publique pour mieux te présenter',
         to: '/admin/links',
         icon: 'lucide:user',
-        color: 'text-yellow-400'
+        color: 'text-green-400'
     },
     {
-        label: 'Description',
-        description: 'Présente ton contenu et ton univers',
-        to: '/admin/links',
-        icon: 'lucide:pen-line',
-        color: 'text-indigo-400'
+        label: 'Planning',
+        description: 'Ton prochain stream sera visible sur la page découverte',
+        to: '/schedule',
+        icon: 'lucide:calendar-days',
+        color: 'text-blue-400'
     },
-    {
-        label: 'Liens',
-        description: 'Ajoute et organise tes plateformes',
-        to: '/admin/links',
-        icon: 'lucide:link',
-        color: 'text-pink-400'
-    },
-    {
-        label: 'Design',
-        description: 'Personnalise l’apparence de ta page',
-        to: '/admin/design',
-        icon: 'lucide:palette',
-        color: 'text-emerald-400'
-    },
-    // {
-    //     label: 'Statistiques avancées',
-    //     icon: 'lucide:star',
-    //     color: 'text-yellow-400',
-    //     premium: true
-    // }
 ]
 
 const toolsSections = [
@@ -335,7 +316,7 @@ const toolsSections = [
         description: "Personnalise et partage ton planning de streams facilement",
         badge: "Nouveau",
         to: "/schedule",
-        color: "indigo",
+        color: "blue",
     },
 ]
 

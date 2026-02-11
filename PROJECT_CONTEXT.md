@@ -20,7 +20,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - UI orientée cartes
 - Empty states pédagogiques
 - Naming clair (anglais dans le code)
-- Mesurabilité (KPI simple) pour chaque feature
+<!-- - Mesurabilité (KPI simple) pour chaque feature -->
 
 ## Features actuelles
 - Consentement RGPD & newsletter
