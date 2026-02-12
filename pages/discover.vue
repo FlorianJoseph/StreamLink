@@ -92,10 +92,19 @@
 
         <!-- Carousel avec chevrons -->
         <div v-if="filteredStreamers.length > 0" class="relative group">
+
+            <!-- Chevron première page -->
+            <div v-if="currentPage > 0" @click="goToPage(0)"
+                class="hidden xl:flex absolute -left-50 top-1/2 -translate-y-1/2 z-35 
+              w-26 h-26 items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-x-2 hover:cursor-pointer"
+                aria-label="Première page">
+                <Icon name="lucide:chevrons-left" size="96"
+                    class="text-purple-500 hover:text-purple-400 transition-colors" />
+            </div>
             <!-- Chevron gauche -->
             <div v-if="currentPage > 0" @click="previousPage"
-                class="hidden xl:flex absolute -left-40 top-1/2 -translate-y-1/2 z-30 
-             w-32 h-32 items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-x-2 hover:cursor-pointer"
+                class="hidden xl:flex absolute -left-30 top-1/2 -translate-y-1/2 z-30 
+             w-28 h-26 items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-x-2 hover:cursor-pointer"
                 aria-label="Page précédente">
                 <Icon name="lucide:chevron-left" size="96"
                     class="text-purple-500 hover:text-purple-400 transition-colors" />
@@ -108,9 +117,17 @@
 
             <!-- Chevron droit -->
             <div v-if="currentPage < totalPages - 1" @click="nextPage"
-                class="hidden xl:flex absolute -right-40 top-1/2 -translate-y-1/2 z-30 
-                w-32 h-32 items-center justify-center transition-all duration-300 hover:scale-110 hover:translate-x-2 hover:cursor-pointer" aria-label="Page suivante">
+                class="hidden xl:flex absolute -right-30 top-1/2 -translate-y-1/2 z-30 
+                w-28 h-26 items-center justify-center transition-all duration-300 hover:scale-110 hover:translate-x-2 hover:cursor-pointer" aria-label="Page suivante">
                 <Icon name="lucide:chevron-right" size="96"
+                    class="text-purple-500 hover:text-purple-400 transition-colors" />
+            </div>
+
+            <!-- Chevron dernière page -->
+            <div v-if="currentPage < totalPages - 1" @click="goToPage(totalPages - 1)"
+                class="hidden xl:flex absolute -right-50 top-1/2 -translate-y-1/2 z-35 
+              w-26 h-26 items-center justify-center transition-all duration-300 hover:scale-110 hover:translate-x-2 hover:cursor-pointer" aria-label="Dernière page">
+                <Icon name="lucide:chevrons-right" size="96"
                     class="text-purple-500 hover:text-purple-400 transition-colors" />
             </div>
         </div>
