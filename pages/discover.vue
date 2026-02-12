@@ -6,7 +6,7 @@
 :#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
-    <div class="flex flex-col gap-4 fade-in" v-else>
+    <div class="flex flex-col gap-4 fade-in w-full" v-else>
         <!-- En-tête -->
         <div class="py-4">
             <div class="flex flex-col items-center justify-end">
@@ -30,41 +30,41 @@
                 <span>Trouver une collab</span>
             </Button>
         </div> -->
-        <div class="sticky top-0 sm:top-13 z-40 bg-zinc-900 pb-3 pt-1 sm:pb-4 sm:pt-2 ">
-
+        <div class="sticky top-0 sm:top-13 z-40 bg-zinc-900 py-2 sm:py-3 px-2 sm:px-4 rounded">
             <!-- Recherche -->
-            <IconField class="w-full">
+            <IconField class="w-full mb-2 sm:mb-3">
                 <InputIcon>
-                    <Icon name="lucide:search" size="20" />
+                    <Icon name="lucide:search" size="18" class="text-gray-400" />
                 </InputIcon>
-                <InputText v-model="search" placeholder="Rechercher par nom" class="w-full"
+                <InputText v-model="search" placeholder="Rechercher par nom" fluid
                     style="--p-inputtext-focus-border-color: #ffffff" />
             </IconField>
 
             <!-- Filtres -->
-            <Card class="w-full">
-                <template #content>
-                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <!-- Filtres rapides (boutons) -->
-                        <div class="flex gap-2 flex-wrap justify-center sm:justify-start">
-                            <Button @click="selectedFilter = 'all'"
-                                :severity="selectedFilter === 'all' ? 'info' : 'secondary'" label="Tous"
-                                :outlined="selectedFilter !== 'all'" size="small" />
-                            <Button @click="selectedFilter = 'active'"
-                                :severity="selectedFilter === 'active' ? 'info' : 'secondary'" label="Actifs"
-                                :outlined="selectedFilter !== 'active'" size="small" />
-                            <Button @click="selectedFilter = 'today'"
-                                :severity="selectedFilter === 'today' ? 'info' : 'secondary'" label="Aujourd'hui"
-                                :outlined="selectedFilter !== 'today'" size="small" />
-                        </div>
-
-                        <!-- Compteur de résultats -->
-                        <div class="text-sm text-gray-400">
-                            {{ filteredStreamers.length }} streameur{{ filteredStreamers.length > 1 ? 's' : '' }}
-                        </div>
-                    </div>
-                </template>
-            </Card>
+            <div class="flex flex-col sm:flex-row justify-between items-center">
+                <!-- Filtres rapides (boutons) -->
+                <div class="flex gap-2 flex-wrap justify-center sm:justify-start text-xs sm:text-base">
+                    <button @click="selectedFilter = 'all'"
+                        class=" px-3 py-1 rounded border-2 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200"
+                        :class="selectedFilter === 'all' ? 'bg-purple-500 text-white border-purple-500' : 'bg-zinc-800 text-gray-300 border-zinc-700'"
+                        size="small"> Tous
+                    </button>
+                    <button @click="selectedFilter = 'active'"
+                        class=" px-3 py-1 rounded border-2 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200"
+                        :class="selectedFilter === 'active' ? 'bg-purple-500 text-white border-purple-500' : 'bg-zinc-800 text-gray-300 border-zinc-700'"
+                        size="small"> Prochains streams
+                    </button>
+                    <button @click="selectedFilter = 'today'"
+                        class=" px-3 py-1 rounded border-2 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200"
+                        :class="selectedFilter === 'today' ? 'bg-purple-500 text-white border-purple-500' : 'bg-zinc-800 text-gray-300 border-zinc-700'"
+                        size="small"> Streams aujourd'hui
+                    </button>
+                </div>
+                <!-- Compteur de résultats -->
+                <div class="mt-1 sm:mt-0 text-sm sm:text-base text-purple-300/80">
+                    {{ filteredStreamers.length }} streameur{{ filteredStreamers.length > 1 ? 's' : '' }}
+                </div>
+            </div>
         </div>
 
         <!-- État vide -->
@@ -92,7 +92,7 @@
 
         <!-- Carousel avec chevrons -->
         <div v-if="filteredStreamers.length > 0" class="relative group">
-            <!-- Chevron gauche --><!-- Chevron gauche -->
+            <!-- Chevron gauche -->
             <div v-if="currentPage > 0" @click="previousPage"
                 class="hidden xl:flex absolute -left-40 top-1/2 -translate-y-1/2 z-30 
              w-32 h-32 items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-x-2 hover:cursor-pointer"
@@ -116,15 +116,6 @@
         </div>
 
         <div v-if="filteredStreamers.length > rowsPerPage" class="flex flex-col items-center gap-3 py-6">
-            <!-- Dots (desktop xl uniquement) -->
-            <div class="hidden xl:flex items-center gap-2">
-                <button v-for="page in visiblePages" :key="page" @click="goToPage(page)" :class="[
-                    'transition-all rounded-full duration-200',
-                    currentPage === page
-                        ? 'w-8 h-2 bg-purple-500'
-                        : 'w-2 h-2 bg-gray-600 hover:bg-gray-500'
-                ]" :aria-label="`Aller à la page ${page + 1}`" />
-            </div>
 
             <!-- Info page (desktop xl uniquement) -->
             <p class="hidden xl:block text-sm text-gray-400">
@@ -157,7 +148,6 @@ const search = ref('')
 const loading = ref(true)
 const { streamers, fetchStreamersWithNextSlot } = useDiscoverStreamers()
 const selectedFilter = ref('all')
-
 const currentPage = ref(0)
 const rowsPerPage = ref(12)
 const totalPages = computed(() =>
@@ -257,32 +247,6 @@ function updateRowsPerPage() {
                     6
 }
 
-
-// Afficher max 7 dots
-const visiblePages = computed(() => {
-    const pages = []
-    const maxDots = 7
-
-    if (totalPages.value <= maxDots) {
-        for (let i = 0; i < totalPages.value; i++) {
-            pages.push(i)
-        }
-    } else {
-        let start = Math.max(0, currentPage.value - 3)
-        let end = Math.min(totalPages.value - 1, start + maxDots - 1)
-
-        if (end - start < maxDots - 1) {
-            start = Math.max(0, end - maxDots + 1)
-        }
-
-        for (let i = start; i <= end; i++) {
-            pages.push(i)
-        }
-    }
-
-    return pages
-})
-
 // Navigation au clavier
 function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'ArrowLeft') {
@@ -323,15 +287,5 @@ onUnmounted(() => {
     to {
         opacity: 1;
     }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.25s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
 }
 </style>
