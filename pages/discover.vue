@@ -6,7 +6,7 @@
 :#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
-    <div class="flex flex-col gap-4 fade-in" v-else>
+    <div class="flex flex-col gap-4 fade-in w-full" v-else>
         <!-- En-tête -->
         <div class="py-4">
             <div class="flex flex-col items-center justify-end">
@@ -30,42 +30,41 @@
                 <span>Trouver une collab</span>
             </Button>
         </div> -->
-        <div class="sticky top-0 sm:top-13 z-40 bg-zinc-900 pb-3 pt-1 sm:pb-4 sm:pt-2 ">
-
+        <div class="sticky top-0 sm:top-13 z-40 bg-zinc-900 py-2 sm:py-3 px-2 sm:px-4 rounded">
             <!-- Recherche -->
-            <IconField class="w-full">
+            <IconField class="w-full mb-2 sm:mb-3">
                 <InputIcon>
-                    <Icon name="lucide:search" size="20" />
+                    <Icon name="lucide:search" size="18" class="text-gray-400" />
                 </InputIcon>
-                <InputText v-model="search" placeholder="Rechercher par nom" class="w-full"
+                <InputText v-model="search" placeholder="Rechercher par nom" fluid
                     style="--p-inputtext-focus-border-color: #ffffff" />
             </IconField>
 
             <!-- Filtres -->
-
-            <Card class="w-full">
-                <template #content>
-                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <!-- Filtres rapides (boutons) -->
-                        <div class="flex gap-2 flex-wrap justify-center sm:justify-start">
-                            <Button @click="selectedFilter = 'all'"
-                                :severity="selectedFilter === 'all' ? 'info' : 'secondary'" label="Tous"
-                                :outlined="selectedFilter !== 'all'" size="small" />
-                            <Button @click="selectedFilter = 'active'"
-                                :severity="selectedFilter === 'active' ? 'info' : 'secondary'" label="Actifs"
-                                :outlined="selectedFilter !== 'active'" size="small" />
-                            <Button @click="selectedFilter = 'today'"
-                                :severity="selectedFilter === 'today' ? 'info' : 'secondary'" label="Aujourd'hui"
-                                :outlined="selectedFilter !== 'today'" size="small" />
-                        </div>
-
-                        <!-- Compteur de résultats -->
-                        <div class="text-sm text-gray-400">
-                            {{ filteredStreamers.length }} streameur{{ filteredStreamers.length > 1 ? 's' : '' }}
-                        </div>
-                    </div>
-                </template>
-            </Card>
+            <div class="flex flex-col sm:flex-row justify-between items-center">
+                <!-- Filtres rapides (boutons) -->
+                <div class="flex gap-2 flex-wrap justify-center sm:justify-start text-xs sm:text-base">
+                    <button @click="selectedFilter = 'all'"
+                        class=" px-3 py-1 rounded border-2 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200"
+                        :class="selectedFilter === 'all' ? 'bg-purple-500 text-white border-purple-500' : 'bg-zinc-800 text-gray-300 border-zinc-700'"
+                        size="small"> Tous
+                    </button>
+                    <button @click="selectedFilter = 'active'"
+                        class=" px-3 py-1 rounded border-2 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200"
+                        :class="selectedFilter === 'active' ? 'bg-purple-500 text-white border-purple-500' : 'bg-zinc-800 text-gray-300 border-zinc-700'"
+                        size="small"> Prochains streams
+                    </button>
+                    <button @click="selectedFilter = 'today'"
+                        class=" px-3 py-1 rounded border-2 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200"
+                        :class="selectedFilter === 'today' ? 'bg-purple-500 text-white border-purple-500' : 'bg-zinc-800 text-gray-300 border-zinc-700'"
+                        size="small"> Streams aujourd'hui
+                    </button>
+                </div>
+                <!-- Compteur de résultats -->
+                <div class="mt-1 sm:mt-0 text-sm sm:text-base text-purple-300/80">
+                    {{ filteredStreamers.length }} streameur{{ filteredStreamers.length > 1 ? 's' : '' }}
+                </div>
+            </div>
         </div>
 
         <!-- État vide -->
@@ -91,29 +90,56 @@
             </div>
         </div>
 
-        <!-- Grid de streamers -->
-        <transition :name="pageDirection" mode="out-in">
-            <div :key="currentPage">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    <StreamerCard v-for="s in paginatedStreamers" :key="s.id" :streamer="s" />
-                </div>
+        <!-- Carousel avec chevrons -->
+        <div v-if="filteredStreamers.length > 0" class="relative group">
+            <!-- Chevron gauche -->
+            <div v-if="currentPage > 0" @click="previousPage"
+                class="hidden xl:flex absolute -left-40 top-1/2 -translate-y-1/2 z-30 
+             w-32 h-32 items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-x-2 hover:cursor-pointer"
+                aria-label="Page précédente">
+                <Icon name="lucide:chevron-left" size="96"
+                    class="text-purple-500 hover:text-purple-400 transition-colors" />
             </div>
-        </transition>
 
-        <!-- Pagination -->
-        <Card v-if="filteredStreamers.length > rowsPerPage" class="w-full"> <template #content>
+            <!-- Grid de streamers -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <StreamerCard v-for="s in paginatedStreamers" :key="s.id + '-' + currentPage" :streamer="s" />
+            </div>
 
-                <!-- sticky bottom-0 w-full flex justify-center py-4 bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-800 -->
-                <Paginator :template="{
-                    '640px': 'PrevPageLink CurrentPageReport NextPageLink',
-                    '960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
-                    '1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
-                }" :rows="rowsPerPage" :totalRecords="filteredStreamers.length" @page="onPageChange"
-                    style="--p-paginator-nav-button-selected-background:#fff; --p-paginator-nav-button-selected-color:#000"
-                    currentPageReportTemplate="Page {currentPage} sur {totalPages}" />
-            </template>
-        </Card>
+            <!-- Chevron droit -->
+            <div v-if="currentPage < totalPages - 1" @click="nextPage"
+                class="hidden xl:flex absolute -right-40 top-1/2 -translate-y-1/2 z-30 
+                w-32 h-32 items-center justify-center transition-all duration-300 hover:scale-110 hover:translate-x-2 hover:cursor-pointer" aria-label="Page suivante">
+                <Icon name="lucide:chevron-right" size="96"
+                    class="text-purple-500 hover:text-purple-400 transition-colors" />
+            </div>
+        </div>
+
+        <div v-if="filteredStreamers.length > rowsPerPage" class="flex flex-col items-center gap-3 py-6">
+
+            <!-- Info page (desktop xl uniquement) -->
+            <p class="hidden xl:block text-sm text-gray-400">
+                Page {{ currentPage + 1 }} sur {{ totalPages }}
+            </p>
+
+            <!-- Navigation mobile/tablette -->
+            <div class="flex xl:hidden items-center gap-4">
+                <Button @click="previousPage" :disabled="currentPage === 0" severity="secondary" outlined size="small"
+                    class="min-w-[44px]">
+                    <Icon name="lucide:chevron-left" size="16" />
+                </Button>
+
+                <span class="text-sm text-gray-400">
+                    {{ currentPage + 1 }} / {{ totalPages }}
+                </span>
+
+                <Button @click="nextPage" :disabled="currentPage === totalPages - 1" severity="secondary" outlined
+                    size="small" class="min-w-[44px]">
+                    <Icon name="lucide:chevron-right" size="16" />
+                </Button>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -122,6 +148,34 @@ const search = ref('')
 const loading = ref(true)
 const { streamers, fetchStreamersWithNextSlot } = useDiscoverStreamers()
 const selectedFilter = ref('all')
+const currentPage = ref(0)
+const rowsPerPage = ref(12)
+const totalPages = computed(() =>
+    Math.ceil(filteredStreamers.value.length / rowsPerPage.value)
+)
+
+// Liste affichée (pagination locale)
+const paginatedStreamers = computed(() => {
+    const start = currentPage.value * rowsPerPage.value
+    const end = start + rowsPerPage.value
+    return filteredStreamers.value.slice(start, end)
+})
+
+function goToPage(page: number) {
+    currentPage.value = page
+}
+
+function nextPage() {
+    if (currentPage.value < totalPages.value - 1) {
+        currentPage.value++
+    }
+}
+
+function previousPage() {
+    if (currentPage.value > 0) {
+        currentPage.value--
+    }
+}
 
 // Watch pour réinitialiser la page lors des changements
 watch([search, selectedFilter], () => {
@@ -171,7 +225,7 @@ function getEmptyStateMessage() {
     return 'Aucun streameur disponible pour le moment'
 }
 
-
+// Label lisible pour le filtre actif
 function getFilterLabel() {
     const labels: Record<string, string> = {
         all: 'Tous',
@@ -181,8 +235,6 @@ function getFilterLabel() {
     return labels[selectedFilter.value] || 'Tous'
 }
 
-const currentPage = ref(0)
-const rowsPerPage = ref(16)
 
 // Détecter la taille de l’écran une seule fois
 function updateRowsPerPage() {
@@ -195,28 +247,14 @@ function updateRowsPerPage() {
                     6
 }
 
-const pageDirection = ref('slide-left')
-const previousPage = ref(0)
-
-function onPageChange(event: { page: number }) {
-    if (event.page > previousPage.value) {
-        pageDirection.value = 'slide-left'
-    } else {
-        pageDirection.value = 'slide-right'
+// Navigation au clavier
+function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'ArrowLeft') {
+        previousPage()
+    } else if (e.key === 'ArrowRight') {
+        nextPage()
     }
-
-    previousPage.value = event.page
-    currentPage.value = event.page
-
-    window.scrollTo({ top: 0, behavior: 'smooth' })
 }
-
-// Liste affichée (pagination locale)
-const paginatedStreamers = computed(() => {
-    const start = currentPage.value * rowsPerPage.value
-    const end = start + rowsPerPage.value
-    return filteredStreamers.value.slice(start, end)
-})
 
 // Charger tous les streamers
 onMounted(async () => {
@@ -225,6 +263,7 @@ onMounted(async () => {
         await fetchStreamersWithNextSlot()
         updateRowsPerPage()
         window.addEventListener('resize', updateRowsPerPage)
+        window.addEventListener('keydown', handleKeydown)
     } finally {
         loading.value = false
     }
@@ -233,6 +272,7 @@ onMounted(async () => {
 // Penser à retirer le listener si le composant se détruit
 onUnmounted(() => {
     window.removeEventListener('resize', updateRowsPerPage)
+    window.removeEventListener('keydown', handleKeydown)
 })
 </script>
 
@@ -247,32 +287,5 @@ onUnmounted(() => {
     to {
         opacity: 1;
     }
-}
-
-.slide-left-enter-active,
-.slide-left-leave-active,
-.slide-right-enter-active,
-.slide-right-leave-active {
-    transition: all 0.25s ease;
-}
-
-.slide-left-enter-from {
-    opacity: 0;
-    transform: translateX(40px);
-}
-
-.slide-left-leave-to {
-    opacity: 0;
-    transform: translateX(-40px);
-}
-
-.slide-right-enter-from {
-    opacity: 0;
-    transform: translateX(-40px);
-}
-
-.slide-right-leave-to {
-    opacity: 0;
-    transform: translateX(40px);
 }
 </style>

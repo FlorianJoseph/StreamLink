@@ -18,8 +18,8 @@
 
                 <!-- Prochain stream -->
                 <div v-if="streamer.nextSlot" class="flex-1 min-h-0">
-                    <div class="p-3 rounded-xl border-2 border-zinc-700 bg-zinc-800/30 space-y-3">
-                        <div class="flex items-center gap-2 text-purple-400">
+                    <div class="p-3 rounded-xl border-2 border-zinc-700 bg-zinc-800/30 space-y-3 h-[105px]">
+                        <div class="flex items-center gap-2 text-purple-400/90">
                             <Icon name="lucide:play" size="16" class=" shrink-0" />
                             <p class="font-semibold text-xs uppercase tracking-wider ">
                                 Prochain stream
@@ -30,7 +30,7 @@
                             <div class="flex-shrink-0">
                                 <img v-if="streamer.nextSlot.game.cover" :src="streamer.nextSlot.game.cover"
                                     :alt="streamer.nextSlot.game.label"
-                                    class="w-9 h-12 rounded object-contain border border-zinc-700" />
+                                    class="w-9 h-12 rounded object-fill border border-zinc-700" />
                             </div>
 
                             <!-- Infos -->
@@ -49,7 +49,7 @@
                 <!-- Aucun planning -->
                 <div v-else class="flex-1 min-h-0">
                     <div class="p-3 rounded-xl border-2 border-zinc-600/70 border-dashed
-                               bg-zinc-800/30 text-center flex flex-col justify-center h-full">
+                               bg-zinc-800/30 text-center flex flex-col justify-center h-[105px]">
                         <Icon name="lucide:calendar-plus" size="18" class="text-gray-500 mx-auto mb-2" />
                         <p class="text-xs text-gray-400 font-medium">
                             Aucun stream prévu
@@ -63,7 +63,7 @@
                 <!-- Bouton CTA -->
                 <NuxtLink :to="`/${streamer.username}`" target="_blank" class="w-full mt-auto">
                     <button
-                        class="w-full px-4 py-2 text-sm font-medium rounded-lg border-2 border-zinc-700 hover:border-purple-500 transition-all flex items-center justify-center gap-2">
+                        class="w-full px-4 py-2 text-sm font-medium rounded-lg border-2 border-zinc-700 hover:border-purple-400/80 transition-all flex items-center justify-center gap-2">
                         <span>Voir le profil</span>
                         <Icon name="lucide:external-link" size="16" />
                     </button>
