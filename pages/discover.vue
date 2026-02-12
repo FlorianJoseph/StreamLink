@@ -116,21 +116,19 @@
             </div>
 
             <!-- Chevron droit -->
-            <div>
-                <div v-if="currentPage < totalPages - 1" @click="nextPage"
-                    class="hidden xl:flex absolute -right-30 top-1/2 -translate-y-1/2 z-30 
+            <div v-if="currentPage < totalPages - 1" @click="nextPage"
+                class="hidden xl:flex absolute -right-30 top-1/2 -translate-y-1/2 z-30 
                 w-28 h-26 items-center justify-center transition-all duration-300 hover:scale-110 hover:translate-x-2 hover:cursor-pointer" aria-label="Page suivante">
-                    <Icon name="lucide:chevron-right" size="96"
-                        class="text-purple-500 hover:text-purple-400 transition-colors" />
-                </div>
+                <Icon name="lucide:chevron-right" size="96"
+                    class="text-purple-500 hover:text-purple-400 transition-colors" />
+            </div>
 
-                <!-- Chevron dernière page -->
-                <div v-if="currentPage < totalPages - 1" @click="goToPage(totalPages - 1)"
-                    class="hidden xl:flex absolute -right-50 top-1/2 -translate-y-1/2 z-35 
+            <!-- Chevron dernière page -->
+            <div v-if="currentPage < totalPages - 1" @click="goToPage(totalPages - 1)"
+                class="hidden xl:flex absolute -right-50 top-1/2 -translate-y-1/2 z-35 
               w-26 h-26 items-center justify-center transition-all duration-300 hover:scale-110 hover:translate-x-2 hover:cursor-pointer" aria-label="Dernière page">
-                    <Icon name="lucide:chevrons-right" size="96"
-                        class="text-purple-500 hover:text-purple-400 transition-colors" />
-                </div>
+                <Icon name="lucide:chevrons-right" size="96"
+                    class="text-purple-500 hover:text-purple-400 transition-colors" />
             </div>
         </div>
 
