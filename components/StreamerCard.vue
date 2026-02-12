@@ -3,9 +3,9 @@
         <template #content>
             <div class="flex flex-col h-full p-4 gap-3">
                 <!-- Header : Avatar + Pseudo -->
-                <div class="flex items-center gap-3 ">
+                <div class="flex items-center gap-3">
                     <div class="relative w-12 h-12 flex-shrink-0">
-                        <img :src="streamer.avatar_url || defaultAvatar"
+                        <img :src="streamer.avatar_url"
                             class="w-full h-full object-cover rounded-xl ring-2 ring-zinc-700"
                             :alt="streamer.username" />
                     </div>
@@ -17,7 +17,7 @@
                 </div>
 
                 <!-- Prochain stream -->
-                <div v-if="streamer.nextSlot" class="flex-1">
+                <div v-if="streamer.nextSlot" class="flex-1 min-h-0">
                     <div class="p-3 rounded-xl border-2 border-zinc-700 bg-zinc-800/30 space-y-3">
                         <div class="flex items-center gap-2 text-purple-400">
                             <Icon name="lucide:play" size="16" class=" shrink-0" />
@@ -47,7 +47,7 @@
                 </div>
 
                 <!-- Aucun planning -->
-                <div v-else class="flex-1">
+                <div v-else class="flex-1 min-h-0">
                     <div class="p-3 rounded-xl border-2 border-zinc-600/70 border-dashed
                                bg-zinc-800/30 text-center flex flex-col justify-center h-full">
                         <Icon name="lucide:calendar-plus" size="18" class="text-gray-500 mx-auto mb-2" />
@@ -74,8 +74,6 @@
 </template>
 
 <script setup lang="ts">
-const defaultAvatar =
-    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 
 defineProps({
     streamer: {

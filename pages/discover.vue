@@ -30,63 +30,90 @@
                 <span>Trouver une collab</span>
             </Button>
         </div> -->
+        <div class="sticky top-0 sm:top-13 z-40 bg-zinc-900 pb-3 pt-1 sm:pb-4 sm:pt-2 ">
 
-        <IconField class="w-full">
-            <InputIcon>
-                <Icon name="lucide:search" size="20" />
-            </InputIcon>
-            <InputText v-model="search" placeholder="Rechercher par nom" class="w-full"
-                style="--p-inputtext-focus-border-color: #ffffff" />
-        </IconField>
+            <!-- Recherche -->
+            <IconField class="w-full">
+                <InputIcon>
+                    <Icon name="lucide:search" size="20" />
+                </InputIcon>
+                <InputText v-model="search" placeholder="Rechercher par nom" class="w-full"
+                    style="--p-inputtext-focus-border-color: #ffffff" />
+            </IconField>
 
-        <Card class="w-full" :content-class="'flex flex-col gap-4'">
-            <template #content>
-                <div class="flex justify-center">
-                    <!-- <Button severity="contrast" class="flex items-center gap-2">
-                        <Icon name="lucide:funnel" class="w-5 h-5" />
-                        <span>Filtrer</span>
-                    </Button> -->
+            <!-- Filtres -->
 
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-300">Trier par :</span>
-                        <Select v-model="selectedFilter" :options="tri" showClear optionLabel="name" optionValue="value"
-                            placeholder="Filtrer les streamers" class=" w-full w-40 md:w-56" />
+            <Card class="w-full">
+                <template #content>
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <!-- Filtres rapides (boutons) -->
+                        <div class="flex gap-2 flex-wrap justify-center sm:justify-start">
+                            <Button @click="selectedFilter = 'all'"
+                                :severity="selectedFilter === 'all' ? 'info' : 'secondary'" label="Tous"
+                                :outlined="selectedFilter !== 'all'" size="small" />
+                            <Button @click="selectedFilter = 'active'"
+                                :severity="selectedFilter === 'active' ? 'info' : 'secondary'" label="Actifs"
+                                :outlined="selectedFilter !== 'active'" size="small" />
+                            <Button @click="selectedFilter = 'today'"
+                                :severity="selectedFilter === 'today' ? 'info' : 'secondary'" label="Aujourd'hui"
+                                :outlined="selectedFilter !== 'today'" size="small" />
+                        </div>
+
+                        <!-- Compteur de résultats -->
+                        <div class="text-sm text-gray-400">
+                            {{ filteredStreamers.length }} streameur{{ filteredStreamers.length > 1 ? 's' : '' }}
+                        </div>
                     </div>
-                </div>
-            </template>
-        </Card>
-        <div v-if="filteredStreamers.length === 0 && !loading"
-            class="flex flex-col items-center justify-center py-20 gap-4">
+                </template>
+            </Card>
+        </div>
+
+        <!-- État vide -->
+        <div v-if="filteredStreamers.length === 0" class="flex flex-col items-center justify-center py-20 gap-4">
             <Icon name="lucide:search-x" size="64" class="text-gray-600" />
             <div class="text-center">
                 <h3 class="text-xl font-semibold text-white mb-2">
                     Aucun streameur trouvé
                 </h3>
                 <p class="text-sm text-gray-400">
-                    {{ search ? `Aucun résultat pour "${search}"` : 'Aucun streameur disponible pour le moment' }}
+                    {{ getEmptyStateMessage() }}
                 </p>
             </div>
-            <Button v-if="search" @click="search = ''" severity="contrast" outlined class="mt-4">
-                <Icon name="lucide:x" size="16" />
-                <span>Réinitialiser la recherche</span>
-            </Button>
+            <div class="flex flex-col sm:flex-row gap-2 mt-4">
+                <Button v-if="search" @click="search = ''" severity="contrast" outlined>
+                    <Icon name="lucide:x" size="16" />
+                    <span class="text-sm sm:text-base">Réinitialiser la recherche</span>
+                </Button>
+                <Button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'" severity="contrast" outlined>
+                    <Icon name="lucide:filter-x" size="16" />
+                    <span class="text-sm sm:text-base">Supprimer le filtre</span>
+                </Button>
+            </div>
         </div>
 
-        <div v-else
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-24 sm:pb-20">
-            <StreamerCard v-for="s in paginatedStreamers" :key="s.id" :streamer="s" />
-        </div>
-        <div v-if="filteredStreamers.length > rowsPerPage"
-            class="w-full fixed left-0 bottom-0 flex justify-center pb-safe pb-6">
-            <Paginator :template="{
-                '640px': 'PrevPageLink CurrentPageReport NextPageLink',
-                '960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
-                '1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
-            }" :rows="rowsPerPage" :totalRecords="filteredStreamers.length" @page="onPageChange"
-                style="--p-paginator-nav-button-selected-background:#fff; --p-paginator-nav-button-selected-color:#000"
-                currentPageReportTemplate="Page {currentPage} sur {totalPages}" />
-        </div>
+        <!-- Grid de streamers -->
+        <transition :name="pageDirection" mode="out-in">
+            <div :key="currentPage">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <StreamerCard v-for="s in paginatedStreamers" :key="s.id" :streamer="s" />
+                </div>
+            </div>
+        </transition>
+
+        <!-- Pagination -->
+        <Card v-if="filteredStreamers.length > rowsPerPage" class="w-full"> <template #content>
+
+                <!-- sticky bottom-0 w-full flex justify-center py-4 bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-800 -->
+                <Paginator :template="{
+                    '640px': 'PrevPageLink CurrentPageReport NextPageLink',
+                    '960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
+                    '1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+                    default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
+                }" :rows="rowsPerPage" :totalRecords="filteredStreamers.length" @page="onPageChange"
+                    style="--p-paginator-nav-button-selected-background:#fff; --p-paginator-nav-button-selected-color:#000"
+                    currentPageReportTemplate="Page {currentPage} sur {totalPages}" />
+            </template>
+        </Card>
     </div>
 </template>
 
@@ -96,20 +123,12 @@ const loading = ref(true)
 const { streamers, fetchStreamersWithNextSlot } = useDiscoverStreamers()
 const selectedFilter = ref('all')
 
-const tri = [
-    { name: 'Prochains streams', value: 'all' },
-    { name: 'Actifs uniquement', value: 'active' },
-    { name: "Aujourd'hui", value: 'today' }
-]
-
-watch(search, () => {
+// Watch pour réinitialiser la page lors des changements
+watch([search, selectedFilter], () => {
     currentPage.value = 0
 })
 
-watch(selectedFilter, () => {
-    currentPage.value = 0
-})
-
+// Liste filtrée en fonction des critères de recherche et de filtre
 const filteredStreamers = computed(() => {
     let list = [...streamers.value] // déjà triés : prochains streams d'abord, puis alphabétique
 
@@ -135,6 +154,33 @@ const filteredStreamers = computed(() => {
     return list
 })
 
+// Message d'état vide contextuel
+function getEmptyStateMessage() {
+    if (search.value && selectedFilter.value !== 'all') {
+        return `Aucun résultat pour "${search.value}" avec le filtre "${getFilterLabel()}"`
+    }
+    if (search.value) {
+        return `Aucun résultat pour "${search.value}"`
+    }
+    if (selectedFilter.value === 'active') {
+        return 'Aucun streameur avec un planning actif'
+    }
+    if (selectedFilter.value === 'today') {
+        return 'Aucun stream prévu aujourd\'hui'
+    }
+    return 'Aucun streameur disponible pour le moment'
+}
+
+
+function getFilterLabel() {
+    const labels: Record<string, string> = {
+        all: 'Tous',
+        active: 'Actifs',
+        today: 'Aujourd\'hui'
+    }
+    return labels[selectedFilter.value] || 'Tous'
+}
+
 const currentPage = ref(0)
 const rowsPerPage = ref(16)
 
@@ -143,15 +189,26 @@ function updateRowsPerPage() {
     const width = window.innerWidth
 
     rowsPerPage.value =
-        width >= 1280 ? 8 :
-            width >= 1024 ? 6 :
-                width >= 640 ? 4 :
-                    2
+        width >= 1280 ? 12 :
+            width >= 1024 ? 9 :
+                width >= 640 ? 8 :
+                    6
 }
 
-// Pagination
+const pageDirection = ref('slide-left')
+const previousPage = ref(0)
+
 function onPageChange(event: { page: number }) {
+    if (event.page > previousPage.value) {
+        pageDirection.value = 'slide-left'
+    } else {
+        pageDirection.value = 'slide-right'
+    }
+
+    previousPage.value = event.page
     currentPage.value = event.page
+
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 // Liste affichée (pagination locale)
@@ -190,5 +247,32 @@ onUnmounted(() => {
     to {
         opacity: 1;
     }
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+    transition: all 0.25s ease;
+}
+
+.slide-left-enter-from {
+    opacity: 0;
+    transform: translateX(40px);
+}
+
+.slide-left-leave-to {
+    opacity: 0;
+    transform: translateX(-40px);
+}
+
+.slide-right-enter-from {
+    opacity: 0;
+    transform: translateX(-40px);
+}
+
+.slide-right-leave-to {
+    opacity: 0;
+    transform: translateX(40px);
 }
 </style>
