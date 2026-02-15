@@ -287,6 +287,9 @@
 
 <script setup>
 const streamerStore = useStreamerStore()
+const scheduleStore = useScheduleStore()
+const scheduleSlotStore = useScheduleSlotStore()
+const linkStore = useLinkStore()
 const { streamer } = storeToRefs(streamerStore)
 const newsletterStore = useNewsletterStore()
 const user = useSupabaseUser()
@@ -337,6 +340,14 @@ watch(user, async (val) => {
     if (val) {
         loading.value = true
         await streamerStore.fetchStreamer(val.sub)
+
+        const { data: schedule } = await scheduleStore.fetchSchedule()
+        if (schedule?.id) {
+            await scheduleSlotStore.fetchSlots(schedule.id)
+        }
+
+        await linkStore.fetchLinks()
+
         loading.value = false
     }
 }, { immediate: true })
