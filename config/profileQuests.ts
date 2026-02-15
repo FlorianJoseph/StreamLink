@@ -4,6 +4,7 @@ type Streamer = Tables<'Streamer'>
 type QuestContext = {
     streamer: Streamer | null
     hasLinks: boolean
+    hasMultipleLinks: boolean
     hasSlots: boolean
 }
 
@@ -44,12 +45,18 @@ export const PROFILE_QUESTS: Quest[] = [
         to: '/admin/design',
         condition: ({ streamer }) => !!streamer?.bio
     },
-
     {
         id: 'schedule',
         type: 'optional',
         label: 'Ajouter ton prochain stream',
         to: '/schedule',
         condition: ({ hasSlots }) => hasSlots
+    },
+    {
+        id: 'multiple-links',
+        type: 'optional',
+        label: 'Ajoute 3 liens ou plus',
+        to: '/admin/links',
+        condition: ({ hasLinks, hasMultipleLinks }) => hasLinks && hasMultipleLinks
     }
 ]

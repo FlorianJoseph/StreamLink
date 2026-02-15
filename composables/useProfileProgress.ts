@@ -27,24 +27,53 @@ export const useProfileProgress = () => {
     // Ensemble des quêtes déjà notifiées
     const notifiedQuests = ref<Set<string>>(new Set())
 
+    // Flag pour savoir si c'est initialisé
+    const isInitialized = ref(false)
+
+    // Initialiser depuis localStorage uniquement côté client
+    if (process.client) {
+        const stored = localStorage.getItem('notifiedQuests')
+        if (stored) {
+            try {
+                notifiedQuests.value = new Set(JSON.parse(stored))
+            } catch (e) {
+                console.error('Erreur lors du chargement des quêtes notifiées', e)
+            }
+        }
+    }
+
+    // Fonction pour sauvegarder les quêtes notifiées
+    const saveNotifiedQuests = () => {
+        if (process.client) {
+            localStorage.setItem(
+                'notifiedQuests',
+                JSON.stringify(Array.from(notifiedQuests.value))
+            )
+        }
+    }
+
     // Fonction pour calculer les quêtes et stats
     const recalc = () => {
         const hasLinks = links.value.length > 0
         const hasSlots = slots.value.length > 0
+        const hasMultipleLinks = links.value.length >= 3
 
         // Calcul des quêtes
         const newQuests = PROFILE_QUESTS.map((quest: Quest) => ({
             ...quest,
-            completed: quest.condition({ streamer: streamer.value, hasLinks, hasSlots })
+            completed: quest.condition({ streamer: streamer.value, hasLinks, hasSlots, hasMultipleLinks })
         }))
 
-        // Notification pour nouvelles quêtes complétées
-        newQuests.forEach((quest) => {
-            if (quest.completed && !notifiedQuests.value.has(quest.id)) {
-                notifyQuestCompleted(quest)
-                notifiedQuests.value.add(quest.id)
-            }
-        })
+        // Notification uniquement après l'initialisation
+        if (isInitialized.value) {
+            newQuests.forEach((quest) => {
+                if (quest.completed && !notifiedQuests.value.has(quest.id)) {
+                    notifyQuestCompleted(quest)
+                    notifiedQuests.value.add(quest.id)
+                    saveNotifiedQuests()
+                }
+            })
+        }
 
         quests.value = newQuests
 
@@ -72,31 +101,48 @@ export const useProfileProgress = () => {
         }
     }
 
+    // Marquer comme initialisé après le premier calcul
+    if (!isInitialized.value) {
+        isInitialized.value = true
+    }
+
     const notifyQuestCompleted = (quest: Quest) => {
         toast.add({
-            severity: 'contrast',
+            severity: 'success',
             summary: 'Quête complétée !',
             detail: quest.label,
             life: 3000
         })
     }
 
-    // Recalculer dès que streamer / links / slots changent
-    watch([streamer, links, slots], recalc)
+    // Calcul initial
+    recalc()
+
+    // calculer dès que streamer / links / slots changent
+    watch([streamer, links, slots], () => {
+        recalc()
+    }, { deep: true })
 
     const getQuests = () => quests.value
     const getStats = () => stats.value
     const getProfileMessage = () => {
         const s = stats.value
-        if (s.completionPercentage === 100) return 'Ton profil est au top !'
+        if (s.completionPercentage === 100) return 'Ton profil est absolument parfait !'
         if (s.completionPercentage >= 75) return 'Ton profil est optimisé ! Plus que quelques détails...'
         if (s.profileVisible) return 'Ton profil est maintenant visible !'
         return 'Complète les quêtes essentielles pour apparaître sur la page Découverte'
     }
 
+    // Fonction utile pour debug/reset
+    const resetNotifications = () => {
+        notifiedQuests.value.clear()
+        saveNotifiedQuests()
+    }
+
     return {
         getQuests,
         getStats,
-        getProfileMessage
+        getProfileMessage,
+        resetNotifications
     }
 }
