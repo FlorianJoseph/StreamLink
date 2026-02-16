@@ -42,7 +42,7 @@
                                     <span class="font-semibold text-sm sm:text-base">{{ tool.title }}</span>
                                     <span v-if="tool.badge" :class="[
                                         'ml-auto text-xs px-2 py-1 rounded-full font-medium',
-                                        `bg-blue-500 text-blue-100`
+                                        `bg-${tool.color}-500 text-white`
                                     ]">
                                         {{ tool.badge }}
                                     </span>
