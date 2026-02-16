@@ -127,8 +127,8 @@ export const useProfileProgress = () => {
     const getStats = () => stats.value
     const getProfileMessage = () => {
         const s = stats.value
-        if (s.completionPercentage === 100) return 'Ton profil est absolument parfait !'
-        if (s.completionPercentage >= 75) return 'Ton profil est optimisé ! Plus que quelques détails...'
+        if (s.completionPercentage === 100) return 'Ton profil est parfait !'
+        if (s.completionPercentage >= 75) return 'Ton profil est optimisé !'
         if (s.profileVisible) return 'Ton profil est maintenant visible !'
         return 'Complète les quêtes essentielles pour apparaître sur la page Découverte'
     }

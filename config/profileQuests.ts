@@ -57,6 +57,6 @@ export const PROFILE_QUESTS: Quest[] = [
         type: 'optional',
         label: 'Ajoute 3 liens ou plus',
         to: '/admin/links',
-        condition: ({ hasLinks, hasMultipleLinks }) => hasLinks && hasMultipleLinks
+        condition: ({ hasMultipleLinks }) => hasMultipleLinks
     }
 ]
