@@ -39,6 +39,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Design 31 décembre 2025
 - Newletter 10 janvier 2026
 - Dashboard 14 janvier 2026
+- Planning 08 Février 2026
 - Découverte v1 (prochain stream + filtres) 12 février 2026
 
 ## Roadmap court terme – Consolider l’usage (priorité)

@@ -76,6 +76,7 @@ const menuItems = ref([
         label: 'Tableau de bord',
         icon: 'lucide:layout-dashboard',
         route: '/dashboard',
+        badge: 'Nouvelles quêtes',
     },
     {
         label: 'Mon StreamLink',
@@ -97,7 +98,6 @@ const menuItems = ref([
         label: 'Planning',
         icon: 'lucide:calendar-days',
         route: '/schedule',
-        badge: 'Nouveau',
     },
 ]);
 
