@@ -115,7 +115,6 @@
             </NuxtLink>
         </div>
     </template>
-    <Toast />
 </template>
 
 <script setup>

@@ -21,7 +21,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 <!-- Carte Visibilité -->
-                <ProfileStatus class="lg:row-span-2" />
+                <ProfileStatus />
 
                 <!-- Carte Outils -->
                 <Card class="border border-zinc-700 lg:col-span-1">
@@ -153,7 +153,6 @@ const { streamer } = storeToRefs(streamerStore)
 const newsletterStore = useNewsletterStore()
 const user = useSupabaseUser()
 const loading = ref(true)
-const toast = useToast()
 
 const toolsSections = [
     {

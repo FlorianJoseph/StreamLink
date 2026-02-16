@@ -31,7 +31,7 @@ export const useProfileProgress = () => {
     const isInitialized = ref(false)
 
     // Initialiser depuis localStorage uniquement côté client
-    if (process.client) {
+    if (import.meta.env.SSR === false) {
         const stored = localStorage.getItem('notifiedQuests')
         if (stored) {
             try {
@@ -44,7 +44,7 @@ export const useProfileProgress = () => {
 
     // Fonction pour sauvegarder les quêtes notifiées
     const saveNotifiedQuests = () => {
-        if (process.client) {
+        if (import.meta.env.SSR === false) {
             localStorage.setItem(
                 'notifiedQuests',
                 JSON.stringify(Array.from(notifiedQuests.value))

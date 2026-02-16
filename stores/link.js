@@ -123,8 +123,6 @@ export const useLinkStore = defineStore('link', () => {
         }
     }
 
-    onMounted(fetchLinks)
-
     return {
         links,
         fetchLinks,
