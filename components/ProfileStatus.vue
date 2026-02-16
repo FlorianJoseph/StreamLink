@@ -62,11 +62,12 @@
 
         <template #content>
             <!-- Section 1 : Quêtes essentielles -->
-            <Accordion :value="[0, 1]" multiple class="overflow-auto">
+            <Accordion class="overflow-auto">
                 <AccordionPanel value="0">
                     <AccordionHeader>
                         <span class="flex items-center gap-2 w-full mr-2">
-                            <Icon name="lucide:shield-check" size="18" class="text-red-400 shrink-0" />
+                            <Icon name="lucide:shield-check" size="18" class="shrink-0"
+                                :class="stats.completedRequired >= getRequiredCount() ? 'text-green-400' : 'text-red-400'" />
                             <span class="font-bold whitespace-nowrap text-sm sm:text-base">Essentielles pour être
                                 visible</span>
                             <span class="text-xs px-2 py-1 rounded-full font-medium"
@@ -238,11 +239,11 @@ const getNextStepMessage = () => {
     }
 
     if (!hasPlanning.value) {
-        return "Ajoute ton planning pour tripler ta visibilité sur la Découverte !"
+        return "Ajoute ton planning pour tripler ta visibilité sur la Découverte"
     }
 
     if (getOptionalCompletedCount() < getOptionalCount()) {
-        return `Plus que ${getOptionalCount() - getOptionalCompletedCount()} amélioration(s) pour un profil parfait !`
+        return `Plus que ${getOptionalCount() - getOptionalCompletedCount()} amélioration(s) pour un profil parfait`
     }
 
     return "Ton profil est au top !"
