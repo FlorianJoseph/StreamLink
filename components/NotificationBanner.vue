@@ -14,7 +14,7 @@
                         <!-- Mobile -->
                         <span class="md:hidden">
                             Nouvelles quêtes disponibles sur le
-                            <NuxtLink to="/schedule" class="font-bold underline">
+                            <NuxtLink to="/dashboard" class="font-bold underline">
                                 <span>tableau de bord</span>
                             </NuxtLink>
                         </span>
@@ -22,7 +22,7 @@
                         <!-- Tablet -->
                         <span class="hidden md:inline lg:hidden">
                             Découvre les nouvelles quêtes sur ton
-                            <NuxtLink to="/schedule" class="font-bold underline">
+                            <NuxtLink to="/dashboard" class="font-bold underline">
                                 <span>tableau de bord</span>
                             </NuxtLink>
                             !
@@ -31,7 +31,7 @@
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
                             Découvre les nouvelles quêtes sur ton
-                            <NuxtLink to="/schedule" class="font-bold underline">
+                            <NuxtLink to="/dashboard" class="font-bold underline">
                                 <span>tableau de bord</span>
                             </NuxtLink>
                             et optimise ton profil pour être mieux découvert !
