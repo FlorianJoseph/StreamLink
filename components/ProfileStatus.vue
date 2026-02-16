@@ -190,10 +190,10 @@
                 <!-- <div class="border-t border-zinc-700/50"></div> -->
 
                 <!-- Bouton reset en bas -->
-                <div class="px-2">
+                <!-- <div class="px-2">
                     <Button label="Réinitialiser les notifications" severity="secondary" text size="small"
                         @click="showResetDialog = true" class="w-full justify-center" />
-                </div>
+                </div> -->
             </div>
         </template>
     </Card>
