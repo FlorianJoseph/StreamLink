@@ -34,10 +34,8 @@
                     <!-- Progression compacte intégrée -->
                     <div>
                         <!-- Barre de progression -->
-                        <div class="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                            <div class="h-full transition-all duration-700 bg-gradient-to-r from-green-500 to-emerald-500"
-                                :style="{ width: `${getStats().completionPercentage}%` }" />
-                        </div>
+                        <ProgressBar :value="stats.completionPercentage" :showValue="false"
+                            style="--p-progressbar-value-background: linear-gradient(to right, #10b981, #059669); height: 6px;" />
 
                         <!-- Stats et badge niveau -->
                         <div class="flex items-center justify-between mt-2">
