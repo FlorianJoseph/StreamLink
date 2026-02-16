@@ -108,7 +108,7 @@ export const useProfileProgress = () => {
 
     const notifyQuestCompleted = (quest: Quest) => {
         toast.add({
-            severity: 'success',
+            severity: 'secondary',
             summary: 'Quête complétée !',
             detail: quest.label,
             life: 6500

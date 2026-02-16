@@ -13,28 +13,28 @@
                     <p class="text-xs sm:text-sm lg:text-base leading-relaxed">
                         <!-- Mobile -->
                         <span class="md:hidden">
-                            Découvre notre
+                            Nouvelles quêtes disponibles sur le
                             <NuxtLink to="/schedule" class="font-bold underline">
-                                <span>éditeur de planning</span>
+                                <span>tableau de bord</span>
                             </NuxtLink>
                         </span>
 
                         <!-- Tablet -->
                         <span class="hidden md:inline lg:hidden">
-                            Planifie tes streams dans notre nouvel
+                            Découvre les nouvelles quêtes sur ton
                             <NuxtLink to="/schedule" class="font-bold underline">
-                                <span>éditeur de planning</span>
+                                <span>tableau de bord</span>
                             </NuxtLink>
                             !
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Planifie tes streams dans notre nouvel
+                            Découvre les nouvelles quêtes sur ton
                             <NuxtLink to="/schedule" class="font-bold underline">
-                                <span>éditeur de planning</span>
+                                <span>tableau de bord</span>
                             </NuxtLink>
-                            et personnalise le design pour le rendre unique !
+                            et optimise ton profil pour être mieux découvert !
                         </span>
                     </p>
                 </div>
@@ -43,7 +43,7 @@
                 <div class="flex items-center gap-2 flex-shrink-0">
                     <NuxtLink to="/schedule"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
-                        Essayer maintenant
+                        Voir les quêtes
                     </NuxtLink>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
                         <Icon name="lucide:x" size="18" class="sm:w-5 sm:h-5" />
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-const STORAGE_KEY = 'schedule'
+const STORAGE_KEY = 'quests'
 const visible = ref(false)
 
 

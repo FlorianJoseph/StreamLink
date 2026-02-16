@@ -2,7 +2,12 @@
     <Card class="border border-zinc-700 h-full">
         <template #header>
             <div class="p-4">
-                <h2 class="text-lg font-semibold mb-4">Visibilité du profil</h2>
+                <div class="mb-4">
+                    <h2 class="text-lg font-semibold">Visibilité du profil</h2>
+                    <p class="text-xs sm:text-sm text-gray-400">
+                        Utilise les outils et rend ton profil visible sur la page Découverte
+                    </p>
+                </div>
 
                 <!-- Bloc principal fusionné -->
                 <div :class="stats.profileVisible
@@ -185,10 +190,10 @@
                 <!-- <div class="border-t border-zinc-700/50"></div> -->
 
                 <!-- Bouton reset en bas -->
-                <!-- <div class="px-2">
+                <div class="px-2">
                     <Button label="Réinitialiser les notifications" severity="secondary" text size="small"
                         @click="showResetDialog = true" class="w-full justify-center" />
-                </div> -->
+                </div>
             </div>
         </template>
     </Card>
