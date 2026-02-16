@@ -1,6 +1,7 @@
 export const PROFILE_LEVELS = [
-    { min: 0, label: 'Débutant', color: 'gray', bgClass: 'bg-gray-500/20', textClass: 'text-gray-400' },
-    { min: 50, label: 'Visible', color: 'green', bgClass: 'bg-green-500/20', textClass: 'text-green-400' },
-    { min: 75, label: 'Optimisé', color: 'blue', bgClass: 'bg-blue-500/20', textClass: 'text-blue-400' },
-    { min: 100, label: 'Complet', color: 'yellow', bgClass: 'bg-yellow-500/20', textClass: 'text-yellow-400' }
+    { min: 0, label: 'Bronze', color: 'bronze', bgClass: 'bg-amber-900/20', textClass: 'text-amber-700' },
+    { min: 25, label: 'Argent', color: 'silver', bgClass: 'bg-gray-300/20', textClass: 'text-gray-400' },
+    { min: 50, label: 'Or', color: 'gold', bgClass: 'bg-yellow-500/20', textClass: 'text-yellow-400' },
+    { min: 75, label: 'Platine', color: 'platinum', bgClass: 'bg-sky-500/20', textClass: 'text-sky-400' },
+    { min: 100, label: 'Diamant', color: 'diamond', bgClass: 'bg-purple-500/20', textClass: 'text-purple-400' }
 ]

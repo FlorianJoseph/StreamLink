@@ -2,81 +2,57 @@
     <Card class="border border-zinc-700">
         <template #header>
             <div class="p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <h2 class="text-lg font-semibold">Visibilité du profil</h2>
-                </div>
+                <h2 class="text-lg font-semibold mb-4">Visibilité du profil</h2>
 
-                <!-- Statut principal -->
-                <div :class="getStats().profileVisible ? 'bg-green-500/10 border-green-500/30' : 'bg-yellow-500/10 border-yellow-500/30'"
-                    class="flex items-start gap-2 p-3 rounded-lg border">
-                    <Icon :name="getStats().profileVisible ? 'lucide:check-circle' : 'lucide:alert-circle'"
-                        :class="getStats().profileVisible ? 'text-green-400' : 'text-yellow-400'" size="18" />
-                    <div class="flex-1">
-                        <p class="text-sm font-semibold"
-                            :class="getStats().profileVisible ? 'text-green-200' : 'text-yellow-200'">
-                            {{ getStats().profileVisible ? getProfileMessage() :
-                                'Ton profil n’est pas encore visible sur la page Découverte' }}
-                        </p>
-                        <p v-if="!getStats().profileVisible" class="text-xs text-yellow-200/80">
-                            Complète {{ getRequiredCount() - getStats().completedRequired }} quête(s) essentielles pour
-                            être découvert
-                        </p>
+                <!-- Bloc principal fusionné -->
+                <div :class="stats.profileVisible
+                    ? ' border-green-500/30'
+                    : ' border-yellow-500/30'" class="p-4 rounded-lg border space-y-3 bg-zinc-800/30 ring-1 ring-white/5">
+                    <!-- Ligne statut -->
+                    <div class="flex items-start gap-2">
+                        <Icon :name="stats.profileVisible ? 'lucide:check-circle' : 'lucide:alert-circle'"
+                            :class="stats.profileVisible ? 'text-green-400' : 'text-yellow-400'" size="18" />
+
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold"
+                                :class="stats.profileVisible ? 'text-zinc-200' : 'text-yellow-200'">
+                                {{
+                                    stats.profileVisible
+                                        ? getProfileMessage()
+                                        : 'Ton profil n’est pas encore visible sur la page Découverte'
+                                }}
+                            </p>
+
+                            <p v-if="stats.completionPercentage < 100" class="text-xs mt-1"
+                                :class="stats.completionPercentage < 40 ? 'text-yellow-200/80' : 'text-blue-300/80'">
+                                {{ getNextStepMessage() }}
+                            </p>
+                        </div>
                     </div>
+
+                    <!-- Progression compacte intégrée -->
+                    <div>
+                        <div class="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                            <div class="h-full transition-all duration-700 bg-gradient-to-r from-green-500 to-emerald-500"
+                                :style="{ width: `${stats.completionPercentage}%` }" />
+                        </div>
+
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-xs text-gray-400">
+                                {{ stats.completedTotal }}/{{ stats.total }} quêtes
+                            </span>
+
+                            <span class="text-xs font-bold text-white">
+                                {{ stats.completionPercentage }}%
+                            </span>
+                        </div>
+                    </div>
+
                 </div>
-                <Button label="Réinitialiser les notifications" severity="secondary" text size="small"
-                    @click="showResetDialog = true" />
             </div>
         </template>
 
         <template #content>
-            <!-- Section 0 : Niveau et progression -->
-            <div
-                class="mb-6 p-4 rounded-lg border border-zinc-700/50 bg-gradient-to-br from-zinc-800/30 to-zinc-900/30">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                        <Icon name="lucide:trophy" size="18" class="text-yellow-400" />
-                        <span class="text-sm font-medium text-gray-300">Niveau du profil</span>
-                    </div>
-                    <Transition name="level-change" mode="out-in">
-                        <span :key="getStats().level.label"
-                            :class="`px-3 py-1 text-sm rounded-full font-semibold ${getStats().level.bgClass} ${getStats().level.textClass} shadow-lg transition-all duration-300`">
-                            {{ getStats().level.label }}
-                        </span>
-                    </Transition>
-                </div>
-
-                <!-- Progress bar custom avec gradient et animation -->
-                <div class="relative">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs text-gray-400">Progression</span>
-                        <span class="text-sm font-bold text-white">{{ getStats().completionPercentage }}%</span>
-                    </div>
-                    <!-- Barre custom au lieu de PrimeVue -->
-                    <div class="relative h-2 bg-zinc-800 rounded-full overflow-hidden shadow-inner">
-                        <div class="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
-                            :class="'bg-gradient-to-r from-green-500 to-emerald-500'"
-                            :style="{ width: `${getStats().completionPercentage}%` }">
-                            <!-- Effet de brillance qui se déplace -->
-                            <div
-                                class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer">
-                            </div>
-                        </div>
-                    </div>
-                    <Transition name="fade">
-                        <div v-if="getStats().completionPercentage < 100"
-                            class="mt-3 flex items-start gap-2 text-xs text-gray-500">
-                            <Icon name="lucide:lightbulb" size="14" class="text-blue-400 shrink-0 mt-0.5" />
-                            <p>{{ getNextStepMessage() }}</p>
-                        </div>
-                    </Transition>
-
-                    <!-- Indicateur de quêtes restantes -->
-                    <!-- <div class="flex items-center gap-1 mt-2 text-xs text-gray-500">
-                        <Icon name="lucide:target" size="12" />
-                        <span>{{ getStats().completedTotal }}/{{ getStats().total }} quêtes complétées</span>
-                    </div> -->
-                </div>
-            </div>
             <!-- Section 1 : Quêtes essentielles -->
             <Accordion :value="[0, 1]" multiple class="overflow-auto">
                 <AccordionPanel value="0">
@@ -86,8 +62,8 @@
                             <span class="font-bold whitespace-nowrap text-sm sm:text-base">Essentielles pour être
                                 visible</span>
                             <span class="text-xs px-2 py-1 rounded-full font-medium"
-                                :class="getStats().completedRequired >= getRequiredCount() ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'">
-                                {{ getStats().completedRequired }}/{{ getRequiredCount() }} complétées
+                                :class="stats.completedRequired >= getRequiredCount() ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'">
+                                {{ stats.completedRequired }}/{{ getRequiredCount() }} complétées
                             </span>
                         </span>
                     </AccordionHeader>
@@ -117,7 +93,7 @@
                     </AccordionContent>
                 </AccordionPanel>
 
-            <!-- Section 2 : Planning (optionnel mais valorisé) -->
+                <!-- Section 2 : Planning (optionnel mais valorisé) -->
                 <AccordionPanel value="1">
                     <AccordionHeader>
                         <span class="flex items-center gap-2 w-full mr-2">
@@ -167,7 +143,7 @@
                     </AccordionContent>
                 </AccordionPanel>
 
-            <!-- Section 3 : Autres améliorations -->
+                <!-- Section 3 : Autres améliorations -->
                 <AccordionPanel value="2">
                     <AccordionHeader>
                         <span class="flex items-center gap-2 w-full mr-2">
@@ -205,6 +181,8 @@
                     </AccordionContent>
                 </AccordionPanel>
             </Accordion>
+            <Button label="Réinitialiser les notifications" severity="secondary" text size="small"
+                @click="showResetDialog = true" />
         </template>
     </Card>
 
@@ -223,6 +201,8 @@
 
 <script setup lang="ts">
 const { getQuests, getStats, getProfileMessage, resetNotifications } = useProfileProgress()
+
+const stats = computed(() => getStats())
 
 // Helpers pour filtrer les quêtes
 const getRequiredQuests = () => getQuests().filter(q => q.type === 'required')
@@ -246,7 +226,7 @@ const getNextStepMessage = () => {
     const stats = getStats()
 
     if (stats.completedRequired < getRequiredCount()) {
-        return `Complète ${getRequiredCount() - stats.completedRequired} quête(s) obligatoire(s) pour débloquer la visibilité`
+        return `Complète ${getRequiredCount() - stats.completedRequired} quête(s) essentielle(s) pour débloquer la visibilité`
     }
 
     if (!hasPlanning.value) {
@@ -257,6 +237,6 @@ const getNextStepMessage = () => {
         return `Plus que ${getOptionalCount() - getOptionalCompletedCount()} amélioration(s) pour un profil parfait !`
     }
 
-    return "Ton profil est au top ! 🎉"
+    return "Ton profil est au top !"
 }
 </script>

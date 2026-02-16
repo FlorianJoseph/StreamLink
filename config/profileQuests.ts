@@ -42,7 +42,7 @@ export const PROFILE_QUESTS: Quest[] = [
         id: 'bio',
         type: 'optional',
         label: 'Rédiger une description',
-        to: '/admin/design',
+        to: '/admin/links',
         condition: ({ streamer }) => !!streamer?.bio
     },
     {

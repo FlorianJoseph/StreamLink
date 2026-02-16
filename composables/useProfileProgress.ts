@@ -31,7 +31,7 @@ export const useProfileProgress = () => {
     const isInitialized = ref(false)
 
     // Initialiser depuis localStorage uniquement côté client
-    if (import.meta.env.SSR === false) {
+    if (import.meta.client) {
         const stored = localStorage.getItem('notifiedQuests')
         if (stored) {
             try {
@@ -44,7 +44,7 @@ export const useProfileProgress = () => {
 
     // Fonction pour sauvegarder les quêtes notifiées
     const saveNotifiedQuests = () => {
-        if (import.meta.env.SSR === false) {
+        if (import.meta.client) {
             localStorage.setItem(
                 'notifiedQuests',
                 JSON.stringify(Array.from(notifiedQuests.value))
@@ -55,7 +55,7 @@ export const useProfileProgress = () => {
     // Fonction pour calculer les quêtes et stats
     const recalc = () => {
         const hasLinks = links.value.length > 0
-        const hasSlots = slots.value.length > 0
+        const hasSlots = slots.value.length > 0 
         const hasMultipleLinks = links.value.length >= 3
 
         // Calcul des quêtes
@@ -108,10 +108,10 @@ export const useProfileProgress = () => {
 
     const notifyQuestCompleted = (quest: Quest) => {
         toast.add({
-            severity: 'success',
+            severity: 'contrast',
             summary: 'Quête complétée !',
             detail: quest.label,
-            life: 3000
+            life: 6500
         })
     }
 
