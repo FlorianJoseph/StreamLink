@@ -1,14 +1,16 @@
 <template>
     <Card class="border border-zinc-700 h-full">
         <template #header>
-            <div class="p-4">
-                <div class="mb-4">
-                    <h2 class="text-lg font-semibold">Visibilité du profil</h2>
-                    <p class="text-xs sm:text-sm text-gray-400">
-                        Utilise les outils et rend ton profil visible sur la page Découverte
-                    </p>
-                </div>
+            <div class="p-3">
+                <h2 class="text-lg font-semibold">Visibilité du profil</h2>
+                <p class="text-xs sm:text-sm text-gray-400">
+                    Utilise les outils et rend ton profil visible sur la page Découverte
+                </p>
+            </div>
+        </template>
 
+        <template #content>
+            <div class="space-y-5">
                 <!-- Bloc principal fusionné -->
                 <div :class="stats.profileVisible
                     ? 'border-green-500/30'
@@ -61,11 +63,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </template>
 
-        <template #content>
-            <div class="space-y-5">
+                <div class="border-t border-zinc-700/50"></div>
 
                 <!-- Section 1 : Quêtes essentielles -->
                 <div>
@@ -131,7 +130,7 @@
                         <div class="flex-1">
                             <p class="text-sm font-medium text-gray-200 mb-1">Ajoute ton planning</p>
                             <div class="flex items-center gap-1 text-xs text-blue-400">
-                                <Icon name="lucide:trending-up" size="14" class="shrink-0"/>
+                                <Icon name="lucide:trending-up" size="14" class="shrink-0" />
                                 <span>Ton prochain stream sera mis en avant sur la page Découverte</span>
                             </div>
                         </div>
@@ -187,7 +186,7 @@
                 </div>
 
                 <!-- Séparateur -->
-                <!-- <div class="border-t border-zinc-700/50"></div> -->
+                <div class="border-t border-zinc-700/50"></div>
 
                 <!-- Bouton reset en bas -->
                 <!-- <div class="px-2">
