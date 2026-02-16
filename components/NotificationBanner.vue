@@ -41,7 +41,7 @@
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <NuxtLink to="/schedule"
+                    <NuxtLink to="/dashboard"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
                         Voir les quêtes
                     </NuxtLink>
