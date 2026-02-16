@@ -178,7 +178,13 @@ const toolsSections = [
 
 onMounted(async () => {
     loading.value = true
+    await streamerStore.fetchStreamer(user.value.sub)
     await newsletterStore.fetchStatus()
+    const { data: schedule } = await scheduleStore.fetchSchedule()
+    if (schedule?.id) {
+        await scheduleSlotStore.fetchSlots(schedule.id)
+    }
+    await linkStore.fetchLinks()
     loading.value = false
 })
 
@@ -187,23 +193,6 @@ const subscribeIfNotYet = async () => {
         await newsletterStore.toggle()
     }
 }
-
-// Charger les données du streamer
-watch(user, async (val) => {
-    if (val) {
-        loading.value = true
-        await streamerStore.fetchStreamer(val.sub)
-
-        const { data: schedule } = await scheduleStore.fetchSchedule()
-        if (schedule?.id) {
-            await scheduleSlotStore.fetchSlots(schedule.id)
-        }
-
-        await linkStore.fetchLinks()
-
-        loading.value = false
-    }
-}, { immediate: true })
 
 definePageMeta({
     layout: 'fullscreen'
