@@ -7,7 +7,8 @@
                 <!-- Bloc principal fusionné -->
                 <div :class="stats.profileVisible
                     ? ' border-green-500/30'
-                    : ' border-yellow-500/30'" class="p-4 rounded-lg border space-y-3 bg-zinc-800/30 ring-1 ring-white/5">
+                    : ' border-yellow-500/30'"
+                    class="p-4 rounded-lg border space-y-3 bg-zinc-800/30 ring-1 ring-white/5">
                     <!-- Ligne statut -->
                     <div class="flex items-start gap-2">
                         <Icon :name="stats.profileVisible ? 'lucide:check-circle' : 'lucide:alert-circle'"
@@ -24,7 +25,7 @@
                             </p>
 
                             <p v-if="stats.completionPercentage < 100" class="text-xs mt-1"
-                                :class="stats.completionPercentage < 40 ? 'text-yellow-200/80' : 'text-blue-300/80'">
+                                :class="stats.completedRequired < getRequiredCount() ? 'text-yellow-200/80' : 'text-blue-300/80'">
                                 {{ getNextStepMessage() }}
                             </p>
                         </div>
@@ -32,19 +33,28 @@
 
                     <!-- Progression compacte intégrée -->
                     <div>
+                        <!-- Barre de progression -->
                         <div class="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                             <div class="h-full transition-all duration-700 bg-gradient-to-r from-green-500 to-emerald-500"
-                                :style="{ width: `${stats.completionPercentage}%` }" />
+                                :style="{ width: `${getStats().completionPercentage}%` }" />
                         </div>
 
+                        <!-- Stats et badge niveau -->
                         <div class="flex items-center justify-between mt-2">
                             <span class="text-xs text-gray-400">
-                                {{ stats.completedTotal }}/{{ stats.total }} quêtes
+                                {{ getStats().completedTotal }}/{{ getStats().total }} quêtes
                             </span>
 
-                            <span class="text-xs font-bold text-white">
-                                {{ stats.completionPercentage }}%
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold text-white">{{ getStats().completionPercentage }}%</span>
+
+                                <!-- Badge niveau -->
+                                <!-- <div :key="stats.level.label"
+                                    :class="`flex items-center gap-1.5 px-2.5 py-1 rounded-full font-semibold text-xs whitespace-nowrap ${stats.level.bgClass} ${stats.level.textClass} ${stats.level.borderClass} ring-1 ring-white/10`">
+                                    <Icon :name="getLevelIcon(stats.level.color)" size="14" />
+                                    <span>{{ stats.level.label }}</span>
+                                </div> -->
+                            </div>
                         </div>
                     </div>
 
@@ -63,7 +73,7 @@
                                 visible</span>
                             <span class="text-xs px-2 py-1 rounded-full font-medium"
                                 :class="stats.completedRequired >= getRequiredCount() ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'">
-                                {{ stats.completedRequired }}/{{ getRequiredCount() }} complétées
+                                {{ stats.completedRequired }}/{{ getRequiredCount() }}
                             </span>
                         </span>
                     </AccordionHeader>
@@ -238,5 +248,17 @@ const getNextStepMessage = () => {
     }
 
     return "Ton profil est au top !"
+}
+
+// Icons selon le niveau
+const getLevelIcon = (color: string) => {
+    const icons = {
+        bronze: 'lucide:shield',
+        silver: 'lucide:award',
+        gold: 'lucide:crown',
+        platinum: 'lucide:diamond',
+        diamond: 'lucide:gem'
+    }
+    return icons[color] || 'lucide:star'
 }
 </script>
