@@ -1,5 +1,9 @@
 import { defineStore } from 'pinia'
-import type { ScheduleSlot, ScheduleSlotInsert, ScheduleSlotUpdate } from '~/types/stores'
+import type { Tables, TablesInsert, TablesUpdate } from '~/types/database.types'
+
+type ScheduleSlot = Tables<'ScheduleSlot'>
+type ScheduleSlotInsert = TablesInsert<'ScheduleSlot'>
+type ScheduleSlotUpdate = TablesUpdate<'ScheduleSlot'>
 
 export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
     const { supabase, safe } = useSupabase()
@@ -10,19 +14,21 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
     async function fetchSlots(scheduleId: ScheduleSlot['schedule_id']): Promise<Result<ScheduleSlot[]>> {
         loading.value = true
 
-        const result = await safe(async () => {
-            const { data, error } = await supabase
-                .from('ScheduleSlot')
-                .select('*')
-                .eq('schedule_id', scheduleId)
-                .order('start_at', { ascending: true })
-            return { data: data || [], error }
-        })
+        try {
+            const result = await safe(async () => {
+                const { data, error } = await supabase
+                    .from('ScheduleSlot')
+                    .select('*')
+                    .eq('schedule_id', scheduleId)
+                    .order('start_at', { ascending: true })
+                return { data: data || [], error }
+            })
 
-        if (result.data) slots.value = result.data
-        loading.value = false
-
-        return result
+            if (result.data) slots.value = result.data
+            return result
+        } finally {
+            loading.value = false
+        }
     }
 
     // Crée un créneau
@@ -39,7 +45,6 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
         })
 
         if (result.data) slots.value.push(result.data)
-
         return result
     }
 
@@ -60,7 +65,6 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
             const index = slots.value.findIndex(s => s.id === slotId)
             if (index !== -1) slots.value[index] = result.data
         }
-
         return result
     }
 
