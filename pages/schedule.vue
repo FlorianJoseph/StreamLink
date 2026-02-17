@@ -676,6 +676,7 @@
 const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
 const { loading, schedule } = storeToRefs(scheduleStore)
+const { slots } = storeToRefs(scheduleSlotStore)
 const supabase = useSupabaseClient()
 
 // Édition du titre et du sous-titre
@@ -708,13 +709,10 @@ function cancelEdit() {
     editing.value.value = ''
 }
 
-const slots = ref([])
-
 // Charge les slots
 async function loadSlots() {
     if (!schedule.value) return
-    const { data } = await scheduleSlotStore.fetchSlots(schedule.value.id)
-    if (data) slots.value = data
+    await scheduleSlotStore.fetchSlots(schedule.value.id)
 }
 
 // Trie les slots pour un jour donné
