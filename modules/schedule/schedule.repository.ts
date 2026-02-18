@@ -9,7 +9,9 @@ export const useScheduleRepository = () => {
             .select('*')
             .eq('user_id', userId)
             .maybeSingle()
-        return { data, error }
+
+        if (error) throw error
+        return data
     }
 
     const create = async (userId: string, payload: ScheduleInsertPayload) => {
@@ -18,7 +20,9 @@ export const useScheduleRepository = () => {
             .insert([{ user_id: userId, ...payload }])
             .select()
             .single()
-        return { data, error }
+
+        if (error) throw error
+        return data
     }
 
     const update = async (scheduleId: string, payload: ScheduleUpdate) => {
@@ -28,7 +32,9 @@ export const useScheduleRepository = () => {
             .eq('id', scheduleId)
             .select()
             .single()
-        return { data, error }
+
+        if (error) throw error
+        return data
     }
 
     return { findByUserId, create, update }

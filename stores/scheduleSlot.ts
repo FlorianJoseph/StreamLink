@@ -21,11 +21,9 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
                     .select('*')
                     .eq('schedule_id', scheduleId)
                     .order('start_at', { ascending: true })
+                slots.value = data || []
                 return { data: data || [], error }
             })
-
-            if (result.data) slots.value = result.data
-            return result
         } finally {
             loading.value = false
         }

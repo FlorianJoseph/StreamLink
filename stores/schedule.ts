@@ -36,11 +36,12 @@ export const useScheduleStore = defineStore('schedule', () => {
     async function updateSchedule(payload: ScheduleUpdate) {
         if (!schedule.value) return { data: null, error: 'Pas de planning à mettre à jour.' }
 
-        if (payload.style) {
-            payload.style = { ...schedule.value.style as object, ...payload.style as object }
-        }
-
-        const result = await safe(() => repo.update(schedule.value!.id, payload))
+        const result = await safe(() => repo.update(schedule.value!.id, {
+            ...payload,
+            style: payload.style
+                ? { ...schedule.value!.style as object, ...payload.style as object }
+                : schedule.value!.style
+        }))
 
         if (result.data) schedule.value = result.data
         return result
@@ -50,7 +51,7 @@ export const useScheduleStore = defineStore('schedule', () => {
     async function getOrCreateSchedule() {
         if (!uid.value) return null
         loading.value = true
-        
+
         try {
             const { data } = await fetchSchedule()
             if (data) return data
