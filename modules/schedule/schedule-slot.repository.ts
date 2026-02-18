@@ -1,55 +1,52 @@
-import type { ScheduleSlot, ScheduleSlotInsert, ScheduleSlotUpdate } from '~/modules/schedule/schedule-slot.type'
+import type { ScheduleSlotInsert, ScheduleSlotUpdate } from '~/modules/schedule/schedule-slot.type'
 
-export const scheduleSlotRepository = {
+export const useScheduleSlotRepository = () => {
+    const { supabase } = useSupabase()
 
-    async findByScheduleId(
-        supabase: any,
-        scheduleId: ScheduleSlot['schedule_id']
-    ) {
-        return await supabase
+    const findByScheduleId = async (scheduleId: string) => {
+        const { data, error } = await supabase
             .from('ScheduleSlot')
             .select('*')
             .eq('schedule_id', scheduleId)
             .order('start_at', { ascending: true })
-    },
 
-    async create(
-        supabase: any,
-        payload: ScheduleSlotInsert
-    ) {
-        return await supabase
+        if (error) throw error
+        return data
+    }
+
+    const create = async (payload: ScheduleSlotInsert) => {
+        if (!payload.schedule_id) throw new Error('schedule_id requis')
+        const { data, error } = await supabase
             .from('ScheduleSlot')
             .insert([payload])
             .select()
             .single()
-    },
 
-    async update(
-        supabase: any,
-        slotId: string,
-        payload: ScheduleSlotUpdate
-    ) {
-        return await supabase
+        if (error) throw error
+        return data
+    }
+
+    const update = async (slotId: string, payload: ScheduleSlotUpdate) => {
+        const { data, error } = await supabase
             .from('ScheduleSlot')
             .update(payload)
             .eq('id', slotId)
             .select()
             .single()
-    },
 
-    async delete(
-        supabase: any,
-        slotId: string
-    ) {
-        return await supabase
+        if (error) throw error
+        return data
+    }
+
+    const deleteSlot = async (slotId: string) => {
+        const { error } = await supabase
             .from('ScheduleSlot')
             .delete()
             .eq('id', slotId)
-    },
 
-    async countAll(supabase: any) {
-        return await supabase
-            .from('ScheduleSlot')
-            .select('*', { count: 'exact', head: true })
+        if (error) throw error
+        return null
     }
+
+    return { findByScheduleId, create, update, deleteSlot }
 }

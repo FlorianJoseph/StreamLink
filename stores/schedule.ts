@@ -10,7 +10,6 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     // Récupère le planning de l'utilisateur
     async function fetchSchedule() {
-        if (!uid.value) return { data: null, error: 'Aucun utilisateur connecté.' }
 
         const result = await safe(() => repo.findByUserId(uid.value))
 
@@ -20,7 +19,6 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     // Crée un planning si l'utilisateur n'en a pas
     async function createSchedule() {
-        if (!uid.value) return { data: null, error: 'Aucun utilisateur connecté.' }
 
         const result = await safe(() => repo.create(
             {
@@ -52,7 +50,8 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     // Récupère le planning ou en crée un nouveau s'il n'existe pas
     async function getOrCreateSchedule() {
-        if (!uid.value) return null
+        if (!uid.value) return { data: null, error: 'Aucun utilisateur connecté.' }
+
         loading.value = true
 
         try {

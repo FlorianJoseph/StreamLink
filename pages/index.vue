@@ -160,16 +160,18 @@ const features = [
   }
 ]
 
-const streamerStore = useStreamerStore()
-const linkStore = useLinkStore()
-const scheduleSlotStore = useScheduleSlotStore()
+const statsStore = useStatsStore()
 const totalStreamers = ref(0)
 const totalLinks = ref(0)
 const totalSlots = ref(0)
 
 onMounted(async () => {
-  totalStreamers.value = await streamerStore.fetchTotalStreamers()
-  totalLinks.value = await linkStore.fetchTotalLinks()
-  totalSlots.value = (await scheduleSlotStore.fetchTotalSlots()).data || 0
+  const streamersRes = await statsStore.fetchTotalStreamers()
+  const linksRes = await statsStore.fetchTotalLinks()
+  const slotsRes = await statsStore.fetchTotalSlots()
+
+  totalStreamers.value = streamersRes.data ?? 0
+  totalLinks.value = linksRes.data ?? 0
+  totalSlots.value = slotsRes.data ?? 0
 })
 </script>

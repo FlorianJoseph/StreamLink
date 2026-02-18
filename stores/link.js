@@ -32,20 +32,6 @@ export const useLinkStore = defineStore('link', () => {
         else links.value = []
     }
 
-    // Permet de récupérer le nombre total de liens (pour stats)
-    const fetchTotalLinks = async () => {
-        const { count, error } = await supabase
-            .from('Link')
-            .select('*', { count: 'exact', head: true }) // head: true = pas besoin des données, juste le count
-
-        if (!error) {
-            return count
-        } else {
-            console.error(error)
-            return 0
-        }
-    }
-
     /** Ajouter un lien */
     const addLink = async (payload) => {
         if (!user.value) return
@@ -126,7 +112,6 @@ export const useLinkStore = defineStore('link', () => {
     return {
         links,
         fetchLinks,
-        fetchTotalLinks,
         addLink,
         updateLink,
         deleteLink,
