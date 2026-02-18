@@ -1,4 +1,4 @@
-import type { ScheduleUpdate, ScheduleInsertPayload } from '~/modules/schedule/schedule.type'
+import type { ScheduleUpdate, ScheduleInsert } from '~/modules/schedule/schedule.type'
 
 export const useScheduleRepository = () => {
     const { supabase } = useSupabase()
@@ -14,10 +14,10 @@ export const useScheduleRepository = () => {
         return data
     }
 
-    const create = async (userId: string, payload: ScheduleInsertPayload) => {
+    const create = async (payload: ScheduleInsert) => {
         const { data, error } = await supabase
             .from('Schedule')
-            .insert([{ user_id: userId, ...payload }])
+            .insert([payload])
             .select()
             .single()
 

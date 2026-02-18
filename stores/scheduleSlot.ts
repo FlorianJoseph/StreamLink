@@ -14,19 +14,19 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
     async function fetchSlots(scheduleId: ScheduleSlot['schedule_id']): Promise<Result<ScheduleSlot[]>> {
         loading.value = true
 
-        try {
-            const result = await safe(async () => {
-                const { data, error } = await supabase
-                    .from('ScheduleSlot')
-                    .select('*')
-                    .eq('schedule_id', scheduleId)
-                    .order('start_at', { ascending: true })
-                slots.value = data || []
-                return { data: data || [], error }
-            })
-        } finally {
-            loading.value = false
-        }
+        const result = await safe(async () => {
+            const { data, error } = await supabase
+                .from('ScheduleSlot')
+                .select('*')
+                .eq('schedule_id', scheduleId)
+                .order('start_at', { ascending: true })
+            return data || []
+        })
+
+        if (result.data) slots.value = result.data
+        loading.value = false
+
+        return result
     }
 
     // Crée un créneau

@@ -22,11 +22,14 @@ export const useScheduleStore = defineStore('schedule', () => {
     async function createSchedule() {
         if (!uid.value) return { data: null, error: 'Aucun utilisateur connecté.' }
 
-        const result = await safe(() => repo.create(uid.value, {
-            title: 'Mon planning de stream',
-            subtitle: getCurrentWeekSubtitle(),
-            style: { bgColor: '18181B', textColor: 'FFFFFF' }
-        }))
+        const result = await safe(() => repo.create(
+            {
+                user_id: uid.value,
+                title: 'Mon planning de stream',
+                subtitle: getCurrentWeekSubtitle(),
+                style: { bgColor: '18181B', textColor: 'FFFFFF' }
+            }
+        ))
 
         if (result.data) schedule.value = result.data
         return result
