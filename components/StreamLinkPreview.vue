@@ -103,6 +103,7 @@ const streamerId = streamer.value?.id
 // Charger le design au montage du composant
 onMounted(async () => {
     if (streamerId) {
+        await linkStore.fetchLinks(streamerId)
         await designStore.fetchDesign(streamerId)
     }
 })
