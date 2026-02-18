@@ -5,7 +5,7 @@
 :#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
-    <Card class="min-h-full w-full sm:w-2xl sm:p-2 fade-in" v-else-if="streamer"
+    <Card class="min-h-full w-full sm:w-2xl sm:p-2 fade-in" v-else-if="publicStreamer"
         :style="{ '--p-card-background': wallpaperColor, boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }">
         <template #title>
             <div class="flex items-center justify-between">
@@ -27,13 +27,13 @@
             </div>
 
             <div class="flex items-center text-center flex-col mx-auto my-4">
-                <img :src="streamer?.avatar_url || defaultAvatar" alt="Avatar"
+                <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
                     class="w-24 h-24 rounded-full object-cover mb-4 mt-4" />
                 <span :class="['font-bold', usernameSizeClass]" :style="{ color: usernameColor }">
-                    {{ streamer?.username }}
+                    {{ publicStreamer?.username }}
                 </span>
                 <span class="text-base font-medium break-words" :style="{ color: descriptionColor }">
-                    {{ streamer?.bio }}
+                    {{ publicStreamer?.bio }}
                 </span>
             </div>
 
@@ -72,9 +72,9 @@
 
         <template #footer>
             <div class="flex justify-center my-12">
-                <NuxtLink :to="'/admin/links'" external>
+                <NuxtLink :to="'/admin/links'">
                     <Button severity="contrast">
-                        <span class="font-semibold font-sm">Rejoignez {{ streamer?.username }} sur StreamLink</span>
+                        <span class="font-semibold font-sm">Rejoignez {{ publicStreamer?.username }} sur StreamLink</span>
                     </Button>
                 </NuxtLink>
             </div>
@@ -124,7 +124,7 @@ definePageMeta({
 
 // Stores
 const streamerStore = useStreamerStore()
-const { streamer, loading } = storeToRefs(streamerStore)
+const { publicStreamer, loading } = storeToRefs(streamerStore)
 const linkStore = useLinkStore()
 const { links } = storeToRefs(linkStore)
 const designStore = useDesignStore()

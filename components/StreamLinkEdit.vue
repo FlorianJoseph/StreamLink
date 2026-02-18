@@ -284,17 +284,17 @@ const openStreamerModal = async () => {
 }
 
 const handleSave = async () => {
-    const { data, error } = await streamerStore.updateStreamer({
+    const result = await streamerStore.updateStreamer({
         username: username.value,
         bio: bio.value
     })
     // Gestion de l'erreur
-    if (error) {
-        if (error.code === '23505') {
+    if (result.error) {
+        if (result.error.code === '23505') {
             // Conflit unique Postgres
             usernameError.value = 'Ce pseudo est déjà utilisé !'
         } else {
-            usernameError.value = error.message
+            usernameError.value = result.error.message
         }
         return
     }
