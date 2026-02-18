@@ -1,8 +1,4 @@
-import type { TablesInsert, TablesUpdate } from '~/types/database.types'
-
-type ScheduleInsert = TablesInsert<'Schedule'>
-type ScheduleInsertPayload = Omit<ScheduleInsert, 'user_id'>
-type ScheduleUpdate = TablesUpdate<'Schedule'>
+import type { ScheduleUpdate, ScheduleInsertPayload } from '~/modules/schedule/schedule.type'
 
 export const useScheduleRepository = () => {
     const { supabase } = useSupabase()

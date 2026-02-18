@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia'
-import type { Tables, TablesUpdate } from '~/types/database.types'
-import { useScheduleRepository } from '~/repositories/schedule.repository'
-
-type Schedule = Tables<'Schedule'>
-type ScheduleUpdate = TablesUpdate<'Schedule'>
+import type { Schedule, ScheduleUpdate } from '~/modules/schedule/schedule.type'
+import { useScheduleRepository } from '~/modules/schedule/schedule.repository'
 
 export const useScheduleStore = defineStore('schedule', () => {
     const { safe, uid } = useSupabase()
@@ -40,7 +37,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         if (!schedule.value) return { data: null, error: 'Pas de planning à mettre à jour.' }
 
         if (payload.style) {
-            payload.style = { ...schedule.value.style, ...payload.style }
+            payload.style = { ...schedule.value.style as object, ...payload.style as object }
         }
 
         const result = await safe(() => repo.update(schedule.value!.id, payload))

@@ -72,6 +72,15 @@ export const useStreamerStore = defineStore('streamer', () => {
         return data
     }
 
+    // const fetchStreamerByUsername2 = async (username) => {
+    //     if (!username) return { data: null, error: 'Aucun utilisateur connecté.' }
+
+    //     const result = await safe(() => repo.findByUsername(username))
+
+    //     if (result.data) streamer.value = result.data
+    //     return result
+    // }
+
     // Récupère le nombre total de streamers (pour stats)
     const fetchTotalStreamers = async () => {
         const { count, error } = await supabase
