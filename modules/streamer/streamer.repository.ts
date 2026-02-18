@@ -3,7 +3,7 @@ import type { StreamerInsert, StreamerUpdate } from '~/modules/streamer/streamer
 export const useStreamerRepository = () => {
     const { supabase } = useSupabase()
 
-    const fetchStreamer = async (userId: string) => {
+    const fetchByUserId = async (userId: string) => {
         const { data, error } = await supabase
             .from('Streamer')
             .select('*')
@@ -68,5 +68,5 @@ export const useStreamerRepository = () => {
         return data
     }
 
-    return { fetchStreamer, fetchStreamerPublic, fetchAllStreamers, createStreamer, updateStreamer }
+    return { fetchByUserId, fetchStreamerPublic, fetchAllStreamers, createStreamer, updateStreamer }
 }

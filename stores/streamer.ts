@@ -16,7 +16,7 @@ export const useStreamerStore = defineStore('streamer', () => {
 
         loading.value = true
         try {
-            const result = await safe(() => repo.fetchStreamer(uid.value))
+            const result = await safe(() => repo.fetchByUserId(uid.value))
 
             if (result.data) streamer.value = result.data
             return result
