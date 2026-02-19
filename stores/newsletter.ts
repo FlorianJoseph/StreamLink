@@ -1,15 +1,15 @@
 import { defineStore } from 'pinia'
 
 export const useNewsletterStore = defineStore('newsletter', () => {
-    const user = useSupabaseUser()
+    const { uid } = useSupabase()
     const { isSubscribed, subscribe, unsubscribe } = useNewsletter()
-
+    const toast = useToast()
     const subscribed = ref<boolean | null>(null)
     const loading = ref(true)
 
     const fetchStatus = async () => {
         loading.value = true
-        subscribed.value = await isSubscribed(user.value?.sub)
+        subscribed.value = await isSubscribed(uid.value)
         loading.value = false
     }
 
@@ -17,11 +17,23 @@ export const useNewsletterStore = defineStore('newsletter', () => {
         if (subscribed.value === null) return
 
         if (subscribed.value) {
-            await unsubscribe(user.value?.sub)
+            await unsubscribe(uid.value)
             subscribed.value = false
+            toast.add({
+                severity: 'info',
+                summary: 'Nouveautés',
+                detail: 'Vous ne recevrez plus les nouveautés',
+                life: 4000,
+            })
         } else {
-            await subscribe(user.value?.sub)
+            await subscribe(uid.value)
             subscribed.value = true
+            toast.add({
+                severity: 'success',
+                summary: 'Nouveautés',
+                detail: 'Vous recevrez désormais les nouveautés',
+                life: 4000,
+            })
         }
     }
 
