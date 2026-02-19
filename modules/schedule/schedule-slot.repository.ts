@@ -15,7 +15,6 @@ export const useScheduleSlotRepository = () => {
     }
 
     const create = async (payload: ScheduleSlotInsert) => {
-        if (!payload.schedule_id) throw new Error('schedule_id requis')
         const { data, error } = await supabase
             .from('ScheduleSlot')
             .insert([payload])
@@ -38,7 +37,7 @@ export const useScheduleSlotRepository = () => {
         return data
     }
 
-    const deleteSlot = async (slotId: string) => {
+    const remove = async (slotId: string) => {
         const { error } = await supabase
             .from('ScheduleSlot')
             .delete()
@@ -48,5 +47,5 @@ export const useScheduleSlotRepository = () => {
         return null
     }
 
-    return { findByScheduleId, create, update, deleteSlot }
+    return { findByScheduleId, create, update, remove }
 }

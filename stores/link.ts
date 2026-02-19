@@ -12,7 +12,7 @@ export const useLinkStore = defineStore('link', () => {
     const fetchLinks = async () => {
         if (!uid.value) return
 
-        const result = await safe(() => repo.fetchByUserId(uid.value))
+        const result = await safe(() => repo.findByUserId(uid.value))
         if (result.data) links.value = result.data
         return result
     }
@@ -21,7 +21,7 @@ export const useLinkStore = defineStore('link', () => {
     const fetchLinksByStreamerId = async (streamerId: string) => {
         if (!streamerId) return
 
-        const result = await safe(() => repo.fetchLinkPublic(streamerId))
+        const result = await safe(() => repo.findByUserId(streamerId))
         if (result.data) publicLinks.value = result.data
         return result
     }

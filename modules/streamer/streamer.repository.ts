@@ -3,7 +3,7 @@ import type { StreamerInsert, StreamerUpdate } from '~/modules/streamer/streamer
 export const useStreamerRepository = () => {
     const { supabase } = useSupabase()
 
-    const fetchByUserId = async (userId: string) => {
+    const findByUserId = async (userId: string) => {
         const { data, error } = await supabase
             .from('Streamer')
             .select('*')
@@ -14,7 +14,7 @@ export const useStreamerRepository = () => {
         return data
     }
 
-    const fetchStreamerPublic = async (username: string) => {
+    const findByUsername = async (username: string) => {
         const { data, error } = await supabase
             .from('Streamer')
             .select('*')
@@ -25,7 +25,7 @@ export const useStreamerRepository = () => {
         return data
     }
 
-    const fetchAllStreamers = async () => {
+    const findAllVisible = async () => {
         const { data, error } = await supabase
             .from('streamer_visible')
             .select(`
@@ -45,7 +45,7 @@ export const useStreamerRepository = () => {
         return data
     }
 
-    const createStreamer = async (payload: StreamerInsert) => {
+    const create = async (payload: StreamerInsert) => {
         const { data, error } = await supabase
             .from('Streamer')
             .insert([payload])
@@ -56,7 +56,7 @@ export const useStreamerRepository = () => {
         return data
     }
 
-    const updateStreamer = async (streamerId: string, payload: StreamerUpdate) => {
+    const update = async (streamerId: string, payload: StreamerUpdate) => {
         const { data, error } = await supabase
             .from('Streamer')
             .update(payload)
@@ -68,5 +68,5 @@ export const useStreamerRepository = () => {
         return data
     }
 
-    return { fetchByUserId, fetchStreamerPublic, fetchAllStreamers, createStreamer, updateStreamer }
+    return { findByUserId, findByUsername, findAllVisible, create, update }
 }

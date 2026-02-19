@@ -18,6 +18,7 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
 
     // Crée un créneau
     async function createSlot(payload: ScheduleSlotInsert) {
+        if (!payload.schedule_id) throw new Error('schedule_id requis')
 
         const result = await safe(() => repo.create(payload))
 
@@ -40,7 +41,7 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
     // Supprime un créneau
     async function deleteSlot(slotId: string) {
 
-        const result = await safe(() => repo.deleteSlot(slotId))
+        const result = await safe(() => repo.remove(slotId))
 
         return result
     }

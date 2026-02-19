@@ -16,7 +16,7 @@ export const useStreamerStore = defineStore('streamer', () => {
 
         loading.value = true
         try {
-            const result = await safe(() => repo.fetchByUserId(uid.value))
+            const result = await safe(() => repo.findByUserId(uid.value))
 
             if (result.data) streamer.value = result.data
             return result
@@ -29,7 +29,7 @@ export const useStreamerStore = defineStore('streamer', () => {
     // Récupère tous les streamers pour la page découverte
     const fetchAllStreamers = async () => {
 
-        const result = await safe(() => repo.fetchAllStreamers())
+        const result = await safe(() => repo.findAllVisible())
         if (result.data) return result.data
     }
 
@@ -37,7 +37,7 @@ export const useStreamerStore = defineStore('streamer', () => {
     const fetchStreamerByUsername = async (username: string) => {
         if (!username) return { data: null, error: 'Username manquant' }
 
-        const result = await safe(() => repo.fetchStreamerPublic(username))
+        const result = await safe(() => repo.findByUsername(username))
         if (result.data) publicStreamer.value = result.data
         return result.data
     }
@@ -54,7 +54,7 @@ export const useStreamerStore = defineStore('streamer', () => {
 
         // Sinon, on le crée
         const result = await safe(() =>
-            repo.createStreamer({
+            repo.create({
                 id: uid.value,
                 username: user.value!.user_metadata!.nickname,
                 bio: '',
@@ -73,7 +73,7 @@ export const useStreamerStore = defineStore('streamer', () => {
     // Mettre à jour le streamer du user connecté
     const updateStreamer = async (payload: StreamerUpdate) => {
 
-        const result = await safe(() => repo.updateStreamer(uid.value, { ...payload, updated_at: new Date().toISOString() }))
+        const result = await safe(() => repo.update(uid.value, { ...payload, updated_at: new Date().toISOString() }))
 
         if (result.data) streamer.value = result.data
         return result

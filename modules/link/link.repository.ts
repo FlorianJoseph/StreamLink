@@ -3,23 +3,11 @@ import type { LinkInsert, LinkUpdate } from '~/modules/link/link.type'
 export const useLinkRepository = () => {
     const { supabase } = useSupabase()
 
-    const fetchByUserId = async (userId: string) => {
+    const findByUserId = async (userId: string) => {
         const { data, error } = await supabase
             .from('Link')
             .select('*')
             .eq('streamer_id', userId)
-            .eq('visible', true)
-            .order('order', { ascending: true })
-
-        if (error) throw error
-        return data
-    }
-
-    const fetchLinkPublic = async (streamerId: string) => {
-        const { data, error } = await supabase
-            .from('Link')
-            .select('*')
-            .eq('streamer_id', streamerId)
             .eq('visible', true)
             .order('order', { ascending: true })
 
@@ -80,8 +68,7 @@ export const useLinkRepository = () => {
     }
 
     return {
-        fetchByUserId,
-        fetchLinkPublic,
+        findByUserId,
         create,
         update,
         remove,

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { Design, DesignInsert, DesignUpdate } from '~/modules/design/design.type'
+import type { Design, DesignUpdate } from '~/modules/design/design.type'
 import { useDesignRepository } from '~/modules/design/design.repository'
 
 export const useDesignStore = defineStore('design', () => {
