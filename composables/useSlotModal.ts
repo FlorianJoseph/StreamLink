@@ -44,7 +44,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         isSearching.value = true
 
         timeout = setTimeout(async () => {
-            const res = await $fetch('/api/IGDBgames', { params: { search: query, limit: 5 } })
+            const res = await $fetch('/api/IGDBgames', { params: { search: query } })
             gameSuggestions.value = res
             searchCache.set(query, res) // Sauvegarde en cache
             isSearching.value = false

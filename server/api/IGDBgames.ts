@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     fields name, cover.url, external_games.uid, external_games.external_game_source;
     where external_games.external_game_source = 14
     & external_games.uid = (${quotedTwitchIds});
-    limit 5;
+    limit 12;
   `
     })
 
@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
 
             return hasIgdbCover || hasCustomCover
         })
-        .slice(0, 5)
+        .slice(0, 12)
         .map((cat: any) => {
             const igdbCover = igdbByTwitchId[cat.id]
 
