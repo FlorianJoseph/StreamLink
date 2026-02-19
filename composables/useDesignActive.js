@@ -11,7 +11,6 @@ export const useDesignActive = (design) => {
     const isActive = (section, key, value) =>
         computed(() => design.value?.[section]?.[key] === value)
 
-
     const isThemeActive = (themePreset) =>
         computed(() => {
             if (!design.value) return false

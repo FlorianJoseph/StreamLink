@@ -27,10 +27,16 @@ export const useDesignStore = defineStore('design', () => {
         future.value = []
     }
 
+    const { wallpaper_style, button_style, username_style, bio_style } = THEME_PRESETS.dark
+
     // Créer un design par défaut pour un nouveau streamer
     const createDesign = async () => {
         const result = await safe(() => repo.create({
             streamer_id: uid.value,
+            wallpaper_style,
+            button_style,
+            username_style,
+            bio_style,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
         }))
