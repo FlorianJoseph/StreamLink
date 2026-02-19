@@ -30,7 +30,7 @@ export const useStreamerStore = defineStore('streamer', () => {
     const fetchAllStreamers = async () => {
 
         const result = await safe(() => repo.findAllVisible())
-        if (result.data) return result.data
+        if (result.data) return result.data ?? []
     }
 
     // Récupérer un streamer pour la page publique
@@ -39,7 +39,7 @@ export const useStreamerStore = defineStore('streamer', () => {
 
         const result = await safe(() => repo.findByUsername(username))
         if (result.data) publicStreamer.value = result.data
-        return result.data
+        return result
     }
 
     // Créer un streamer

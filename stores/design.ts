@@ -130,9 +130,9 @@ export const useDesignStore = defineStore('design', () => {
         history.value = []
         future.value = []
         toast.add({
-            severity: 'secondary',
-            summary: 'Design sauvegardé !',
-            detail: 'Vos modifications ont été enregistrées.',
+            severity: 'success',
+            summary: 'Design sauvegardé',
+            detail: 'Vos modifications ont été sauvegardées',
             life: 4000,
         })
     }
@@ -144,9 +144,9 @@ export const useDesignStore = defineStore('design', () => {
         history.value = []
         future.value = []
         toast.add({
-            severity: 'secondary',
-            summary: 'Design réinitialisé !',
-            detail: 'Le design a été réinitialisé à la dernière version sauvegardée.',
+            severity: 'info',
+            summary: 'Design réinitialisé',
+            detail: 'Le design a été restauré à la dernière version sauvegardée',
             life: 4000,
         })
     }

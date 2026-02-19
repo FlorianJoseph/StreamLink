@@ -42,7 +42,7 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
     async function deleteSlot(slotId: string) {
 
         const result = await safe(() => repo.remove(slotId))
-
+        if (!result.error) slots.value = slots.value.filter(s => s.id !== slotId)
         return result
     }
 

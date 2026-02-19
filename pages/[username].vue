@@ -74,7 +74,8 @@
             <div class="flex justify-center my-12">
                 <NuxtLink :to="'/admin/links'" external>
                     <Button severity="contrast">
-                        <span class="font-semibold font-sm">Rejoignez {{ publicStreamer?.username }} sur StreamLink</span>
+                        <span class="font-semibold font-sm">Rejoignez {{ publicStreamer?.username }} sur
+                            StreamLink</span>
                     </Button>
                 </NuxtLink>
             </div>
@@ -122,7 +123,6 @@ definePageMeta({
     layout: 'links'
 })
 
-// Stores
 const streamerStore = useStreamerStore()
 const { publicStreamer, loading } = storeToRefs(streamerStore)
 const linkStore = useLinkStore()
@@ -135,6 +135,7 @@ const route = useRoute()
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 
+// Fonction de copie du lien
 const copied = ref(false)
 const copyText = () => {
     const url = `${window.location.origin}/${route.params.username || ''}`
@@ -146,10 +147,16 @@ const copyText = () => {
 onMounted(async () => {
     const username = route.params.username
     streamerStore.loading = true
-    const data = await streamerStore.fetchStreamerByUsername(username)
-    await linkStore.fetchLinksByStreamerId(data.id)
-    await designStore.fetchPublicDesign(data.id)
-    streamerStore.loading = false
+    try {
+        await streamerStore.fetchStreamerByUsername(username)
+
+        await Promise.all([
+            linkStore.fetchPublicLinks(publicStreamer.value.id),
+            designStore.fetchPublicDesign(publicStreamer.value.id)
+        ])
+    } finally {
+        streamerStore.loading = false
+    }
 })
 
 // Style du pseudo dynamique
@@ -187,21 +194,25 @@ const buttonClass = computed(() => {
     ]
 })
 
+// Couleur de bordure pour les boutons outlined
 const buttonBorderColor = computed(() => {
     const color = publicDesign.value?.button_style?.backgroundColor ?? 'FFFFFF'
     return buttonVariant.value === 'outlined' ? `#${color}` : null
 })
 
+// Couleur de fond pour les boutons filled
 const buttonBackgroundColor = computed(() => {
     const color = publicDesign.value?.button_style?.backgroundColor ?? 'FFFFFF'
     return buttonVariant.value === 'filled' ? `#${color}` : 'transparent'
 })
 
+// Couleur du texte des boutons
 const buttonTextColor = computed(() => {
     const color = publicDesign.value?.button_style?.textColor ?? '000000'
     return `#${color}`
 })
 
+// Style de la bordure des boutons dynamique
 const buttonRadiusClass = computed(() => {
     return publicDesign.value?.button_style?.borderRadius ?? 'rounded-lg'
 })
@@ -224,14 +235,17 @@ function isColorDark(hex) {
     return brightness < 128
 }
 
+// Couleur des boutons et du texte en fonction de la luminosité du fond
 const fixedButtonColor = computed(() => {
     return isColorDark(wallpaperColor.value) ? 'text-white' : 'text-black'
 })
 
+// Couleur de fond des boutons en fonction de la luminosité du fond
 const fixedButtonBg = computed(() => {
     return isColorDark(wallpaperColor.value) ? 'bg-zinc-800 hover:bg-zinc-700/70' : 'bg-white hover:bg-zinc-200'
 })
 
+// Couleur du texte du footer en fonction de la luminosité du fond
 const footerTextColor = computed(() => {
     return isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000'
 })

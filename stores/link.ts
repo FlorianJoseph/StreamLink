@@ -18,7 +18,7 @@ export const useLinkStore = defineStore('link', () => {
     }
 
     // Récupérer les liens d'un streamer pour la page publique
-    const fetchLinksByStreamerId = async (streamerId: string) => {
+    const fetchPublicLinks = async (streamerId: string) => {
         if (!streamerId) return
 
         const result = await safe(() => repo.findByStreamerId(streamerId))
@@ -99,6 +99,6 @@ export const useLinkStore = defineStore('link', () => {
         deleteLink,
         updateOrder,
         toggleVisibility,
-        fetchLinksByStreamerId,
+        fetchPublicLinks,
     }
 })
