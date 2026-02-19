@@ -8,6 +8,7 @@ export const useLinkRepository = () => {
             .from('Link')
             .select('*')
             .eq('streamer_id', userId)
+            .eq('visible', true)
             .order('order', { ascending: true })
 
         if (error) throw error
@@ -19,6 +20,7 @@ export const useLinkRepository = () => {
             .from('Link')
             .select('*')
             .eq('streamer_id', streamerId)
+            .eq('visible', true)
             .order('order', { ascending: true })
 
         if (error) throw error

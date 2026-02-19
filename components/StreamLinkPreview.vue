@@ -39,7 +39,7 @@
             </template>
             <template #content>
                 <div class="flex flex-col gap-2 w-full">
-                    <div class="w-full mx-auto" v-for="link in visibleLinks" :key="link.id">
+                    <div class="w-full mx-auto" v-for="link in links" :key="link.id">
                         <a :href="link.url" target="_blank">
                             <button :class="['relative flex items-center w-full font-semibold transition h-14',
                                 link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]" :style="{
@@ -93,7 +93,6 @@ const designStore = useDesignStore()
 const { links } = storeToRefs(linkStore)
 const { streamer } = storeToRefs(streamerStore)
 const { design } = storeToRefs(designStore)
-const visibleLinks = computed(() => links.value.filter(link => link.visible))
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
@@ -103,8 +102,8 @@ const streamerId = streamer.value?.id
 // Charger le design au montage du composant
 onMounted(async () => {
     if (streamerId) {
-        await linkStore.fetchLinks(streamerId)
-        await designStore.fetchDesign(streamerId)
+        await linkStore.fetchLinks()
+        await designStore.fetchDesign()
     }
 })
 

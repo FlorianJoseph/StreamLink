@@ -6,6 +6,7 @@ export const useLinkStore = defineStore('link', () => {
     const { uid, safe } = useSupabase()
     const repo = useLinkRepository()
     const links = ref<Link[]>([])
+    const publicLinks = ref<Link[]>([])
 
     // Récupérer tous les liens du streamer connecté
     const fetchLinks = async () => {
@@ -21,7 +22,7 @@ export const useLinkStore = defineStore('link', () => {
         if (!streamerId) return
 
         const result = await safe(() => repo.fetchLinkPublic(streamerId))
-        if (result.data) links.value = result.data
+        if (result.data) publicLinks.value = result.data
         return result
     }
 
@@ -86,12 +87,13 @@ export const useLinkStore = defineStore('link', () => {
 
     return {
         links,
+        publicLinks,
         fetchLinks,
         addLink,
         updateLink,
         deleteLink,
         updateOrder,
         toggleVisibility,
-        fetchLinksByStreamerId
+        fetchLinksByStreamerId,
     }
 })

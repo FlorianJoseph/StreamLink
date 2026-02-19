@@ -41,7 +41,7 @@
         <template #content>
             <!-- Liste de liens -->
             <div class="flex flex-col gap-4 w-full">
-                <div class="w-full mx-auto" v-for="link in visibleLinks" :key="link.id">
+                <div class="w-full mx-auto" v-for="link in publicLinks" :key="link.id">
                     <a :href="link.url" target="_blank">
                         <button :class="['relative flex items-center w-full font-semibold transition h-16',
                             link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]" :style="{
@@ -72,7 +72,7 @@
 
         <template #footer>
             <div class="flex justify-center my-12">
-                <NuxtLink :to="'/admin/links'">
+                <NuxtLink :to="'/admin/links'" external>
                     <Button severity="contrast">
                         <span class="font-semibold font-sm">Rejoignez {{ publicStreamer?.username }} sur StreamLink</span>
                     </Button>
@@ -126,9 +126,9 @@ definePageMeta({
 const streamerStore = useStreamerStore()
 const { publicStreamer, loading } = storeToRefs(streamerStore)
 const linkStore = useLinkStore()
-const { links } = storeToRefs(linkStore)
+const { publicLinks } = storeToRefs(linkStore)
 const designStore = useDesignStore()
-const { design } = storeToRefs(designStore)
+const { publicDesign } = storeToRefs(designStore)
 
 const route = useRoute()
 
@@ -143,8 +143,6 @@ const copyText = () => {
     setTimeout(() => (copied.value = false), 1500)
 }
 
-const visibleLinks = computed(() => links.value.filter(link => link.visible))
-
 onMounted(async () => {
     const username = route.params.username
     streamerStore.loading = true
@@ -156,22 +154,22 @@ onMounted(async () => {
 
 // Style du pseudo dynamique
 const usernameSizeClass = computed(() => {
-    const size = design.value?.username_style?.size ?? 'normal'
+    const size = publicDesign.value?.username_style?.size ?? 'normal'
     return size === 'medium' ? 'text-3xl' : 'text-2xl'
 })
 const usernameColor = computed(() => {
-    const color = design.value?.username_style?.textColor ?? 'FFFFFF'
+    const color = publicDesign.value?.username_style?.textColor ?? 'FFFFFF'
     return color ? `#${color}` : '#FFFFFF'
 })
 
 // Style de la description dynamique
 const descriptionColor = computed(() => {
-    const color = design.value?.bio_style?.textColor ?? 'D4D4D8'
+    const color = publicDesign.value?.bio_style?.textColor ?? 'D4D4D8'
     return color ? `#${color}` : '#D4D4D8'
 })
 
 // Style des boutons dynamique
-const buttonVariant = computed(() => design.value?.button_style?.variant ?? 'filled')
+const buttonVariant = computed(() => publicDesign.value?.button_style?.variant ?? 'filled')
 
 const buttonClass = computed(() => {
 
@@ -190,27 +188,27 @@ const buttonClass = computed(() => {
 })
 
 const buttonBorderColor = computed(() => {
-    const color = design.value?.button_style?.backgroundColor ?? 'FFFFFF'
+    const color = publicDesign.value?.button_style?.backgroundColor ?? 'FFFFFF'
     return buttonVariant.value === 'outlined' ? `#${color}` : null
 })
 
 const buttonBackgroundColor = computed(() => {
-    const color = design.value?.button_style?.backgroundColor ?? 'FFFFFF'
+    const color = publicDesign.value?.button_style?.backgroundColor ?? 'FFFFFF'
     return buttonVariant.value === 'filled' ? `#${color}` : 'transparent'
 })
 
 const buttonTextColor = computed(() => {
-    const color = design.value?.button_style?.textColor ?? '000000'
+    const color = publicDesign.value?.button_style?.textColor ?? '000000'
     return `#${color}`
 })
 
 const buttonRadiusClass = computed(() => {
-    return design.value?.button_style?.borderRadius ?? 'rounded-lg'
+    return publicDesign.value?.button_style?.borderRadius ?? 'rounded-lg'
 })
 
 // Style du fond dynamique
 const wallpaperColor = computed(() => {
-    const color = design.value?.wallpaper_style?.backgroundColor ?? '18181B'
+    const color = publicDesign.value?.wallpaper_style?.backgroundColor ?? '18181B'
     return `#${color}`
 })
 
