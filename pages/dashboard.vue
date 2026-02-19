@@ -155,8 +155,14 @@ const scheduleSlotStore = useScheduleSlotStore()
 const linkStore = useLinkStore()
 const { streamer } = storeToRefs(streamerStore)
 const newsletterStore = useNewsletterStore()
-const user = useSupabaseUser()
 const loading = ref(true)
+const { uid } = useSupabase()
+
+watch(uid, async (val) => {
+    if (val) {
+        await streamerStore.fetchStreamer(uid.value)
+    }
+}, { immediate: true })
 
 const toolsSections = [
     {
@@ -178,7 +184,6 @@ const toolsSections = [
 
 onMounted(async () => {
     loading.value = true
-    await streamerStore.fetchStreamer(user.value.sub)
     await newsletterStore.fetchStatus()
     const { data: schedule } = await scheduleStore.fetchSchedule()
     if (schedule?.id) {

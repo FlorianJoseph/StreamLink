@@ -9,7 +9,7 @@
 
 <script setup>
 const designStore = useDesignStore()
-const { design } = storeToRefs(designStore)
+const { publicDesign } = storeToRefs(designStore)
 
 function deriveBackgroundColor(hex) {
     const c = hex.replace('#', '')
@@ -61,7 +61,7 @@ function deriveBackgroundColor(hex) {
 }
 
 const wallpaperColor = computed(() => {
-    const color = design.value?.wallpaper_style?.backgroundColor ?? '2E2E2E'
+    const color = publicDesign.value?.wallpaper_style?.backgroundColor ?? '2E2E2E'
     return `#${color}`
 })
 

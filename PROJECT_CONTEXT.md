@@ -29,18 +29,23 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Planning hebdomadaire personnalisable
 
 ## État du produit
-- ~100 utilisateurs, ~50 profils actifs, newsletter active (~30 inscrits) 20 janvier 2026
-- ~150 utilisateurs, ~65 profils actifs, newsletter active (~65 inscrits) 07 février 2026
+- 20/01/26 100 utilisateurs, 50 profils actifs, newsletter ~30 inscrits
+- 07/02/26 150 utilisateurs, 65 profils actifs, 230 liens, 0 streams planifiés, newsletter 65 inscrits
+- 14/02/26 170 utilisateurs, 69 profils actifs, 276 liens, 37 streams planifiés, newsletter 70 inscrits
+- 17/02/26 190 utilisateurs, 76 profils actifs, 300 liens, 75 streams planifiés, newsletter 80 inscrits
+- 18/02/26 200 utilisateurs, 83 profils actifs, 325 liens, 115 streams planifiés, newsletter 93 inscrits + 1ère collab
+- 19/02/26 225 utilisateurs, 93 profils actifs, 363 liens, 143 streams planifiés, newsletter 100 inscrits
 
 ## Roadmap déjà réalisée
-- En production depuis le 19 octobre 2025
-- Confidentialité 28 octobre 2025
-- Découverte 05 novembre 2025
-- Design 31 décembre 2025
-- Newletter 10 janvier 2026
-- Dashboard 14 janvier 2026
-- Planning 08 Février 2026
-- Découverte v1 (prochain stream + filtres) 12 février 2026
+- En production 19/10/25
+- Confidentialité 28/10/25
+- Découverte 05/11/25
+- Design 31/12/25
+- Newsletter 10/01/26
+- Dashboard 14/01/26
+- Planning 08/02/26
+- Découverte v1 (prochain stream + filtres simples) 12/02/26
+- Nouvelles quêtes dashboard (activation planning) 16/02/26
 
 ## Roadmap court terme – Consolider l’usage (priorité)
 1. Notifications in‑app
@@ -49,9 +54,9 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
     - Alertes nouvelles features 
 
 ## Roadmap moyen terme – Augmenter la visibilité
-1. Boost Discover (filtres, collabs, raids)
-    - Filtres (jeu, langue, horaire)
-    - Collabs / raids aléatoires
+1. Boost Discover
+    - Filtres (jeu, horaire...)
+    - Collabs/Raids
     - Mise en avant rotationnelle des profils
 
 2. Statistiques basiques (vues profil, clics)
@@ -66,7 +71,6 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
     - Thèmes avancés / design pro
     - Stats avancées
     - Badges / options pro
-    - Accès anticipé features
 
 2. Features virales (roue aléatoire, tournois)
     - Roue aléatoire pour chat Twitch

@@ -93,19 +93,11 @@ const designStore = useDesignStore()
 const { links } = storeToRefs(linkStore)
 const { streamer } = storeToRefs(streamerStore)
 const { design } = storeToRefs(designStore)
+
 const visibleLinks = computed(() => links.value.filter(link => link.visible))
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
-
-const streamerId = streamer.value?.id
-
-// Charger le design au montage du composant
-onMounted(async () => {
-    if (streamerId) {
-        await designStore.fetchDesign(streamerId)
-    }
-})
 
 // Style du pseudo dynamique
 const usernameSizeClass = computed(() => {
