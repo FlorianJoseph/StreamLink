@@ -55,9 +55,14 @@ export const useLinkStore = defineStore('link', () => {
 
     // Supprimer un lien
     const deleteLink = async (id: string) => {
+        const linkToDelete = links.value.find(l => l.id === id)
+
+        const { removeVignette } = useVignetteUploader(ref(linkToDelete))
+        await removeVignette()
+
         const result = await safe(() => repo.remove(id))
 
-        if (!result.error) links.value = links.value.filter((l) => l.id !== id)
+        if (!result.error) links.value = links.value.filter(l => l.id !== id)
         return result
     }
 
