@@ -99,16 +99,6 @@ const visibleLinks = computed(() => links.value.filter(link => link.visible))
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 
-const streamerId = streamer.value?.id
-
-// Charger le design au montage du composant
-onMounted(async () => {
-    if (streamerId) {
-        await linkStore.fetchLinks()
-        await designStore.fetchDesign()
-    }
-})
-
 // Style du pseudo dynamique
 const usernameSizeClass = computed(() => {
     const size = design.value?.username_style?.size ?? 'normal'

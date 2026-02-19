@@ -454,8 +454,4 @@ const defaultSize = ({ imageSize, visibleArea }) => {
         height: (visibleArea || imageSize).height,
     };
 };
-
-onMounted(async () => {
-    await linkStore.fetchLinks()
-})
 </script>

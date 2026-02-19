@@ -31,13 +31,21 @@
 const streamerStore = useStreamerStore()
 const { loading } = storeToRefs(streamerStore)
 const { uid } = useSupabase()
+const linkStore = useLinkStore()
+const designStore = useDesignStore()
 
 watch(uid, async (val) => {
     if (val) {
-        await streamerStore.fetchStreamer(uid.value)
+        await streamerStore.fetchStreamer()
     }
 }, { immediate: true })
 
+onMounted(async () => {
+    await Promise.all([
+        linkStore.fetchLinks(),
+        designStore.fetchDesign()
+    ])
+})
 </script>
 
 <style scoped>
