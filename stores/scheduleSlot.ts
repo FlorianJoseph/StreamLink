@@ -9,7 +9,6 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
 
     // Récupère tous les créneaux d'un planning 
     async function fetchSlots(scheduleId: ScheduleSlot['schedule_id']) {
-
         const result = await safe(() => repo.findByScheduleId(scheduleId))
 
         if (result.data) slots.value = result.data
@@ -28,7 +27,6 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
 
     // Met à jour un créneau
     async function updateSlot(slotId: string, payload: ScheduleSlotUpdate) {
-
         const result = await safe(() => repo.update(slotId, payload))
 
         if (result.data) {
@@ -40,8 +38,8 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
 
     // Supprime un créneau
     async function deleteSlot(slotId: string) {
-
         const result = await safe(() => repo.remove(slotId))
+        
         if (!result.error) slots.value = slots.value.filter(s => s.id !== slotId)
         return result
     }

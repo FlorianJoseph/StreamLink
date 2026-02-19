@@ -28,8 +28,8 @@ export const useStreamerStore = defineStore('streamer', () => {
 
     // Récupère tous les streamers pour la page découverte
     const fetchAllStreamers = async () => {
-
         const result = await safe(() => repo.findAllVisible())
+
         if (result.data) return result.data ?? []
     }
 
@@ -72,7 +72,6 @@ export const useStreamerStore = defineStore('streamer', () => {
 
     // Mettre à jour le streamer du user connecté
     const updateStreamer = async (payload: StreamerUpdate) => {
-
         const result = await safe(() => repo.update(uid.value, { ...payload, updated_at: new Date().toISOString() }))
 
         if (result.data) streamer.value = result.data
@@ -82,7 +81,6 @@ export const useStreamerStore = defineStore('streamer', () => {
     // Supprimer le streameur et ses liens associés avec leurs vignettes + avatar
     const deleteStreamerWithLinks = async (streamerId: string) => {
         try {
-
             // Sélectionner les liens + leurs vignettes
             const { data: links, error: linksFetchError } = await supabase
                 .from('Link')

@@ -10,7 +10,6 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     // Récupère le planning de l'utilisateur
     async function fetchSchedule() {
-
         const result = await safe(() => repo.findByUserId(uid.value))
 
         if (result.data) schedule.value = result.data
@@ -19,7 +18,6 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     // Crée un planning si l'utilisateur n'en a pas
     async function createSchedule() {
-
         const result = await safe(() => repo.create(
             {
                 user_id: uid.value,
