@@ -8,6 +8,17 @@ export const useLinkRepository = () => {
             .from('Link')
             .select('*')
             .eq('streamer_id', userId)
+            .order('order', { ascending: true })
+
+        if (error) throw error
+        return data
+    }
+
+    const findByStreamerId = async (streamerId: string) => {
+        const { data, error } = await supabase
+            .from('Link')
+            .select('*')
+            .eq('streamer_id', streamerId)
             .eq('visible', true)
             .order('order', { ascending: true })
 
@@ -69,6 +80,7 @@ export const useLinkRepository = () => {
 
     return {
         findByUserId,
+        findByStreamerId,
         create,
         update,
         remove,

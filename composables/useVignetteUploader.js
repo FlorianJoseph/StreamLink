@@ -102,12 +102,6 @@ export const useVignetteUploader = (linkRef) => {
 
     const selectIcon = async (iconName) => {
         selectedIcon.value = iconName
-        if (!linkRef.value) return
-        if (linkRef.value.icon_url) {
-            const path = linkRef.value.icon_url.split('/Vignette/')[1]
-            await supabase.storage.from('Streamlink').remove([`Vignette/${path}`])
-        }
-        await linkStore.updateLink(linkRef.value.id, { icon_url: null, custom_icon: true })
         imageUrl.value = null // supprime l'image si icône choisie
     }
 
@@ -137,6 +131,10 @@ export const useVignetteUploader = (linkRef) => {
         // Si une icône est choisie
         else if (selectedIcon.value) {
             await linkStore.updateLink(linkRef.value.id, { icon: selectedIcon.value, icon_url: null, custom_icon: true })
+            if (linkRef.value.icon_url) {
+                const path = linkRef.value.icon_url.split('/Vignette/')[1]
+                await supabase.storage.from('Streamlink').remove([`Vignette/${path}`])
+            }
         }
 
         // Reset

@@ -21,7 +21,7 @@ export const useLinkStore = defineStore('link', () => {
     const fetchLinksByStreamerId = async (streamerId: string) => {
         if (!streamerId) return
 
-        const result = await safe(() => repo.findByUserId(streamerId))
+        const result = await safe(() => repo.findByStreamerId(streamerId))
         if (result.data) publicLinks.value = result.data
         return result
     }
