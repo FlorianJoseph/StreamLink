@@ -5,7 +5,7 @@
                 <!-- Header : Avatar + Pseudo -->
                 <div class="flex items-center gap-3">
                     <div class="relative w-12 h-12 flex-shrink-0">
-                        <img :src="streamer.avatar_url"
+                        <img :src="streamer.avatar_url || defaultAvatar"
                             class="w-full h-full object-cover rounded-xl ring-2 ring-zinc-700"
                             :alt="streamer.username" />
                     </div>
@@ -74,6 +74,9 @@
 </template>
 
 <script setup lang="ts">
+
+const defaultAvatar =
+    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 
 defineProps({
     streamer: {
