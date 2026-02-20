@@ -17,11 +17,11 @@ export const useLinkStore = defineStore('link', () => {
         return result
     }
 
-    // Récupérer les liens d'un streamer pour la page publique
-    const fetchPublicLinks = async (streamerId: string) => {
-        if (!streamerId) return
+    // Récupérer les liens d'un utilisateur pour la page publique
+    const fetchPublicLinks = async (userId: string) => {
+        if (!userId) return
 
-        const result = await safe(() => repo.findByStreamerId(streamerId))
+        const result = await safe(() => repo.findPublicLinksByUserId(userId))
         if (result.data) publicLinks.value = result.data
         return result
     }
@@ -33,7 +33,7 @@ export const useLinkStore = defineStore('link', () => {
         const result = await safe(() => repo.create({
             id: crypto.randomUUID(),
             ...payload,
-            streamer_id: uid.value,
+            user_id: uid.value,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
         }))

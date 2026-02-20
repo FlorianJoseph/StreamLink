@@ -32,7 +32,7 @@ export const useDesignStore = defineStore('design', () => {
     // Créer un design par défaut pour un nouveau streamer
     const createDesign = async () => {
         const result = await safe(() => repo.create({
-            streamer_id: uid.value,
+            user_id: uid.value,
             wallpaper_style,
             button_style,
             username_style,
@@ -48,9 +48,9 @@ export const useDesignStore = defineStore('design', () => {
         return result
     }
 
-    // Récupérer le design d'un streamer pour la page publique
-    const fetchPublicDesign = async (streamerId: string) => {
-        const result = await safe(() => repo.findByUserId(streamerId))
+    // Récupérer le design d'un utilisateur pour la page publique
+    const fetchPublicDesign = async (userId: string) => {
+        const result = await safe(() => repo.findByUserId(userId))
 
         if (result.data) {
             publicDesign.value = result.data

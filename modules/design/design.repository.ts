@@ -7,7 +7,7 @@ export const useDesignRepository = () => {
         const { data, error } = await supabase
             .from('Design')
             .select('*')
-            .eq('streamer_id', userId)
+            .eq('user_id', userId)
             .maybeSingle()
 
         if (error) throw error
