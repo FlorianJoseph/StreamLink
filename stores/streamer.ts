@@ -79,13 +79,13 @@ export const useStreamerStore = defineStore('streamer', () => {
     }
 
     // Supprimer le streameur et ses liens associés avec leurs vignettes + avatar
-    const deleteStreamerWithLinks = async (streamerId: string) => {
+    const deleteStreamerWithLinks = async (userId: string) => {
         try {
             // Sélectionner les liens + leurs vignettes
             const { data: links, error: linksFetchError } = await supabase
                 .from('Link')
                 .select('id, icon_url')
-                .eq('streamer_id', streamerId)
+                .eq('user_id', userId)
 
             if (linksFetchError) throw linksFetchError
 
@@ -104,7 +104,7 @@ export const useStreamerStore = defineStore('streamer', () => {
             const { error: linksError } = await supabase
                 .from('Link')
                 .delete()
-                .eq('streamer_id', streamerId)
+                .eq('user_id', userId)
 
             if (linksError) throw linksError
 
@@ -112,7 +112,7 @@ export const useStreamerStore = defineStore('streamer', () => {
             const { data: streamer, error: streamerFetchError } = await supabase
                 .from('Streamer')
                 .select('avatar_url')
-                .eq('id', streamerId)
+                .eq('id', userId)
                 .single()
 
             if (streamerFetchError) throw streamerFetchError
@@ -129,7 +129,7 @@ export const useStreamerStore = defineStore('streamer', () => {
             const { error: streamerError } = await supabase
                 .from('Streamer')
                 .delete()
-                .eq('id', streamerId)
+                .eq('id', userId)
 
             if (streamerError) throw streamerError
             return true

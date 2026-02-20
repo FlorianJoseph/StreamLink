@@ -56,11 +56,11 @@ export const useStreamerRepository = () => {
         return data
     }
 
-    const update = async (streamerId: string, payload: StreamerUpdate) => {
+    const update = async (userId: string, payload: StreamerUpdate) => {
         const { data, error } = await supabase
             .from('Streamer')
             .update(payload)
-            .eq('id', streamerId)
+            .eq('id', userId)
             .select()
             .single()
 

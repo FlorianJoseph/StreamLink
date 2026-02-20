@@ -7,18 +7,18 @@ export const useLinkRepository = () => {
         const { data, error } = await supabase
             .from('Link')
             .select('*')
-            .eq('streamer_id', userId)
+            .eq('user_id', userId)
             .order('order', { ascending: true })
 
         if (error) throw error
         return data
     }
 
-    const findByStreamerId = async (streamerId: string) => {
+    const findPublicLinksByUserId = async (userId: string) => {
         const { data, error } = await supabase
             .from('Link')
             .select('*')
-            .eq('streamer_id', streamerId)
+            .eq('user_id', userId)
             .eq('visible', true)
             .order('order', { ascending: true })
 
@@ -80,7 +80,7 @@ export const useLinkRepository = () => {
 
     return {
         findByUserId,
-        findByStreamerId,
+        findPublicLinksByUserId,
         create,
         update,
         remove,

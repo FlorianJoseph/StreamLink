@@ -91,16 +91,16 @@ async function acceptTerms() {
             await streamerStore.createStreamer()
         }
 
-        const streamerId = streamer.value?.id
+        const userId = streamer.value?.id
 
         // Stocke CGU + Privacy (obligatoire)
-        await accept('terms', streamerId)
-        await accept('privacy', streamerId)
+        await accept('terms', userId)
+        await accept('privacy', userId)
 
         // Newsletter (optionnelle)
         if (newsletter.value === true) {
             try {
-                await subscribe(streamerId)
+                await subscribe(userId)
             } catch (e) {
                 console.warn('Newsletter non enregistrée', e)
             }

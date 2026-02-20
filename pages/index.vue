@@ -146,7 +146,7 @@ const features = [
     icon: 'lucide:calendar-days',
     title: "Planning de streams",
     description: "Organise tes streams pour que ta communauté soit toujours au courant.",
-    badge: "Nouveau"
+    // badge: "Nouveau"
   },
   {
     icon: 'lucide:layout-dashboard',
@@ -156,7 +156,7 @@ const features = [
   {
     icon: 'lucide:users',
     title: "Communauté",
-    description: "Connecte-toi avec d'autres créateurs et booste ta visibilité.",
+    description: "Connecte-toi avec d'autres créateurs et augmente ta visibilité.",
   }
 ]
 
