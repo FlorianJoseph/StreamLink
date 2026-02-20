@@ -99,6 +99,11 @@ const menuItems = ref([
         icon: 'lucide:calendar-days',
         route: '/schedule',
     },
+    {
+        label: 'Analytics',
+        icon: 'lucide:bar-chart-2',
+        route: '/admin/analytics',
+    },
 ]);
 
 const menu = ref();
