@@ -1,63 +1,64 @@
 <template>
-    <div class="w-full border-2 border-zinc-600 p-6 space-y-8 rounded-2xl">
+    <div class="w-full space-y-8">
 
         <!-- HEADER / OVERVIEW -->
         <div>
-            <h2 class="text-xl font-semibold text-zinc-800 mb-4">
+            <h2 class="text-xl font-semibold text-gray-200 mb-4">
                 Vue d'ensemble - {{ currentDate }}
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <StatCard label="Health Score" :value="healthScore + '/100'"
-                    :trend="healthScore > 50 ? 'up' : 'down'" />
+                <StatCard label="Health Score" :value="healthScore + '/100'" :trend="healthScore > 50 ? 'up' : 'down'"
+                    :sub="healthScore > 50 ? 'Bon' : 'En dessous du seuil'" />
                 <StatCard label="Activation" :value="activationRate + '%'"
-                    :trend="activationRate > 40 ? 'up' : 'down'" />
-                <StatCard label="Nouveaux profils actifs (7j)" :value="`${fmt(growthAbsolute)}`"
+                    :note="`${totalStreamersVisible} visibles / ${totalStreamers} inscrits`" />
+                <StatCard label="Nouveaux profils visibles (7j)" :value="`${fmt(growthAbsolute)}`"
                     :sub="`${fmt(growthWeekOverWeek)}% vs semaine préc.`" :trend="growthAbsolute > 0 ? 'up' : 'down'" />
             </div>
         </div>
 
         <!-- ACQUISITION -->
         <div>
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+            <h2 class="text-lg font-semibold text-gray-200 mb-4">
                 Acquisition
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard label="Utilisateurs" :value="totalStreamers"
-                    :sub="`${fmt(totalStreamers7D)} (7j) • ${fmt(totalStreamers30D)} (30j)`"
-                    :trend="totalStreamers7D > 0 ? 'up' : totalStreamers7D < 0 ? 'down' : 'neutral'" />
-                <StatCard label="Visibles" :value="totalStreamersVisible"
-                    :sub="`${fmt(totalStreamersVisible7D)} (7j) • ${fmt(totalStreamersVisible30D)} (30j)`"
-                    :trend="totalStreamersVisible7D > 0 ? 'up' : totalStreamersVisible7D < 0 ? 'down' : 'neutral'" />
+                    :breakdown="{ d7: totalStreamers7D, d30: totalStreamers30D }" />
+                <StatCard label="Profils visibles" :value="totalStreamersVisible"
+                    :breakdown="{ d7: totalStreamersVisible7D, d30: totalStreamersVisible30D }" />
                 <StatCard label="Newsletter" :value="totalNewsletter"
-                    :sub="`${fmt(totalNewsletter7D)} (7j) • ${fmt(totalNewsletter30D)} (30j) • ${fmt(totalNewsletterNotVisible)} non visibles`"
-                    :trend="totalNewsletter7D > 0 ? 'up' : totalNewsletter7D < 0 ? 'down' : 'neutral'" />
+                    :breakdown="{ d7: totalNewsletter7D, d30: totalNewsletter30D }" />
             </div>
         </div>
 
         <!-- FUNNEL -->
         <div>
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+            <h2 class="text-lg font-semibold text-gray-200 mb-4">
                 Funnel d'activation
             </h2>
-            <Funnel :steps="funnelSteps" :funnel-integrity="funnelIntegrity"
-                :newsletter-conversion="newsletterConversion" />
+            <Funnel :steps="funnelSteps" />
         </div>
 
         <!-- ENGAGEMENT -->
         <div>
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+            <h2 class="text-lg font-semibold text-gray-200 mb-4">
                 Engagement
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard label="Total Liens" :value="totalLinks"
-                    :sub="`${fmt(totalLinks7D)} (7j) • ${fmt(totalLinks30D)} (30j)`"
+                <StatCard label="Total Liens" :value="totalLinks" :breakdown="{ d7: totalLinks7D, d30: totalLinks30D }"
                     :trend="totalLinks7D > 0 ? 'up' : totalLinks7D < 0 ? 'down' : 'neutral'" />
                 <StatCard label="Total Streams" :value="totalSlots"
-                    :sub="`${fmt(totalSlots7D)} (7j) • ${fmt(totalSlots30D)} (30j)`"
-                    :trend="totalSlots7D > 0 ? 'up' : totalSlots7D < 0 ? 'down' : 'neutral'" />
+                    :breakdown="{ d7: totalSlots7D, d30: totalSlots30D }" />
+                <StatCard label="Conversion Liens" :value="conversionLink + '%'"
+                    :note="`${totalStreamersWithLink} streamers avec lien`" />
+                <StatCard label="Conversion Slot" :value="conversionSlot + '%'"
+                    :note="`${totalStreamersWithSlot} streamers avec slot`" />
+                <StatCard label="Streamer avec lien qui crée un stream" :value="funnelIntegrity + '%'" />
+                <StatCard label="Newsletter avec profil visible" :value="newsletterConversion + '%'"
+                    :note="`${totalNewsletterNotVisible} streamers non visible`" />
             </div>
         </div>
 
@@ -237,9 +238,7 @@ const funnelSteps = computed(() => [
 ])
 
 const funnelIntegrity = computed(() => {
-    if (totalStreamersVisible.value === 0) return 0
-    return Math.round(
-        (conversionSlot.value / conversionLink.value) * 100
-    )
+    if (totalStreamersWithLink.value === 0) return 0
+    return Math.round((totalStreamersWithSlot.value / totalStreamersWithLink.value) * 100)
 })
 </script>
