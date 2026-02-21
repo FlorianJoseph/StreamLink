@@ -35,6 +35,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - 17/02/26 190 utilisateurs, 76 profils actifs, 300 liens, 75 streams planifiés, newsletter 80 inscrits
 - 18/02/26 200 utilisateurs, 83 profils actifs, 325 liens, 115 streams planifiés, newsletter 93 inscrits + 1ère collab
 - 19/02/26 225 utilisateurs, 95 profils actifs, 375 liens, 149 streams planifiés, newsletter 100 inscrits
+- 20/02/26 236 utilisateurs, 104 profils actifs, 419 liens, 180 streams planifiés, newsletter 103 inscrits
 
 ## Roadmap déjà réalisée
 - En production 19/10/25
