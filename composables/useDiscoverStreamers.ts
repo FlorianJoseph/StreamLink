@@ -45,6 +45,9 @@ export function useDiscoverStreamers() {
         }
 
         const isToday = slotDate.toDateString() === now.toDateString()
+        const tomorrow = new Date(now)
+        tomorrow.setDate(now.getDate() + 1)
+        const isTomorrow = slotDate.toDateString() === tomorrow.toDateString()
         const isLive = now >= slotDate && now < endDate
 
         return {
@@ -52,12 +55,8 @@ export function useDiscoverStreamers() {
           slotDate,
           endDate,
           isToday,
+          isTomorrow,
           isLive,
-          displayDay: isLive
-            ? 'En cours'
-            : isToday
-              ? "Aujourd'hui"
-              : slot.day
         }
       })
       .filter(slot => slot && slot.endDate > now)
