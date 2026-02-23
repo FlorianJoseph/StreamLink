@@ -24,19 +24,42 @@ export function useDiscoverStreamers() {
     // Transforme les slots en objets avec une date complète pour le tri
     const upcoming = slots
       .map(slot => {
-        const [hours, minutes] = slot.start_at.split(':').map(Number)
+        const [startH, startM] = slot.start_at.split(':').map(Number)
+        const [endH, endM] = slot.end_at.split(':').map(Number)
+
         const targetDay = dayMap[slot.day]
         if (targetDay === undefined) return null
 
         // Calcul du prochain jour correspondant
-        const slotDate = new Date()
-        const diffDays = (targetDay + 7 - slotDate.getDay()) % 7
-        slotDate.setDate(slotDate.getDate() + diffDays)
-        slotDate.setHours(hours, minutes, 0, 0)
+        const slotDate = new Date(now)
+        const diff = targetDay - now.getDay()
+        slotDate.setDate(now.getDate() + diff)
+        slotDate.setHours(startH, startM, 0, 0)
 
-        return { ...slot, slotDate }
+        const endDate = new Date(slotDate)
+        endDate.setHours(endH, endM, 0, 0)
+
+        if (endDate < now) {
+          slotDate.setDate(slotDate.getDate() + 7)
+          endDate.setDate(endDate.getDate() + 7)
+        }
+
+        const isToday = slotDate.toDateString() === now.toDateString()
+        const tomorrow = new Date(now)
+        tomorrow.setDate(now.getDate() + 1)
+        const isTomorrow = slotDate.toDateString() === tomorrow.toDateString()
+        const isLive = now >= slotDate && now < endDate
+
+        return {
+          ...slot,
+          slotDate,
+          endDate,
+          isToday,
+          isTomorrow,
+          isLive,
+        }
       })
-      .filter(slot => slot && slot.slotDate.getTime() > now.getTime())
+      .filter(slot => slot && slot.endDate > now)
       .sort((a, b) => a.slotDate.getTime() - b.slotDate.getTime())
 
     return upcoming[0] || null

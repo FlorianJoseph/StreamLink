@@ -43,21 +43,14 @@
             <!-- Filtres -->
             <div class="flex flex-col sm:flex-row justify-between items-center">
                 <!-- Filtres rapides (boutons) -->
-                <div class="flex gap-2 flex-wrap justify-center sm:justify-start text-xs sm:text-base">
-                    <button @click="selectedFilter = 'all'"
-                        class=" px-3 py-1 rounded border-2 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200"
-                        :class="selectedFilter === 'all' ? 'bg-purple-500 text-white border-purple-500' : 'bg-zinc-800 text-gray-300 border-zinc-700'"
-                        size="small"> Tous
-                    </button>
-                    <button @click="selectedFilter = 'active'"
-                        class=" px-3 py-1 rounded border-2 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200"
-                        :class="selectedFilter === 'active' ? 'bg-purple-500 text-white border-purple-500' : 'bg-zinc-800 text-gray-300 border-zinc-700'"
-                        size="small"> Prochains streams
-                    </button>
-                    <button @click="selectedFilter = 'today'"
-                        class=" px-3 py-1 rounded border-2 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200"
-                        :class="selectedFilter === 'today' ? 'bg-purple-500 text-white border-purple-500' : 'bg-zinc-800 text-gray-300 border-zinc-700'"
-                        size="small"> Streams aujourd'hui
+                <div class="flex gap-2 flex-wrap justify-center sm:justify-start ">
+                    <button v-for="filter in filters" :key="filter.key" @click="selectedFilter = filter.key" :class="[
+                        'px-3 py-1.5 rounded text-sm sm:text-base font-medium transition-all duration-200',
+                        selectedFilter === filter.key
+                            ? 'bg-purple-500 text-white'
+                            : 'text-gray-400 hover:text-white hover:bg-purple-500/20'
+                    ]">
+                        {{ filter.label }}
                     </button>
                 </div>
                 <!-- Compteur de résultats -->
@@ -165,6 +158,12 @@ const search = ref('')
 const loading = ref(true)
 const { streamers, fetchStreamersWithNextSlot } = useDiscoverStreamers()
 const selectedFilter = ref('all')
+const filters = [
+    { key: 'all', label: 'Tous' },
+    { key: 'live', label: 'En live' },
+    { key: 'today', label: 'Aujourd\'hui' },
+    { key: 'future', label: 'À venir' },
+]
 const currentPage = ref(0)
 const rowsPerPage = ref(12)
 const totalPages = computed(() =>
@@ -201,28 +200,23 @@ watch([search, selectedFilter], () => {
 
 // Liste filtrée en fonction des critères de recherche et de filtre
 const filteredStreamers = computed(() => {
-    let list = [...streamers.value] // déjà triés : prochains streams d'abord, puis alphabétique
-
-    // Filtre : actifs seulement
-    if (selectedFilter.value === 'active') {
-        list = list.filter(s => s.nextSlot)
-    }
-
-    // Filtre : aujourd'hui seulement
-    if (selectedFilter.value === 'today') {
+    return streamers.value.filter(s => {
         const today = new Date().getDay()
-        list = list.filter(
-            s => s.nextSlot && s.nextSlot.slotDate?.getDay() === today
-        )
-    }
 
-    // Filtre par recherche
-    if (search.value) {
-        const searchLower = search.value.toLowerCase()
-        list = list.filter(s => s.username.toLowerCase().includes(searchLower))
-    }
+        // Filtre : en live seulement
+        if (selectedFilter.value === 'live' && !s.nextSlot?.isLive) return false
 
-    return list
+        // Filtre : aujourd'hui seulement
+        if (selectedFilter.value === 'today' && (!s.nextSlot || s.nextSlot.slotDate?.getDay() !== today || s.nextSlot.isLive)) return false
+
+        // Filtre : à venir seulement (streamers avec un prochain stream programmé, qu'il soit aujourd'hui ou plus tard)
+        if (selectedFilter.value === 'future' && (!s.nextSlot || s.nextSlot.isLive || s.nextSlot.slotDate?.getDay() === today)) return false
+
+        // Filtre recherche
+        if (search.value && !s.username.toLowerCase().includes(search.value.toLowerCase())) return false
+
+        return true
+    })
 })
 
 // Message d'état vide contextuel
@@ -233,11 +227,14 @@ function getEmptyStateMessage() {
     if (search.value) {
         return `Aucun résultat pour "${search.value}"`
     }
-    if (selectedFilter.value === 'active') {
-        return 'Aucun streameur avec un planning actif'
+    if (selectedFilter.value === 'live') {
+        return 'Aucun stream en direct pour le moment'
     }
     if (selectedFilter.value === 'today') {
         return 'Aucun stream prévu aujourd\'hui'
+    }
+    if (selectedFilter.value === 'future') {
+        return 'Aucun stream à venir pour le moment'
     }
     return 'Aucun streameur disponible pour le moment'
 }
@@ -246,8 +243,9 @@ function getEmptyStateMessage() {
 function getFilterLabel() {
     const labels: Record<string, string> = {
         all: 'Tous',
-        active: 'Actifs',
-        today: 'Aujourd\'hui'
+        live: 'En live',
+        today: 'Aujourd\'hui',
+        future: 'À venir'
     }
     return labels[selectedFilter.value] || 'Tous'
 }

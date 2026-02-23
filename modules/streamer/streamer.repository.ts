@@ -36,7 +36,8 @@ export const useStreamerRepository = () => {
                     id,
                     game,
                     day,
-                    start_at
+                    start_at,
+                    end_at
                 )
             )
         `)
