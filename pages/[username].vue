@@ -5,30 +5,52 @@
 :#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
-    <Card class="min-h-full w-full sm:w-2xl sm:p-2 fade-in" v-else-if="publicStreamer"
-        :style="{ '--p-card-background': wallpaperColor, boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }">
-        <template #title>
-            <div class="flex items-center justify-between">
-                <NuxtLink v-ripple :to="'/'">
-                    <button class="flex items-center p-3 rounded-full transition-all "
-                        :class="[fixedButtonColor, fixedButtonBg]">
-                        <Icon name="lucide:home" size="20" />
-                    </button>
-                </NuxtLink>
-                <button @click="copyText" class="flex items-center px-3 py-2.5 rounded-full transition-all gap-2"
-                    :class="copied
-                        ? 'bg-green-400 text-black'
-                        : [fixedButtonBg, fixedButtonColor]
-                        ">
-                    <Icon v-if="!copied" name="lucide:copy" size="20" />
-                    <Icon v-else name="lucide:check" size="20" />
-                    <span class="text-sm sm:text-base">{{ copied ? 'Copié !' : 'Copier le StreamLink' }}</span>
-                </button>
-            </div>
+    <div class="min-h-full w-full sm:w-2xl p-5 sm:p-7 fade-in sm:rounded-t-xl sm:border-t sm:border-r sm:border-l shadow-xl"
+        v-else-if="publicStreamer" :style="{ background: wallpaperColor, borderColor: accentColorAuto }">
 
+        <!-- Top bar -->
+        <div class="flex items-center justify-between">
+            <NuxtLink v-ripple :to="'/'">
+                <button class="flex items-center p-3 rounded-full transition-all shadow-xs"
+                    :class="[fixedButtonColor, fixedButtonBg]">
+                    <Icon name="lucide:home" size="20" />
+                </button>
+            </NuxtLink>
+            <button @click="copyText" class="flex items-center px-3 py-2.5 rounded-full transition-all gap-2 shadow-xs"
+                :class="copied
+                    ? 'bg-green-400 text-black'
+                    : [fixedButtonBg, fixedButtonColor]
+                    ">
+                <Icon v-if="!copied" name="lucide:copy" size="20" />
+                <Icon v-else name="lucide:check" size="20" />
+                <span class="text-sm sm:text-base font-medium">{{ copied ? 'Copié !' : 'Copier le lien' }}</span>
+            </button>
+        </div>
+
+        <div class="flex flex-col space-y-2">
+            <!-- En-tête -->
             <div class="flex items-center text-center flex-col mx-auto my-4">
-                <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
-                    class="w-24 h-24 rounded-full object-cover mb-4 mt-4" />
+                <!-- Avatar -->
+                <div class="relative my-4 ">
+                    <div class="avatar-ring" :class="isLive ? 'live-ring' : ''"
+                        :style="!isLive ? { '--ring-color': accentColorAuto + '88' } : {}">
+                        <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
+                            class="w-24 h-24 rounded-full object-cover" />
+                    </div>
+
+                    <!-- Badge statut -->
+                    <span v-if="isLive"
+                        class="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-red-500 text-white text-xs font-bold px-3 py-0.5 rounded-full flex items-center gap-1.5 shadow-lg animate-pulse w-auto whitespace-nowrap">
+                        <span class="w-1.5 h-1.5 bg-white rounded-full inline-block" />
+                        LIVE
+                    </span>
+                    <span v-else
+                        class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-0.5 rounded-full whitespace-nowrap shadow-sm"
+                        :style="{ backgroundColor: accentColorAuto + '88', color: isColorDark(accentColorAuto) ? '#fff' : '#000' }">
+                        Offline
+                    </span>
+                </div>
+
                 <span :class="['font-bold', usernameSizeClass]" :style="{ color: usernameColor }">
                     {{ publicStreamer?.username }}
                 </span>
@@ -37,10 +59,20 @@
                 </span>
             </div>
 
-        </template>
-        <template #content>
+            <!-- Switcher -->
+            <div class="flex rounded-xl p-1 gap-1" :style="{ backgroundColor: bgColorAuto }">
+                <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id"
+                    class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all"
+                    :style="activeTab === tab.id
+                        ? { backgroundColor: accentColorAuto, color: isColorDark(accentColorAuto) ? '#fff' : '#000' }
+                        : { color: descriptionColor }">
+                    <Icon :name="tab.icon" size="16" />
+                    {{ tab.label }}
+                </button>
+            </div>
+
             <!-- Liste de liens -->
-            <div class="flex flex-col gap-4 w-full">
+            <div class="flex flex-col gap-4 w-full mt-2">
                 <div class="w-full mx-auto" v-for="link in publicLinks" :key="link.id">
                     <a :href="link.url" target="_blank">
                         <button :class="['relative flex items-center w-full font-semibold transition h-16',
@@ -68,17 +100,21 @@
                     </a>
                 </div>
             </div>
-        </template>
 
-        <template #footer>
+            <!-- Footer CTA -->
             <div class="flex justify-center my-12">
                 <NuxtLink :to="'/admin/links'" external>
-                    <Button severity="contrast">
-                        <span class="font-semibold font-sm">Rejoignez {{ publicStreamer?.username }} sur
-                            StreamLink</span>
-                    </Button>
+                    <button :class="['py-2.5 px-3 rounded-md font-semibold transition-all shadow-sm',
+                        isColorDark(accentColorAuto) ? 'hover:brightness-105' : 'hover:brightness-95']" :style="{
+                            backgroundColor: buttonBackgroundColor ? accentColorAuto : buttonBackgroundColor,
+                            color: isColorDark(accentColorAuto) ? '#fff' : '#000'
+                        }">
+                        Rejoignez {{ publicStreamer?.username }} sur
+                        StreamLink
+                    </button>
                 </NuxtLink>
             </div>
+
             <!-- Footer infos -->
             <div class="flex flex-col items-center gap-3 pb-10 text-xs">
                 <div class="flex items-center gap-2" :style="{ color: footerTextColor }">
@@ -91,8 +127,10 @@
                     </NuxtLink>
                 </div>
             </div>
-        </template>
-    </Card>
+        </div>
+    </div>
+
+    <!-- Page d’erreur si le streamer n’existe pas -->
     <template v-else>
         <div class="flex flex-col items-center text-center gap-6">
             <!-- Icône pour illustrer l'erreur -->
@@ -134,6 +172,13 @@ const route = useRoute()
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
+
+// Tabs
+const tabs = [
+    { id: 'liens', label: 'Liens', icon: 'lucide:link' },
+    { id: 'planning', label: 'Planning', icon: 'lucide:calendar-days' },
+]
+const activeTab = ref('liens')
 
 // Fonction de copie du lien
 const copied = ref(false)
@@ -242,12 +287,18 @@ const fixedButtonColor = computed(() => {
 
 // Couleur de fond des boutons en fonction de la luminosité du fond
 const fixedButtonBg = computed(() => {
-    return isColorDark(wallpaperColor.value) ? 'bg-zinc-800 hover:bg-zinc-700/70' : 'bg-white hover:bg-zinc-200'
+    return isColorDark(wallpaperColor.value) ? 'bg-zinc-800 hover:brightness-115' : 'bg-white hover:brightness-95'
 })
 
 // Couleur du texte du footer en fonction de la luminosité du fond
 const footerTextColor = computed(() => {
     return isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000'
+})
+
+const bgColorAuto = computed(() => isColorDark(wallpaperColor.value) ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')
+const accentColorAuto = computed(() => {
+    const color = publicDesign.value?.button_style?.backgroundColor
+    return `#${color}`
 })
 
 </script>
@@ -263,5 +314,15 @@ const footerTextColor = computed(() => {
     to {
         opacity: 1;
     }
+}
+
+/* Ring avatar */
+.avatar-ring {
+    border-radius: 9999px;
+    border: 3px solid var(--ring-color, rgba(255, 255, 255, 0.15));
+}
+
+.live-ring {
+    border-color: rgba(255, 0, 0, 0.8);
 }
 </style>
