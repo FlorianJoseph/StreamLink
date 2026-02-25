@@ -65,7 +65,7 @@
                     class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all"
                     :style="activeTab === tab.id
                         ? { backgroundColor: accentColorAuto, color: isColorDark(accentColorAuto) ? '#fff' : '#000' }
-                        : { color: descriptionColor }">
+                        : { color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
                     <Icon :name="tab.icon" size="16" />
                     {{ tab.label }}
                 </button>
