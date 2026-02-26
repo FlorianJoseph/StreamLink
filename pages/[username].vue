@@ -6,7 +6,7 @@
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
     <div class="min-h-full w-full sm:w-2xl p-5 sm:p-7 fade-in sm:rounded-t-xl sm:border-t sm:border-r sm:border-l shadow-xl"
-        v-else-if="publicStreamer" :style="{ background: wallpaperColor, borderColor: accentColorAuto }">
+        v-else-if="publicStreamer" :style="{ background: wallpaperColor, borderColor: accentColorAuto + '44' }">
 
         <!-- Top bar -->
         <div class="flex items-center justify-between">
@@ -28,35 +28,61 @@
         </div>
 
         <div class="flex flex-col space-y-2">
-            <!-- En-tête -->
-            <div class="flex items-center text-center flex-col mx-auto my-4">
-                <!-- Avatar -->
-                <div class="relative my-4 ">
-                    <div class="avatar-ring" :class="isLive ? 'live-ring' : ''"
-                        :style="!isLive ? { '--ring-color': accentColorAuto + '88' } : {}">
-                        <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
-                            class="w-24 h-24 rounded-full object-cover" />
+            <div class="relative rounded-2xl my-4 border shadow-xs"
+                :style="{ backgroundColor: bgColorAuto, borderColor: accentColorAuto + '44' }">
+                <!-- En-tête -->
+                <div class="relative z-10 flex items-center gap-4 px-5 py-4">
+                    <!-- Avatar -->
+                    <div class="relative flex-shrink-0">
+                        <div class="avatar-ring" :style="{ '--ring-color': accentColorAuto + '88' }">
+                            <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
+                                class="w-20 h-20 rounded-full object-cover" />
+                        </div>
+                        <!-- Badge statut -->
+                        <span v-if="!isLive"
+                            class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-0.5 rounded-full whitespace-nowrap shadow-sm"
+                            :style="{ backgroundColor: accentColorAuto + '88', color: isColorDark(accentColorAuto) ? '#fff' : '#000' }">
+                            Offline
+                        </span>
                     </div>
-
-                    <!-- Badge statut -->
-                    <span v-if="isLive"
-                        class="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-red-500 text-white text-xs font-bold px-3 py-0.5 rounded-full flex items-center gap-1.5 shadow-lg animate-pulse w-auto whitespace-nowrap">
-                        <span class="w-1.5 h-1.5 bg-white rounded-full inline-block" />
-                        LIVE
+                    <div class="flex flex-col flex-1 min-w-0">
+                        <span :class="['font-bold ', usernameSizeClass]" :style="{ color: usernameColor }">
+                            {{ publicStreamer?.username }}
+                        </span>
+                        <span class="text-sm mt-1 break-words line-clamp-3" :style="{ color: descriptionColor }">
+                            {{ publicStreamer?.bio }}
+                        </span>
+                    </div>
+                </div>
+                <!-- Prochain stream -->
+                <div v-if="nextSlot && !isLive" class="flex items-center justify-between gap-3 px-4 py-2.5 border-t"
+                    :style="{ borderColor: accentColorAuto + '22' }">
+                    <span class="text-xs font-semibold flex-shrink-0" :style="{ color: accentColorAuto + 'AA' }">
+                        Prochain stream
                     </span>
-                    <span v-else
-                        class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-0.5 rounded-full whitespace-nowrap shadow-sm"
-                        :style="{ backgroundColor: accentColorAuto + '88', color: isColorDark(accentColorAuto) ? '#fff' : '#000' }">
-                        Offline
-                    </span>
+                    <div class="flex items-center gap-2 min-w-0">
+                        <div class="flex flex-col items-end min-w-0">
+                            <span class="text-xs font-semibold truncate"
+                                :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                                {{ nextSlot.game?.label ?? nextSlot.title }}
+                            </span>
+                            <span class="text-xs" :style="{ color: accentColorAuto }">
+                                {{ nextSlot.isToday ? 'Aujourd\'hui' : formatDay(nextSlot.day) }} · {{
+                                    formatTime(nextSlot.start_at) }}
+                            </span>
+                        </div>
+                        <img v-if="nextSlot.game?.cover" :src="nextSlot.game.cover"
+                            class="w-6 h-8 rounded object-cover flex-shrink-0" />
+                    </div>
                 </div>
 
-                <span :class="['font-bold', usernameSizeClass]" :style="{ color: usernameColor }">
-                    {{ publicStreamer?.username }}
-                </span>
-                <span class="text-base font-medium break-words" :style="{ color: descriptionColor }">
-                    {{ publicStreamer?.bio }}
-                </span>
+                <!-- En live -->
+                <div v-if="isLive" class="relative z-10 flex items-center gap-3 px-5 py-3 border-t"
+                    :style="{ borderColor: accentColorAuto + '22' }">
+                    <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
+                    <span class="text-sm font-semibold"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">En live</span>
+                </div>
             </div>
 
             <!-- Switcher -->
@@ -134,9 +160,10 @@
                             class="flex items-center gap-3 px-3 py-2 rounded-xl"
                             :style="{ backgroundColor: bgColorAuto }">
                             <img v-if="slot.game?.cover" :src="slot.game.cover"
-                                class="w-10 h-14 rounded-lg object-fill shadow-xs flex-shrink-0" />
+                                class="w-10 h-14 rounded object-fill shadow-xs flex-shrink-0" />
                             <div class="flex flex-col flex-1 min-w-0 justify-center">
-                                <span class="font-semibold text-sm truncate" :style="{ color: usernameColor }">
+                                <span class="font-semibold text-sm truncate"
+                                    :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
                                     {{ slot.game?.label ?? slot.title }}
                                 </span>
                                 <span class="text-xs mt-1 flex items-center gap-1" :style="{ color: descriptionColor }">
@@ -213,6 +240,7 @@
 </template>
 
 <script setup>
+
 definePageMeta({
     layout: 'links'
 })
@@ -430,6 +458,12 @@ function formatTime(time) {
     const [h, m] = time.split(':')
     return `${h}h${m}`
 }
+
+const nextSlot = computed(() => {
+    const group = groupedSlots.value[0]
+    if (!group) return null
+    return { ...group.slots[0], isToday: group.isToday, day: group.day }
+})
 
 </script>
 
