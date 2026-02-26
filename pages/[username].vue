@@ -31,17 +31,17 @@
             <div class="relative rounded-2xl my-4 border shadow-xs"
                 :style="{ backgroundColor: bgColorAuto, borderColor: accentColorAuto + '44' }">
                 <!-- En-tête -->
-                <div class="relative z-10 flex items-center gap-4 px-5 py-4">
+                <div class="relative z-10 flex items-center gap-3 sm:gap-4 px-4 py-3 sm:px-5 sm:py-4">
                     <!-- Avatar -->
                     <div class="relative flex-shrink-0">
-                        <div class="avatar-ring" :style="{ '--ring-color': accentColorAuto + '88' }">
+                        <div class="avatar-ring" :style="{ '--ring-color': buttonBackgroundColor + '88' }">
                             <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
-                                class="w-20 h-20 rounded-full object-cover" />
+                                class="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover" />
                         </div>
                         <!-- Badge statut -->
                         <span v-if="!isLive"
                             class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-0.5 rounded-full whitespace-nowrap shadow-sm"
-                            :style="{ backgroundColor: accentColorAuto + '88', color: isColorDark(accentColorAuto) ? '#fff' : '#000' }">
+                            :style="{ backgroundColor: buttonBackgroundColor + '88', color: isColorDark(accentColorAuto) ? '#fff' : '#000' }">
                             Offline
                         </span>
                     </div>
@@ -49,39 +49,40 @@
                         <span :class="['font-bold ', usernameSizeClass]" :style="{ color: usernameColor }">
                             {{ publicStreamer?.username }}
                         </span>
-                        <span class="text-sm mt-1 break-words line-clamp-3" :style="{ color: descriptionColor }">
+                        <span class="text-xs sm:text-sm mt-1 break-words line-clamp-5"
+                            :style="{ color: descriptionColor }">
                             {{ publicStreamer?.bio }}
                         </span>
                     </div>
                 </div>
                 <!-- Prochain stream -->
-                <div v-if="nextSlot && !isLive" class="flex items-center justify-between gap-3 px-4 py-2.5 border-t"
+                <div v-if="nextSlot && !isLive" class="flex items-center gap-2 px-4 py-2.5 border-t"
                     :style="{ borderColor: accentColorAuto + '22' }">
-                    <span class="text-xs font-semibold flex-shrink-0" :style="{ color: buttonBackgroundColor }">
-                        Prochain stream
+                    <span class="text-xs font-semibold flex-shrink-0"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                        Prochain <span class="hidden sm:inline">stream</span>
                     </span>
-                    <div class="flex items-center gap-2 min-w-0">
-                        <div class="flex flex-col items-end min-w-0">
-                            <span class="text-xs font-semibold truncate"
-                                :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
-                                {{ nextSlot.game?.label ?? nextSlot.title }}
-                            </span>
-                            <span class="text-xs" :style="{ color: buttonBackgroundColor }">
-                                {{ nextSlot.isToday ? 'Aujourd\'hui' : nextSlot.day }} - {{
-                                    formatTime(nextSlot.start_at) }}
-                            </span>
-                        </div>
-                        <img v-if="nextSlot.game?.cover" :src="nextSlot.game.cover"
-                            class="w-6 h-8 rounded object-cover flex-shrink-0" />
+                    <div class="w-px h-4 flex-shrink-0" :style="{ backgroundColor: buttonBackgroundColor + '44' }" />
+                    <div class="flex flex-col sm:flex-row sm:items-center min-w-0 flex-1">
+                        <span class="text-xs font-semibold truncate"
+                            :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                            {{ nextSlot.game?.label }}
+                        </span>
+                        <span class="text-xs sm:ml-auto sm:flex-shrink-0"
+                            :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                            {{ nextSlot.isToday ? 'Auj.' : formatDay(nextSlot.day) }} {{ formatTime(nextSlot.start_at)
+                            }}
+                        </span>
                     </div>
                 </div>
 
                 <!-- En live -->
-                <div v-if="isLive" class="relative z-10 flex items-center gap-3 px-5 py-3 border-t"
+                <div v-if="isLive" class="relative z-10 flex items-center gap-3 px-4 py-2.5 border-t"
                     :style="{ borderColor: accentColorAuto + '22' }">
                     <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
-                    <span class="text-sm font-semibold"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">En live</span>
+                    <span class="text-xs sm:text-sm font-semibold"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">En live sur {{
+                            nextSlot.game.label }}</span>
                 </div>
             </div>
 
@@ -89,11 +90,11 @@
             <div class="flex rounded-xl p-1 gap-1" :style="{ backgroundColor: bgColorAuto }">
                 <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" @mouseenter="hoveredTab = tab.id"
                     @mouseleave="hoveredTab = null"
-                    class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all"
+                    class="flex-1 flex items-center justify-center gap-2 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all"
                     :style="activeTab === tab.id
-                        ? { backgroundColor: accentColorAuto, color: isColorDark(accentColorAuto) ? '#fff' : '#000' }
+                        ? { backgroundColor: buttonBackgroundColor, color: isColorDark(accentColorAuto) ? '#fff' : '#000' }
                         : {
-                            backgroundColor: hoveredTab === tab.id ? accentColorAuto + '18' : 'transparent',
+                            backgroundColor: hoveredTab === tab.id ? buttonBackgroundColor + '18' : 'transparent',
                             color: isColorDark(wallpaperColor) ? '#fff' : '#000'
                         }">
                     <Icon :name="tab.icon" size="16" />
@@ -135,61 +136,59 @@
                     </div>
                 </div>
                 <div v-else class="flex flex-col items-center gap-3 py-10 text-center">
-                    <Icon name="lucide:link-2-off" size="36" :style="{ color: descriptionColor }" />
-                    <p class="text-sm" :style="{ color: descriptionColor }">Aucun lien partagé pour l'instant.</p>
+                    <Icon name="lucide:link-2-off" size="36"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
+                    <p class="text-sm" :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">Aucun lien
+                        partagé pour
+                        l'instant.</p>
                 </div>
             </div>
 
             <div v-if="activeTab === 'planning'" class="mt-2">
                 <div v-if="groupedSlots.length > 0" class="flex flex-col gap-2">
-                    <template v-for="(group, index) in groupedSlots" :key="group.day">
-                        <!-- Séparateur de jour -->
-                        <div class="flex items-center gap-3" :class="index === 0 ? 'mt-0' : 'mt-3'">
-                            <span class="text-xs font-bold uppercase" :style="{ color: accentColorAuto }">
-                                {{ formatDay(group.day) }} {{ formatDayNum(group.day) }}
+                    <template v-for="group in groupedSlots" :key="group.day">
+                        <div class="flex items-start gap-2">
+                            <!-- Jour -->
+                            <span class="text-xs font-bold flex-shrink-0 w-8 text-center mt-2"
+                                :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                                {{ group.isToday ? 'Auj.' : formatDay(group.day) }}
                             </span>
-                            <div class="flex-1 h-px" :style="{ backgroundColor: accentColorAuto + '33' }" />
-                            <span v-if="group.isToday" class="text-xs font-bold px-2 py-0.5 rounded-full"
-                                :style="{ backgroundColor: accentColorAuto + '22', color: accentColorAuto }">
-                                Aujourd'hui
-                            </span>
-                        </div>
-
-                        <!-- Slots — style fixe, indépendant du style bouton -->
-                        <div v-for="slot in group.slots" :key="slot.id"
-                            class="flex items-center gap-3 px-3 py-2 rounded-xl"
-                            :style="{ backgroundColor: bgColorAuto }">
-                            <img v-if="slot.game?.cover" :src="slot.game.cover"
-                                class="w-10 h-14 rounded object-fill shadow-xs flex-shrink-0" />
-                            <div class="flex flex-col flex-1 min-w-0 justify-center">
-                                <span class="font-semibold text-sm truncate"
-                                    :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
-                                    {{ slot.game?.label ?? slot.title }}
-                                </span>
-                                <span class="text-xs mt-1 flex items-center gap-1" :style="{ color: descriptionColor }">
-                                    <Icon name="lucide:clock" size="12" />
-                                    {{ formatTime(slot.start_at) }}
-                                    <template v-if="slot.title">
-                                        <span class="mx-1">·</span>
-                                        {{ slot.title }}
-                                    </template>
-                                </span>
+                            <div class="w-px self-stretch" :style="{ backgroundColor: accentColorAuto + '44' }" />
+                            <!-- Grid auto -->
+                            <div class="flex-1 flex flex-col gap-1.5 min-w-0">
+                                <div v-for="slot in group.slots" :key="slot.id"
+                                    class="flex items-center gap-1.5 sm:gap-2 px-2.5 py-2 rounded-lg"
+                                    :style="{ backgroundColor: bgColorAuto }">
+                                    <img v-if="slot.game?.cover" :src="slot.game.cover"
+                                        class="w-5 h-7 sm:w-7 sm:h-10 rounded object-fill flex-shrink-0" />
+                                    <span class="text-xs sm:text-sm font-semibold truncate flex-1"
+                                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                                        {{ slot.game?.label }}
+                                    </span>
+                                    <span class="text-xs sm:text-sm flex-shrink-0"
+                                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                                        {{ formatTime(slot.start_at) }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </template>
                 </div>
                 <div v-else class="flex flex-col items-center gap-3 py-10 text-center">
-                    <Icon name="lucide:calendar-x" size="36" :style="{ color: descriptionColor }" />
-                    <p class="text-sm" :style="{ color: descriptionColor }">Pas de stream prévu cette semaine.</p>
+                    <Icon name="lucide:calendar-x" size="36"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
+                    <p class="text-sm" :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">Pas de stream
+                        prévu cette
+                        semaine.</p>
                 </div>
             </div>
 
             <!-- Footer CTA -->
             <div class="flex justify-center my-12">
                 <NuxtLink :to="'/admin/links'" external>
-                    <button :class="['py-2.5 px-3 rounded-md font-semibold transition-all shadow-sm',
+                    <button :class="['py-2.5 px-3 rounded-md font-semibold transition-all shadow-sm text-xs sm:text-base',
                         isColorDark(accentColorAuto) ? 'hover:brightness-110' : 'hover:brightness-90']" :style="{
-                            backgroundColor: buttonBackgroundColor ? accentColorAuto : buttonBackgroundColor,
+                            backgroundColor: buttonBackgroundColor,
                             color: isColorDark(accentColorAuto) ? '#fff' : '#000'
                         }">
                         Rejoignez {{ publicStreamer?.username }} sur
@@ -256,7 +255,6 @@ const { publicDesign } = storeToRefs(designStore)
 const { publicSchedule } = storeToRefs(scheduleStore)
 const { publicSlots } = storeToRefs(scheduleSlotStore)
 const route = useRoute()
-const isLive = ref(false)
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
@@ -295,7 +293,7 @@ onMounted(async () => {
 // Style du pseudo dynamique
 const usernameSizeClass = computed(() => {
     const size = publicDesign.value?.username_style?.size ?? 'normal'
-    return size === 'medium' ? 'text-3xl' : 'text-2xl'
+    return size === 'medium' ? 'text-xl sm:text-3xl' : 'text-lg sm:text-2xl'
 })
 const usernameColor = computed(() => {
     const color = publicDesign.value?.username_style?.textColor ?? 'FFFFFF'
@@ -410,13 +408,21 @@ const groupedSlots = computed(() => {
     for (const slot of publicSlots.value) {
         const normalizedDay = slot.day.toLowerCase()
         const targetIndex = DAY_INDEX[normalizedDay]
+        if (targetIndex === undefined) continue
 
-        const diff = (targetIndex - todayIndex + 7) % 7
+        // Semaine lundi (1) → dimanche (0), on rebase dimanche à 7
+        const rebase = (d) => d === 0 ? 7 : d
 
+        const targetIndexRebased = rebase(targetIndex)
+        const todayIndexRebased = rebase(todayIndex)
+
+        if (targetIndexRebased < todayIndexRebased) continue
+
+        const diff = targetIndexRebased - todayIndexRebased
         const targetDate = new Date(today)
         targetDate.setDate(today.getDate() + diff)
 
-        const dateKey = targetDate.toISOString()
+        const dateKey = targetDate.toDateString()
 
         if (!groupsMap[dateKey]) {
             groupsMap[dateKey] = {
@@ -435,23 +441,7 @@ const groupedSlots = computed(() => {
     )
 })
 
-const formatDay = (day) => DAY_LABELS[day] ?? day.slice(0, 3).toUpperCase()
-const formatDayNum = (day) => {
-    const normalizedDay = day.toLowerCase()
-
-    const today = new Date()
-    const todayIndex = today.getDay()
-    const targetIndex = DAY_INDEX[normalizedDay]
-
-    if (targetIndex === undefined) return ''
-
-    const diff = (targetIndex - todayIndex + 7) % 7
-
-    const targetDate = new Date(today)
-    targetDate.setDate(today.getDate() + diff)
-
-    return targetDate.getDate()
-}
+const formatDay = (day) => DAY_LABELS[day] ?? day.slice(0, 3) + '.'
 
 function formatTime(time) {
     if (!time) return ''
@@ -465,6 +455,30 @@ const nextSlot = computed(() => {
     return { ...group.slots[0], isToday: group.isToday, day: group.day }
 })
 
+const isLive = computed(() => {
+    const now = new Date()
+    const todayIndex = now.getDay()
+    const rebase = (d) => d === 0 ? 7 : d
+    const todayRebased = rebase(todayIndex)
+
+    for (const slot of publicSlots.value) {
+        const normalizedDay = slot.day.toLowerCase()
+        const targetIndex = DAY_INDEX[normalizedDay]
+        if (targetIndex === undefined) continue
+
+        // Uniquement les slots d'aujourd'hui
+        if (rebase(targetIndex) !== todayRebased) continue
+
+        const [startH, startM] = slot.start_at.split(':').map(Number)
+        const [endH, endM] = slot.end_at.split(':').map(Number)
+        const nowMinutes = now.getHours() * 60 + now.getMinutes()
+        const startMinutes = startH * 60 + startM
+        const endMinutes = endH * 60 + endM
+
+        if (nowMinutes >= startMinutes && nowMinutes < endMinutes) return true
+    }
+    return false
+})
 </script>
 
 <style scoped>
@@ -484,9 +498,5 @@ const nextSlot = computed(() => {
 .avatar-ring {
     border-radius: 9999px;
     border: 3px solid var(--ring-color, rgba(255, 255, 255, 0.15));
-}
-
-.live-ring {
-    border-color: rgba(255, 0, 0, 0.8);
 }
 </style>
