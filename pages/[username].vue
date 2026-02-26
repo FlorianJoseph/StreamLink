@@ -61,43 +61,99 @@
 
             <!-- Switcher -->
             <div class="flex rounded-xl p-1 gap-1" :style="{ backgroundColor: bgColorAuto }">
-                <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id"
+                <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" @mouseenter="hoveredTab = tab.id"
+                    @mouseleave="hoveredTab = null"
                     class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all"
                     :style="activeTab === tab.id
                         ? { backgroundColor: accentColorAuto, color: isColorDark(accentColorAuto) ? '#fff' : '#000' }
-                        : { color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                        : {
+                            backgroundColor: hoveredTab === tab.id ? accentColorAuto + '18' : 'transparent',
+                            color: isColorDark(wallpaperColor) ? '#fff' : '#000'
+                        }">
                     <Icon :name="tab.icon" size="16" />
                     {{ tab.label }}
                 </button>
             </div>
 
             <!-- Liste de liens -->
-            <div class="flex flex-col gap-4 w-full mt-2">
-                <div class="w-full mx-auto" v-for="link in publicLinks" :key="link.id">
-                    <a :href="link.url" target="_blank">
-                        <button :class="['relative flex items-center w-full font-semibold transition h-16',
-                            link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]" :style="{
-                                backgroundColor: buttonBackgroundColor,
-                                borderColor: buttonBorderColor
-                            }">
-                            <!-- Icône ou image à gauche -->
-                            <div
-                                :class="['absolute flex items-center justify-center', link.icon_url ? 'left-3' : 'left-5']">
-                                <template v-if="link.icon_url">
-                                    <img :src="link.icon_url" class="w-10 h-10 object-contain rounded flex-shrink-0" />
-                                </template>
-                                <template v-else>
-                                    <Icon :name="link.icon" size="24" class="flex-shrink-0"
-                                        :style="{ color: buttonTextColor }" />
-                                </template>
+            <div v-if="activeTab === 'liens'" class="mt-2">
+                <div v-if="publicLinks.length > 0" class="flex flex-col gap-4 w-full">
+                    <div class="w-full mx-auto" v-for="link in publicLinks" :key="link.id">
+                        <a :href="link.url" target="_blank">
+                            <button :class="['relative flex items-center w-full font-semibold transition h-16',
+                                link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]" :style="{
+                                    backgroundColor: buttonVariant === 'outlined'
+                                        ? hoveredLink === link.id ? buttonBorderColor + '18' : 'transparent'
+                                        : buttonBackgroundColor,
+                                    borderColor: buttonBorderColor
+                                }" @mouseenter="hoveredLink = link.id" @mouseleave="hoveredLink = null">
+                                <!-- Icône ou image à gauche -->
+                                <div
+                                    :class="['absolute flex items-center justify-center', link.icon_url ? 'left-3' : 'left-5']">
+                                    <template v-if="link.icon_url">
+                                        <img :src="link.icon_url"
+                                            class="w-10 h-10 object-contain rounded flex-shrink-0" />
+                                    </template>
+                                    <template v-else>
+                                        <Icon :name="link.icon" size="24" class="flex-shrink-0"
+                                            :style="{ color: buttonTextColor }" />
+                                    </template>
+                                </div>
+                                <!-- Texte centré -->
+                                <span class="font-medium break-words flex-1 text-sm sm:text-base text-center mx-8"
+                                    :style="{ color: buttonTextColor }">{{
+                                        link.title
+                                    }}</span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <div v-else class="flex flex-col items-center gap-3 py-10 text-center">
+                    <Icon name="lucide:link-2-off" size="36" :style="{ color: descriptionColor }" />
+                    <p class="text-sm" :style="{ color: descriptionColor }">Aucun lien partagé pour l'instant.</p>
+                </div>
+            </div>
+
+            <div v-if="activeTab === 'planning'" class="mt-2">
+                <div v-if="groupedSlots.length > 0" class="flex flex-col gap-2">
+                    <template v-for="(group, index) in groupedSlots" :key="group.day">
+                        <!-- Séparateur de jour -->
+                        <div class="flex items-center gap-3" :class="index === 0 ? 'mt-0' : 'mt-3'">
+                            <span class="text-xs font-bold uppercase" :style="{ color: accentColorAuto }">
+                                {{ formatDay(group.day) }} {{ formatDayNum(group.day) }}
+                            </span>
+                            <div class="flex-1 h-px" :style="{ backgroundColor: accentColorAuto + '33' }" />
+                            <span v-if="group.isToday" class="text-xs font-bold px-2 py-0.5 rounded-full"
+                                :style="{ backgroundColor: accentColorAuto + '22', color: accentColorAuto }">
+                                Aujourd'hui
+                            </span>
+                        </div>
+
+                        <!-- Slots — style fixe, indépendant du style bouton -->
+                        <div v-for="slot in group.slots" :key="slot.id"
+                            class="flex items-center gap-3 px-3 py-2 rounded-xl"
+                            :style="{ backgroundColor: bgColorAuto }">
+                            <img v-if="slot.game?.cover" :src="slot.game.cover"
+                                class="w-10 h-14 rounded-lg object-fill shadow-xs flex-shrink-0" />
+                            <div class="flex flex-col flex-1 min-w-0 justify-center">
+                                <span class="font-semibold text-sm truncate" :style="{ color: usernameColor }">
+                                    {{ slot.game?.label ?? slot.title }}
+                                </span>
+                                <span class="text-xs mt-1 flex items-center gap-1" :style="{ color: descriptionColor }">
+                                    <Icon name="lucide:clock" size="12" />
+                                    {{ formatTime(slot.start_at) }}
+                                    <template v-if="slot.title">
+                                        <span class="mx-1">·</span>
+                                        {{ slot.title }}
+                                    </template>
+                                </span>
                             </div>
-                            <!-- Texte centré -->
-                            <span class="font-medium break-words flex-1 text-sm sm:text-base text-center mx-8"
-                                :style="{ color: buttonTextColor }">{{
-                                    link.title
-                                }}</span>
-                        </button>
-                    </a>
+                        </div>
+                    </template>
+                </div>
+                <div v-else class="flex flex-col items-center gap-3 py-10 text-center">
+                    <Icon name="lucide:calendar-x" size="36" :style="{ color: descriptionColor }" />
+                    <p class="text-sm" :style="{ color: descriptionColor }">Pas de stream prévu cette semaine.</p>
                 </div>
             </div>
 
@@ -105,7 +161,7 @@
             <div class="flex justify-center my-12">
                 <NuxtLink :to="'/admin/links'" external>
                     <button :class="['py-2.5 px-3 rounded-md font-semibold transition-all shadow-sm',
-                        isColorDark(accentColorAuto) ? 'hover:brightness-105' : 'hover:brightness-95']" :style="{
+                        isColorDark(accentColorAuto) ? 'hover:brightness-110' : 'hover:brightness-90']" :style="{
                             backgroundColor: buttonBackgroundColor ? accentColorAuto : buttonBackgroundColor,
                             color: isColorDark(accentColorAuto) ? '#fff' : '#000'
                         }">
@@ -162,13 +218,17 @@ definePageMeta({
 })
 
 const streamerStore = useStreamerStore()
-const { publicStreamer, loading } = storeToRefs(streamerStore)
 const linkStore = useLinkStore()
-const { publicLinks } = storeToRefs(linkStore)
 const designStore = useDesignStore()
+const scheduleStore = useScheduleStore()
+const scheduleSlotStore = useScheduleSlotStore()
+const { publicStreamer, loading } = storeToRefs(streamerStore)
+const { publicLinks } = storeToRefs(linkStore)
 const { publicDesign } = storeToRefs(designStore)
-
+const { publicSchedule } = storeToRefs(scheduleStore)
+const { publicSlots } = storeToRefs(scheduleSlotStore)
 const route = useRoute()
+const isLive = ref(false)
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
@@ -189,18 +249,18 @@ const copyText = () => {
     setTimeout(() => (copied.value = false), 1500)
 }
 
+
 onMounted(async () => {
     const username = route.params.username
-    streamerStore.loading = true
+    loading.value = true
     try {
         await streamerStore.fetchStreamerByUsername(username)
-
-        await Promise.all([
-            linkStore.fetchPublicLinks(publicStreamer.value.id),
-            designStore.fetchPublicDesign(publicStreamer.value.id)
-        ])
+        await linkStore.fetchPublicLinks(publicStreamer.value.id)
+        await designStore.fetchPublicDesign(publicStreamer.value.id)
+        await scheduleStore.fetchPublicSchedule(publicStreamer.value.id)
+        await scheduleSlotStore.fetchPublicSlots(publicSchedule.value.id)
     } finally {
-        streamerStore.loading = false
+        loading.value = false
     }
 })
 
@@ -227,17 +287,19 @@ const buttonClass = computed(() => {
 
     if (buttonVariant.value === 'outlined') {
         return [
-            'bg-transparent',
-            `border border-2`,
+            `border border`,
         ]
     }
 
     // filled
     return [
         'border-none',
-        'hover:brightness-90',
+        isColorDark(buttonBackgroundColor.value) ? 'hover:brightness-105' : 'hover:brightness-95',
     ]
 })
+
+const hoveredLink = ref(null)
+const hoveredTab = ref(null)
 
 // Couleur de bordure pour les boutons outlined
 const buttonBorderColor = computed(() => {
@@ -248,7 +310,7 @@ const buttonBorderColor = computed(() => {
 // Couleur de fond pour les boutons filled
 const buttonBackgroundColor = computed(() => {
     const color = publicDesign.value?.button_style?.backgroundColor ?? 'FFFFFF'
-    return buttonVariant.value === 'filled' ? `#${color}` : 'transparent'
+    return `#${color}`
 })
 
 // Couleur du texte des boutons
@@ -300,6 +362,74 @@ const accentColorAuto = computed(() => {
     const color = publicDesign.value?.button_style?.backgroundColor
     return `#${color}`
 })
+
+const DAY_LABELS = { lundi: 'Lun', mardi: 'Mar', mercredi: 'Mer', jeudi: 'Jeu', vendredi: 'Ven', samedi: 'Sam', dimanche: 'Dim' }
+const DAY_INDEX = {
+    dimanche: 0,
+    lundi: 1,
+    mardi: 2,
+    mercredi: 3,
+    jeudi: 4,
+    vendredi: 5,
+    samedi: 6
+}
+const groupedSlots = computed(() => {
+    const today = new Date()
+    const todayIndex = today.getDay()
+
+    const groupsMap = {}
+
+    for (const slot of publicSlots.value) {
+        const normalizedDay = slot.day.toLowerCase()
+        const targetIndex = DAY_INDEX[normalizedDay]
+
+        const diff = (targetIndex - todayIndex + 7) % 7
+
+        const targetDate = new Date(today)
+        targetDate.setDate(today.getDate() + diff)
+
+        const dateKey = targetDate.toISOString()
+
+        if (!groupsMap[dateKey]) {
+            groupsMap[dateKey] = {
+                day: slot.day,
+                date: targetDate,
+                slots: [],
+                isToday: diff === 0
+            }
+        }
+
+        groupsMap[dateKey].slots.push(slot)
+    }
+
+    return Object.values(groupsMap).sort(
+        (a, b) => a.date - b.date
+    )
+})
+
+const formatDay = (day) => DAY_LABELS[day] ?? day.slice(0, 3).toUpperCase()
+const formatDayNum = (day) => {
+    const normalizedDay = day.toLowerCase()
+
+    const today = new Date()
+    const todayIndex = today.getDay()
+    const targetIndex = DAY_INDEX[normalizedDay]
+
+    if (targetIndex === undefined) return ''
+
+    const diff = (targetIndex - todayIndex + 7) % 7
+
+    const targetDate = new Date(today)
+    targetDate.setDate(today.getDate() + diff)
+
+    return targetDate.getDate()
+}
+
+function formatTime(time) {
+    if (!time) return ''
+    const [h, m] = time.split(':')
+    return `${h}h${m}`
+}
 
 </script>
 
