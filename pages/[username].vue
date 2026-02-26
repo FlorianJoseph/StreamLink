@@ -27,7 +27,7 @@
             </button>
         </div>
 
-        <div class="flex flex-col space-y-2">
+        <div class="flex flex-col space-y-2 mt-4">
             <div class="relative rounded-2xl my-4 border shadow-xs"
                 :style="{ backgroundColor: bgColorAuto, borderColor: accentColorAuto + '44' }">
                 <!-- En-tête -->
@@ -57,7 +57,7 @@
                 <!-- Prochain stream -->
                 <div v-if="nextSlot && !isLive" class="flex items-center justify-between gap-3 px-4 py-2.5 border-t"
                     :style="{ borderColor: accentColorAuto + '22' }">
-                    <span class="text-xs font-semibold flex-shrink-0" :style="{ color: accentColorAuto + 'AA' }">
+                    <span class="text-xs font-semibold flex-shrink-0" :style="{ color: buttonBackgroundColor }">
                         Prochain stream
                     </span>
                     <div class="flex items-center gap-2 min-w-0">
@@ -66,8 +66,8 @@
                                 :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
                                 {{ nextSlot.game?.label ?? nextSlot.title }}
                             </span>
-                            <span class="text-xs" :style="{ color: accentColorAuto }">
-                                {{ nextSlot.isToday ? 'Aujourd\'hui' : formatDay(nextSlot.day) }} · {{
+                            <span class="text-xs" :style="{ color: buttonBackgroundColor }">
+                                {{ nextSlot.isToday ? 'Aujourd\'hui' : nextSlot.day }} - {{
                                     formatTime(nextSlot.start_at) }}
                             </span>
                         </div>
