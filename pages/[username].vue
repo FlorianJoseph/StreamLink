@@ -153,7 +153,7 @@
                                 :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
                                 {{ group.isToday ? 'Auj.' : formatDay(group.day) }}
                             </span>
-                            <div class="w-px self-stretch" :style="{ backgroundColor: accentColorAuto + '44' }" />
+                            <div class="w-px self-stretch" :style="{ backgroundColor: buttonBackgroundColor + '44' }" />
                             <!-- Grid auto -->
                             <div class="flex-1 flex flex-col gap-1.5 min-w-0">
                                 <div v-for="slot in group.slots" :key="slot.id"
