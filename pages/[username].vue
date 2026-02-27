@@ -184,7 +184,7 @@
             <!-- Footer CTA -->
             <div class="flex flex-col items-center gap-2">
                 <p class="text-sm sm:text-base text-center font-semibold tracking-wide"
-                    :style="{ color: footerTextColor + 'CC' }">
+                    :style="{ color: textColor + 'CC' }">
                     Votre univers, en une page.
                 </p>
                 <NuxtLink :to="'/admin/links'" external>
@@ -198,7 +198,7 @@
             </div>
             <!-- Footer infos -->
             <div class="flex flex-col items-center gap-3 pb-10 text-xs">
-                <div class="flex items-center gap-2" :style="{ color: footerTextColor }">
+                <div class="flex items-center gap-2" :style="{ color: textColor }">
                     <NuxtLink to="/contact" class="hover:underline font-medium">
                         Contact
                     </NuxtLink>
@@ -368,11 +368,6 @@ function isColorDark(hex) {
     const brightness = (r * 299 + g * 587 + b * 114) / 1000
     return brightness < 128
 }
-
-// Couleur du texte du footer en fonction de la luminosité du fond
-const footerTextColor = computed(() => {
-    return isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000'
-})
 
 const bgColorAuto = computed(() => isColorDark(wallpaperColor.value) ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')
 const accentColorAuto = computed(() => {
