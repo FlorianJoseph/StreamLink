@@ -46,22 +46,18 @@
             <div v-if="nextSlot && !isLive" class="flex items-center gap-2 px-4 py-2.5 border-t border-b"
                 :style="{ borderColor: isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto }">
                 <div class="flex flex-col sm:flex-row sm:items-center items-center gap-1.5">
-                    <Icon name="lucide:calendar-clock" size="14" class="flex-shrink-0"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
-                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                    <Icon name="lucide:calendar-clock" size="14" class="flex-shrink-0" :style="{ color: textColor }" />
+                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0" :style="{ color: textColor }">
                         Prochain stream
                     </span>
                 </div>
                 <div class="w-px h-4 flex-shrink-0"
                     :style="{ backgroundColor: isColorDark(wallpaperColor) ? accentColorAuto + '44' : accentColorAuto }" />
                 <div class="flex flex-col sm:flex-row sm:items-center min-w-0 flex-1">
-                    <span class="text-xs sm:text-sm font-semibold truncate"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                    <span class="text-xs sm:text-sm font-semibold truncate" :style="{ color: textColor }">
                         {{ nextSlot.game?.label }}
                     </span>
-                    <span class="text-xs sm:text-sm sm:ml-auto sm:flex-shrink-0"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                    <span class="text-xs sm:text-sm sm:ml-auto sm:flex-shrink-0" :style="{ color: textColor }">
                         {{ nextSlot.isToday ? 'Auj.' : formatDay(nextSlot.day) }} {{ formatTime(nextSlot.start_at)
                         }}
                     </span>
@@ -72,8 +68,7 @@
             <div v-if="isLive" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-b"
                 :style="{ borderColor: isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto }">
                 <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
-                <span class="text-xs sm:text-sm font-semibold"
-                    :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                <span class="text-xs sm:text-sm font-semibold" :style="{ color: textColor }">
                     En live sur {{ nextSlot?.game?.label }}
                 </span>
             </div>
@@ -81,10 +76,8 @@
             <div v-else-if="!nextSlot && !isLive" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-b"
                 :style="{ borderColor: isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto }">
                 <div class="flex items-center gap-1.5">
-                    <Icon name="lucide:calendar-x" size="14" class="flex-shrink-0"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
-                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                    <Icon name="lucide:calendar-x" size="14" class="flex-shrink-0" :style="{ color: textColor }" />
+                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0" :style="{ color: textColor }">
                         Aucun stream prévu ici pour l'instant
                     </span>
                 </div>
@@ -103,7 +96,7 @@
                         : {
                             backgroundColor: hoveredTab === tab.id ?
                                 (isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor + '44') : 'transparent',
-                            color: isColorDark(wallpaperColor) ? '#fff' : '#000'
+                            color: textColor
                         }">
                     <Icon :name="tab.icon" size="14" />
                     {{ tab.label }}
@@ -144,9 +137,8 @@
                     </div>
                 </div>
                 <div v-else class="flex flex-col items-center gap-3 py-10 text-center">
-                    <Icon name="lucide:link-2-off" size="36"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
-                    <p class="text-sm" :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                    <Icon name="lucide:link-2-off" size="36" :style="{ color: textColor }" />
+                    <p class="text-sm" :style="{ color: textColor }">
                         Aucun lien partagé pour l'instant</p>
                 </div>
             </div>
@@ -157,7 +149,7 @@
                         <div class="flex items-start gap-2">
                             <!-- Jour -->
                             <span class="text-xs font-bold flex-shrink-0 w-8 text-center mt-2"
-                                :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                                :style="{ color: textColor }">
                                 {{ group.isToday ? 'Auj.' : formatDay(group.day) }}
                             </span>
                             <div class="w-px self-stretch"
@@ -170,11 +162,10 @@
                                     <img v-if="slot.game?.cover" :src="slot.game.cover"
                                         class="w-5 h-7 sm:w-7 sm:h-10 rounded object-fill flex-shrink-0" />
                                     <span class="text-xs sm:text-sm font-semibold truncate flex-1"
-                                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                                        :style="{ color: textColor }">
                                         {{ slot.game?.label }}
                                     </span>
-                                    <span class="text-xs sm:text-sm flex-shrink-0"
-                                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                                    <span class="text-xs sm:text-sm flex-shrink-0" :style="{ color: textColor }">
                                         {{ formatTime(slot.start_at) }}
                                     </span>
                                 </div>
@@ -183,9 +174,8 @@
                     </template>
                 </div>
                 <div v-else class="flex flex-col items-center gap-3 py-10 text-center">
-                    <Icon name="lucide:calendar-x" size="36"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
-                    <p class="text-sm" :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                    <Icon name="lucide:calendar-x" size="36" :style="{ color: textColor }" />
+                    <p class="text-sm" :style="{ color: textColor }">
                         Aucun stream prévu ici pour l'instant
                     </p>
                 </div>
@@ -390,6 +380,8 @@ const accentColorAuto = computed(() => {
     return `#${color}`
 })
 
+const textColor = computed(() => isColorDark(wallpaperColor.value) ? '#fff' : '#000')
+
 const DAY_LABELS = { lundi: 'Lun', mardi: 'Mar', mercredi: 'Mer', jeudi: 'Jeu', vendredi: 'Ven', samedi: 'Sam', dimanche: 'Dim' }
 const DAY_INDEX = {
     dimanche: 0,
@@ -508,6 +500,14 @@ const isLive = computed(() => {
 /* Ring avatar */
 .avatar-ring {
     border-radius: 9999px;
-    border: 3px solid var(--ring-color, rgba(255, 255, 255, 0.15));
+    border: 2px solid var(--ring-color, rgba(255, 255, 255, 0.15));
+}
+
+@media (min-width: 640px) {
+
+    /* sm */
+    .avatar-ring {
+        border-width: 3px;
+    }
 }
 </style>
