@@ -5,15 +5,26 @@
 :#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
-    <div class="min-h-full w-full fade-in sm:rounded-t-xl shadow-xl" v-else-if="publicStreamer"
+    <div class="min-h-full w-full fade-in sm:rounded-t-xl shadow-xl relative" v-else-if="publicStreamer"
         :style="{ background: wallpaperColor }">
+        <button @click="copyText"
+            class="absolute top-4 right-4 flex items-center gap-1 px-3 py-1.5 rounded-md transition-all"
+            :class="copied ? 'text-green-400' : ''" :style="copied ? {} : {
+                color: isColorDark(wallpaperColor) ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.8)',
+                backgroundColor: hoveredCopy ? (isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor + '44') : 'transparent'
+            }" @mouseenter="hoveredCopy = true" @mouseleave="hoveredCopy = false">
+            <Icon v-if="!copied" name="lucide:copy" size="14" class="shrink-0" />
+            <Icon v-else name="lucide:check" size="14" class="shrink-0" />
+            <span class="text-sm hidden sm:inline">{{ copied ? 'Copié !' : 'Copier le lien' }}</span>
+        </button>
 
         <!-- En-tête avec avatar, pseudo, description et statut live -->
         <div>
             <div class="flex items-center gap-3 sm:gap-4 px-5 py-8 sm:py-10 sm:px-7">
                 <!-- Avatar -->
                 <div class="relative flex-shrink-0">
-                    <div class="avatar-ring" :style="{ '--ring-color': buttonBackgroundColor + '88' }">
+                    <div class="avatar-ring"
+                        :style="{ '--ring-color': isColorDark(wallpaperColor) ? buttonBackgroundColor + '88' : buttonBackgroundColor }">
                         <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
                             class="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover" />
                     </div>
@@ -24,15 +35,6 @@
                         <span :class="['font-bold ', usernameSizeClass]" :style="{ color: usernameColor }">
                             {{ publicStreamer?.username }}
                         </span>
-                        <button @click="copyText" class="flex items-center gap-1 px-3 py-1.5 rounded-md transition-all"
-                            :class="copied ? 'text-green-400' : ''" :style="copied ? {} : {
-                                color: isColorDark(wallpaperColor) ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.8)',
-                                backgroundColor: hoveredCopy ? (isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto + '22') : 'transparent'
-                            }" @mouseenter="hoveredCopy = true" @mouseleave="hoveredCopy = false">
-                            <Icon v-if="!copied" name="lucide:copy" size="14" class="shrink-0" />
-                            <Icon v-else name="lucide:check" size="14" class="shrink-0" />
-                            <span class="text-sm hidden sm:inline">{{ copied ? 'Copié !' : 'Copier le lien' }}</span>
-                        </button>
                     </div>
                     <span class="text-xs sm:text-sm mt-1 break-words line-clamp-5" :style="{ color: descriptionColor }">
                         {{ publicStreamer?.bio }}
@@ -42,7 +44,7 @@
 
             <!-- Prochain stream -->
             <div v-if="nextSlot && !isLive" class="flex items-center gap-2 px-4 py-2.5 border-t border-b"
-                :style="{ borderColor: accentColorAuto + '22' }">
+                :style="{ borderColor: isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto }">
                 <div class="flex flex-col sm:flex-row sm:items-center items-center gap-1.5">
                     <Icon name="lucide:calendar-clock" size="14" class="flex-shrink-0"
                         :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
@@ -51,7 +53,8 @@
                         Prochain stream
                     </span>
                 </div>
-                <div class="w-px h-4 flex-shrink-0" :style="{ backgroundColor: buttonBackgroundColor + '44' }" />
+                <div class="w-px h-4 flex-shrink-0"
+                    :style="{ backgroundColor: isColorDark(wallpaperColor) ? accentColorAuto + '44' : accentColorAuto }" />
                 <div class="flex flex-col sm:flex-row sm:items-center min-w-0 flex-1">
                     <span class="text-xs sm:text-sm font-semibold truncate"
                         :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
@@ -67,7 +70,7 @@
 
             <!-- En live -->
             <div v-if="isLive" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-b"
-                :style="{ borderColor: accentColorAuto + '22' }">
+                :style="{ borderColor: isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto }">
                 <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
                 <span class="text-xs sm:text-sm font-semibold"
                     :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
@@ -76,7 +79,7 @@
             </div>
             <!-- Aucun stream prévu -->
             <div v-else-if="!nextSlot && !isLive" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-b"
-                :style="{ borderColor: accentColorAuto + '22' }">
+                :style="{ borderColor: isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto }">
                 <div class="flex items-center gap-1.5">
                     <Icon name="lucide:calendar-x" size="14" class="flex-shrink-0"
                         :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
@@ -94,11 +97,12 @@
             <div class="flex gap-1" :style="{ borderColor: accentColorAuto + '22' }">
                 <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" @mouseenter="hoveredTab = tab.id"
                     @mouseleave="hoveredTab = null"
-                    class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm sm:text-base font-medium transition-all"
+                    class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm sm:text-base font-medium transition-all"
                     :style="activeTab === tab.id
                         ? { backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000' }
                         : {
-                            backgroundColor: hoveredTab === tab.id ? buttonBackgroundColor + '22' : 'transparent',
+                            backgroundColor: hoveredTab === tab.id ?
+                                (isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor + '44') : 'transparent',
                             color: isColorDark(wallpaperColor) ? '#fff' : '#000'
                         }">
                     <Icon :name="tab.icon" size="14" />
@@ -143,7 +147,7 @@
                     <Icon name="lucide:link-2-off" size="36"
                         :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
                     <p class="text-sm" :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
-                        Aucun lien partagé pour l'instant.</p>
+                        Aucun lien partagé pour l'instant</p>
                 </div>
             </div>
 
@@ -156,7 +160,8 @@
                                 :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
                                 {{ group.isToday ? 'Auj.' : formatDay(group.day) }}
                             </span>
-                            <div class="w-px self-stretch" :style="{ backgroundColor: buttonBackgroundColor + '44' }" />
+                            <div class="w-px self-stretch"
+                                :style="{ backgroundColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '44' : buttonBackgroundColor }" />
                             <!-- Grid auto -->
                             <div class="flex-1 flex flex-col gap-1.5 min-w-0">
                                 <div v-for="slot in group.slots" :key="slot.id"
