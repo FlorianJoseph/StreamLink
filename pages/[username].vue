@@ -1,5 +1,5 @@
 <template>
-    <div v-if="loading" class="flex justify-center items-center w-full">
+    <div v-if="pending" class="flex justify-center items-center w-full">
         <ProgressSpinner
             style="width: 50px; height: 50px;--p-progressspinner-color-one
 :#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
@@ -243,6 +243,8 @@
 definePageMeta({
     layout: 'links'
 })
+
+const { data: streamer, pending} = await useFetch(`/api/publicStreamer/${route.params.username}`)
 
 const streamerStore = useStreamerStore()
 const linkStore = useLinkStore()
