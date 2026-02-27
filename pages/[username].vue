@@ -370,7 +370,7 @@ function isColorDark(hex) {
 }
 
 const bgColorAuto = computed(() => isColorDark(wallpaperColor.value) ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')
-const textColor = computed(() => isColorDark(wallpaperColor.value) ? '#fff' : '#000')
+const textColor = computed(() => isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000')
 
 const DAY_LABELS = { lundi: 'Lun', mardi: 'Mar', mercredi: 'Mer', jeudi: 'Jeu', vendredi: 'Ven', samedi: 'Sam', dimanche: 'Dim' }
 const DAY_INDEX = {
