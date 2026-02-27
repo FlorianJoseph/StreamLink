@@ -5,105 +5,109 @@
 :#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
-    <div class="min-h-full w-full sm:w-2xl p-5 sm:p-7 fade-in sm:rounded-t-xl sm:border-t sm:border-r sm:border-l shadow-xl"
-        v-else-if="publicStreamer" :style="{ background: wallpaperColor, borderColor: accentColorAuto + '44' }">
+    <div class="min-h-full w-full fade-in sm:rounded-t-xl shadow-xl" v-else-if="publicStreamer"
+        :style="{ background: wallpaperColor }">
 
-        <!-- Top bar -->
-        <div class="flex items-center justify-between">
-            <NuxtLink v-ripple :to="'/'">
-                <button class="flex items-center p-3 rounded-full transition-all shadow-xs"
-                    :class="[fixedButtonColor, fixedButtonBg]">
-                    <Icon name="lucide:home" size="20" />
-                </button>
-            </NuxtLink>
-            <button @click="copyText" class="flex items-center px-3 py-2.5 rounded-full transition-all gap-2 shadow-xs"
-                :class="copied
-                    ? 'bg-green-400 text-black'
-                    : [fixedButtonBg, fixedButtonColor]
-                    ">
-                <Icon v-if="!copied" name="lucide:copy" size="20" />
-                <Icon v-else name="lucide:check" size="20" />
-                <span class="text-sm sm:text-base font-medium">{{ copied ? 'Copié !' : 'Copier le lien' }}</span>
-            </button>
-        </div>
-
-        <div class="flex flex-col space-y-2 mt-4">
-            <div class="relative rounded-2xl my-4 border shadow-xs"
-                :style="{ backgroundColor: bgColorAuto, borderColor: accentColorAuto + '44' }">
-                <!-- En-tête -->
-                <div class="relative z-10 flex items-center gap-3 sm:gap-4 px-4 py-3 sm:px-5 sm:py-4">
-                    <!-- Avatar -->
-                    <div class="relative flex-shrink-0">
-                        <div class="avatar-ring" :style="{ '--ring-color': buttonBackgroundColor + '88' }">
-                            <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
-                                class="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover" />
-                        </div>
-                        <!-- Badge statut -->
-                        <span v-if="!isLive"
-                            class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-0.5 rounded-full whitespace-nowrap shadow-sm"
-                            :style="{ backgroundColor: buttonBackgroundColor + '88', color: isColorDark(accentColorAuto) ? '#fff' : '#000' }">
-                            Offline
-                        </span>
+        <!-- En-tête avec avatar, pseudo, description et statut live -->
+        <div>
+            <div class="flex items-center gap-3 sm:gap-4 px-5 py-8 sm:py-10 sm:px-7">
+                <!-- Avatar -->
+                <div class="relative flex-shrink-0">
+                    <div class="avatar-ring" :style="{ '--ring-color': buttonBackgroundColor + '88' }">
+                        <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
+                            class="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover" />
                     </div>
-                    <div class="flex flex-col flex-1 min-w-0">
+                </div>
+                <!-- Pseudo et description -->
+                <div class="flex flex-col flex-1 min-w-0">
+                    <div class="flex items-center gap-2 sm:gap-3">
                         <span :class="['font-bold ', usernameSizeClass]" :style="{ color: usernameColor }">
                             {{ publicStreamer?.username }}
                         </span>
-                        <span class="text-xs sm:text-sm mt-1 break-words line-clamp-5"
-                            :style="{ color: descriptionColor }">
-                            {{ publicStreamer?.bio }}
-                        </span>
+                        <button @click="copyText" class="flex items-center gap-1 px-3 py-1.5 rounded-md transition-all"
+                            :class="copied ? 'text-green-400' : ''" :style="copied ? {} : {
+                                color: isColorDark(wallpaperColor) ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.8)',
+                                backgroundColor: hoveredCopy ? (isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto + '22') : 'transparent'
+                            }" @mouseenter="hoveredCopy = true" @mouseleave="hoveredCopy = false">
+                            <Icon v-if="!copied" name="lucide:copy" size="14" class="shrink-0" />
+                            <Icon v-else name="lucide:check" size="14" class="shrink-0" />
+                            <span class="text-sm hidden sm:inline">{{ copied ? 'Copié !' : 'Copier le lien' }}</span>
+                        </button>
                     </div>
-                </div>
-                <!-- Prochain stream -->
-                <div v-if="nextSlot && !isLive" class="flex items-center gap-2 px-4 py-2.5 border-t"
-                    :style="{ borderColor: accentColorAuto + '22' }">
-                    <span class="text-xs font-semibold flex-shrink-0"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
-                        Prochain <span class="hidden sm:inline">stream</span>
+                    <span class="text-xs sm:text-sm mt-1 break-words line-clamp-5" :style="{ color: descriptionColor }">
+                        {{ publicStreamer?.bio }}
                     </span>
-                    <div class="w-px h-4 flex-shrink-0" :style="{ backgroundColor: buttonBackgroundColor + '44' }" />
-                    <div class="flex flex-col sm:flex-row sm:items-center min-w-0 flex-1">
-                        <span class="text-xs font-semibold truncate"
-                            :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
-                            {{ nextSlot.game?.label }}
-                        </span>
-                        <span class="text-xs sm:ml-auto sm:flex-shrink-0"
-                            :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
-                            {{ nextSlot.isToday ? 'Auj.' : formatDay(nextSlot.day) }} {{ formatTime(nextSlot.start_at)
-                            }}
-                        </span>
-                    </div>
-                </div>
-
-                <!-- En live -->
-                <div v-if="isLive" class="relative z-10 flex items-center gap-3 px-4 py-2.5 border-t"
-                    :style="{ borderColor: accentColorAuto + '22' }">
-                    <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
-                    <span class="text-xs sm:text-sm font-semibold"
-                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">En live sur {{
-                            nextSlot.game.label }}</span>
                 </div>
             </div>
 
+            <!-- Prochain stream -->
+            <div v-if="nextSlot && !isLive" class="flex items-center gap-2 px-4 py-2.5 border-t border-b"
+                :style="{ borderColor: accentColorAuto + '22' }">
+                <div class="flex flex-col sm:flex-row sm:items-center items-center gap-1.5">
+                    <Icon name="lucide:calendar-clock" size="14" class="flex-shrink-0"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
+                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                        Prochain stream
+                    </span>
+                </div>
+                <div class="w-px h-4 flex-shrink-0" :style="{ backgroundColor: buttonBackgroundColor + '44' }" />
+                <div class="flex flex-col sm:flex-row sm:items-center min-w-0 flex-1">
+                    <span class="text-xs sm:text-sm font-semibold truncate"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                        {{ nextSlot.game?.label }}
+                    </span>
+                    <span class="text-xs sm:text-sm sm:ml-auto sm:flex-shrink-0"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                        {{ nextSlot.isToday ? 'Auj.' : formatDay(nextSlot.day) }} {{ formatTime(nextSlot.start_at)
+                        }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- En live -->
+            <div v-if="isLive" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-b"
+                :style="{ borderColor: accentColorAuto + '22' }">
+                <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
+                <span class="text-xs sm:text-sm font-semibold"
+                    :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                    En live sur {{ nextSlot?.game?.label }}
+                </span>
+            </div>
+            <!-- Aucun stream prévu -->
+            <div v-else-if="!nextSlot && !isLive" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-b"
+                :style="{ borderColor: accentColorAuto + '22' }">
+                <div class="flex items-center gap-1.5">
+                    <Icon name="lucide:calendar-x" size="14" class="flex-shrink-0"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
+                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0"
+                        :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                        Aucun stream prévu ici pour l'instant
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col space-y-8 px-5 sm:px-7 items-center mt-7">
+
             <!-- Switcher -->
-            <div class="flex rounded-xl p-1 gap-1" :style="{ backgroundColor: bgColorAuto }">
+            <div class="flex gap-1" :style="{ borderColor: accentColorAuto + '22' }">
                 <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" @mouseenter="hoveredTab = tab.id"
                     @mouseleave="hoveredTab = null"
-                    class="flex-1 flex items-center justify-center gap-2 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all"
+                    class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm sm:text-base font-medium transition-all"
                     :style="activeTab === tab.id
-                        ? { backgroundColor: buttonBackgroundColor, color: isColorDark(accentColorAuto) ? '#fff' : '#000' }
+                        ? { backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000' }
                         : {
-                            backgroundColor: hoveredTab === tab.id ? buttonBackgroundColor + '18' : 'transparent',
+                            backgroundColor: hoveredTab === tab.id ? buttonBackgroundColor + '22' : 'transparent',
                             color: isColorDark(wallpaperColor) ? '#fff' : '#000'
                         }">
-                    <Icon :name="tab.icon" size="16" />
+                    <Icon :name="tab.icon" size="14" />
                     {{ tab.label }}
                 </button>
             </div>
 
             <!-- Liste de liens -->
-            <div v-if="activeTab === 'liens'" class="mt-2">
+            <div v-if="activeTab === 'liens'" class="w-full">
                 <div v-if="publicLinks.length > 0" class="flex flex-col gap-4 w-full">
                     <div class="w-full mx-auto" v-for="link in publicLinks" :key="link.id">
                         <a :href="link.url" target="_blank">
@@ -138,13 +142,12 @@
                 <div v-else class="flex flex-col items-center gap-3 py-10 text-center">
                     <Icon name="lucide:link-2-off" size="36"
                         :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
-                    <p class="text-sm" :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">Aucun lien
-                        partagé pour
-                        l'instant.</p>
+                    <p class="text-sm" :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                        Aucun lien partagé pour l'instant.</p>
                 </div>
             </div>
 
-            <div v-if="activeTab === 'planning'" class="mt-2">
+            <div v-if="activeTab === 'planning'" class="w-full">
                 <div v-if="groupedSlots.length > 0" class="flex flex-col gap-2">
                     <template v-for="group in groupedSlots" :key="group.day">
                         <div class="flex items-start gap-2">
@@ -177,26 +180,27 @@
                 <div v-else class="flex flex-col items-center gap-3 py-10 text-center">
                     <Icon name="lucide:calendar-x" size="36"
                         :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }" />
-                    <p class="text-sm" :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">Pas de stream
-                        prévu cette
-                        semaine.</p>
+                    <p class="text-sm" :style="{ color: isColorDark(wallpaperColor) ? '#fff' : '#000' }">
+                        Aucun stream prévu ici pour l'instant
+                    </p>
                 </div>
             </div>
 
             <!-- Footer CTA -->
-            <div class="flex justify-center my-12">
+            <div class="flex flex-col items-center gap-2">
+                <p class="text-sm sm:text-base text-center font-semibold tracking-wide"
+                    :style="{ color: footerTextColor + 'CC' }">
+                    Votre univers, en une page.
+                </p>
                 <NuxtLink :to="'/admin/links'" external>
-                    <button :class="['py-2.5 px-3 rounded-md font-semibold transition-all shadow-sm text-xs sm:text-base',
-                        isColorDark(accentColorAuto) ? 'hover:brightness-110' : 'hover:brightness-90']" :style="{
-                            backgroundColor: buttonBackgroundColor,
-                            color: isColorDark(accentColorAuto) ? '#fff' : '#000'
-                        }">
-                        Rejoignez {{ publicStreamer?.username }} sur
-                        StreamLink
+                    <button :class="['py-2.5 px-4 rounded-lg font-semibold transition-all shadow-md text-xs sm:text-base group',
+                        isColorDark(accentColorAuto) ? 'hover:brightness-110' : 'hover:brightness-90']"
+                        :style="{ backgroundColor: buttonBackgroundColor, color: isColorDark(accentColorAuto) ? '#fff' : '#000' }">
+                        Créer ma page comme
+                        <span class="font-bold group-hover:underline">{{ publicStreamer?.username }}</span>
                     </button>
                 </NuxtLink>
             </div>
-
             <!-- Footer infos -->
             <div class="flex flex-col items-center gap-3 pb-10 text-xs">
                 <div class="flex items-center gap-2" :style="{ color: footerTextColor }">
@@ -223,7 +227,8 @@
 
             <!-- Message secondaire -->
             <p class="text-gray-500 max-w-md">
-                Cette page n'existe pas encore. Créez votre page maintenant et commencez à partager vos liens facilement
+                Cette page n'existe pas encore. Créez votre page maintenant et commencez à partager vos liens
+                facilement
                 !
             </p>
 
@@ -326,6 +331,7 @@ const buttonClass = computed(() => {
 
 const hoveredLink = ref(null)
 const hoveredTab = ref(null)
+const hoveredCopy = ref(false)
 
 // Couleur de bordure pour les boutons outlined
 const buttonBorderColor = computed(() => {
@@ -367,16 +373,6 @@ function isColorDark(hex) {
     const brightness = (r * 299 + g * 587 + b * 114) / 1000
     return brightness < 128
 }
-
-// Couleur des boutons et du texte en fonction de la luminosité du fond
-const fixedButtonColor = computed(() => {
-    return isColorDark(wallpaperColor.value) ? 'text-white' : 'text-black'
-})
-
-// Couleur de fond des boutons en fonction de la luminosité du fond
-const fixedButtonBg = computed(() => {
-    return isColorDark(wallpaperColor.value) ? 'bg-zinc-800 hover:brightness-115' : 'bg-white hover:brightness-95'
-})
 
 // Couleur du texte du footer en fonction de la luminosité du fond
 const footerTextColor = computed(() => {
@@ -450,9 +446,19 @@ function formatTime(time) {
 }
 
 const nextSlot = computed(() => {
-    const group = groupedSlots.value[0]
-    if (!group) return null
-    return { ...group.slots[0], isToday: group.isToday, day: group.day }
+    const now = new Date()
+    const nowMinutes = now.getHours() * 60 + now.getMinutes()
+
+    for (const group of groupedSlots.value) {
+        for (const slot of group.slots) {
+            if (group.isToday) {
+                const [endH, endM] = slot.end_at.split(':').map(Number)
+                if (endH * 60 + endM <= nowMinutes) continue
+            }
+            return { ...slot, isToday: group.isToday, day: group.day }
+        }
+    }
+    return null
 })
 
 const isLive = computed(() => {
