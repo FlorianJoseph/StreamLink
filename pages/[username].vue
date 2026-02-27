@@ -44,7 +44,7 @@
 
             <!-- Prochain stream -->
             <div v-if="nextSlot && !isLive" class="flex items-center gap-2 px-4 py-2.5 border-t border-b"
-                :style="{ borderColor: isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto }">
+                :style="{ borderColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor }">
                 <div class="flex flex-col sm:flex-row sm:items-center items-center gap-1.5">
                     <Icon name="lucide:calendar-clock" size="14" class="flex-shrink-0" :style="{ color: textColor }" />
                     <span class="text-xs sm:text-sm font-semibold flex-shrink-0" :style="{ color: textColor }">
@@ -52,7 +52,7 @@
                     </span>
                 </div>
                 <div class="w-px h-4 flex-shrink-0"
-                    :style="{ backgroundColor: isColorDark(wallpaperColor) ? accentColorAuto + '44' : accentColorAuto }" />
+                    :style="{ backgroundColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '44' : buttonBackgroundColor }" />
                 <div class="flex flex-col sm:flex-row sm:items-center min-w-0 flex-1">
                     <span class="text-xs sm:text-sm font-semibold truncate" :style="{ color: textColor }">
                         {{ nextSlot.game?.label }}
@@ -66,7 +66,7 @@
 
             <!-- En live -->
             <div v-if="isLive" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-b"
-                :style="{ borderColor: isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto }">
+                :style="{ borderColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor }">
                 <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
                 <span class="text-xs sm:text-sm font-semibold" :style="{ color: textColor }">
                     En live sur {{ nextSlot?.game?.label }}
@@ -74,7 +74,7 @@
             </div>
             <!-- Aucun stream prévu -->
             <div v-else-if="!nextSlot && !isLive" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-b"
-                :style="{ borderColor: isColorDark(wallpaperColor) ? accentColorAuto + '22' : accentColorAuto }">
+                :style="{ borderColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor }">
                 <div class="flex items-center gap-1.5">
                     <Icon name="lucide:calendar-x" size="14" class="flex-shrink-0" :style="{ color: textColor }" />
                     <span class="text-xs sm:text-sm font-semibold flex-shrink-0" :style="{ color: textColor }">
@@ -87,7 +87,7 @@
         <div class="flex flex-col space-y-8 px-5 sm:px-7 items-center mt-7">
 
             <!-- Switcher -->
-            <div class="flex gap-1" :style="{ borderColor: accentColorAuto + '22' }">
+            <div class="flex gap-1">
                 <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" @mouseenter="hoveredTab = tab.id"
                     @mouseleave="hoveredTab = null"
                     class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm sm:text-base font-medium transition-all"
@@ -189,8 +189,8 @@
                 </p>
                 <NuxtLink :to="'/admin/links'" external>
                     <button :class="['py-2.5 px-4 rounded-lg font-semibold transition-all shadow-md text-xs sm:text-base group',
-                        isColorDark(accentColorAuto) ? 'hover:brightness-110' : 'hover:brightness-90']"
-                        :style="{ backgroundColor: buttonBackgroundColor, color: isColorDark(accentColorAuto) ? '#fff' : '#000' }">
+                        isColorDark(buttonBackgroundColor) ? 'hover:brightness-110' : 'hover:brightness-90']"
+                        :style="{ backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000' }">
                         Créer ma page comme
                         <span class="font-bold group-hover:underline">{{ publicStreamer?.username }}</span>
                     </button>
@@ -370,11 +370,6 @@ function isColorDark(hex) {
 }
 
 const bgColorAuto = computed(() => isColorDark(wallpaperColor.value) ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')
-const accentColorAuto = computed(() => {
-    const color = publicDesign.value?.button_style?.backgroundColor
-    return `#${color}`
-})
-
 const textColor = computed(() => isColorDark(wallpaperColor.value) ? '#fff' : '#000')
 
 const DAY_LABELS = { lundi: 'Lun', mardi: 'Mar', mercredi: 'Mer', jeudi: 'Jeu', vendredi: 'Ven', samedi: 'Sam', dimanche: 'Dim' }
