@@ -42,15 +42,15 @@
 
         <Card class="w-full mx-auto">
             <template #title>
-                <div class="flex flex-row justify-between items-center">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
                     <div class="flex flex-col">
                         <span class="font-semibold">Notifications par email</span>
-                        <span class="text-sm text-gray-400">
+                        <span class="text-xs sm:text-sm text-gray-400">
                             Recevoir les mises à jour importantes et nouveautés de StreamLink
                         </span>
                     </div>
                     <Button @click="newsletterStore.toggle"
-                        :severity="newsletterStore.subscribed ? 'secondary' : 'info'">
+                        :severity="newsletterStore.subscribed ? 'secondary' : 'info'" class="w-full sm:w-auto">
                         <Icon :name="newsletterStore.subscribed ? 'lucide:mail-x' : 'lucide:mail-plus'" size="16" />
                         {{ newsletterStore.subscribed ? 'Désactiver' : 'Activer' }}
                     </Button>
@@ -61,7 +61,7 @@
             <template #title>
                 <div class="flex flex-col">
                     <span class="font-semibold">Supprimer pour toujours</span>
-                    <span class="text-sm text-gray-400">
+                    <span class="text-xs sm:text-sm text-gray-400">
                         Supprimez définitivement votre profil StreamLink.
                     </span>
                 </div>

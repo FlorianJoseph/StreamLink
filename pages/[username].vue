@@ -5,7 +5,7 @@
 :#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
-    <div class="min-h-full w-full fade-in sm:rounded-t-xl shadow-xl relative" v-else-if="publicStreamer"
+    <div class="min-h-full w-full fade-in sm:rounded-t-xl shadow-xl relative" v-else-if="user"
         :style="{ background: wallpaperColor }">
         <button @click="copyText"
             class="absolute top-4 right-4 flex items-center gap-1 px-3 py-1.5 rounded-md transition-all"
@@ -25,19 +25,19 @@
                 <div class="relative flex-shrink-0">
                     <div class="avatar-ring"
                         :style="{ '--ring-color': isColorDark(wallpaperColor) ? buttonBackgroundColor + '88' : buttonBackgroundColor }">
-                        <img :src="publicStreamer?.avatar_url || defaultAvatar" alt="Avatar"
+                        <img :src="user?.avatar_url || defaultAvatar" alt="Avatar"
                             class="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover" />
                     </div>
                 </div>
                 <!-- Pseudo et description -->
                 <div class="flex flex-col flex-1 min-w-0">
                     <div class="flex items-center gap-2 sm:gap-3">
-                        <span :class="['font-bold ', usernameSizeClass]" :style="{ color: usernameColor }">
-                            {{ publicStreamer?.username }}
+                        <span :class="['font-bold tracking-wide', usernameSizeClass]" :style="{ color: usernameColor }">
+                            {{ user?.username }}
                         </span>
                     </div>
                     <span class="text-xs sm:text-sm mt-1 break-words line-clamp-5" :style="{ color: descriptionColor }">
-                        {{ publicStreamer?.bio }}
+                        {{ user?.bio }}
                     </span>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                         Prochain stream
                     </span>
                 </div>
-                <div class="w-px h-4 flex-shrink-0"
+                <div class="w-px h-8 sm:h-4 flex-shrink-0"
                     :style="{ backgroundColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '44' : buttonBackgroundColor }" />
                 <div class="flex flex-col sm:flex-row sm:items-center min-w-0 flex-1">
                     <span class="text-xs sm:text-sm font-semibold truncate" :style="{ color: textColor }">
@@ -78,7 +78,7 @@
                 <div class="flex items-center gap-1.5">
                     <Icon name="lucide:calendar-x" size="14" class="flex-shrink-0" :style="{ color: textColor }" />
                     <span class="text-xs sm:text-sm font-semibold flex-shrink-0" :style="{ color: textColor }">
-                        Aucun stream prévu ici pour l'instant
+                        Aucun stream prévu ici cette semaine
                     </span>
                 </div>
             </div>
@@ -105,34 +105,31 @@
 
             <!-- Liste de liens -->
             <div v-if="activeTab === 'liens'" class="w-full">
-                <div v-if="publicLinks.length > 0" class="flex flex-col gap-4 w-full">
-                    <div class="w-full mx-auto" v-for="link in publicLinks" :key="link.id">
-                        <a :href="link.url" target="_blank">
-                            <button :class="['relative flex items-center w-full font-semibold transition h-16',
-                                link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]" :style="{
-                                    backgroundColor: buttonVariant === 'outlined'
-                                        ? hoveredLink === link.id ? buttonBorderColor + '18' : 'transparent'
-                                        : buttonBackgroundColor,
-                                    borderColor: buttonBorderColor
-                                }" @mouseenter="hoveredLink = link.id" @mouseleave="hoveredLink = null">
-                                <!-- Icône ou image à gauche -->
-                                <div
-                                    :class="['absolute flex items-center justify-center', link.icon_url ? 'left-3' : 'left-5']">
-                                    <template v-if="link.icon_url">
-                                        <img :src="link.icon_url"
-                                            class="w-10 h-10 object-contain rounded flex-shrink-0" />
-                                    </template>
-                                    <template v-else>
-                                        <Icon :name="link.icon" size="24" class="flex-shrink-0"
-                                            :style="{ color: buttonTextColor }" />
-                                    </template>
-                                </div>
-                                <!-- Texte centré -->
-                                <span class="font-medium break-words flex-1 text-sm sm:text-base text-center mx-8"
-                                    :style="{ color: buttonTextColor }">{{
-                                        link.title
-                                    }}</span>
-                            </button>
+                <div v-if="links.length > 0" class="flex flex-col gap-4 w-full">
+                    <div class="w-full mx-auto" v-for="link in links" :key="link.id">
+                        <a :href="link.url" target="_blank" :class="['relative flex items-center w-full font-semibold transition h-16',
+                            link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]" :style="{
+                                backgroundColor: buttonVariant === 'outlined'
+                                    ? hoveredLink === link.id ? buttonBorderColor + '18' : 'transparent'
+                                    : buttonBackgroundColor,
+                                borderColor: buttonBorderColor
+                            }" @mouseenter="hoveredLink = link.id" @mouseleave="hoveredLink = null">
+                            <!-- Icône ou image à gauche -->
+                            <div
+                                :class="['absolute flex items-center justify-center', link.icon_url ? 'left-3' : 'left-5']">
+                                <template v-if="link.icon_url">
+                                    <img :src="link.icon_url" class="w-10 h-10 object-contain rounded flex-shrink-0" />
+                                </template>
+                                <template v-else>
+                                    <Icon :name="link.icon" size="24" class="flex-shrink-0"
+                                        :style="{ color: buttonTextColor }" />
+                                </template>
+                            </div>
+                            <!-- Texte centré -->
+                            <span class="font-medium break-words flex-1 text-sm sm:text-base text-center mx-8"
+                                :style="{ color: buttonTextColor }">{{
+                                    link.title
+                                }}</span>
                         </a>
                     </div>
                 </div>
@@ -148,7 +145,7 @@
                     <template v-for="group in groupedSlots" :key="group.day">
                         <div class="flex items-start gap-2">
                             <!-- Jour -->
-                            <span class="text-xs font-bold flex-shrink-0 w-8 text-center mt-2"
+                            <span class="text-xs font-bold tracking-wide flex-shrink-0 w-8 text-center mt-2"
                                 :style="{ color: textColor }">
                                 {{ group.isToday ? 'Auj.' : formatDay(group.day) }}
                             </span>
@@ -176,7 +173,7 @@
                 <div v-else class="flex flex-col items-center gap-3 py-10 text-center">
                     <Icon name="lucide:calendar-x" size="36" :style="{ color: textColor }" />
                     <p class="text-sm" :style="{ color: textColor }">
-                        Aucun stream prévu ici pour l'instant
+                        Aucun stream prévu ici cette semaine
                     </p>
                 </div>
             </div>
@@ -187,12 +184,12 @@
                     :style="{ color: textColor + 'CC' }">
                     Votre univers, en une page.
                 </p>
-                <NuxtLink :to="'/admin/links'" external>
-                    <button :class="['py-2.5 px-4 rounded-lg font-semibold transition-all shadow-md text-xs sm:text-base group',
+                <NuxtLink :to="'/admin/links'">
+                    <button :class="['py-2.5 px-5 rounded-lg font-semibold tracking-wide transition-all shadow-md text-sm sm:text-base group',
                         isColorDark(buttonBackgroundColor) ? 'hover:brightness-110' : 'hover:brightness-90']"
                         :style="{ backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000' }">
                         Créer ma page comme
-                        <span class="font-bold group-hover:underline">{{ publicStreamer?.username }}</span>
+                        <span class="font-extrabold group-hover:underline">{{ user.username }}</span>
                     </button>
                 </NuxtLink>
             </div>
@@ -211,7 +208,7 @@
         </div>
     </div>
 
-    <!-- Page d’erreur si le streamer n’existe pas -->
+    <!-- Page d’erreur si le user n’existe pas -->
     <template v-else>
         <div class="flex flex-col items-center text-center gap-6">
             <!-- Icône pour illustrer l'erreur -->
@@ -229,34 +226,31 @@
 
             <!-- Bouton CTA -->
             <NuxtLink :to="'/admin/links'">
-                <Button severity="contrast">
+                <button
+                    class="py-2.5 px-5 rounded-lg font-semibold tracking-wide transition-all shadow-md text-sm sm:text-base group hover:brightness-90 bg-white text-black flex items-center gap-2">
                     <Icon name="lucide:plus" size="20" />
-                    <span class="font-semibold">Créez votre page StreamLink</span>
-                </Button>
+                    Créer ma page<span class="font-extrabold group-hover:underline">StreamLink</span>
+                </button>
             </NuxtLink>
         </div>
     </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 definePageMeta({
     layout: 'links'
 })
 
-const { data: streamer, pending} = await useFetch(`/api/publicStreamer/${route.params.username}`)
-
-const streamerStore = useStreamerStore()
-const linkStore = useLinkStore()
-const designStore = useDesignStore()
-const scheduleStore = useScheduleStore()
-const scheduleSlotStore = useScheduleSlotStore()
-const { publicStreamer, loading } = storeToRefs(streamerStore)
-const { publicLinks } = storeToRefs(linkStore)
-const { publicDesign } = storeToRefs(designStore)
-const { publicSchedule } = storeToRefs(scheduleStore)
-const { publicSlots } = storeToRefs(scheduleSlotStore)
+// Récupération des données du user public
 const route = useRoute()
+const { data: publicUser, pending } = await useFetch(`/api/publicUser/${route.params.username}`)
+
+// Données extraites pour faciliter l’accès dans le template
+const user = publicUser.value?.user || null
+const design = publicUser.value?.design || null
+const links = publicUser.value?.links ?? []
+const slots = publicUser.value?.slots ?? []
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
@@ -277,45 +271,30 @@ const copyText = () => {
     setTimeout(() => (copied.value = false), 1500)
 }
 
-
-onMounted(async () => {
-    const username = route.params.username
-    loading.value = true
-    try {
-        await streamerStore.fetchStreamerByUsername(username)
-        await linkStore.fetchPublicLinks(publicStreamer.value.id)
-        await designStore.fetchPublicDesign(publicStreamer.value.id)
-        await scheduleStore.fetchPublicSchedule(publicStreamer.value.id)
-        await scheduleSlotStore.fetchPublicSlots(publicSchedule.value.id)
-    } finally {
-        loading.value = false
-    }
-})
-
 // Style du pseudo dynamique
 const usernameSizeClass = computed(() => {
-    const size = publicDesign.value?.username_style?.size ?? 'normal'
+    const size = design.username_style?.size ?? 'normal'
     return size === 'medium' ? 'text-xl sm:text-3xl' : 'text-lg sm:text-2xl'
 })
 const usernameColor = computed(() => {
-    const color = publicDesign.value?.username_style?.textColor ?? 'FFFFFF'
+    const color = design.username_style?.textColor ?? 'FFFFFF'
     return color ? `#${color}` : '#FFFFFF'
 })
 
 // Style de la description dynamique
 const descriptionColor = computed(() => {
-    const color = publicDesign.value?.bio_style?.textColor ?? 'D4D4D8'
+    const color = design.bio_style?.textColor ?? 'D4D4D8'
     return color ? `#${color}` : '#D4D4D8'
 })
 
 // Style des boutons dynamique
-const buttonVariant = computed(() => publicDesign.value?.button_style?.variant ?? 'filled')
+const buttonVariant = computed(() => design.button_style?.variant ?? 'filled')
 
 const buttonClass = computed(() => {
 
     if (buttonVariant.value === 'outlined') {
         return [
-            `border border`,
+            `border`,
         ]
     }
 
@@ -326,41 +305,42 @@ const buttonClass = computed(() => {
     ]
 })
 
+// États de survol pour les liens, les tabs et le bouton de copie
 const hoveredLink = ref(null)
 const hoveredTab = ref(null)
 const hoveredCopy = ref(false)
 
 // Couleur de bordure pour les boutons outlined
 const buttonBorderColor = computed(() => {
-    const color = publicDesign.value?.button_style?.backgroundColor ?? 'FFFFFF'
+    const color = design.button_style?.backgroundColor ?? 'FFFFFF'
     return buttonVariant.value === 'outlined' ? `#${color}` : null
 })
 
 // Couleur de fond pour les boutons filled
 const buttonBackgroundColor = computed(() => {
-    const color = publicDesign.value?.button_style?.backgroundColor ?? 'FFFFFF'
+    const color = design.button_style?.backgroundColor ?? 'FFFFFF'
     return `#${color}`
 })
 
 // Couleur du texte des boutons
 const buttonTextColor = computed(() => {
-    const color = publicDesign.value?.button_style?.textColor ?? '000000'
+    const color = design.button_style?.textColor ?? '000000'
     return `#${color}`
 })
 
 // Style de la bordure des boutons dynamique
 const buttonRadiusClass = computed(() => {
-    return publicDesign.value?.button_style?.borderRadius ?? 'rounded-lg'
+    return design.button_style?.borderRadius ?? 'rounded-lg'
 })
 
 // Style du fond dynamique
 const wallpaperColor = computed(() => {
-    const color = publicDesign.value?.wallpaper_style?.backgroundColor ?? '18181B'
+    const color = design.wallpaper_style?.backgroundColor ?? '18181B'
     return `#${color}`
 })
 
 // Fonction pour déterminer si le texte du footer et les boutons doivent être clairs ou sombres
-function isColorDark(hex) {
+function isColorDark(hex: string) {
     if (!hex) return true
     const c = hex.startsWith('#') ? hex.substring(1) : hex
     const r = parseInt(c.substr(0, 2), 16)
@@ -371,9 +351,12 @@ function isColorDark(hex) {
     return brightness < 128
 }
 
+// Couleur de fond des éléments auto (prochain stream, planning) basée sur la luminosité du wallpaper
 const bgColorAuto = computed(() => isColorDark(wallpaperColor.value) ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')
+// Couleur du texte basée sur la luminosité du wallpaper
 const textColor = computed(() => isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000')
 
+// Logique de calcul du prochain stream et du statut live
 const DAY_LABELS = { lundi: 'Lun', mardi: 'Mar', mercredi: 'Mer', jeudi: 'Jeu', vendredi: 'Ven', samedi: 'Sam', dimanche: 'Dim' }
 const DAY_INDEX = {
     dimanche: 0,
@@ -384,56 +367,61 @@ const DAY_INDEX = {
     vendredi: 5,
     samedi: 6
 }
+
+// Regroupement des créneaux par jour à venir, en filtrant les créneaux déjà passés aujourd'hui
 const groupedSlots = computed(() => {
     const today = new Date()
     const todayIndex = today.getDay()
+    const now = new Date()
+    const groupsMap: Record<string, any> = {}
 
-    const groupsMap = {}
+    for (const slot of slots) {
+        const normalizedDay = slot.day?.toLowerCase()
+        if (!normalizedDay || !slot.start_at || !slot.end_at) continue
 
-    for (const slot of publicSlots.value) {
-        const normalizedDay = slot.day.toLowerCase()
         const targetIndex = DAY_INDEX[normalizedDay]
         if (targetIndex === undefined) continue
 
-        // Semaine lundi (1) → dimanche (0), on rebase dimanche à 7
-        const rebase = (d) => d === 0 ? 7 : d
-
+        const rebase = (d: number) => d === 0 ? 7 : d
         const targetIndexRebased = rebase(targetIndex)
         const todayIndexRebased = rebase(todayIndex)
-
         if (targetIndexRebased < todayIndexRebased) continue
 
         const diff = targetIndexRebased - todayIndexRebased
         const targetDate = new Date(today)
         targetDate.setDate(today.getDate() + diff)
 
-        const dateKey = targetDate.toDateString()
+        // filtre des streams déjà terminés aujourd'hui
+        if (diff === 0) {
+            const [startH, startM] = slot.start_at.split(':').map(Number)
+            const startDateTime = new Date(today)
+            startDateTime.setHours(startH, startM, 0, 0)
 
+            if (now >= startDateTime) continue
+        }
+
+        const dateKey = targetDate.toDateString()
         if (!groupsMap[dateKey]) {
-            groupsMap[dateKey] = {
-                day: slot.day,
-                date: targetDate,
-                slots: [],
-                isToday: diff === 0
-            }
+            groupsMap[dateKey] = { day: slot.day, date: targetDate, slots: [], isToday: diff === 0 }
         }
 
         groupsMap[dateKey].slots.push(slot)
     }
 
-    return Object.values(groupsMap).sort(
-        (a, b) => a.date - b.date
-    )
+    return Object.values(groupsMap).sort((a, b) => a.date.getTime() - b.date.getTime())
 })
 
-const formatDay = (day) => DAY_LABELS[day] ?? day.slice(0, 3) + '.'
+// Formatage du jour pour l’affichage (ex: lundi -> Lun.)
+const formatDay = (day?: string) => day ? DAY_LABELS[day.toLowerCase()] ?? day.slice(0, 3) + '.' : ''
 
-function formatTime(time) {
+// Formatage de l’heure pour l’affichage (ex: 20:30 -> 20h30)
+function formatTime(time: string) {
     if (!time) return ''
     const [h, m] = time.split(':')
     return `${h}h${m}`
 }
 
+// Recherche du prochain créneau à venir (le premier créneau du groupe le plus proche)
 const nextSlot = computed(() => {
     const now = new Date()
     const nowMinutes = now.getHours() * 60 + now.getMinutes()
@@ -450,14 +438,15 @@ const nextSlot = computed(() => {
     return null
 })
 
+// Détermination du statut live en vérifiant si le créneau en cours correspond à l’heure actuelle
 const isLive = computed(() => {
     const now = new Date()
     const todayIndex = now.getDay()
-    const rebase = (d) => d === 0 ? 7 : d
+    const rebase = (d: number) => d === 0 ? 7 : d
     const todayRebased = rebase(todayIndex)
 
-    for (const slot of publicSlots.value) {
-        const normalizedDay = slot.day.toLowerCase()
+    for (const slot of slots) {
+        const normalizedDay = slot.day?.toLowerCase()
         const targetIndex = DAY_INDEX[normalizedDay]
         if (targetIndex === undefined) continue
 
