@@ -13,7 +13,7 @@
             </div>
         </div>
         <StreamLinkShare />
-        <Card class="flex flex-col w-full h-160 sm:w-sm overflow-auto"
+        <Card class="flex flex-col w-full h-160 sm:w-sm overflow-auto preview-scroll"
             :style="{ '--p-card-background': wallpaperColor }">
             <template #title>
                 <div class="flex items-center justify-between">
@@ -184,3 +184,11 @@ const footerTextColor = computed(() => {
 })
 
 </script>
+
+<style scoped>
+.preview-scroll {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #9F9F9F transparent;
+}
+</style>
