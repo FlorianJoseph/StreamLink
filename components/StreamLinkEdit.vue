@@ -44,11 +44,11 @@
                         <!-- Description -->
                         <div class="flex flex-col gap-2 relative">
                             <label for="description">Description</label>
-                            <Textarea id="description" v-model="bio" rows="5" autoResize maxlength="160"
+                            <Textarea id="description" v-model="bio" rows="5" autoResize maxlength="120"
                                 placeholder="Écrivez une courte description..." class="w-full"
                                 style="--p-textarea-focus-border-color : #ffffff" />
                             <span class="absolute right-2 bottom-1 text-xs text-gray-500">
-                                {{ bio.length }}/160
+                                {{ bio.length }}/120
                             </span>
                         </div>
                         <Button type="button" label="Sauvegarder" severity="contrast" @click="handleSave" class="w-full"

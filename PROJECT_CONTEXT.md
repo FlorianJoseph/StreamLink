@@ -88,24 +88,23 @@ Objectif principal : booster l’engagement et l’usage régulier.
 Objectif principal : créer de la valeur pour les utilisateurs Pro et maximiser la rétention.
 
 ### Premium V1
+#### Pack réseaux sociaux 
+    - Twitch live API
+    - Branding supprimé Planning et Page de Liens
+    - Sync Twitch automatique
+    - Export Discord
 
-    1. Design avancé
+#### Pack Designer
     - Thèmes exclusifs
     - Background animé
     - Layout custom
+    - Branding supprimé
+
+#### Pack Créateur
+Les 2 Packs + Stats avancées
+
+#### Tous
     - Badges premium
-    - Branding supprimé
-
-    2. Stats avancées
-    - CTR par lien
-    - Vues par jour
-    - Pic horaire
-    - Performance planning
-
-    3. Planning
-    - Sync Twitch automatique
-    - Export Discord
-    - Branding supprimé
 
 Objectifs KPI :
     - Conversion planning → 60%
