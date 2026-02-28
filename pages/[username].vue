@@ -7,6 +7,8 @@
     </div>
     <div class="min-h-full w-full fade-in sm:rounded-t-xl shadow-xl relative" v-else-if="user"
         :style="{ background: wallpaperColor }">
+
+        <!-- Bouton de copie du lien -->
         <button @click="copyText"
             class="absolute top-2 sm:top-4 right-2 sm:right-4 flex items-center gap-1 px-3 py-1.5 rounded-md transition-all"
             :class="copied ? 'text-green-400' : ''" :style="copied ? {} : {
@@ -69,7 +71,7 @@
                 :style="{ borderColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor }">
                 <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
                 <span class="text-xs sm:text-sm font-semibold" :style="{ color: textColor }">
-                    En live sur {{ nextSlot?.game?.label }}
+                    En live sur {{ liveSlot?.game?.label }}
                 </span>
             </div>
             <!-- Aucun stream prévu -->
@@ -84,6 +86,7 @@
             </div>
         </div>
 
+        <!-- Contenu principal avec switcher Liens / Planning -->
         <div class="flex flex-col space-y-8 px-5 sm:px-7 items-center mt-7">
 
             <!-- Switcher -->
@@ -140,6 +143,7 @@
                 </div>
             </div>
 
+            <!-- Planning des streams -->
             <div v-if="activeTab === 'planning'" class="w-full">
                 <div v-if="groupedSlots.length > 0" class="flex flex-col gap-2">
                     <template v-for="group in groupedSlots" :key="group.day">
@@ -193,6 +197,7 @@
                     </button>
                 </NuxtLink>
             </div>
+
             <!-- Footer infos -->
             <div class="flex flex-col items-center gap-3 pb-10 text-xs">
                 <div class="flex items-center gap-2" :style="{ color: textColor }">
