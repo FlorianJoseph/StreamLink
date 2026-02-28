@@ -14,7 +14,7 @@
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
                             Votre page publique a été repensée
-                            <NuxtLink :to="`/${username}`" target="_blank"
+                            <NuxtLink :to="`/${streamer?.username}`" target="_blank"
                                 class="font-bold underline hover:text-indigo-200">
                                 <span>Voir ma page</span>
                             </NuxtLink>
@@ -33,7 +33,7 @@
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <NuxtLink :to="`/${username}`" target="_blank"
+                    <NuxtLink :to="`/${streamer?.username}`" target="_blank"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
                         Voir ma page
                     </NuxtLink>
@@ -49,7 +49,6 @@
 <script setup>
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
-const username = streamer.value?.username
 const STORAGE_KEY = 'NewPublicPage'
 const visible = ref(false)
 
