@@ -12,29 +12,30 @@
                 <div>
                     <p class="text-xs sm:text-sm lg:text-base leading-relaxed">
                         <!-- Mobile -->
-                        <span class="lg:hidden">
-                            Tes streams en direct sont maintenant mis en avant sur la page
-                            <NuxtLink to="/discover" class="font-bold underline hover:text-indigo-200">
-                                <span>Découvrir des streameurs</span>
+                        <span class="lg:hidden flex flex-col gap-1">
+                            Votre page publique a été repensée
+                            <NuxtLink :to="`/${username}`" target="_blank"
+                                class="font-bold underline hover:text-indigo-200">
+                                <span>Voir ma page</span>
                             </NuxtLink>
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Tes streams en direct apparaissent automatiquement en tête de la page
-                            <NuxtLink to="/discover" class="font-bold underline hover:text-indigo-200">
-                                <span>Découvrir des streameurs</span>
-                            </NuxtLink>
-                            pour maximiser ta visibilité !
+                            Votre page publique a été entièrement repensée avec un nouveau design et le planning intégré
+                            <!-- <NuxtLink :to="`/${username}`" target="_blank"
+                                class="font-bold underline hover:text-indigo-200">
+                                <span>Voir ma page</span>
+                            </NuxtLink> -->
                         </span>
                     </p>
                 </div>
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <NuxtLink to="/discover"
+                    <NuxtLink :to="`/${username}`" target="_blank"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
-                        Voir les streams
+                        Voir ma page
                     </NuxtLink>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
                         <Icon name="lucide:x" size="18" class="sm:w-5 sm:h-5" />
@@ -46,7 +47,10 @@
 </template>
 
 <script setup>
-const STORAGE_KEY = 'LiveBoost'
+const streamerStore = useStreamerStore()
+const { streamer } = storeToRefs(streamerStore)
+const username = computed(() => streamer.value?.username || 'streamer')
+const STORAGE_KEY = 'NewPublicPage'
 const visible = ref(false)
 
 
