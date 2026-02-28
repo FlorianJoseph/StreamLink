@@ -6,12 +6,21 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
     const { safe } = useSupabase()
     const repo = useScheduleSlotRepository()
     const slots = shallowRef<ScheduleSlot[]>([])
+    const publicSlots = shallowRef<ScheduleSlot[]>([])
 
     // Récupère tous les créneaux d'un planning 
     async function fetchSlots(scheduleId: ScheduleSlot['schedule_id']) {
         const result = await safe(() => repo.findByScheduleId(scheduleId))
 
         if (result.data) slots.value = result.data
+        return result
+    }
+
+    // Récupère tous les créneaux d'un planning 
+    async function fetchPublicSlots(scheduleId: ScheduleSlot['schedule_id']) {
+        const result = await safe(() => repo.findByScheduleId(scheduleId))
+
+        if (result.data) publicSlots.value = result.data
         return result
     }
 
@@ -39,10 +48,10 @@ export const useScheduleSlotStore = defineStore('scheduleSlot', () => {
     // Supprime un créneau
     async function deleteSlot(slotId: string) {
         const result = await safe(() => repo.remove(slotId))
-        
+
         if (!result.error) slots.value = slots.value.filter(s => s.id !== slotId)
         return result
     }
 
-    return { slots, fetchSlots, createSlot, updateSlot, deleteSlot }
+    return { slots, publicSlots, fetchSlots, fetchPublicSlots, createSlot, updateSlot, deleteSlot }
 })

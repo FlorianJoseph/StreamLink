@@ -8,8 +8,10 @@
 </template>
 
 <script setup>
-const designStore = useDesignStore()
-const { publicDesign } = storeToRefs(designStore)
+const route = useRoute()
+const { data: publicUser } = await useFetch(`/api/publicUser/${route.params.username}`)
+
+const design = publicUser.value?.design || null
 
 function deriveBackgroundColor(hex) {
     const c = hex.replace('#', '')
@@ -61,7 +63,7 @@ function deriveBackgroundColor(hex) {
 }
 
 const wallpaperColor = computed(() => {
-    const color = publicDesign.value?.wallpaper_style?.backgroundColor ?? '2E2E2E'
+    const color = design?.wallpaper_style?.backgroundColor ?? '2E2E2E'
     return `#${color}`
 })
 
