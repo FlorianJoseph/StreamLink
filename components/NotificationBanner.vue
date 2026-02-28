@@ -49,7 +49,7 @@
 <script setup>
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
-const username = computed(() => streamer.value?.username || 'streamer')
+const username = streamer.value?.username
 const STORAGE_KEY = 'NewPublicPage'
 const visible = ref(false)
 
@@ -60,6 +60,7 @@ const closeBanner = () => {
 }
 
 onMounted(() => {
+    streamerStore.fetchStreamer()
     if (localStorage.getItem(STORAGE_KEY) !== 'true') {
         visible.value = true
     }
