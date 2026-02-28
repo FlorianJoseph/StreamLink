@@ -8,14 +8,14 @@
     <div class="min-h-full w-full fade-in sm:rounded-t-xl shadow-xl relative" v-else-if="user"
         :style="{ background: wallpaperColor }">
         <button @click="copyText"
-            class="absolute top-4 right-4 flex items-center gap-1 px-3 py-1.5 rounded-md transition-all"
+            class="absolute top-2 sm:top-4 right-2 sm:right-4 flex items-center gap-1 px-3 py-1.5 rounded-md transition-all"
             :class="copied ? 'text-green-400' : ''" :style="copied ? {} : {
                 color: isColorDark(wallpaperColor) ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.8)',
                 backgroundColor: hoveredCopy ? (isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor + '44') : 'transparent'
             }" @mouseenter="hoveredCopy = true" @mouseleave="hoveredCopy = false">
             <Icon v-if="!copied" name="lucide:copy" size="14" class="shrink-0" />
             <Icon v-else name="lucide:check" size="14" class="shrink-0" />
-            <span class="text-sm hidden sm:inline">{{ copied ? 'Copié !' : 'Copier le lien' }}</span>
+            <span class="text-xs sm:text-sm">{{ copied ? 'Copié !' : 'Copier le lien' }}</span>
         </button>
 
         <!-- En-tête avec avatar, pseudo, description et statut live -->
@@ -45,7 +45,7 @@
             <!-- Prochain stream -->
             <div v-if="nextSlot && !isLive" class="flex items-center gap-2 px-4 py-2.5 border-t border-b"
                 :style="{ borderColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor }">
-                <div class="flex flex-col sm:flex-row sm:items-center items-center gap-1.5">
+                <div class="flex flex-row items-center gap-1.5">
                     <Icon name="lucide:calendar-clock" size="14" class="flex-shrink-0" :style="{ color: textColor }" />
                     <span class="text-xs sm:text-sm font-semibold flex-shrink-0" :style="{ color: textColor }">
                         Prochain stream
@@ -438,31 +438,35 @@ const nextSlot = computed(() => {
     return null
 })
 
-// Détermination du statut live en vérifiant si le créneau en cours correspond à l’heure actuelle
-const isLive = computed(() => {
+// Recherche du créneau en cours pour déterminer le statut live
+const liveSlot = computed(() => {
     const now = new Date()
     const todayIndex = now.getDay()
-    const rebase = (d: number) => d === 0 ? 7 : d
-    const todayRebased = rebase(todayIndex)
+    const nowMinutes = now.getHours() * 60 + now.getMinutes()
 
     for (const slot of slots) {
         const normalizedDay = slot.day?.toLowerCase()
         const targetIndex = DAY_INDEX[normalizedDay]
         if (targetIndex === undefined) continue
 
-        // Uniquement les slots d'aujourd'hui
-        if (rebase(targetIndex) !== todayRebased) continue
+        if (targetIndex !== todayIndex) continue
 
         const [startH, startM] = slot.start_at.split(':').map(Number)
         const [endH, endM] = slot.end_at.split(':').map(Number)
-        const nowMinutes = now.getHours() * 60 + now.getMinutes()
-        const startMinutes = startH * 60 + startM
-        const endMinutes = endH * 60 + endM
 
-        if (nowMinutes >= startMinutes && nowMinutes < endMinutes) return true
+        const start = startH * 60 + startM
+        const end = endH * 60 + endM
+
+        if (nowMinutes >= start && nowMinutes < end) {
+            return slot
+        }
     }
-    return false
+
+    return null
 })
+
+// Détermination du statut live en vérifiant si le créneau en cours correspond à l’heure actuelle
+const isLive = computed(() => !!liveSlot.value)
 </script>
 
 <style scoped>

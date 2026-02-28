@@ -29,7 +29,7 @@
                                 <div class="flex items-center gap-1.5">
                                     <span v-if="streamer.nextSlot.isLive"
                                         class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_6px_rgba(239,68,68,0.8)] shrink-0" />
-                                    <Icon v-else name="lucide:calendar-clock" size="16" class="shrink-0 opacity-80" />
+                                    <Icon v-else name="lucide:calendar-clock" size="14" class="shrink-0 opacity-80" />
                                     <p class="font-semibold text-xs uppercase tracking-widest">
                                         {{ streamer.nextSlot.isLive ? 'Live' : 'Prochain stream' }}
                                     </p>
@@ -43,7 +43,7 @@
                                 <div class="flex-shrink-0">
                                     <img v-if="streamer.nextSlot.game.cover" :src="streamer.nextSlot.game.cover"
                                         :alt="streamer.nextSlot.game.label"
-                                        class="w-9 h-12 rounded-lg object-fill border border-zinc-700/80 shadow-md" />
+                                        class="w-9 h-12 rounded object-fill border border-zinc-700/80 shadow-md" />
                                 </div>
 
                                 <!-- Infos texte -->
