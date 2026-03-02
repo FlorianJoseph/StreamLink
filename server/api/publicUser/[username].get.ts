@@ -1,15 +1,15 @@
-import { createClient } from '@supabase/supabase-js'
+import { serverSupabaseClient } from '#supabase/server'
 import type { Tables } from '~/types/database.types'
 
 export type UserPublic = Tables<'streamer_public'>
 
 export default defineEventHandler(async (event) => {
-    const { NUXT_PUBLIC_SUPABASE_URL, NUXT_PUBLIC_SUPABASE_KEY } = process.env
-    const supabase = createClient(NUXT_PUBLIC_SUPABASE_URL!, NUXT_PUBLIC_SUPABASE_KEY!)
+    const client = await serverSupabaseClient(event)
+
     const { username } = event.context.params as { username: string }
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await client
             .from('user_public')
             .select('*')
             .eq('username', username)
