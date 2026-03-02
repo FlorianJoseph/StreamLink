@@ -70,13 +70,12 @@ const menuItems = ref([
     {
         label: 'Découvrir des streameurs',
         icon: 'lucide:user-search',
-        route: '/discover'
+        route: '/discover',
     },
     {
         label: 'Tableau de bord',
         icon: 'lucide:layout-dashboard',
         route: '/dashboard',
-        badge: 'Nouvelles quêtes',
     },
     {
         label: 'Mon StreamLink',
