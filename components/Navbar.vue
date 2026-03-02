@@ -38,7 +38,7 @@
                 <Avatar :image="user.user_metadata.avatar_url" shape="circle" @click="toggle" aria-haspopup="true"
                     aria-controls="overlay_menu" class="hover:cursor-pointer" />
             </div>
-            <Menu ref="menu" id="overlay_menu" :model="popoverItems" :popup="true">
+            <Menu ref="menu" id="overlay_menu" :model="filteredPopoverItems" :popup="true">
                 <template #start>
                     <span class="inline-flex items-center gap-2 px-2 py-2">
                         <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
@@ -70,13 +70,13 @@ const menuItems = ref([
     {
         label: 'Découvrir des streameurs',
         icon: 'lucide:user-search',
-        route: '/discover',
+        route: '/discover'
     },
     {
         label: 'Tableau de bord',
         icon: 'lucide:layout-dashboard',
         route: '/dashboard',
-        // badge: 'Nouvelles quêtes',
+        badge: 'Nouvelles quêtes',
     },
     {
         label: 'Mon StreamLink',
@@ -105,6 +105,12 @@ const menu = ref();
 const popoverItems = ref([
     {
         items: [
+            {
+                label: 'Admin',
+                icon: 'lucide:shield-user',
+                route: '/_secret-admin/dashboard',
+                adminOnly: true
+            },
             {
                 label: 'Compte',
                 icon: 'lucide:user',
@@ -137,5 +143,27 @@ async function logOut() {
         console.error('Erreur lors de la déconnexion:', err);
     }
 }
+
+const isAdmin = ref(false);
+const streamerStore = useStreamerStore();
+const { streamer } = storeToRefs(streamerStore);
+
+onMounted(async () => {
+    await streamerStore.fetchStreamer();
+    if (streamer.value?.is_admin) {
+        isAdmin.value = true;
+    } else {
+        isAdmin.value = false;
+    }
+});
+
+const filteredPopoverItems = computed(() => {
+    return popoverItems.value.map(group => {
+        return {
+            ...group,
+            items: group.items.filter(item => !item.adminOnly || isAdmin.value)
+        };
+    });
+});
 
 </script>
