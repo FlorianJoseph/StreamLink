@@ -35,20 +35,18 @@
                 </NuxtLink>
             </div>
             <div v-else>
-                <Avatar :image="user.user_metadata.avatar_url" shape="circle" @click="toggle" aria-haspopup="true"
-                    aria-controls="overlay_menu" class="hover:cursor-pointer" />
+                <button class="flex items-center gap-2 p-1 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
+                    @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
+                    <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
+                    <span class="text-sm sm:text-base font-medium">{{ user.user_metadata.nickname }}</span>
+                    <Icon name="lucide:chevron-down" size="16" />
+                </button>
             </div>
             <Menu ref="menu" id="overlay_menu" :model="filteredPopoverItems" :popup="true">
-                <template #start>
-                    <span class="inline-flex items-center gap-2 px-2 py-2">
-                        <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
-                        <span class="font-medium">{{ user.user_metadata.nickname }}</span>
-                    </span>
-                </template>
                 <template #item="{ item, props }">
                     <NuxtLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
                         <a v-ripple :href="href" v-bind="props.action" @click="navigate">
-                            <Icon :name="item.icon" size="24" />
+                            <Icon :name="item.icon" size="20" />
                             <span>{{ item.label }}</span>
                         </a>
                     </NuxtLink>
@@ -103,11 +101,18 @@ const menuItems = ref([
 const menu = ref();
 const popoverItems = ref([
     {
+        label: 'Menu',
         items: [
             {
-                label: 'Admin',
-                icon: 'lucide:shield-user',
+                label: 'Statistiques',
+                icon: 'lucide:chart-column',
                 route: '/_secret-admin/dashboard',
+                adminOnly: true
+            },
+            {
+                label: 'Newsletter',
+                icon: 'lucide:mail',
+                route: '/_secret-admin/mails',
                 adminOnly: true
             },
             {
