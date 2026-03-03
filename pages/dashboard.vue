@@ -122,15 +122,14 @@
                                     <span class="text-gray-400 text-sm">…et bien plus encore !</span>
                                 </div>
                             </div>
-
                             <!-- CTA Newsletter -->
-                            <div class="mt-4 pt-4 border-t border-zinc-700">
+                            <div class="mt-3 pt-3 border-t border-zinc-700">
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                     <p class="text-xs sm:text-sm text-gray-400 text-center">
                                         Sois informé en avant-première des nouvelles fonctionnalités StreamLink
                                     </p>
                                     <Button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
-                                        severity="info" class="flex items-center gap-2">
+                                        severity="info" class="flex items-center gap-2 w-full sm:w-[220px] justify-center">
                                         <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'"
                                             size="16" />
                                         <span class="text-sm sm:text-base">
@@ -138,6 +137,20 @@
                                                 'Recevoir les nouveautés'
                                             }}</span>
                                     </Button>
+                                </div>
+                            </div>
+                            <!-- CTA Discord -->
+                            <div class="pt-3">
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                    <p class="text-xs sm:text-sm text-gray-400 text-center">
+                                        Rejoins la communauté et influence les prochaines fonctionnalités
+                                    </p>
+                                    <a href="https://discord.gg/fVFguWc76b" target="_blank">
+                                        <Button severity="contrast" class="flex items-center gap-2 w-full sm:w-[220px] justify-center">
+                                            <Icon name="simple-icons:discord" size="16" />
+                                            <span class="text-sm sm:text-base">Rejoindre le Discord</span>
+                                        </Button>
+                                    </a>
                                 </div>
                             </div>
                         </template>
