@@ -13,19 +13,19 @@
                     <p class="text-xs sm:text-sm lg:text-base leading-relaxed">
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
-                            Votre page publique a été repensée
-                            <NuxtLink :to="`/${streamer?.username}`" target="_blank"
+                            Le Discord est ouvert !
+                            <a href="https://discord.gg/fVFguWc76b" target="_blank"
                                 class="font-bold underline hover:text-indigo-200">
-                                <span>Voir ma page</span>
-                            </NuxtLink>
+                                <span>Rejoindre le Discord</span>
+                            </a>
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Votre page publique a été entièrement repensée avec un nouveau design et le planning intégré
-                            <!-- <NuxtLink :to="`/${username}`" target="_blank"
+                            Le Discord est ouvert, rejoins la communauté et influence les prochaines fonctionnalités !
+                            <!-- <NuxtLink :to="'https://discord.gg/fVFguWc76b'" target="_blank"
                                 class="font-bold underline hover:text-indigo-200">
-                                <span>Voir ma page</span>
+                                <span>Rejoindre le Discord</span>
                             </NuxtLink> -->
                         </span>
                     </p>
@@ -33,10 +33,13 @@
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <NuxtLink :to="`/${streamer?.username}`" target="_blank"
+                    <a href="https://discord.gg/fVFguWc76b" target="_blank"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
-                        Voir ma page
-                    </NuxtLink>
+                        <div class="flex items-center gap-2">
+                            <Icon name="simple-icons:discord" size="18" />
+                            Rejoindre le Discord
+                        </div>
+                    </a>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
                         <Icon name="lucide:x" size="18" class="sm:w-5 sm:h-5" />
                     </Button>
@@ -47,9 +50,7 @@
 </template>
 
 <script setup>
-const streamerStore = useStreamerStore()
-const { streamer } = storeToRefs(streamerStore)
-const STORAGE_KEY = 'NewPublicPage'
+const STORAGE_KEY = 'Discord'
 const visible = ref(false)
 
 
@@ -59,7 +60,6 @@ const closeBanner = () => {
 }
 
 onMounted(() => {
-    streamerStore.fetchStreamer()
     if (localStorage.getItem(STORAGE_KEY) !== 'true') {
         visible.value = true
     }

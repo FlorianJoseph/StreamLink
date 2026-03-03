@@ -35,27 +35,33 @@
                 </NuxtLink>
             </div>
             <div v-else>
-                <button class="flex items-center gap-2 p-1 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
-                    @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
-                    <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
-                    <span class="text-sm sm:text-base font-medium">{{ user.user_metadata.nickname }}</span>
-                    <Icon name="lucide:chevron-down" size="16" />
-                </button>
-            </div>
-            <Menu ref="menu" id="overlay_menu" :model="filteredPopoverItems" :popup="true">
-                <template #item="{ item, props }">
-                    <NuxtLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-                        <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                <div class="flex items-center gap-2">
+                    <a href="https://discord.gg/fVFguWc76b" target="_blank"
+                        class="hover:opacity-80 transition-opacity pt-1.5 mr-2" v-tooltip.bottom="'Rejoindre le Discord'">
+                        <Icon name="simple-icons:discord" size="24"/>
+                    </a>
+                    <button class="flex items-center gap-2 p-1 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
+                        @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
+                        <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
+                        <span class="text-sm sm:text-base font-medium">{{ user.user_metadata.nickname }}</span>
+                        <Icon name="lucide:chevron-down" size="16" />
+                    </button>
+                </div>
+                <Menu ref="menu" id="overlay_menu" :model="filteredPopoverItems" :popup="true">
+                    <template #item="{ item, props }">
+                        <NuxtLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                            <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                                <Icon :name="item.icon" size="20" />
+                                <span>{{ item.label }}</span>
+                            </a>
+                        </NuxtLink>
+                        <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
                             <Icon :name="item.icon" size="20" />
                             <span>{{ item.label }}</span>
                         </a>
-                    </NuxtLink>
-                    <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
-                        <Icon :name="item.icon" size="20" />
-                        <span>{{ item.label }}</span>
-                    </a>
-                </template>
-            </Menu>
+                    </template>
+                </Menu>
+            </div>
         </template>
     </Menubar>
     <NotificationBanner />
