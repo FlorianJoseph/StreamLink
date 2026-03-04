@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         await resend.emails.send({
-            from: 'StreamLink <noreply@mail.stream-link.fr>',
+            from: 'StreamLink <welcome@mail.stream-link.fr>',
             to: email,
             subject: 'Bienvenue sur StreamLink',
             html,
