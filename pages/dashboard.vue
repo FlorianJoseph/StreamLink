@@ -130,9 +130,9 @@
                                     </p>
                                     <Button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
                                         severity="info"
-                                        class="flex items-center gap-2 w-full sm:w-[220px] justify-center">
+                                        class="flex items-center gap-2 w-full sm:w-[240px] justify-center">
                                         <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'"
-                                            size="16" />
+                                            size="16" class="shrink-0"/>
                                         <span class="text-sm sm:text-base">
                                             {{ newsletterStore.subscribed ? 'Inscrit aux nouveautés' :
                                                 'Recevoir les nouveautés'
@@ -148,7 +148,7 @@
                                     </p>
                                     <a href="https://discord.gg/fVFguWc76b" target="_blank">
                                         <button severity="contrast"
-                                            class="flex items-center gap-2 w-full sm:w-[220px] justify-center px-4 py-2 rounded-md hover:opacity-95"
+                                            class="flex items-center gap-2 w-full sm:w-[240px] justify-center px-4 py-2 rounded-md hover:opacity-95"
                                             :style="{ backgroundColor: '#5865f2', color: '#e0e3ff' }">
                                             <Icon name="simple-icons:discord" size="16" />
                                             <span class="text-sm sm:text-base">Rejoindre le Discord</span>
