@@ -65,6 +65,17 @@ export const useStreamerStore = defineStore('streamer', () => {
 
         if (result.data) {
             streamer.value = result.data
+
+            // Envoyer un email de bienvenue
+            if (!existingStreamer?.data) {
+                $fetch('/api/admin/mail/welcome', {
+                    method: 'POST',
+                    body: {
+                        email: user.value!.email,
+                        username: user.value!.user_metadata!.nickname,
+                    },
+                }).catch(() => { })
+            }
         }
 
         return result

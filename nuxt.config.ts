@@ -28,4 +28,15 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false
   },
+  nitro: {
+    externals: {
+      external: ['react', 'react-dom', '@react-email/components', '@react-email/render']
+    },
+    esbuild: {
+      options: {
+        jsx: 'automatic',
+        jsxImportSource: 'react'
+      }
+    }
+  }
 })
