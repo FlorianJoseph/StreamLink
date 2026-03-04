@@ -129,7 +129,8 @@
                                         Sois informé en avant-première des nouvelles fonctionnalités StreamLink
                                     </p>
                                     <Button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
-                                        severity="info" class="flex items-center gap-2 w-full sm:w-[220px] justify-center">
+                                        severity="info"
+                                        class="flex items-center gap-2 w-full sm:w-[220px] justify-center">
                                         <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'"
                                             size="16" />
                                         <span class="text-sm sm:text-base">
@@ -146,10 +147,12 @@
                                         Rejoins la communauté et influence les prochaines fonctionnalités
                                     </p>
                                     <a href="https://discord.gg/fVFguWc76b" target="_blank">
-                                        <Button severity="contrast" class="flex items-center gap-2 w-full sm:w-[220px] justify-center">
+                                        <button severity="contrast"
+                                            class="flex items-center gap-2 w-full sm:w-[220px] justify-center px-4 py-2 rounded-md hover:opacity-95"
+                                            :style="{ backgroundColor: '#5865f2', color: '#e0e3ff' }">
                                             <Icon name="simple-icons:discord" size="16" />
                                             <span class="text-sm sm:text-base">Rejoindre le Discord</span>
-                                        </Button>
+                                        </button>
                                     </a>
                                 </div>
                             </div>

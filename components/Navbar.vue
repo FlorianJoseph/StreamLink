@@ -37,7 +37,7 @@
             <div v-else>
                 <div class="flex items-center gap-2">
                     <a href="https://discord.gg/fVFguWc76b" target="_blank"
-                        class="hover:opacity-80 transition-opacity pt-1.5 mr-2" v-tooltip.bottom="'Rejoindre le Discord'">
+                        class="hover:opacity-90 pt-1.5 mr-2" v-tooltip.bottom="'Rejoindre le Discord'">
                         <Icon name="simple-icons:discord" size="24"/>
                     </a>
                     <button class="flex items-center gap-2 p-1 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
