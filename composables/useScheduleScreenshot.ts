@@ -26,7 +26,29 @@ export const useScheduleScreenshot = () => {
                 if (cloned.classList.contains('export-day-column-content')) {
                     cloned.style.gridRow = '1 / -1'
                     cloned.style.height = '100%'
-                    cloned.style.justifyContent = 'flex-end'
+                    const slots = Array.from(cloned.querySelectorAll('.day-slot')) as HTMLElement[]
+                    if (slots.length) {
+                        const wrapper = document.createElement('div')
+                        wrapper.style.display = 'flex'
+                        wrapper.style.flexDirection = 'column'
+                        wrapper.style.height = '100%'
+                        wrapper.style.gap = '0.25rem'
+
+                        slots.forEach(slot => {
+                            // Slot fixed unique de l'après-midi
+                            const hour = parseInt(slot.dataset.startHour!)
+                            const isAfternoon = hour >= 12
+                            const samePeriod = slots.filter(s => parseInt(s.dataset.startHour!) >= 12)
+
+                            if (slot.dataset.size === 'fixed' && isAfternoon && samePeriod.length === 1) {
+                                slot.style.marginTop = 'auto'
+                            }
+
+                            wrapper.appendChild(slot)
+                        })
+
+                        cloned.appendChild(wrapper)
+                    }
                 }
 
                 // Gérer les jours off
