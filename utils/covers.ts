@@ -9,6 +9,8 @@ export const CUSTOM_CATEGORY_COVERS: Record<string, string> = {
     'Fitness & Health': '/covers/fitness.jpg',
     'Science & Technology': '/covers/science.jpg',
     'Sports': '/covers/sports.jpg',
+    'Art': '/covers/art.jpg',
+    'Pokémon Red/Blue': '/covers/pokemon-red-blue.jpg',
 }
 
 export const resolveCategoryCover = ({
