@@ -370,7 +370,7 @@
                                                         <!-- CAS : aucun créneau -->
                                                         <template v-if="slotsForDay(day.label).length === 0">
                                                             <div
-                                                                class="day-slot-empty h-full w-full bg-black/30 rounded-lg">
+                                                                class="day-slot-empty h-full w-full bg-black/20 rounded-lg">
                                                                 <div class="border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-zinc-400 hover:border-zinc-200 
                             transition-all h-full w-full " @click="openSlotModal(day.label)">
                                                                     <div
@@ -386,7 +386,7 @@
 
                                                         <!-- CAS : il y a des créneaux -->
                                                         <template v-else>
-                                                            <div class="h-full bg-black/30 rounded-lg">
+                                                            <div class="h-full bg-black/20 rounded-lg">
                                                                 <div
                                                                     class="grid grid-rows-[auto_1fr_auto] gap-2 h-full export-day-column">
                                                                     <!-- Zone + en haut -->
@@ -399,44 +399,44 @@
                                                                     <!-- Créneaux -->
                                                                     <div
                                                                         class="flex flex-col gap-1 overflow-hidden w-full export-day-column-content">
-                                                                        <div v-for="slot in slotsForDay(day.label)"
-                                                                            :key="slot.id"
-                                                                            class="border-4 rounded-lg flex-1 min-h-0 w-full relative h-full flex flex-col group transition-all"
-                                                                            :style="slotStyle(slot)">
-                                                                            <div class="flex-1"></div>
-                                                                            <!-- Tag titre -->
-                                                                            <div class="bg-black/80 text-sm font-bold px-2 py-1 rounded-b-md z-25 line-clamp-1"
-                                                                                v-if="titleVisible">
-                                                                                {{ slot.title }}
+                                                                        <template v-for="slot in slotsForDay(day.label)"
+                                                                            :key="slot.id">
+                                                                            <div class="border-4 rounded-lg min-h-0 w-full relative flex flex-col group transition-all"
+                                                                                :style="[slotStyle(slot), slotFlexStyle(slot, day.label)]">
+                                                                                <div class="flex-1"></div>
+                                                                                <!-- Tag titre -->
+                                                                                <div class="bg-black/80 text-sm font-bold px-2 py-1 rounded-b-md z-60 line-clamp-1"
+                                                                                    v-if="titleVisible">
+                                                                                    {{ slot.title }}
+                                                                                </div>
+                                                                                <!-- Heure -->
+                                                                                <div class="absolute top-[-1px] left-[-1px] z-100 px-2 py-1 text-base font-semibold rounded-br-md rounded-tl-sm"
+                                                                                    :style="slot.game.cover ? { backgroundColor: `#${slot.color}` } : {}">
+                                                                                    {{ formatTime(slot.start_at) }}
+                                                                                    <span v-if="endTimeVisible">- {{
+                                                                                        formatTime(slot.end_at)
+                                                                                        }}</span>
+                                                                                </div>
+                                                                                <!-- Overlay desktop -->
+                                                                                <div class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 rounded-sm overflow-hidden"
+                                                                                    :class="slotOverlayDirection(slot, day.label)">
+                                                                                    <!-- Modifier -->
+                                                                                    <div class="flex-1 flex items-center justify-center bg-black/50 hover:bg-black/70 cursor-pointer"
+                                                                                        @click.prevent="openSlotModal(day.label, slot)">
+                                                                                        <Icon name="lucide:pencil"
+                                                                                            size="24"
+                                                                                            class="text-white" />
+                                                                                    </div>
+                                                                                    <!-- Supprimer -->
+                                                                                    <div class="flex-1 flex items-center justify-center bg-black/50 hover:bg-black/70 cursor-pointer"
+                                                                                        @click.prevent="showDeleteConfirmation = true; slotToDelete = slot">
+                                                                                        <Icon name="lucide:trash-2"
+                                                                                            size="24"
+                                                                                            class="text-white" />
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
-                                                                            <div class="absolute top-[-1px] left-[-1px] z-100 px-2 py-1 text-base font-semibold rounded-br-md rounded-tl-sm"
-                                                                                :style="slot.game.cover
-                                                                                    ? { backgroundColor: `#${slot.color}` || 'rgba(0, 0, 0, 0.7)' }
-                                                                                    : {}">
-                                                                                {{ formatTime(slot.start_at) }}
-                                                                                <span v-if="endTimeVisible">
-                                                                                    - {{ formatTime(slot.end_at) }}
-                                                                                </span>
-                                                                            </div>
-                                                                            <!-- Overlay desktop uniquement -->
-                                                                            <div
-                                                                                class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 bg-black/30 items-center justify-center rounded-sm gap-2">
-                                                                                <Button
-                                                                                    @click.prevent="openSlotModal(day.label, slot)"
-                                                                                    v-tooltip.bottom="`Modifier`"
-                                                                                    severity="info">
-                                                                                    <Icon name="lucide:edit-2"
-                                                                                        size="20" />
-                                                                                </Button>
-                                                                                <Button
-                                                                                    @click.prevent="showDeleteConfirmation = true; slotToDelete = slot"
-                                                                                    v-tooltip.bottom="`Supprimer`"
-                                                                                    severity="danger">
-                                                                                    <Icon name="lucide:trash-2"
-                                                                                        size="20" />
-                                                                                </Button>
-                                                                            </div>
-                                                                        </div>
+                                                                        </template>
                                                                     </div>
                                                                     <!-- Zone + en bas -->
                                                                     <div class="h-6 border-2 border-dashed border-zinc-400 rounded-lg flex items-center justify-center cursor-pointer hover:border-zinc-200 transition-all w-full row-span-1 ignore-export"
@@ -480,7 +480,7 @@
     <Dialog v-model:visible="visible" dismissable-mask modal
         :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'" :style="{ width: '30rem', margin: '1rem' }"
         :draggable="false">
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col space-y-5 mb-2">
 
             <!-- Catégorie Twitch -->
             <div class="flex flex-col gap-2">
@@ -589,7 +589,7 @@
                         : 'Sélectionne un ou plusieurs jours pour ce créneau' }}
                 </span>
                 <SelectButton v-model="selectedDays" :options="daysOptions" optionLabel="label" :multiple="!editingSlot"
-                    aria-labelledby="multiple" :pt="{
+                    aria-labelledby="multiple" class="mt-1" :pt="{
                         root: { class: 'flex gap-1 w-full flex-wrap' },
                         pcToggleButton: {
                             root: { class: 'flex-1 min-w-[80px] sm:min-w-[90px] !rounded-lg' },
@@ -619,6 +619,36 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Taille du créneau -->
+            <div class="flex flex-col gap-2">
+                <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                    <Icon name="lucide:maximize-2" size="16" />
+                    Taille du créneau
+                    <span class="text-red-500">*</span>
+                </label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div v-for="option in sizeOptions" :key="option.value"
+                        class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all"
+                        :class="selectedSize === option.value
+                            ? 'border-white bg-white/10'
+                            : 'border-zinc-700 hover:border-zinc-500 '" @click="selectedSize = option.value">
+                        <Icon :name="option.value === 'fixed' ? 'lucide:square-split-vertical' : 'lucide:expand'"
+                            size="20" :class="selectedSize === option.value ? 'text-white' : 'text-zinc-400'" />
+                        <span class="text-sm font-semibold"
+                            :class="selectedSize === option.value ? 'text-white' : 'text-zinc-400'">
+                            {{ option.label }}
+                        </span>
+                        <span class="text-xs text-center leading-tight"
+                            :class="selectedSize === option.value ? 'text-zinc-300' : 'text-zinc-500'">
+                            {{ option.value === 'fixed'
+                                ? 'Moitié de journée'
+                                : 'Prend tout l\'espace disponible' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <template #footer>
             <div class="flex gap-2 w-full">
@@ -774,6 +804,40 @@ const slotStyle = (slot: any) => {
     return {}
 }
 
+// Fonction pour générer le style de flex d'un slot selon sa taille et les autres slots du même jour
+function slotFlexStyle(slot: any, dayLabel: string) {
+    const daySlots = slotsForDay(dayLabel)
+
+    // FULL → prend tout
+    if (slot.size === 'auto') {
+        return { flex: '1 1 0%' }
+    }
+
+    // Fixed → compter tous les fixed de la journée
+    const allFixedSlots = daySlots.filter(s => s.size === 'fixed')
+
+    // Si un seul fixed dans toute la journée → 50% et position selon période
+    if (allFixedSlots.length === 1) {
+        const hour = parseInt(slot.start_at.split(':')[0])
+        const isAfternoon = hour >= 12
+        return {
+            flex: '0 0 50%',
+            ...(isAfternoon ? { marginTop: 'auto' } : {})
+        }
+    }
+
+    // Sinon → tous les fixed partagent l'espace restant
+    return { flex: '1 1 0%' }
+}
+
+// Fonction pour déterminer la direction de l'overlay d'un slot selon le nombre de slots du même jour
+function slotOverlayDirection(slot: any, dayLabel: string) {
+    const slots = slotsForDay(dayLabel)
+
+    if (slot.size === 'fixed' || slots.length > 1) return 'flex-row'
+    return 'flex-col'
+}
+
 // Affiche la confirmation de suppression d'un slot
 const showDeleteConfirmation = ref(false)
 const slotToDelete = ref<any>(null)
@@ -882,6 +946,8 @@ const {
     endTime,
     selectedDays,
     daysOptions,
+    selectedSize,
+    sizeOptions,
     openSlotModal,
     editingSlot,
     saveSlot,
