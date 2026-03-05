@@ -401,7 +401,9 @@
                                                                         class="flex flex-col gap-1 overflow-hidden w-full export-day-column-content">
                                                                         <template v-for="slot in slotsForDay(day.label)"
                                                                             :key="slot.id">
-                                                                            <div class="border-4 rounded-lg min-h-0 w-full relative flex flex-col group transition-all"
+                                                                            <div class="border-4 rounded-lg min-h-0 w-full relative flex flex-col group transition-all day-slot"
+                                                                                :data-start-hour="parseInt(slot.start_at.split(':')[0])"
+                                                                                :data-size="slot.size"
                                                                                 :style="[slotStyle(slot), slotFlexStyle(slot, day.label)]">
                                                                                 <div class="flex-1"></div>
                                                                                 <!-- Tag titre -->
