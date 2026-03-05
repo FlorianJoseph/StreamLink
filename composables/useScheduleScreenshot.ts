@@ -26,6 +26,7 @@ export const useScheduleScreenshot = () => {
                 if (cloned.classList.contains('export-day-column-content')) {
                     cloned.style.gridRow = '1 / -1'
                     cloned.style.height = '100%'
+                    cloned.style.justifyContent = 'flex-end'
                 }
 
                 // Gérer les jours off

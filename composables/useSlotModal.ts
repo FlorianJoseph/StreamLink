@@ -10,12 +10,16 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
     const gameSuggestions = ref<{ label: string; cover?: string }[]>([])
     const title = ref('')
     const slotColor = ref('')
-    // Input de la couleur avec validation
     const colorInput = ref(slotColor.value)
     const isColorInvalid = ref(false)
     const useGameColor = ref(true)
     const daysOptions = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map(label => ({ label }))
     const selectedDays = ref<{ label: string }[]>([...daysOptions])
+    const sizeOptions = [
+        { label: 'Fixe', value: 'fixed' },
+        { label: 'Automatique', value: 'auto' }
+    ]
+    const selectedSize = ref<'fixed' | 'auto'>('auto')
     const startTime = ref('12:00')
     const endTime = ref('14:00')
     const editingSlot = ref<ScheduleSlot | null>(null)
@@ -134,6 +138,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
             endTime.value = slot.end_at
             selectedDays.value = daysOptions.find(d => d.label === slot.day)
             useGameColor.value = slot.use_game_color
+            selectedSize.value = slot.size || 'auto'
 
             // Couleur auto si aucune couleur, sinon manuel par défaut
             if (useGameColor.value && slot.game?.cover) {
@@ -149,6 +154,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
             title.value = ''
             slotColor.value = '636370'
             useGameColor.value = true
+            selectedSize.value = 'auto'
 
             if (!daySlots.length) {
                 startTime.value = '12:00'
@@ -182,6 +188,7 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
             color: slotColor.value.replace('#', '').toUpperCase(),
             use_game_color: useGameColor.value,
             game: selectedGame.value,
+            size: selectedSize.value,
             start_at: startTime.value,
             end_at: endTime.value,
             day: dayValue[0]
@@ -214,6 +221,8 @@ export const useSlotModal = (scheduleId: string, slots: Ref<ScheduleSlot[]>, sch
         endTime,
         selectedDays,
         daysOptions,
+        selectedSize,
+        sizeOptions,
         editingSlot,
         openSlotModal,
         saveSlot,
