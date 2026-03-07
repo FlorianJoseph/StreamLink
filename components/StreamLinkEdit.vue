@@ -59,17 +59,22 @@
         </div>
 
         <!-- Stats rapides -->
-        <div class="flex items-center gap-3 text-sm text-gray-400">
-            <div class="flex items-center gap-1.5">
-                <Icon name="lucide:eye" size="16" />
-                <span>{{ stats?.total?.views ?? 0 }} vues</span>
+        <template v-if="statsPending">
+            <div class="animate-pulse h-4 w-24 bg-gray-700 rounded" />
+        </template>
+        <template v-else>
+            <div class="flex items-center gap-3 text-sm text-gray-400">
+                <div class="flex items-center gap-1.5">
+                    <Icon name="lucide:eye" size="16" />
+                    <span>{{ stats?.total?.views ?? 0 }} vues</span>
+                </div>
+                <span>•</span>
+                <div class="flex items-center gap-1.5">
+                    <Icon name="lucide:mouse-pointer-click" size="16" />
+                    <span>{{ stats?.total?.clicks ?? 0 }} clics</span>
+                </div>
             </div>
-            <span>•</span>
-            <div class="flex items-center gap-1.5">
-                <Icon name="lucide:mouse-pointer-click" size="16" />
-                <span>{{ stats?.total?.clicks ?? 0 }} clics</span>
-            </div>
-        </div>
+        </template>
 
         <!-- Bouton Ajouter un lien -->
         <Button class="w-full" severity="contrast" @click="newlinkModal = true">
@@ -150,8 +155,11 @@
                                                     <Icon name="lucide:mouse-pointer-click" size="18"
                                                         class="shrink-0 text-gray-300/60" />
                                                     <span class="text-sm text-gray-300/60">
-                                                        {{stats?.links?.findLast(l => l.link_id ===
-                                                            element.id)?.total_clicks ?? 0}} clics
+                                                        <template v-if="statsPending">-</template>
+                                                        <template v-else>
+                                                            {{stats?.links?.findLast(l => l.link_id ===
+                                                            element.id)?.total_clicks ?? 0 }} clics
+                                                        </template>
                                                     </span>
                                                 </Button>
                                             </div>
@@ -281,7 +289,7 @@
 
 <script setup>
 
-const { data: stats } = await useFetch('/api/trackingStats/stats')
+const { data: stats, pending: statsPending } = useFetch('/api/trackingStats/stats')
 
 import Draggable from 'vuedraggable'
 
