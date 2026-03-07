@@ -58,6 +58,19 @@
             </div>
         </div>
 
+        <!-- Stats rapides -->
+        <div class="flex items-center gap-3 text-sm text-gray-400">
+            <div class="flex items-center gap-1.5">
+                <Icon name="lucide:eye" size="16" />
+                <span>{{ stats?.total?.views ?? 0 }} vues</span>
+            </div>
+            <span>•</span>
+            <div class="flex items-center gap-1.5">
+                <Icon name="lucide:mouse-pointer-click" size="16" />
+                <span>{{ stats?.total?.clicks ?? 0 }} clics</span>
+            </div>
+        </div>
+
         <!-- Bouton Ajouter un lien -->
         <Button class="w-full" severity="contrast" @click="newlinkModal = true">
             <Icon name="lucide:plus" size="20" />
@@ -125,16 +138,28 @@
                                         </div>
                                         <!-- Actions -->
                                         <div class="flex justify-between items-center">
-                                            <div class="mt-2 hover:cursor-pointer w-max">
-                                                <Button severity="secondary"
-                                                    v-tooltip.bottom="{ value: 'Modifier l\'icone' }"
+                                            <div class="mt-2 hover:cursor-pointer w-max flex items-center">
+                                                <Button severity="secondary" size="small"
+                                                    v-tooltip.bottom="{ value: 'Modifier l\'icone', pt: { text: '!text-sm' } }"
                                                     @click="openVignetteModal(element)">
-                                                    <Icon name="lucide:image" size="16" />
+                                                    <Icon name="lucide:image" size="18"
+                                                        class="shrink-0 text-gray-300/60" />
+                                                </Button>
+                                                <Button severity="secondary" text size="small"
+                                                    v-tooltip.bottom="{ value: 'Nombre de clics', pt: { text: '!text-sm' } }">
+                                                    <Icon name="lucide:mouse-pointer-click" size="18"
+                                                        class="shrink-0 text-gray-300/60" />
+                                                    <span class="text-sm text-gray-300/60">
+                                                        {{stats?.links?.findLast(l => l.link_id ===
+                                                            element.id)?.total_clicks ?? 0}} clics
+                                                    </span>
                                                 </Button>
                                             </div>
-                                            <Button severity="secondary" v-tooltip.bottom="{ value: 'Supprimer' }"
+                                            <Button severity="secondary" size="small"
+                                                v-tooltip.bottom="{ value: 'Supprimer', pt: { text: '!text-sm' } }"
                                                 @click="confirmDeletePopup($event, element.id)">
-                                                <Icon name="lucide:trash-2" size="20" />
+                                                <Icon name="lucide:trash-2" size="18"
+                                                    class="shrink-0 text-gray-300/60" />
                                             </Button>
                                         </div>
                                     </div>
@@ -255,6 +280,9 @@
 </template>
 
 <script setup>
+
+const { data: stats } = await useFetch('/api/trackingStats/stats')
+
 import Draggable from 'vuedraggable'
 
 // Stores

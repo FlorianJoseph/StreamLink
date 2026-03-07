@@ -110,7 +110,7 @@
             <div v-if="activeTab === 'liens'" class="w-full">
                 <div v-if="links.length > 0" class="flex flex-col gap-4 w-full">
                     <div class="w-full mx-auto" v-for="link in links" :key="link.id">
-                        <a :href="link.url" target="_blank" :class="['relative flex items-center w-full font-semibold transition h-16',
+                        <a :href="link.url" target="_blank" @click="trackLinkClick(link.id)" :class="['relative flex items-center w-full font-semibold transition h-16',
                             link.icon_url ? 'px-3 py-3' : 'px-5 py-5', buttonClass, buttonRadiusClass]" :style="{
                                 backgroundColor: buttonVariant === 'outlined'
                                     ? hoveredLink === link.id ? buttonBorderColor + '18' : 'transparent'
@@ -252,6 +252,7 @@ const route = useRoute()
 const { data: publicUser, pending } = await useFetch(`/api/publicUser/${route.params.username}`)
 
 // Données extraites pour faciliter l’accès dans le template
+const user_id = publicUser.value?.user_id || null
 const user = publicUser.value?.user || null
 const design = publicUser.value?.design || null
 const links = publicUser.value?.links ?? []
@@ -472,6 +473,24 @@ const liveSlot = computed(() => {
 
 // Détermination du statut live en vérifiant si le créneau en cours correspond à l’heure actuelle
 const isLive = computed(() => !!liveSlot.value)
+
+const trackLinkClick = async (linkId: string) => {
+    if (user_id) {
+        await $fetch('/api/trackingStats/track', {
+            method: 'POST',
+            body: { userId: user_id, type: 'LINK_CLICK', linkId }
+        })
+    }
+}
+
+onMounted(async () => {
+    if (user_id) {
+        await $fetch('/api/trackingStats/track', {
+            method: 'POST',
+            body: { userId: user_id, type: 'PAGE_VIEW' }
+        })
+    }
+})
 </script>
 
 <style scoped>

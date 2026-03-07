@@ -86,7 +86,7 @@
                             <span :class="[
                                 'w-1.5 h-1.5 rounded-full flex-shrink-0',
                                 mail.last_event === 'delivered' ? 'bg-green-500' :
-                                    mail.last_event === 'opened' ? 'bg-blue-500' :
+                                    mail.last_event === 'bounced' ? 'bg-red-500' :
                                         'bg-zinc-300'
                             ]" />
                             <!-- To -->
