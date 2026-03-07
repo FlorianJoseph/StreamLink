@@ -13,7 +13,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 
 ## Stack
 
-- Nuxt 3, TypeScript, Prisma, Supabase, Pinia, Tailwind, Resend
+- Nuxt 3, TypeScript, Prisma, Supabase, Pinia, Tailwind, Resend, React Email
 
 ## Principes produit
 
@@ -27,6 +27,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 ## Features actuelles
 
 - Consentement RGPD & newsletter
+    - Email auto de bienvenue
 
 - Page publique StreamLink (type Linktree)
     - Profil streamer : avatar, pseudo, bio, couleurs et style personnalisables
@@ -60,6 +61,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
         Ajouter, modifier ou supprimer des créneaux pour chaque jour de la semaine
         Vue en accordéon par jour pour l’édition rapide
         Affichage visuel clair avec couleurs et jeux associés
+        Choix de la taille du créneau fixe (demie-journée) ou automatique
     - Design & personnalisation :
         Choix de l’arrière-plan (couleur ou image)
         Couleur et style du texte, opacité du background
@@ -71,14 +73,19 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
     - Structure responsive : adaptable desktop/mobile, barre d’outils fixe, grille de créneaux flexible
     - Footer branding : mention “Made with StreamLink” intégrée sur l’export
 
+- Admin
+    - Dashboard d'analyse
+    - Segments Newsletter et historique d'envoi
+    
 ## État du produit
 
 - 20/01/26 100 utilisateurs, 50 profils actifs, newsletter 30 inscrits
-- 07/02/26 150 utilisateurs, 65 profils actifs, 230 liens, newsletter 65 inscrits
+- 07/02/26 150 utilisateurs, 65 profils actifs, 230 liens, newsletter 65 inscrits + sortie planning
 - 14/02/26 170 utilisateurs, 69 profils actifs, 276 liens, 37 streams planifiés, newsletter 70 inscrits
 - 18/02/26 200 utilisateurs, 83 profils actifs, 325 liens, 115 streams planifiés, newsletter 93 inscrits + 1ère collab
 - 24/02/26 283 utilisateurs, 136 profils actifs, 556 liens, 348 streams planifiés, newsletter 117 inscrits
 - 02/02/26 345 utilisateurs, 188 profils actifs, 779 liens, 535 streams planifiés, newsletter 150 inscrits
+- 06/02/26 368 utilisateurs, 206 profils actifs, 871 liens, 577 streams planifiés, newsletter 160 inscrits
 
 ## Roadmap déjà réalisée
 
@@ -92,25 +99,25 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Découverte v1 (prochain stream + filtres simples) 12/02/26
 - Nouvelles quêtes dashboard (activation planning) 16/02/26
 - Découverte V2 avec filtres (live, auj, à venir) 23/02/26
-- Page de lien V2 (design + statut live + planning) 28/02/56
+- Page de lien V2 (design + statut live + planning) 28/02/26
+- Segmentation newsletter (tous, profil non visible et pas de planning) + templates + email auto de bienvenue 05/03/26
 
 ## Roadmap court terme – Augmenter la fréquence d'usage (priorité)
 Objectif : que les utilisateurs reviennent régulièrement et activent leur planning.
 
 ### Notifications et rappels intelligents
-    - Email auto de bienvenu
-    - Rappel planning s'il n'existe pas
     - Alertes nouvelles fonctionnalités ou tips rapides
 
 ### Page publique
     - Stats basiques
-    - Objectif KPI : 60 % activation profils visibles 2 semaines après (45 -> 51 en 4j)
+    - Objectif KPI : 60 % activation profils visibles 2 semaines après (45% 26/02) -> (51% 30/02) -> (56% 06/03)
+
+### Monnaie virtuelle 
+    - Gains automatiques avec les quêtes du dashboard + solde visible + 3-4 cosmétiques simples (thème ou badge), pas de boutique d'achat
 
 ### Optimisation pédagogique
     - Propostion de couleur texte dans le designen fonction du thème
 
-### Monnaie virtuelle 
-    - Gains automatiques avec les quêtes du dashboard + solde visible + 3-4 cosmétiques simples (thème ou badge), pas de boutique d'achat
 
 ## Roadmap moyen terme – Découverte & visibilité
 
@@ -168,8 +175,25 @@ Objectifs KPI :
     - Tournois rapides via chat
     - Marketplace de templates ou événements pour streamers
 
-### Rebranding (nom, logo, favicon)
+## Rebranding (Devis signé 03/03/26)
 
+### DIRECTION ARTISTIQUE & BRANDING WEB 150€
+    • Recherche et définition de l’univers visuel
+    • Palette couleurs 
+    • Typographies 
+    • Ton de marque 
+    • Références iconographiques / flat design
+
+### LOGO & DÉCLINAISONS 200 €
+    • Logo principal 
+    • Versions secondaires 
+    • Icône / favicon
+    • Exports optimisés web
+
+### NAMING 100€
+    • Recherche de noms (3 à 5 propositions) 
+    • Justification sémantique
+    
 ## Règles de décision
 
 Avant d’ajouter une fonctionnalité :
