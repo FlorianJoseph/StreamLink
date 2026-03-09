@@ -59,6 +59,8 @@
                 <StatCard label="Streamer avec lien qui crée un stream" :value="funnelIntegrity + '%'" />
                 <StatCard label="Newsletter avec profil visible" :value="newsletterConversion + '%'"
                     :note="`${totalNewsletterNotVisible} streamers non visible`" />
+                <StatCard label="Vues de pages" :value="totalPageEvents + '%'"
+                    :note="`${totalPageEvents7D} vues sur 7 jours / ${totalPageEvents30D} vues sur 30 jours`" />
             </div>
         </div>
 
@@ -94,6 +96,10 @@ interface AdminStats {
     slots_7d: number
     slots_30d: number
     unique_users_with_slot: number
+
+    page_events_total: number
+    page_events_7d: number
+    page_events_30d: number
 }
 
 const { data: stats } = await useFetch<AdminStats>('/api/admin/admin.stats')
@@ -141,6 +147,11 @@ const totalSlots = computed(() => safeStats.value.slots_total ?? 0)
 const totalSlots7D = computed(() => safeStats.value.slots_7d ?? 0)
 const totalSlots30D = computed(() => safeStats.value.slots_30d ?? 0)
 const totalStreamersWithSlot = computed(() => safeStats.value.unique_users_with_slot ?? 0)
+
+// Vues de pages
+const totalPageEvents = computed(() => safeStats.value.page_events_total ?? 0)
+const totalPageEvents7D = computed(() => safeStats.value.page_events_7d ?? 0)
+const totalPageEvents30D = computed(() => safeStats.value.page_events_30d ?? 0)
 
 const fmt = (n: number) => n > 0 ? `+${n}` : `${n}`
 
