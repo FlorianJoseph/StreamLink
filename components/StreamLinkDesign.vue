@@ -14,7 +14,7 @@
                 </div>
             </div>
             <!-- Barre d'outils -->
-            <Menubar class="lg:sticky lg:top-13 z-60 w-full lg:w-lg xl:w-2xl 2xl:w-2xl mx-auto">
+            <Menubar class="sticky top-0 z-60 w-full lg:w-lg xl:w-2xl 2xl:w-2xl mx-auto">
                 <template #start>
                     <Button severity="secondary" :disabled="!isDirty" @click="resetDesign">
                         <Icon name="lucide:rotate-ccw" size="18" />

@@ -1,8 +1,8 @@
 <template>
-    <Menubar :model="menuItems" class="h-13 fixed top-0 left-0 right-0 z-100" style="--p-menubar-border-radius:0">
+    <Menubar :model="menuItems" class="h-13" style="--p-menubar-border-radius:0; --p-menubar-border-color: transparent">
         <template #start>
             <NuxtLink v-ripple :to="'/'">
-                <Home />
+                <Home :size="20" />
             </NuxtLink>
         </template>
         <template #item="{ item, props, hasSubmenu, root }">
@@ -25,43 +25,45 @@
             </div>
         </template>
         <template #end>
-            <div v-if="!user">
-                <NuxtLink to="/auth/login">
+            <div class="flex items-center gap-2">
+                <a href="https://discord.gg/fVFguWc76b" target="_blank"
+                    class="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-zinc-300/10"
+                    v-tooltip.bottom="{ value: 'Rejoindre le Discord', pt: { text: '!text-sm' } }">
+                    <Icon name="simple-icons:discord" size="24" />
+                </a>
+                <template v-if="!user">
+                    <NuxtLink to="/auth/login">
+                        <button
+                            class="flex flex-row items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
+                            <Icon name="simple-icons:twitch" size="20" />
+                            <span class="text-sm sm:text-base font-semibold">Connexion Twitch</span>
+                        </button>
+                    </NuxtLink>
+                </template>
+                <template v-else>
                     <button
-                        class="flex flex-row items-center gap-2 px-3 py-2 text-lg bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-                        <Icon name="lucide:twitch" size="20" />
-                        <span class="text-xs sm:text-base font-semibold">Se connecter avec Twitch</span>
-                    </button>
-                </NuxtLink>
-            </div>
-            <div v-else>
-                <div class="flex items-center gap-2">
-                    <a href="https://discord.gg/fVFguWc76b" target="_blank"
-                        class="hover:opacity-90 pt-1.5 mr-2" v-tooltip.bottom="'Rejoindre le Discord'">
-                        <Icon name="simple-icons:discord" size="24"/>
-                    </a>
-                    <button class="flex items-center gap-2 p-1 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
+                        class="flex items-center gap-2 py-1 px-2 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
                         @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
                         <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
                         <span class="text-sm sm:text-base font-medium">{{ user.user_metadata.nickname }}</span>
-                        <Icon name="lucide:chevron-down" size="16" />
+                        <Icon name="lucide:chevron-down" size="20" />
                     </button>
-                </div>
-                <Menu ref="menu" id="overlay_menu" :model="filteredPopoverItems" :popup="true">
-                    <template #item="{ item, props }">
-                        <NuxtLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-                            <a v-ripple :href="href" v-bind="props.action" @click="navigate">
-                                <Icon :name="item.icon" size="20" />
-                                <span>{{ item.label }}</span>
-                            </a>
-                        </NuxtLink>
-                        <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+                </template>
+            </div>
+            <Menu ref="menu" id="overlay_menu" :model="filteredPopoverItems" :popup="true" class="w-52" :pt="{ root: { style: 'right: 0.5rem; left: auto !important' } }">
+                <template #item="{ item, props }">
+                    <NuxtLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                        <a v-ripple :href="href" v-bind="props.action" @click="navigate">
                             <Icon :name="item.icon" size="20" />
                             <span>{{ item.label }}</span>
                         </a>
-                    </template>
-                </Menu>
-            </div>
+                    </NuxtLink>
+                    <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+                        <Icon :name="item.icon" size="20" />
+                        <span>{{ item.label }}</span>
+                    </a>
+                </template>
+            </Menu>
         </template>
     </Menubar>
     <NotificationBanner />
@@ -154,18 +156,14 @@ async function logOut() {
     }
 }
 
-const isAdmin = ref(false);
+const isAdmin = computed(() => streamer.value?.is_admin ?? false)
 const streamerStore = useStreamerStore();
 const { streamer } = storeToRefs(streamerStore);
 
-onMounted(async () => {
-    await streamerStore.fetchStreamer();
-    if (streamer.value?.is_admin) {
-        isAdmin.value = true;
-    } else {
-        isAdmin.value = false;
-    }
-});
+watch(user, async (u) => {
+    if (!u || streamer.value) return
+    await streamerStore.fetchStreamer()
+}, { immediate: true })
 
 const filteredPopoverItems = computed(() => {
     return popoverItems.value.map(group => {

@@ -1,5 +1,5 @@
 <template>
-    <Card class="border border-zinc-700 h-full">
+    <Card class="border border-zinc-700 h-auto">
         <template #header>
             <div class="p-3">
                 <h2 class="text-lg font-semibold">Visibilité du profil</h2>
@@ -184,9 +184,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Séparateur -->
-                <div class="border-t border-zinc-700/50"></div>
 
                 <!-- Bouton reset en bas -->
                 <!-- <div class="px-2">

@@ -30,7 +30,7 @@
                 <span>Trouver une collab</span>
             </Button>
         </div> -->
-        <div class="sticky top-0 sm:top-13 z-40 bg-zinc-900 py-2 sm:py-3 px-2 sm:px-4 rounded">
+        <div class="sticky top-0 z-40 bg-zinc-900 py-2 sm:py-3 px-2 sm:px-4 rounded">
             <!-- Recherche -->
             <IconField class="w-full mb-2 sm:mb-3">
                 <InputIcon>

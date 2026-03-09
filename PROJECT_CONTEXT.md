@@ -34,6 +34,11 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
     - Statut live & prochain stream en temps réel, planning semaine affiché
     - Liens personnalisables : icônes/images, boutons stylisés, feedback hover/copie
     - Switcher Liens / Planning pour voir tous les contenus facilement
+    - Stats basiques
+        - vues de la page
+        - clics sur les liens
+        - stats journalières
+        - totaux et 7 derniers jours
     - CTA vers création de page et footer infos (contact/confidentialité)
 
 - Dashboard Progression & Outils
@@ -84,8 +89,8 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - 14/02/26 170 utilisateurs, 69 profils actifs, 276 liens, 37 streams planifiés, newsletter 70 inscrits
 - 18/02/26 200 utilisateurs, 83 profils actifs, 325 liens, 115 streams planifiés, newsletter 93 inscrits + 1ère collab
 - 24/02/26 283 utilisateurs, 136 profils actifs, 556 liens, 348 streams planifiés, newsletter 117 inscrits
-- 02/02/26 345 utilisateurs, 188 profils actifs, 779 liens, 535 streams planifiés, newsletter 150 inscrits
-- 06/02/26 368 utilisateurs, 206 profils actifs, 871 liens, 577 streams planifiés, newsletter 160 inscrits
+- 02/03/26 345 utilisateurs, 188 profils actifs, 779 liens, 535 streams planifiés, newsletter 150 inscrits
+- 08/03/26 389 utilisateurs, 225 profils actifs, 936 liens, 635 streams planifiés, newsletter 171 inscrits
 
 ## Roadmap déjà réalisée
 
@@ -101,16 +106,18 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Découverte V2 avec filtres (live, auj, à venir) 23/02/26
 - Page de lien V2 (design + statut live + planning) 28/02/26
 - Segmentation newsletter (tous, profil non visible et pas de planning) + templates + email auto de bienvenue 05/03/26
+- Stats publiques (vues + clics + historique journalier) 07/03/26
 
 ## Roadmap court terme – Augmenter la fréquence d'usage (priorité)
 Objectif : que les utilisateurs reviennent régulièrement et activent leur planning.
 
 ### Notifications et rappels intelligents
-    - Alertes nouvelles fonctionnalités ou tips rapides
+    - Alertes nouvelles fonctionnalités ou tips rapides (ex : Ton lien Twitch a reçu 12 clics aujourd’hui !)
 
 ### Page publique
-    - Stats basiques
-    - Objectif KPI : 60 % activation profils visibles 2 semaines après (45% 26/02) -> (51% 30/02) -> (56% 06/03)
+    - Choisir sa nationalité
+    - Créer des catégories ?
+    - CTA découvrir d'autres streamers
 
 ### Monnaie virtuelle 
     - Gains automatiques avec les quêtes du dashboard + solde visible + 3-4 cosmétiques simples (thème ou badge), pas de boutique d'achat
@@ -122,8 +129,11 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
 ## Roadmap moyen terme – Découverte & visibilité
 
 ### Améliorer discover
-    - Filtres (jeu, horaire...)
+    - Filtres (nationalité, jeu, horaire...)
     - Collabs/Raids
+
+### Planning
+    - Export format mobile
 
 ### Page Inventaire / Boutique complète
     - Inventaire cosmétiques + accès premium temporaires en coins
@@ -166,7 +176,7 @@ Positionnement : Une page qui te ressemble vraiment.
 
 Objectifs KPI :
     - Conversion planning → 60% (atteint en 4j)
-    - Funnel intégrité lien → stream → 70% (45 -> 53% en 4j)
+    - Funnel intégrité lien → stream → 70% (45 26/02 -> 53% 01/03) (57% 08/03)
     - Engagement newsletter → 40% (41%)
 
 ### Fonctionnalités additionnelles
@@ -214,6 +224,7 @@ Avant d’ajouter une fonctionnalité :
 - Conversion lien (% utilisateurs avec au moins un lien)
 - Conversion slot (% utilisateurs avec au moins un stream)
 - Newsletter (total + profils visibles)
+(ajouter pages vues / profils actifs)
 
 ### Indicateurs stratégiques
 
@@ -246,3 +257,10 @@ Mesurer les leviers qui augmentent :
     - Sync Twitch automatique → gros gain de temps et valeur ajoutée pour les utilisateurs Pro.
     - Stats avancées et design premium → améliore la visibilité et donne un avantage compétitif.
     - Export Discord → pousse à l’engagement régulier.
+
+### Lien avec ma chaine Twitch
+Pour fidéliser tes viewers twitch quand tu auras fait ton système de monnaie virtuelle tu peux aussi proposer d’échanger des points de chaine twitch contre de la monnaie virtuelle
+
+1 coût = 0
+2 apport de nouveau viewers sur la chaîne et farm gratuit 
+3 augmentation globale de ta visibilité twitch

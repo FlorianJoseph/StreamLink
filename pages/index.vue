@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-160 lg:min-h-0 flex lg:flex-row flex-col">
+  <div class="relative h-135 lg:min-h-0 flex lg:flex-row flex-col">
     <!-- Hero -->
     <div class="flex lg:flex lg:flex-row flex-col justify-center md:justify-normal h-full flex-1">
       <!-- Texte -->

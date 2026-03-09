@@ -14,3 +14,7 @@ button,
 a {
     cursor: pointer;
 }
+
+* {
+    scrollbar-color: #9F9F9F transparent;
+}
