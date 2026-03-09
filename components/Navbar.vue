@@ -1,5 +1,5 @@
 <template>
-    <Menubar :model="menuItems" class="h-13" style="--p-menubar-border-radius:0">
+    <Menubar :model="menuItems" class="h-13" style="--p-menubar-border-radius:0; --p-menubar-border-color: transparent">
         <template #start>
             <NuxtLink v-ripple :to="'/'">
                 <Home :size="20" />

@@ -97,54 +97,101 @@
                         </template>
 
                         <template #content>
-                            <div class="space-y-2">
-                                <p class="text-xs text-gray-500 italic">
-                                    La roadmap évolue selon les retours de la communauté
-                                </p>
-                                <div class="flex items-center gap-2">
-                                    <Icon name="lucide:bell" class="text-yellow-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Notifications in-app</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <Icon name="lucide:rocket" class="text-pink-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Amélioration de la page Découverte</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <Icon name="lucide:chart-bar" class="text-blue-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Statistiques</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <Icon name="lucide:users" class="text-purple-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Collabs & raids entre streameurs</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <Icon name="lucide:star" class="text-green-400" size="16" />
-                                    <span class="text-gray-400 text-sm">…et bien plus encore !</span>
-                                </div>
-                            </div>
-                            <!-- CTA Newsletter -->
-                            <div class="mt-3 pt-3 border-t border-zinc-700">
-                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                    <p class="text-xs sm:text-sm text-gray-400 text-center">
-                                        Sois informé en avant-première des nouvelles fonctionnalités StreamLink
+                            <div class="space-y-4">
+                                <!-- Gratuit -->
+                                <div class="space-y-2">
+                                    <span class="text-xs font-semibold text-green-400 uppercase tracking-wide">Bientôt</span>
+                                    <p class="text-xs text-gray-500 italic">
+                                        La roadmap évolue selon les retours de la communauté
                                     </p>
-                                    <Button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
-                                        severity="info"
-                                        class="flex items-center gap-2 w-full sm:w-[240px] justify-center">
-                                        <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'"
-                                            size="16" class="shrink-0"/>
-                                        <span class="text-sm sm:text-base">
-                                            {{ newsletterStore.subscribed ? 'Inscrit aux nouveautés' :
-                                                'Recevoir les nouveautés'
-                                            }}</span>
-                                    </Button>
+                                    <div class="flex items-center gap-2">
+                                        <Icon name="lucide:bell" class="text-yellow-400" size="16" />
+                                        <span class="text-gray-400 text-sm">Notifications in-app</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <Icon name="lucide:globe" class="text-blue-400" size="16" />
+                                        <span class="text-gray-400 text-sm">Choix de la nationalité</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <Icon name="lucide:coins" class="text-pink-400" size="16" />
+                                        <span class="text-gray-400 text-sm">Monnaie virtuelle</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <Icon name="lucide:users" class="text-purple-400" size="16" />
+                                        <span class="text-gray-400 text-sm">Collabs & raids entre streameurs</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <Icon name="lucide:sliders-horizontal" class="text-orange-400" size="16" />
+                                        <span class="text-gray-400 text-sm">Filtres découverte avancés</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- CTA Discord -->
-                            <div class="pt-3">
+
+                                <!-- Premium -->
+                                <div class="space-y-2 border-t border-zinc-700 pt-4">
+                                    <span class="text-xs font-semibold text-purple-400 uppercase tracking-wide">
+                                        Pour les créateurs ambitieux
+                                    </span>
+                                    <p class="text-xs text-gray-500 italic">
+                                        Accède à des fonctionnalités avancées et exclusives grâce à la monnaie
+                                        virtuelle, gratuite ou acquise
+                                    </p>
+                                    <p class="text-xs text-purple-300">
+                                        Les créateurs actifs auront un accès anticipé aux nouvelles fonctionnalités
+                                    </p>
+                                    <!-- Planning -->
+                                    <div class="space-y-1">
+                                        <span class="text-xs text-zinc-500 uppercase tracking-wide">Planning</span>
+                                        <div class="flex items-center gap-2">
+                                            <Icon name="simple-icons:twitch" class="text-purple-400" size="16" />
+                                            <span class="text-gray-400 text-sm">Synchronisation Twitch</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <Icon name="simple-icons:discord" class="text-indigo-400" size="16" />
+                                            <span class="text-gray-400 text-sm">Export Discord</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <Icon name="lucide:smartphone" class="text-green-400" size="16" />
+                                            <span class="text-gray-400 text-sm">Export format mobile</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Page de liens -->
+                                    <div class="space-y-1">
+                                        <span class="text-xs text-zinc-500 uppercase tracking-wide">Page de liens</span>
+                                        <div class="flex items-center gap-2">
+                                            <Icon name="lucide:chart-column" class="text-blue-400" size="16" />
+                                            <span class="text-gray-400 text-sm">Stats avancées</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <Icon name="lucide:palette" class="text-pink-400" size="16" />
+                                            <span class="text-gray-400 text-sm">Thèmes exclusifs & personnalisation
+                                                avancée</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- CTA Newsletter -->
+                                <div class="pt-3 border-t border-zinc-700">
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                        <p class="text-xs sm:text-sm text-gray-400 text-center">
+                                            Sois informé en avant-première des nouveautés et fonctionnalités StreamLink
+                                        </p>
+                                        <Button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
+                                            severity="info"
+                                            class="flex items-center gap-2 w-full sm:w-[240px] justify-center">
+                                            <Icon
+                                                :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'"
+                                                size="16" class="shrink-0" />
+                                            <span class="text-sm sm:text-base">
+                                                {{ newsletterStore.subscribed ? 'Inscrit aux nouveautés' :
+                                                    'Recevoir les nouveautés'
+                                                }}</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                                <!-- CTA Discord -->
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                     <p class="text-xs sm:text-sm text-gray-400 text-center">
-                                        Rejoins la communauté et influence les prochaines fonctionnalités
+                                        Rejoins notre communauté et influence le futur de StreamLink
                                     </p>
                                     <a href="https://discord.gg/fVFguWc76b" target="_blank">
                                         <button severity="contrast"
