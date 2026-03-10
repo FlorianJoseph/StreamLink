@@ -228,6 +228,17 @@
                                         </div>
                                         <div class="space-y-1">
                                             <!-- Avec séparateur subtil -->
+                                            <label for="toggle-subtitle"
+                                                class="flex justify-between items-center px-3 py-2.5">
+                                                <div class="flex items-center gap-2">
+                                                    <Icon name="lucide:calendar" size="18"
+                                                        class="text-gray-400 shrink-0" />
+                                                    <span class="text-xs sm:text-sm">Date automatique</span>
+                                                </div>
+                                                <ToggleSwitch id="toggle-subtitle" v-model="autoSubtitle"
+                                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                                    @change="toggleAutoSubtitle" />
+                                            </label>
                                             <label for="toggle-title"
                                                 class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
@@ -337,7 +348,8 @@
                                                 <!-- Sous-titre -->
                                                 <template v-if="editing.field === 'subtitle'">
                                                     <input :ref="el => inputRefs['subtitle'] = el"
-                                                        v-model="editing.value" @blur="saveEdit" @keyup.enter="saveEdit"
+                                                        :disabled="autoSubtitle" v-model="editing.value"
+                                                        @blur="saveEdit" @keyup.enter="saveEdit"
                                                         @keyup.esc.prevent.stop="cancelEdit"
                                                         class="text-base font-semibold bg-transparent border-none focus:outline-none w-full"
                                                         maxlength="100" />
@@ -347,7 +359,7 @@
                                                         @click="editField('subtitle')">
                                                         <div class="text-base font-semibold"> {{ schedule?.subtitle }}
                                                         </div>
-                                                        <Icon name="lucide:pencil" size="18"
+                                                        <Icon v-if="!autoSubtitle" name="lucide:pencil" size="18"
                                                             class="transition ignore-export" />
                                                     </div>
                                                 </template>
@@ -415,9 +427,10 @@
                                                                                 <div class="absolute top-[-1px] left-[-1px] z-100 px-2 py-1 text-base font-semibold rounded-br-md rounded-tl-sm"
                                                                                     :style="slot.game.cover ? { backgroundColor: `#${slot.color}` } : {}">
                                                                                     {{ formatTime(slot.start_at) }}
-                                                                                    <span v-if="endTimeVisible">- {{
-                                                                                        formatTime(slot.end_at)
-                                                                                        }}</span>
+                                                                                    <span v-if="endTimeVisible">
+                                                                                        -
+                                                                                        {{ formatTime(slot.end_at) }}
+                                                                                    </span>
                                                                                 </div>
                                                                                 <!-- Overlay desktop -->
                                                                                 <div class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 rounded-sm overflow-hidden"
@@ -741,6 +754,25 @@ function cancelEdit() {
     editing.value.value = ''
 }
 
+// Gestion du sous-titre automatique
+const autoSubtitle = ref(schedule?.autoSubtitle ?? false)
+async function toggleAutoSubtitle() {
+    await scheduleStore.updateSchedule({
+        autoSubtitle: autoSubtitle.value,
+        subtitle: autoSubtitle.value
+            ? getCurrentWeekSubtitle()
+            : scheduleStore.schedule?.subtitle
+    })
+}
+watch(
+    () => scheduleStore.schedule,
+    (schedule) => {
+        if (!schedule) return
+        autoSubtitle.value = schedule.autoSubtitle ?? false
+    },
+    { immediate: true }
+)
+
 // Charge les slots
 async function loadSlots() {
     if (!schedule.value) return
@@ -1047,6 +1079,7 @@ const removeBackgroundImage = async () => {
 // Opacité de l'arrière-plan pour améliorer la lisibilité du planning
 const backgroundOpacity = ref(100) // valeur par défaut
 
+// Watch pour mettre à jour l'opacité de l'arrière-plan dès que le planning est chargé ou que l'opacité change
 watch(
     () => schedule.value?.style?.backgroundOpacity,
     (val) => {
@@ -1059,6 +1092,7 @@ watch(
 
 let timeout: ReturnType<typeof setTimeout> | null = null
 
+// Met à jour l'opacité de l'arrière-plan dans le store avec un debounce pour éviter les mises à jour trop fréquentes
 const updateBackgroundOpacity = (value: number) => {
     backgroundOpacity.value = value
     if (!schedule.value) return
@@ -1072,6 +1106,14 @@ const updateBackgroundOpacity = (value: number) => {
 onMounted(async () => {
     await scheduleStore.getOrCreateSchedule()
     await loadSlots()
+
+    // Si autoSubtitle activé → mettre à jour le sous-titre avec la semaine courante
+    if (autoSubtitle.value) {
+        const currentWeekSubtitle = getCurrentWeekSubtitle()
+        if (schedule!.subtitle !== currentWeekSubtitle) {
+            await scheduleStore.updateSchedule({ subtitle: currentWeekSubtitle })
+        }
+    }
 
     update()
     window.addEventListener('resize', update)
