@@ -356,6 +356,7 @@
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer"
+                                                    :class="autoSubtitle ? 'pointer-events-none' : ''"
                                                         @click="editField('subtitle')">
                                                         <div class="text-base font-semibold"> {{ schedule?.subtitle }}
                                                         </div>
