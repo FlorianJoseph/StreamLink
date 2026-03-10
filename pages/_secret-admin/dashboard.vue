@@ -59,8 +59,9 @@
                 <StatCard label="Streamer avec lien qui crée un stream" :value="funnelIntegrity + '%'" />
                 <StatCard label="Newsletter avec profil visible" :value="newsletterConversion + '%'"
                     :note="`${totalNewsletterNotVisible} streamers non visible`" />
-                <StatCard label="Vues de pages" :value="totalPageEvents + '%'"
-                    :note="`${totalPageEvents7D} vues sur 7 jours / ${totalPageEvents30D} vues sur 30 jours`" />
+                <StatCard label="Vues de pages" :value="totalPageEvents"
+                    :breakdown="{ d7: totalPageEvents7D, d30: totalPageEvents30D }" />
+                <StatCard label="Moyenne de vues par page" :value="viewerToStreamerRatio"/>
             </div>
         </div>
 
@@ -232,4 +233,8 @@ const funnelIntegrity = computed(() => {
     return Math.round((totalStreamersWithSlot.value / totalStreamersWithLink.value) * 100)
 })
 
+const viewerToStreamerRatio = computed(() => {
+    if (totalStreamersVisible.value === 0) return 0
+    return Math.round(totalPageEvents.value / totalStreamersVisible.value)
+})
 </script>

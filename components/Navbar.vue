@@ -26,10 +26,10 @@
         </template>
         <template #end>
             <div class="flex items-center gap-2">
-                <a href="https://discord.gg/fVFguWc76b" target="_blank"
-                    class="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-zinc-300/10"
+                 <a href="https://discord.gg/fVFguWc76b" target="_blank"
+                    class="flex items-center gap-2 px-1.5 py-1.5 rounded-full hover:bg-zinc-300/10"
                     v-tooltip.bottom="{ value: 'Rejoindre le Discord', pt: { text: '!text-sm' } }">
-                    <Icon name="simple-icons:discord" size="24" />
+                    <Icon name="simple-icons:discord" size="20" />
                 </a>
                 <template v-if="!user">
                     <NuxtLink to="/auth/login">
