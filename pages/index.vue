@@ -8,8 +8,8 @@
           <div
             class="flex w-full flex-col items-center sm:items-start max-w-2xl px-6 py-12 lg:p-12 xl:p-16 text-center lg:text-left">
             <h1 class="text-4xl xl:text-5xl font-bold mb-6 leading-tight!">
-              <span class="block">Développe ta chaîne</span>
-              <span class="block text-purple-500">avec StreamLink</span>
+              Développe ta chaîne <br>
+              <span class="text-purple-500">avec StreamLink</span>
             </h1>
             <p class="text-base md:text-lg text-gray-300 leading-normal mb-2 max-w-xl lg:max-w-none drop-shadow">
               La plateforme tout-en-un pensée pour les streameurs

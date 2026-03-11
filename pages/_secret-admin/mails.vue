@@ -15,10 +15,6 @@
                 <div class="flex gap-3">
                     <Select v-model="selectedSegment" :options="segments" optionValue="value" optionLabel="label"
                         placeholder="Sélectionner un segment" class="flex-1" />
-                    <Button @click="loadPreview" severity="contrast" class="flex-shrink-0">
-                        <Icon name="lucide:eye" size="16" />
-                        Aperçu
-                    </Button>
                 </div>
 
                 <Transition name="fade">
@@ -198,6 +194,11 @@ function timeAgo(date: string) {
     const days = Math.floor(hours / 24)
     return `il y a ${days}j`
 }
+
+watch(selectedSegment, (val) => {
+    if (val) loadPreview()
+    else { preview.value = null; sentCount.value = null }
+})
 
 onMounted(() => {
     loadEmails()

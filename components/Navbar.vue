@@ -118,7 +118,7 @@ const popoverItems = ref([
                 adminOnly: true
             },
             {
-                label: 'Newsletter',
+                label: 'Mails',
                 icon: 'lucide:mail',
                 route: '/_secret-admin/mails',
                 adminOnly: true
