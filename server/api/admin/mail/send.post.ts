@@ -4,6 +4,10 @@ import { checkAdmin } from '~/server/utils/checkAdmin'
 import { getNotVisibleUsers } from './segments/notVisible'
 import { getNotScheduleUsers } from './segments/notSchedule'
 import { getUpdateUsers } from './segments/update'
+import { render } from '@react-email/render'
+import { UpdateEmail } from '../mail/templates/Update'
+import { NotVisibleEmail } from '../mail/templates/NotVisible'
+import { NotScheduleEmail } from '../mail/templates/NotSchedule'
 
 const resend = new Resend(process.env.NUXT_RESEND_API_KEY)
 
@@ -12,19 +16,28 @@ export default defineEventHandler(async (event) => {
 
     const { segment } = await readBody(event)
 
-    const segmentsConfig: Record<string, { handler: Function; templateId: string }> = {
+    const segmentsConfig: Record<string, { handler: Function }> = {
         update: {
             handler: getUpdateUsers,
-            templateId: 'update'
         },
         notVisible: {
             handler: getNotVisibleUsers,
-            templateId: 'notVisible'
         },
         notSchedule: {
             handler: getNotScheduleUsers,
-            templateId: 'notSchedule'
         }
+    }
+
+    const subjects: Record<string, string> = {
+        update: 'Quoi de neuf sur StreamLink ?',
+        notVisible: 'Ton profil n’est pas visible sur StreamLink',
+        notSchedule: 'Ton planning StreamLink est vide',
+    }
+
+    const segmentTemplates: Record<string, Function> = {
+        update: ({ username }: any) => render(UpdateEmail({ username })),
+        notVisible: ({ username }: any) => render(NotVisibleEmail({ username })),
+        notSchedule: ({ username }: any) => render(NotScheduleEmail({ username })),
     }
 
     const config = segmentsConfig[segment]
@@ -40,17 +53,17 @@ export default defineEventHandler(async (event) => {
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
         const batch = users.slice(i, i + BATCH_SIZE);
         try {
-            const result = await resend.batch.send(
-                batch.map((u: any) => ({
+            // Générer le HTML de tous les utilisateurs du batch
+            const emails = await Promise.all(
+                batch.map(async (u: any) => ({
                     from: 'StreamLink <noreply@mail.stream-link.fr>',
                     to: u.email,
-                    subject: '',
-                    template: {
-                        id: config.templateId,
-                        variables: { username: u.username }
-                    }
+                    subject: subjects[segment],
+                    html: await segmentTemplates[segment]({ username: u.username }),
                 }))
             )
+            // Envoyer le batch d'emails
+            const result = await resend.batch.send(emails)
             console.log(`Batch ${i / BATCH_SIZE + 1} : ${batch.length} emails envoyés, exemple : ${batch[0].email}`);
             totalSent += batch.length;
         } catch (err) {
