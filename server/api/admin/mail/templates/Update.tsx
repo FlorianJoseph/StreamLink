@@ -203,6 +203,8 @@ export const UpdateEmail = ({
                         </table>
                     </Section>
 
+                    <Hr className="border-zinc-800 m-0" />
+
                     {/* Footer */}
                     <Section className="px-8 py-6 text-center" style={{ backgroundColor: "#121212" }}>
                         <Text className="text-zinc-600 text-xs m-0 mb-2">

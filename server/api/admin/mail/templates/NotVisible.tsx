@@ -21,7 +21,7 @@ const baseUrl = "https://stream-link.fr";
 export const NotVisibleEmail = ({ username }: { username: string }) => (
     <Html>
         <Head />
-        <Preview>2 étapes pour le rendre visible</Preview>
+        <Preview>Ton profil est encore invisible</Preview>
         <Tailwind
             config={{
                 theme: {
