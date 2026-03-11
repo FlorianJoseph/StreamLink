@@ -189,12 +189,14 @@ export const Welcome = ({ username }: { username: string }) => (
                         </table>
                     </Section>
 
+                    <Hr className="border-zinc-800 m-0" />
+
                     {/* Footer */}
                     <Section className="px-8 py-6 text-center" style={{ backgroundColor: "#121212" }}>
                         <Text className="text-zinc-600 text-xs m-0 mb-2">
                             StreamLink · stream-link.fr
                         </Text>
-                        <Text className="text-zinc-600 text-xs">
+                        <Text className="text-zinc-600 text-xs m-0">
                             Vous recevez cet email car vous avez créé un compte sur StreamLink.
                         </Text>
                     </Section>

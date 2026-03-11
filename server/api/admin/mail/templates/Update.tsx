@@ -51,7 +51,7 @@ export const UpdateEmail = ({
 }: UpdateEmailProps & { username: string }) => (
     <Html>
         <Head />
-        <Preview>{updateTitle}</Preview>
+        <Preview>{updateSubtitle}</Preview>
         <Tailwind
             config={{
                 theme: {

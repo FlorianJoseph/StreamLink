@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
     const subjects: Record<string, string> = {
         update: 'Quoi de neuf sur StreamLink ?',
-        notVisible: 'Ton profil n’est pas visible sur StreamLink',
+        notVisible: 'Ton profil est invisible sur StreamLink',
         notSchedule: 'Ton planning StreamLink est vide',
     }
 
