@@ -9,85 +9,40 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-            <!-- Colonne gauche — Envoi -->
-            <div class="space-y-4">
-                <label class="text-xs font-semibold uppercase tracking-widest text-zinc-400">Segment cible</label>
-                <Select v-model="selectedSegment" :options="segments" optionValue="value" optionLabel="label"
-                    placeholder="Sélectionner un segment" fluid />
-
-                <Transition name="fade">
-                    <div v-if="loading" class="flex items-center gap-2 text-sm text-zinc-400 py-4">
-                        <Icon name="lucide:loader-2" size="16" class="animate-spin" />
-                        Chargement…
-                    </div>
-
-                    <div v-else-if="preview" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="rounded-xl border p-4">
-                                <p class="text-xs text-zinc-500 mb-1">Template</p>
-                                <p class="font-semibold text-sm truncate">{{ preview.templateId }}</p>
-                            </div>
-                            <div class="rounded-xl border p-4">
-                                <p class="text-xs text-zinc-500 mb-1">Destinataires</p>
-                                <p class="font-semibold text-2xl">{{ preview.count }}</p>
-                            </div>
-                        </div>
-
-                        <div class="rounded-xl border overflow-hidden">
-                            <div class="px-4 py-2.5 border-b bg-zinc-50 dark:bg-zinc-900">
-                                <p class="text-xs font-semibold uppercase tracking-widest text-zinc-400">Échantillon</p>
-                            </div>
-                            <ul class="divide-y">
-                                <li v-for="u in preview.sample" :key="u.email"
-                                    class="flex items-center justify-between px-4 py-2.5">
-                                    <span class="text-sm font-medium">{{ u.username }}</span>
-                                    <span class="text-xs text-zinc-400 font-mono">{{ u.email }}</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="flex items-center gap-3">
-                            <Button @click="sendEmails" severity="contrast">
-                                <Icon name="lucide:send" size="16" />
-                                Envoyer {{ preview.count }} emails
-                            </Button>
-                            <Transition name="fade">
-                                <span v-if="sentCount !== null"
-                                    class="text-sm text-green-600 font-medium flex items-center gap-1.5">
-                                    <Icon name="lucide:check-circle" size="16" />
-                                    {{ sentCount }} envoyés
-                                </span>
-                            </Transition>
-                        </div>
-                    </div>
-                </Transition>
-            </div>
-
-            <!-- Colonne droite — Calendrier -->
-            <!-- Calendrier -->
-            <div class="rounded-xl border overflow-hidden">
+            <!-- Colonne gauche — Calendrier -->
+            <div class="rounded-xl border overflow-hidden self-start">
                 <!-- Cal header -->
                 <div class="flex items-center justify-between px-4 py-3 border-b bg-zinc-50 dark:bg-zinc-900">
                     <button @click="prevMonth"
-                        class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-zinc-500">
-                        <Icon name="lucide:chevron-left" size="14" />
+                        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-zinc-500">
+                        <Icon name="lucide:chevron-left" size="24" />
                     </button>
                     <span class="text-xs font-semibold uppercase tracking-widest text-zinc-400 capitalize">
                         {{ monthLabel }}
                     </span>
                     <button @click="nextMonth"
-                        class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-zinc-500">
-                        <Icon name="lucide:chevron-right" size="14" />
+                        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-zinc-500">
+                        <Icon name="lucide:chevron-right" size="24" />
                     </button>
                 </div>
 
-                <!-- Légende -->
-                <div class="flex gap-4 px-4 py-2 border-b">
-                    <span v-for="seg in segmentsMeta" :key="seg.value"
-                        class="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
+                <!-- Légende + counts -->
+                <div class="flex items-center gap-1 px-4 py-2.5 border-b flex-wrap">
+                    <button v-for="seg in segmentsMeta" :key="seg.value"
+                        @click="selectedSegment = selectedSegment === seg.value ? null : seg.value"
+                        class="flex items-center gap-1.5 rounded-lg px-2 py-1 transition-colors text-xs font-medium"
+                        :class="selectedSegment === seg.value
+                            ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100'
+                            : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'">
                         <span class="w-2 h-2 rounded-full flex-shrink-0" :style="{ background: seg.color }"></span>
                         {{ seg.label }}
-                    </span>
+                        <span v-if="segmentCounts[seg.value] !== undefined" class="font-mono font-semibold tabular-nums"
+                            :style="{ color: seg.color }">
+                            {{ segmentCounts[seg.value] }}
+                        </span>
+                        <Icon v-else-if="countsLoading" name="lucide:loader-2" size="10"
+                            class="animate-spin opacity-40" />
+                    </button>
                 </div>
 
                 <!-- Grille -->
@@ -98,10 +53,8 @@
                             {{ d }}
                         </div>
                     </div>
-
                     <div class="grid grid-cols-7 gap-1">
                         <div v-for="n in firstDayOffset" :key="'e' + n"></div>
-
                         <div v-for="day in daysInMonth" :key="day"
                             class="rounded-lg flex flex-col items-start p-1 min-h-[48px] transition-colors" :class="{
                                 'opacity-40': isPast(day),
@@ -115,29 +68,36 @@
                                     : 'text-zinc-500 dark:text-zinc-400'">
                                 {{ day }}
                             </span>
-
                             <div class="flex flex-col gap-0.5 w-full">
                                 <span v-for="seg in getDaySends(day)" :key="seg.value"
                                     class="text-[9px] font-semibold text-white rounded px-1 leading-[14px] truncate"
                                     :style="{ background: seg.color }"
-                                    :class="{ 'opacity-30': selectedSegment && seg.value !== selectedSegment }">
+                                    :class="{ 'opacity-25': selectedSegment && seg.value !== selectedSegment }">
                                     {{ seg.shortLabel }}
                                 </span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Prochain envoi -->
-                    <div v-if="nextSend" class="px-4 py-2.5 border-t"
-                        :class="nextSend.isToday ? 'bg-green-50 dark:bg-green-950' : 'bg-zinc-50 dark:bg-zinc-900'">
-                        <p class="text-xs flex items-center gap-1.5 font-medium"
-                            :class="nextSend.isToday ? 'text-green-600 dark:text-green-400' : 'text-zinc-400'">
-                            <Icon :name="nextSend.isToday ? 'lucide:zap' : 'lucide:clock'" size="12" />
-                            {{ nextSend.label }}
-                        </p>
-                    </div>
+                <!-- Prochain envoi -->
+                <div v-if="nextSend" class="px-4 py-2.5 border-t flex items-center justify-between"
+                    :class="nextSend.isToday ? 'bg-green-950' : 'bg-zinc-900'">
+                    <p class="text-xs flex items-center gap-1.5 font-medium"
+                        :class="nextSend.isToday ? 'text-green-400' : 'text-zinc-400'">
+                        <Icon :name="nextSend.isToday ? 'lucide:zap' : 'lucide:clock'" size="12" class="shrink-0" />
+                        {{ nextSend.label }}
+                    </p>
+                    <Button @click="sendEmails" severity="contrast" :disabled="!selectedSegment || sending"
+                        :loading="sending" size="small">
+                        <Icon name="lucide:send" size="16" />
+                        Envoyer {{ selectedSegment ? segmentCounts[selectedSegment] : 0 }} emails
+                    </Button>
                 </div>
             </div>
+
+
+            <!-- Colonne droite : Historique -->
             <div class="space-y-3">
                 <h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-400">Historique</h2>
 
@@ -146,6 +106,7 @@
                     Chargement…
                 </div>
 
+                <!-- Liste des emails -->
                 <div v-else class="rounded-xl border overflow-hidden">
                     <div class="divide-y">
                         <div v-for="mail in emails" :key="mail.id"
@@ -184,23 +145,19 @@
 
 <script setup lang="ts">
 
-const segments = ref([
-    { value: 'update', label: 'Mises à jour' },
-    { value: 'notVisible', label: 'Streameurs non visibles' },
-    { value: 'notSchedule', label: 'Streameurs sans planning' },
-]);
-
+// Segments
 const segmentsMeta = [
-    { value: 'update', label: 'Mises à jour', shortLabel: 'Mises à jour', color: '#f59e0b' },
-    { value: 'notVisible', label: 'Streameurs non visibles', shortLabel: 'Non visibles', color: '#6366f1' },
-    { value: 'notSchedule', label: 'Streameurs sans planning', shortLabel: 'Sans planning', color: '#10b981' },
+    { value: 'notVisible', label: 'Non visible', shortLabel: 'Non visible', color: '#6366f1' },
+    { value: 'notSchedule', label: 'Sans planning', shortLabel: 'Sans planning', color: '#10b981' },
+    { value: 'update', label: 'Mises à jour', shortLabel: 'Mise à jour', color: '#f59e0b' },
 ]
 
+// Planning d’envoi : 4 semaines A/B/C/D avec règles différentes
 const scheduleMatrix: Record<number, Record<'mardi' | 'jeudi', string | null>> = {
     1: { mardi: 'notVisible', jeudi: 'update' }, // Semaine A
     2: { mardi: 'notSchedule', jeudi: null }, // Semaine B
-    3: { mardi: 'notVisible', jeudi: null }, // Semaine C
-    4: { mardi: 'notSchedule', jeudi: 'update' }, // Semaine D
+    3: { mardi: 'notVisible', jeudi: 'update' }, // Semaine C
+    4: { mardi: 'notSchedule', jeudi: null }, // Semaine D
 }
 
 // Calendrier
@@ -208,139 +165,156 @@ const today = new Date()
 const viewYear = ref(today.getFullYear())
 const viewMonth = ref(today.getMonth())
 
+// Navigation mois précédent avec gestion d’année
 function prevMonth() {
     if (viewMonth.value === 0) { viewMonth.value = 11; viewYear.value-- }
     else viewMonth.value--
 }
+
+// Navigation mois suivant avec gestion d’année
 function nextMonth() {
     if (viewMonth.value === 11) { viewMonth.value = 0; viewYear.value++ }
     else viewMonth.value++
 }
 
+// Label du mois affiché, ex. "mars 2024"
 const monthLabel = computed(() =>
     new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' })
         .format(new Date(viewYear.value, viewMonth.value, 1))
 )
 
+// Nombre de jours dans le mois affiché
 const daysInMonth = computed(() =>
     new Date(viewYear.value, viewMonth.value + 1, 0).getDate()
 )
 
+// Décalage du premier jour du mois (0 = lundi, 6 = dimanche)
 const firstDayOffset = computed(() => {
     const d = new Date(viewYear.value, viewMonth.value, 1).getDay()
-    return (d + 6) % 7 // lundi = 0
+    return (d + 6) % 7
 })
 
+// Noms des jours de la semaine pour l’en-tête du calendrier
 const dayNames = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
-
+// Jour de la semaine pour un jour donné du mois affiché (0 = dimanche, 6 = samedi)
 function getDayOfWeek(day: number) {
     return new Date(viewYear.value, viewMonth.value, day).getDay()
 }
 
-function getWeekOfMonth(day: number) {
-    const firstDay = new Date(viewYear.value, viewMonth.value, 1).getDay()
-    return Math.ceil((day + ((firstDay + 6) % 7)) / 7)
+// Numéro de semaine ISO (lundi = début) — cycle continu sur toute l'année
+function getISOWeek(date: Date): number {
+    const d = new Date(date)
+    d.setHours(0, 0, 0, 0)
+    d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7))
+    const week1 = new Date(d.getFullYear(), 0, 4)
+    return 1 + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7)
 }
 
+// Convertit un numéro de semaine ISO en index A/B/C/D (1–4)
+function getCycleIndex(date: Date): number {
+    return ((getISOWeek(date) - 1) % 4) + 1
+}
+
+// Indique si le jour donné est aujourd’hui (en fonction du mois/année affiché)
 function isToday(day: number) {
     return day === today.getDate()
         && viewMonth.value === today.getMonth()
         && viewYear.value === today.getFullYear()
 }
 
+// Indique si le jour donné est passé (avant aujourd’hui, en fonction du mois/année affiché)
 function isPast(day: number) {
     const d = new Date(viewYear.value, viewMonth.value, day)
     return d < new Date(today.getFullYear(), today.getMonth(), today.getDate())
 }
 
+// Indique si le jour donné est un week-end (samedi ou dimanche)
 function isWeekend(day: number) {
     const dow = getDayOfWeek(day)
     return dow === 0 || dow === 6
 }
 
+// Récupère les segments prévus pour un jour donné du mois affiché, en fonction du planning
 function getDaySends(day: number) {
     const dow = getDayOfWeek(day)
     if (dow !== 2 && dow !== 4) return []
-
-    const weekIndex = ((getWeekOfMonth(day) - 1) % 4) + 1
+    const date = new Date(viewYear.value, viewMonth.value, day)
     const dayKey = dow === 2 ? 'mardi' : 'jeudi'
-    const segValue = scheduleMatrix[weekIndex]?.[dayKey]
+    const wIdx = getCycleIndex(date)
+    const segValue = scheduleMatrix[wIdx]?.[dayKey]
     if (!segValue) return []
-
     return segmentsMeta.filter(s => s.value === segValue)
 }
 
+// Calcule le prochain envoi prévu à partir d’aujourd’hui, en fonction du planning
 const nextSend = computed(() => {
     if (!selectedSegment.value) return null
-
-    for (let i = 0; i < 28; i++) {
+    for (let i = 0; i < 60; i++) {
         const d = new Date(today)
         d.setDate(today.getDate() + i)
         const dow = d.getDay()
         if (dow !== 2 && dow !== 4) continue
-
-        const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).getDay()
-        const week = Math.ceil((d.getDate() + ((firstDay + 6) % 7)) / 7)
-        const weekIndex = ((week - 1) % 4) + 1
-        const dayKey = dow === 2 ? 'mardi' : 'jeudi'
-        const segValue = scheduleMatrix[weekIndex]?.[dayKey]
-
-        if (segValue === selectedSegment.value) {
-            const isToday = i === 0
-            const label = new Intl.DateTimeFormat('fr-FR', {
-                weekday: 'long', day: 'numeric', month: 'long'
-            }).format(d)
-            return {
-                isToday,
-                label: isToday ? `Aujourd'hui — ${label}` : `Prochain envoi : ${label}`
-            }
+        const dk = dow === 2 ? 'mardi' : 'jeudi'
+        const wIdx = getCycleIndex(d)
+        if (scheduleMatrix[wIdx]?.[dk] !== selectedSegment.value) continue
+        const label = new Intl.DateTimeFormat('fr-FR', {
+            weekday: 'long', day: 'numeric', month: 'long'
+        }).format(d)
+        return {
+            isToday: i === 0,
+            label: i === 0 ? `Aujourd'hui : ${label}` : `Prochain envoi : ${label}`
         }
     }
     return null
 })
 
-const selectedSegment = ref(null);
-const preview = ref<any>(null)
-const loading = ref(false)
-const sentCount = ref<number | null>(null)
+// Compte les segments
+const segmentCounts = ref<Record<string, number>>({})
+const countsLoading = ref(false)
 
-async function loadPreview() {
-    loading.value = true
-    preview.value = null
-    sentCount.value = null
+async function loadSegmentCounts() {
+    countsLoading.value = true
     try {
-        const res = await $fetch('/api/admin/mail/preview', {
-            params: { segment: selectedSegment.value }
-        })
-        preview.value = res
+        const res = await $fetch<Record<string, number>>('/api/admin/mail/counts')
+        segmentCounts.value = res
     } catch (err) {
         console.error(err)
-        alert('Erreur lors du chargement de l’aperçu')
     } finally {
-        loading.value = false
+        countsLoading.value = false
     }
 }
 
+// Aperçu et envoi
+const selectedSegment = ref<string | null>(null);
+const sending = ref(false)
+const toast = useToast()
+
+// Envoie les emails pour le segment sélectionné
 async function sendEmails() {
+    if (sending.value) return
+    sending.value = true
+
     try {
         const res = await $fetch('/api/admin/mail/send', {
             method: 'POST',
-            body: {
-                segment: selectedSegment.value,
-            }
+            body: { segment: selectedSegment.value }
         })
-        sentCount.value = res.sent
+        toast.add({ severity: 'success', summary: 'Emails envoyés', detail: `${res.sent} emails envoyés avec succès`, life: 4000 })
     } catch (err) {
         console.error(err)
-        alert('Erreur lors de l’envoi des emails')
+        toast.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de l’envoi des emails', life: 4000 })
+    } finally {
+        sending.value = false
     }
 }
 
+// Historique des emails
 const emails = ref<any[]>([])
 const emailsLoading = ref(false)
 const hasMore = ref(true)
 const nextCursor = ref<string | null>(null)
 
+// Charge les emails suivants pour l’historique, avec pagination cursor-based
 async function loadEmails() {
     if (!hasMore.value) return
 
@@ -359,12 +333,13 @@ async function loadEmails() {
         nextCursor.value = res.nextCursor
     } catch (err) {
         console.error(err)
-        alert('Erreur chargement emails')
+        toast.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors du chargement des emails', life: 4000 })
     } finally {
         emailsLoading.value = false
     }
 }
 
+// Affiche le temps écoulé depuis la date donnée, en format "il y a Xmin/h/j" ou "À l'instant"
 function timeAgo(date: string) {
     const diff = Date.now() - new Date(date).getTime()
     const mins = Math.floor(diff / 60000)
@@ -376,12 +351,8 @@ function timeAgo(date: string) {
     return `il y a ${days}j`
 }
 
-watch(selectedSegment, (val) => {
-    if (val) loadPreview()
-    else { preview.value = null; sentCount.value = null }
-})
-
 onMounted(() => {
     loadEmails()
+    loadSegmentCounts()
 })
 </script>
