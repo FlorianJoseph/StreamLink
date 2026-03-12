@@ -18,10 +18,50 @@ import {
 
 const baseUrl = "https://stream-link.fr";
 
-export const Welcome = ({ username }: { username: string }) => (
+interface Feature {
+    title: string;
+    icon?: string;
+    details?: string[];
+}
+
+interface UpdateEmailProps {
+    updateTitle?: string;       // ex: "Mise à jour de mars"
+    previewText?: string;    // ex: "3 nouvelles fonctionnalités"
+    features?: Feature[];
+}
+
+const defaultFeatures: Feature[] = [
+    {
+        title: "Nouvelles fonctionnalités",
+        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/wrench.png",
+        details: [
+            "Choix de la taille des créneaux et de la date du planning (auto ou manuel)",
+            "Page de liens : Statistiques de vues et de clics",
+        ],
+    },
+    {
+        title: "Améliorations",
+        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/zap.png",
+        details: [
+            "Navigation repensée avec accès Discord et profil",
+            "Scroll fluide sous le menu",
+            "Roadmap mise à jour dans tableau de bord",
+            "Planning : les boutons de modification et suppression de créneaux ont été repensés",
+        ],
+    },
+];
+
+const DEFAULT_ICON = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/sparkles.png";
+
+export const UpdateEmail = ({
+    username,
+    updateTitle = "Quoi de neuf sur StreamLink ?",
+    previewText = "Voici les dernières nouveautés",
+    features = defaultFeatures,
+}: UpdateEmailProps & { username: string }) => (
     <Html>
         <Head />
-        <Preview>2 étapes pour être visible</Preview>
+        <Preview>{previewText}</Preview>
         <Tailwind
             config={{
                 theme: {
@@ -47,14 +87,43 @@ export const Welcome = ({ username }: { username: string }) => (
 
                     {/* Hero */}
                     <Section className="bg-zinc-900 p-7">
-                        <Heading className="text-white text-2xl font-bold tracking-tight mt-0 mb-3">
-                            Bienvenue {username},
-                        </Heading>
-                        <Text className="text-zinc-400 text-sm leading-relaxed mt-0 mb-6">
-                            StreamLink, ta plateforme tout-en-un : liens, planning, identité… tout prêt à partager.
-                            <br /><br />
-                            Complète ton profil pour apparaître sur la page Découverte et être trouvé par d'autres streamers et viewers.
+                        <Text className="text-white text-sm font-semibold mt-0 mb-1">
+                            Salut {username},
                         </Text>
+                        <Heading className="text-white text-2xl font-bold tracking-tight mt-0">
+                            {updateTitle}
+                        </Heading>
+                    </Section>
+
+                    <Hr className="border-zinc-800 m-0" />
+
+                    {/* Liste des features */}
+                    <Section className="px-8 py-7" style={{ backgroundColor: "#121212" }}>
+                        <Text className="text-purple-400 text-xs font-semibold uppercase tracking-widest m-0 mb-5">
+                            ✦ Mise à jour
+                        </Text>
+
+                        {features.map((feature, index) => (
+                            <Row key={index} className={index < features.length - 1 ? "mb-6" : "mb-5"}>
+                                <Column className="w-9 align-top pt-0.5">
+                                    <Img
+                                        src={feature.icon ?? DEFAULT_ICON}
+                                        width="24"
+                                        alt=""
+                                    />
+                                </Column>
+                                <Column className="align-top">
+                                    <Text className="text-white text-sm font-semibold m-0 mb-1">
+                                        {feature.title}
+                                    </Text>
+                                    {feature.details?.map((detail, i) => (
+                                        <Text key={i} className="text-zinc-400 text-xs leading-relaxed m-0">
+                                            - {detail}
+                                        </Text>
+                                    ))}
+                                </Column>
+                            </Row>
+                        ))}
                         <table width="100%">
                             <tr>
                                 <td align="center">
@@ -65,14 +134,14 @@ export const Welcome = ({ username }: { username: string }) => (
                                             <tr>
                                                 <td className="pr-[4px] pt-[2px]">
                                                     <Img
-                                                        src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/eye.png"
+                                                        src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/sparkles.png"
                                                         width="20"
                                                         alt=""
                                                     />
                                                 </td>
                                                 <td>
                                                     <span className="text-white text-sm font-semibold">
-                                                        Rendre mon profil visible
+                                                        Découvrir les nouveautés
                                                     </span>
                                                 </td>
                                             </tr>
@@ -81,54 +150,6 @@ export const Welcome = ({ username }: { username: string }) => (
                                 </td>
                             </tr>
                         </table>
-                    </Section>
-
-                    <Hr className="border-zinc-800 m-0" />
-
-                    {/* Steps */}
-                    <Section className="px-8 py-7" style={{ backgroundColor: "#121212" }}>
-                        <Text className="text-zinc-400 text-xs font-semibold uppercase tracking-widest mt-0 mb-5">
-                            Par où commencer ?
-                        </Text>
-
-                        {/* Step 1 */}
-                        <Row className="mb-5">
-                            <Column className="w-9 align-top pt-0.5">
-                                <Img
-                                    src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/link.png"
-                                    width="24"
-                                    alt=""
-                                />
-                            </Column>
-                            <Column className="align-top">
-                                <Text className="text-white text-sm font-semibold m-0 mb-1">
-                                    Ajoute tes liens
-                                </Text>
-                                <Text className="text-zinc-400 text-xs leading-relaxed m-0">
-                                    Twitch, YouTube, Discord, réseaux... regroupe tout au même endroit.
-                                </Text>
-                            </Column>
-                        </Row>
-
-                        {/* Step 2 */}
-                        <Row>
-                            <Column className="w-9 align-top pt-0.5">
-                                <Img
-                                    src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/calendar-days.png"
-                                    width="24"
-                                    alt=""
-                                />
-                            </Column>
-                            <Column className="align-top">
-                                <Text className="text-white text-sm font-semibold m-0 mb-1">
-                                    Configure ton planning
-                                </Text>
-                                <Text className="text-zinc-400 text-xs leading-relaxed m-0">
-                                    Indique à ta communauté quand tu stream. C'est le moyen le plus
-                                    simple de gagner en visibilité.
-                                </Text>
-                            </Column>
-                        </Row>
                     </Section>
 
                     <Hr className="border-zinc-800 m-0" />
@@ -149,7 +170,7 @@ export const Welcome = ({ username }: { username: string }) => (
                                             </td>
                                             <td style={{ verticalAlign: "middle" }}>
                                                 <Text className="text-discordText text-base font-semibold m-0">
-                                                    Rejoins la communauté
+                                                    Une idée ? Un retour ?
                                                 </Text>
                                             </td>
                                         </tr>
@@ -158,8 +179,7 @@ export const Welcome = ({ username }: { username: string }) => (
                             </tr>
                         </table>
                         <Text className="text-zinc-400 text-sm leading-relaxed mt-3 mb-5">
-                            Viens influencer les prochaines features, échanger avec d'autres streamers
-                            et suivre la roadmap en direct.
+                            Viens donner ton avis sur ces nouveautés et influencer les prochaines features directement sur Discord.
                         </Text>
                         <table width="100%">
                             <tr>
@@ -197,7 +217,10 @@ export const Welcome = ({ username }: { username: string }) => (
                             StreamLink · stream-link.fr
                         </Text>
                         <Text className="text-zinc-600 text-xs m-0">
-                            Vous recevez cet email car vous avez créé un compte sur StreamLink.
+                            Tu reçois cet email car tu as activé les notifications sur StreamLink.{" "}
+                            <Link href={`${baseUrl}/admin/account`} className="text-zinc-500 underline">
+                                Désactiver
+                            </Link>
                         </Text>
                     </Section>
 
@@ -207,4 +230,4 @@ export const Welcome = ({ username }: { username: string }) => (
     </Html>
 );
 
-export default Welcome;
+export default UpdateEmail;

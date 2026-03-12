@@ -18,10 +18,10 @@ import {
 
 const baseUrl = "https://stream-link.fr";
 
-export const Welcome = ({ username }: { username: string }) => (
+export const NotScheduleEmail = ({ username }: { username: string }) => (
     <Html>
         <Head />
-        <Preview>2 étapes pour être visible</Preview>
+        <Preview>Ton prochain stream est quand ? Dis-le à ta communauté</Preview>
         <Tailwind
             config={{
                 theme: {
@@ -47,32 +47,35 @@ export const Welcome = ({ username }: { username: string }) => (
 
                     {/* Hero */}
                     <Section className="bg-zinc-900 p-7">
+                        <Text className="text-white text-sm font-semibold mt-0 mb-1">
+                            Salut {username},
+                        </Text>
                         <Heading className="text-white text-2xl font-bold tracking-tight mt-0 mb-3">
-                            Bienvenue {username},
+                            Ton prochain stream est quand ?
                         </Heading>
                         <Text className="text-zinc-400 text-sm leading-relaxed mt-0 mb-6">
-                            StreamLink, ta plateforme tout-en-un : liens, planning, identité… tout prêt à partager.
+                            Ton planning StreamLink est encore vide. Sans horaires, ta communauté ne sait pas quand te retrouver en live.
                             <br /><br />
-                            Complète ton profil pour apparaître sur la page Découverte et être trouvé par d'autres streamers et viewers.
+                            Ajoute tes jours et horaires habituels, ça prend <strong>moins de 2 minutes</strong> et ça change tout pour ta visibilité.
                         </Text>
                         <table width="100%">
                             <tr>
                                 <td align="center">
                                     <Button
                                         className="box-border w-full rounded-[8px] bg-buttonBg px-[16px] py-[8px]"
-                                        href={`${baseUrl}/dashboard`}>
+                                        href={`${baseUrl}/schedule`}>
                                         <table>
                                             <tr>
                                                 <td className="pr-[4px] pt-[2px]">
                                                     <Img
-                                                        src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/eye.png"
+                                                        src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/calendar-days.png"
                                                         width="20"
                                                         alt=""
                                                     />
                                                 </td>
                                                 <td>
                                                     <span className="text-white text-sm font-semibold">
-                                                        Rendre mon profil visible
+                                                        Créer mon planning
                                                     </span>
                                                 </td>
                                             </tr>
@@ -85,14 +88,52 @@ export const Welcome = ({ username }: { username: string }) => (
 
                     <Hr className="border-zinc-800 m-0" />
 
-                    {/* Steps */}
+                    {/* Pourquoi un planning */}
                     <Section className="px-8 py-7" style={{ backgroundColor: "#121212" }}>
                         <Text className="text-zinc-400 text-xs font-semibold uppercase tracking-widest mt-0 mb-5">
-                            Par où commencer ?
+                            Pourquoi configurer son planning ?
                         </Text>
 
-                        {/* Step 1 */}
+                        {/* Raison 1 */}
                         <Row className="mb-5">
+                            <Column className="w-9 align-top pt-0.5">
+                                <Img
+                                    src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/heart.png"
+                                    width="24"
+                                    alt=""
+                                />
+                            </Column>
+                            <Column className="align-top">
+                                <Text className="text-white text-sm font-semibold m-0 mb-1">
+                                    Fidélise ta communauté
+                                </Text>
+                                <Text className="text-zinc-400 text-xs leading-relaxed m-0">
+                                    Un planning régulier, c'est ce qui transforme des viewers de passage en abonnés fidèles. Ils savent quand revenir.
+                                </Text>
+                            </Column>
+                        </Row>
+
+                        {/* Raison 2 */}
+                        <Row className="mb-5">
+                            <Column className="w-9 align-top pt-0.5">
+                                <Img
+                                    src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/eye.png"
+                                    width="24"
+                                    alt=""
+                                />
+                            </Column>
+                            <Column className="align-top">
+                                <Text className="text-white text-sm font-semibold m-0 mb-1">
+                                    Augmente ta visibilité sur StreamLink
+                                </Text>
+                                <Text className="text-zinc-400 text-xs leading-relaxed m-0">
+                                    Les profils avec un planning sont mis en avant sur la page Découverte. Cela permet à de nouveaux viewers de te trouver plus facilement.
+                                </Text>
+                            </Column>
+                        </Row>
+
+                        {/* Raison 3 */}
+                        <Row>
                             <Column className="w-9 align-top pt-0.5">
                                 <Img
                                     src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/link.png"
@@ -102,30 +143,10 @@ export const Welcome = ({ username }: { username: string }) => (
                             </Column>
                             <Column className="align-top">
                                 <Text className="text-white text-sm font-semibold m-0 mb-1">
-                                    Ajoute tes liens
+                                    Affiché sur ta page de liens
                                 </Text>
                                 <Text className="text-zinc-400 text-xs leading-relaxed m-0">
-                                    Twitch, YouTube, Discord, réseaux... regroupe tout au même endroit.
-                                </Text>
-                            </Column>
-                        </Row>
-
-                        {/* Step 2 */}
-                        <Row>
-                            <Column className="w-9 align-top pt-0.5">
-                                <Img
-                                    src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/calendar-days.png"
-                                    width="24"
-                                    alt=""
-                                />
-                            </Column>
-                            <Column className="align-top">
-                                <Text className="text-white text-sm font-semibold m-0 mb-1">
-                                    Configure ton planning
-                                </Text>
-                                <Text className="text-zinc-400 text-xs leading-relaxed m-0">
-                                    Indique à ta communauté quand tu stream. C'est le moyen le plus
-                                    simple de gagner en visibilité.
+                                    Ton planning apparaît directement sur ta page publique StreamLink. Tes viewers voient tes horaires dès qu'ils cliquent sur ton lien.
                                 </Text>
                             </Column>
                         </Row>
@@ -158,8 +179,7 @@ export const Welcome = ({ username }: { username: string }) => (
                             </tr>
                         </table>
                         <Text className="text-zinc-400 text-sm leading-relaxed mt-3 mb-5">
-                            Viens influencer les prochaines features, échanger avec d'autres streamers
-                            et suivre la roadmap en direct.
+                            Viens échanger avec d'autres streamers, partager tes horaires et suivre les nouveautés StreamLink en direct.
                         </Text>
                         <table width="100%">
                             <tr>
@@ -197,7 +217,10 @@ export const Welcome = ({ username }: { username: string }) => (
                             StreamLink · stream-link.fr
                         </Text>
                         <Text className="text-zinc-600 text-xs m-0">
-                            Vous recevez cet email car vous avez créé un compte sur StreamLink.
+                            Tu reçois cet email car tu as activé les notifications sur StreamLink.{" "}
+                            <Link href={`${baseUrl}/admin/account`} className="text-zinc-500 underline">
+                                Désactiver
+                            </Link>
                         </Text>
                     </Section>
 
@@ -207,4 +230,4 @@ export const Welcome = ({ username }: { username: string }) => (
     </Html>
 );
 
-export default Welcome;
+export default NotScheduleEmail;
