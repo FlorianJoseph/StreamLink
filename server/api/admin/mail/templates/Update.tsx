@@ -20,24 +20,34 @@ const baseUrl = "https://stream-link.fr";
 
 interface Feature {
     title: string;
-    description: string;
-    icon?: string; // URL icône optionnelle, sinon icône par défaut
+    icon?: string;
+    details?: string[];
 }
 
 interface UpdateEmailProps {
     updateTitle?: string;       // ex: "Mise à jour de mars"
-    updateSubtitle?: string;    // ex: "3 nouvelles fonctionnalités"
+    previewText?: string;    // ex: "3 nouvelles fonctionnalités"
     features?: Feature[];
 }
 
 const defaultFeatures: Feature[] = [
     {
-        title: "Nouvelle fonctionnalité",
-        description: "Description de la fonctionnalité ajoutée dans cette mise à jour.",
+        title: "Nouvelles fonctionnalités",
+        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/wrench.png",
+        details: [
+            "Choix de la taille des créneaux et de la date du planning (auto ou manuel)",
+            "Page de liens : Statistiques de vues et de clics",
+        ],
     },
     {
-        title: "Amélioration",
-        description: "Ce qui a été amélioré ou corrigé dans cette version.",
+        title: "Améliorations",
+        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/zap.png",
+        details: [
+            "Navigation repensée avec accès Discord et profil",
+            "Scroll fluide sous le menu",
+            "Roadmap mise à jour dans tableau de bord",
+            "Planning : les boutons de modification et suppression de créneaux ont été repensés",
+        ],
     },
 ];
 
@@ -46,12 +56,12 @@ const DEFAULT_ICON = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object
 export const UpdateEmail = ({
     username,
     updateTitle = "Quoi de neuf sur StreamLink ?",
-    updateSubtitle = "Voici les dernières nouveautés",
+    previewText = "Voici les dernières nouveautés",
     features = defaultFeatures,
 }: UpdateEmailProps & { username: string }) => (
     <Html>
         <Head />
-        <Preview>{updateSubtitle}</Preview>
+        <Preview>{previewText}</Preview>
         <Tailwind
             config={{
                 theme: {
@@ -77,18 +87,43 @@ export const UpdateEmail = ({
 
                     {/* Hero */}
                     <Section className="bg-zinc-900 p-7">
-                        {/* <Text className="text-purple-400 text-xs font-semibold uppercase tracking-widest m-0 mb-3">
-                            ✦ Mise à jour
-                        </Text> */}
                         <Text className="text-white text-sm font-semibold mt-0 mb-1">
                             Salut {username},
                         </Text>
-                        <Heading className="text-white text-2xl font-bold tracking-tight mt-0 mb-3">
+                        <Heading className="text-white text-2xl font-bold tracking-tight mt-0">
                             {updateTitle}
                         </Heading>
-                        <Text className="text-zinc-400 text-sm leading-relaxed mt-0 mb-6">
-                            {updateSubtitle}
+                    </Section>
+
+                    <Hr className="border-zinc-800 m-0" />
+
+                    {/* Liste des features */}
+                    <Section className="px-8 py-7" style={{ backgroundColor: "#121212" }}>
+                        <Text className="text-purple-400 text-xs font-semibold uppercase tracking-widest m-0 mb-5">
+                            ✦ Mise à jour
                         </Text>
+
+                        {features.map((feature, index) => (
+                            <Row key={index} className={index < features.length - 1 ? "mb-6" : "mb-5"}>
+                                <Column className="w-9 align-top pt-0.5">
+                                    <Img
+                                        src={feature.icon ?? DEFAULT_ICON}
+                                        width="24"
+                                        alt=""
+                                    />
+                                </Column>
+                                <Column className="align-top">
+                                    <Text className="text-white text-sm font-semibold m-0 mb-1">
+                                        {feature.title}
+                                    </Text>
+                                    {feature.details?.map((detail, i) => (
+                                        <Text key={i} className="text-zinc-400 text-xs leading-relaxed m-0">
+                                            - {detail}
+                                        </Text>
+                                    ))}
+                                </Column>
+                            </Row>
+                        ))}
                         <table width="100%">
                             <tr>
                                 <td align="center">
@@ -99,7 +134,7 @@ export const UpdateEmail = ({
                                             <tr>
                                                 <td className="pr-[4px] pt-[2px]">
                                                     <Img
-                                                        src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/eye.png"
+                                                        src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/sparkles.png"
                                                         width="20"
                                                         alt=""
                                                     />
@@ -115,35 +150,6 @@ export const UpdateEmail = ({
                                 </td>
                             </tr>
                         </table>
-                    </Section>
-
-                    <Hr className="border-zinc-800 m-0" />
-
-                    {/* Liste des features */}
-                    <Section className="px-8 py-7" style={{ backgroundColor: "#121212" }}>
-                        <Text className="text-zinc-400 text-xs font-semibold uppercase tracking-widest mt-0 mb-5">
-                            Au programme
-                        </Text>
-
-                        {features.map((feature, index) => (
-                            <Row key={index} className={index < features.length - 1 ? "mb-5" : ""}>
-                                <Column className="w-9 align-top pt-0.5">
-                                    <Img
-                                        src={feature.icon ?? DEFAULT_ICON}
-                                        width="24"
-                                        alt=""
-                                    />
-                                </Column>
-                                <Column className="align-top">
-                                    <Text className="text-white text-sm font-semibold m-0 mb-1">
-                                        {feature.title}
-                                    </Text>
-                                    <Text className="text-zinc-400 text-xs leading-relaxed m-0">
-                                        {feature.description}
-                                    </Text>
-                                </Column>
-                            </Row>
-                        ))}
                     </Section>
 
                     <Hr className="border-zinc-800 m-0" />
