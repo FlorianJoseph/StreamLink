@@ -9,7 +9,7 @@
 
 <script setup>
 const route = useRoute()
-const { data: publicUser } = await useFetch(`/api/publicUser/${route.params.username}`)
+const { data: publicUser } = await useFetch(`/api/streamers/${route.params.username}`)
 
 const design = publicUser.value?.design || null
 

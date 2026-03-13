@@ -28,6 +28,8 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 
 - Consentement RGPD & newsletter
     - Email auto de bienvenue
+    - Email auto segmenté Profil invisible/Sans planning
+    - Templates React Email
 
 - Page publique StreamLink (type Linktree)
     - Profil streamer : avatar, pseudo, bio, couleurs et style personnalisables
@@ -91,6 +93,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - 24/02/26 283 utilisateurs, 136 profils actifs, 556 liens, 348 streams planifiés, newsletter 117 inscrits
 - 02/03/26 345 utilisateurs, 188 profils actifs, 779 liens, 535 streams planifiés, newsletter 150 inscrits
 - 10/03/26 428 utilisateurs, 252 profils actifs, 1036 liens, 728 streams planifiés, 778 vues de pages, newsletter 180 inscrits
+- 12/03/26 428 utilisateurs, 264 profils actifs, 1104 liens, 782 streams planifiés, 1147 vues de pages, newsletter 195 inscrits
 
 ## Roadmap déjà réalisée
 
@@ -134,6 +137,9 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
 
 ### Planning
     - Export format mobile
+
+### Réseaux
+    - Export story insta/X
 
 ### Page Inventaire / Boutique complète
     - Inventaire cosmétiques + accès premium temporaires en coins

@@ -3,7 +3,8 @@ export const iconMapping = {
     youtube: 'simple-icons:youtube',
     youtu: 'simple-icons:youtube', // pour youtu.be
     instagram: 'simple-icons:instagram',
-    twitter: 'simple-icons:twitter',
+    twitter: 'simple-icons:x',
+    'x.com': 'simple-icons:x',
     facebook: 'simple-icons:facebook',
     discord: 'simple-icons:discord',
     tiktok: 'simple-icons:tiktok',

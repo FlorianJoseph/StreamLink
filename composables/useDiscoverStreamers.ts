@@ -68,8 +68,7 @@ export function useDiscoverStreamers() {
   // Fonction pour récupérer les streamers et calculer leur prochain stream
   const fetchStreamersWithNextSlot = async () => {
     loading.value = true
-    const streamerStore = useStreamerStore()
-    const allStreamers = await streamerStore.fetchAllStreamers()
+    const allStreamers = await $fetch('/api/streamers/visible')
 
     // Parcours chaque streamer et calcule nextSlot puis trie les streamers en fonction de nextSlot
     streamers.value = allStreamers

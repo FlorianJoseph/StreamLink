@@ -8,7 +8,6 @@ export const useStreamerStore = defineStore('streamer', () => {
     const repo = useStreamerRepository()
     const loading = ref(true)
     const streamer = ref<Streamer | null>(null)
-    const publicStreamer = ref<Streamer | null>(null)
 
     // Récupérer le streamer du user connecté
     const fetchStreamer = async () => {
@@ -24,22 +23,6 @@ export const useStreamerStore = defineStore('streamer', () => {
         finally {
             loading.value = false
         }
-    }
-
-    // Récupère tous les streamers pour la page découverte
-    const fetchAllStreamers = async () => {
-        const result = await safe(() => repo.findAllVisible())
-
-        if (result.data) return result.data ?? []
-    }
-
-    // Récupérer un streamer pour la page publique
-    const fetchStreamerByUsername = async (username: string) => {
-        if (!username) return { data: null, error: 'Username manquant' }
-
-        const result = await safe(() => repo.findByUsername(username))
-        if (result.data) publicStreamer.value = result.data
-        return result
     }
 
     // Créer un streamer
@@ -153,10 +136,7 @@ export const useStreamerStore = defineStore('streamer', () => {
     return {
         loading,
         streamer,
-        publicStreamer,
         fetchStreamer,
-        fetchStreamerByUsername,
-        fetchAllStreamers,
         createStreamer,
         updateStreamer,
         deleteStreamerWithLinks,
