@@ -7,21 +7,12 @@ export const useScheduleStore = defineStore('schedule', () => {
     const repo = useScheduleRepository()
     const loading = ref(true)
     const schedule = shallowRef<Schedule | null>(null)
-    const publicSchedule = shallowRef<Schedule | null>(null)
 
     // Récupère le planning de l'utilisateur
     async function fetchSchedule() {
         const result = await safe(() => repo.findByUserId(uid.value))
 
         if (result.data) schedule.value = result.data
-        return result
-    }
-
-    // Récupère le planning public de l'utilisateur
-    async function fetchPublicSchedule(userId: string) {
-        const result = await safe(() => repo.findByUserId(userId))
-
-        if (result.data) publicSchedule.value = result.data
         return result
     }
 
@@ -73,5 +64,5 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
     }
 
-    return { loading, fetchSchedule, fetchPublicSchedule, updateSchedule, createSchedule, getOrCreateSchedule, schedule, publicSchedule }
+    return { loading, fetchSchedule, updateSchedule, createSchedule, getOrCreateSchedule, schedule }
 })

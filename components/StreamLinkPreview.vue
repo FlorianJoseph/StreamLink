@@ -38,10 +38,16 @@
                     </div>
                     <!-- Pseudo et description -->
                     <div class="flex flex-col flex-1 min-w-0">
-                        <div class="flex items-center gap-2 sm:gap-3">
+                        <div class="flex items-center gap-2">
                             <span :class="['font-bold tracking-wide', usernameSizeClass]"
                                 :style="{ color: usernameColor }">
                                 {{ streamer?.username }}
+                            </span>
+                            <img v-if="streamer?.nationality && streamer.nationality !== 'Autre'"
+                                :src="`https://flagcdn.com/w80/${streamer.nationality.toLowerCase()}.png`"
+                                class="w-4 h-[12px] object-cover rounded-xs shadow-sm" />
+                            <span v-else-if="streamer?.nationality === 'Autre'" class="flex items-center">
+                                <Icon name="lucide:globe" size="16" />
                             </span>
                         </div>
                         <span class="text-xs mt-1 break-words line-clamp-5" :style="{ color: descriptionColor }">

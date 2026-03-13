@@ -501,13 +501,13 @@
             <!-- Catégorie Twitch -->
             <div class="flex flex-col gap-2">
                 <label for="game-search" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:gamepad-2" size="18" class="shrink-0" />
+                    <Icon name="lucide:gamepad-2" size="16" class="shrink-0" />
                     Catégorie Twitch
                     <span class="text-red-500">*</span>
                 </label>
                 <InputGroup>
                     <InputGroupAddon>
-                        <Icon name="lucide:search" size="20" class="text-zinc-500" />
+                        <Icon name="lucide:search" size="18" class="text-zinc-500" />
                     </InputGroupAddon>
                     <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
                         optionLabel="label" placeholder="Ex: League of Legends, Valorant..." fluid forceSelection
@@ -519,7 +519,7 @@
                                     class="w-8 h-10 rounded border border-zinc-700 flex-shrink-0" />
                                 <div v-else
                                     class="w-8 h-10 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center flex-shrink-0">
-                                    <Icon name="lucide:image-off" size="20" class="text-zinc-600 shrink-0" />
+                                    <Icon name="lucide:image-off" size="18" class="text-zinc-600 shrink-0" />
                                 </div>
                                 <span>{{ slotProps.option.label }}</span>
                             </div>
@@ -542,7 +542,7 @@
             <!-- Titre du stream -->
             <div class="flex flex-col gap-2 relative">
                 <label for="stream-title" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:type" size="18" class="shrink-0" />
+                    <Icon name="lucide:type" size="16" class="shrink-0" />
                     Titre du stream
                 </label>
                 <InputText id="stream-title" type="text" v-model="title"
@@ -560,7 +560,7 @@
                 <div class="flex items-start justify-between">
                     <div class="flex flex-col gap-1">
                         <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                            <Icon name="lucide:palette" size="18" class="shrink-0" />
+                            <Icon name="lucide:palette" size="16" class="shrink-0" />
                             Couleur du créneau
                         </label>
                         <span class="text-xs text-zinc-500">
@@ -571,7 +571,7 @@
                     </div>
                     <div v-if="!useGameColor"
                         class="px-2 py-1 bg-zinc-700 text-white text-xs rounded-full flex items-center gap-1">
-                        <Icon name="lucide:wand-2" size="12" class="shrink-0" />
+                        <Icon name="lucide:wand-2" size="14" class="shrink-0" />
                         Modifiée
                     </div>
                 </div>
@@ -586,7 +586,7 @@
                         :style="{ color: isColorInvalid ? '#f87171' : '#ffffff' }" />
                     <InputGroupAddon v-tooltip.bottom="'Réinitialiser en couleur automatique'"
                         class="cursor-pointer flex items-center gap-1" @click="resetColor">
-                        <Icon name="lucide:rotate-ccw" size="16" class="shrink-0" />
+                        <Icon name="lucide:rotate-ccw" size="18" class="shrink-0" />
                         <span class="text-sm sm:text-base">Réinitialiser</span>
                     </InputGroupAddon>
                 </InputGroup>
@@ -595,7 +595,7 @@
             <!-- Jours de stream -->
             <div class="flex flex-col gap-2">
                 <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:calendar-days" size="18" class="shrink-0" />
+                    <Icon name="lucide:calendar-days" size="16" class="shrink-0" />
                     Jours de stream
                     <span class="text-red-500">*</span>
                 </label>
@@ -617,7 +617,7 @@
             <!-- Horaires -->
             <div class="flex flex-col gap-2">
                 <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:clock" size="18" />
+                    <Icon name="lucide:clock" size="16" />
                     Horaires
                     <span class="text-red-500">*</span>
                 </label>
@@ -627,7 +627,7 @@
                         <InputText id="start-time" type="time" v-model="startTime"
                             style="--p-inputtext-focus-border-color:white" />
                     </div>
-                    <Icon name="lucide:arrow-right" size="20" class="text-zinc-500 mt-5 shrink-0" />
+                    <Icon name="lucide:arrow-right" size="18" class="text-zinc-500 mt-5 shrink-0" />
                     <div class="flex flex-col gap-1">
                         <label for="end-time" class="text-xs text-zinc-500">Fin</label>
                         <InputText id="end-time" type="time" v-model="endTime"
@@ -639,18 +639,18 @@
             <!-- Taille du créneau -->
             <div class="flex flex-col gap-2">
                 <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:maximize-2" size="16" />
+                    <Icon name="lucide:maximize-2" size="16" class="shrink-0" />
                     Taille du créneau
                     <span class="text-red-500">*</span>
                 </label>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div v-for="option in sizeOptions" :key="option.value"
-                        class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all"
+                        class="flex flex-col items-center gap-1 p-2 rounded-lg border-2 cursor-pointer transition-all"
                         :class="selectedSize === option.value
                             ? 'border-white bg-white/10'
                             : 'border-zinc-700 hover:border-zinc-500 '" @click="selectedSize = option.value">
                         <Icon :name="option.value === 'fixed' ? 'lucide:square-split-vertical' : 'lucide:expand'"
-                            size="20" :class="selectedSize === option.value ? 'text-white' : 'text-zinc-400'" />
+                            size="16" :class="selectedSize === option.value ? 'text-white' : 'text-zinc-400'" />
                         <span class="text-sm font-semibold"
                             :class="selectedSize === option.value ? 'text-white' : 'text-zinc-400'">
                             {{ option.label }}

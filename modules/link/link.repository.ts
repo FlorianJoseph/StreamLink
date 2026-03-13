@@ -14,18 +14,6 @@ export const useLinkRepository = () => {
         return data
     }
 
-    const findPublicLinksByUserId = async (userId: string) => {
-        const { data, error } = await supabase
-            .from('Link')
-            .select('*')
-            .eq('user_id', userId)
-            .eq('visible', true)
-            .order('order', { ascending: true })
-
-        if (error) throw error
-        return data
-    }
-
     const create = async (payload: LinkInsert) => {
         const { data, error } = await supabase
             .from('Link')
@@ -80,7 +68,6 @@ export const useLinkRepository = () => {
 
     return {
         findByUserId,
-        findPublicLinksByUserId,
         create,
         update,
         remove,

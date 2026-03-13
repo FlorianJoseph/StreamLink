@@ -18,42 +18,114 @@
             <AvatarUploader />
             <div class="min-w-0">
                 <div class="flex flex-col" @click="openStreamerModal()">
-                    <span class="text-lg font-medium hover:underline cursor-pointer">
-                        {{ streamer?.username }}
-                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="font-medium hover:underline cursor-pointer">
+                            {{ streamer?.username }}
+                        </span>
+                        <img v-if="streamer?.nationality && streamer.nationality !== 'Autre'"
+                            :src="`https://flagcdn.com/w80/${streamer.nationality.toLowerCase()}.png`"
+                            class="w-4 h-[12px] object-cover rounded-xs shadow-sm hover:cursor-pointer" />
+                        <span v-else-if="streamer?.nationality === 'Autre'" class="flex items-center">
+                            <Icon name="lucide:globe" size="16" />
+                        </span>
+                        <span v-else class="text-xs text-gray-400 hover:underline cursor-pointer">
+                            Ajouter ma nationalité
+                        </span>
+                    </div>
                     <span class="block text-sm font-medium text-gray-400 hover:underline cursor-pointer truncate">
                         {{ streamer?.bio || 'Ajouter une description' }}
                     </span>
                 </div>
-                <Dialog v-model:visible="streamerModal" modal dismissableMask header="Nom et description"
-                    :style="{ width: '25rem' }">
-                    <div class="flex flex-col gap-4">
+                <Dialog v-model:visible="streamerModal" modal dismissableMask header="Modifier le profil"
+                    :style="{ width: '25rem', margin: '1rem' }" :draggable="false">
+                    <div class="flex flex-col space-y-5 mb-2">
+
                         <!-- Nom -->
                         <div class="flex flex-col gap-2 relative">
-                            <label for="username">Nom</label>
+                            <label for="username" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                                <Icon name="lucide:user" size="16" class="shrink-0" />
+                                Nom
+                                <span class="text-red-500">*</span>
+                            </label>
                             <InputText id="username" v-model="username" maxlength="30" placeholder="Entrez votre nom"
-                                class="w-full" style="--p-inputtext-focus-border-color : #ffffff" />
-                            <span class="absolute right-2 bottom-1 text-xs text-gray-500">
+                                fluid style="--p-inputtext-focus-border-color : #ffffff" />
+                            <span class="absolute right-2 bottom-1 text-xs text-zinc-500">
                                 {{ username.length }}/30
                             </span>
                         </div>
+
                         <!-- Message d'erreur -->
                         <span v-if="usernameError" class="text-xs text-red-500">
                             {{ usernameError }}
                         </span>
+
                         <!-- Description -->
                         <div class="flex flex-col gap-2 relative">
-                            <label for="description">Description</label>
-                            <Textarea id="description" v-model="bio" rows="5" autoResize maxlength="120"
-                                placeholder="Écrivez une courte description..." class="w-full"
+                            <label for="description" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                                <Icon name="lucide:align-left" size="16" class="shrink-0" />
+                                Description
+                            </label>
+                            <Textarea id="description" v-model="bio" rows="4" autoResize maxlength="120"
+                                placeholder="Écrivez une courte description..." fluid
                                 style="--p-textarea-focus-border-color : #ffffff" />
-                            <span class="absolute right-2 bottom-1 text-xs text-gray-500">
+                            <span class="absolute right-2 bottom-1 text-xs text-zinc-500">
                                 {{ bio.length }}/120
                             </span>
                         </div>
-                        <Button type="button" label="Sauvegarder" severity="contrast" @click="handleSave" class="w-full"
-                            :disabled="!username || !!usernameError" />
+
+                        <!-- Nationalité -->
+                        <div class="flex flex-col gap-2">
+                            <label for="nationality" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                                <Icon name="lucide:globe" size="16" class="shrink-0" />
+                                Nationalité
+                            </label>
+                            <Select id="nationality" v-model="nationality" :options="nationalityOptions"
+                                optionLabel="label" optionValue="value" optionGroupLabel="label"
+                                optionGroupChildren="items" placeholder="Sélectionnez votre nationalité" showClear
+                                :highlightOnSelect="false" filter fluid style="--p-select-focus-border-color: #ffffff"
+                                :pt="{
+                                    pcFilter: {
+                                        root: {
+                                            style: '--p-inputtext-focus-border-color: #ffffff'
+                                        },
+                                    }
+                                }">
+                                <template #option="{ option }">
+                                    <div class="flex items-center gap-2">
+                                        <img v-if="option.value !== 'Autre'"
+                                            :src="`https://flagcdn.com/w80/${option.value.toLowerCase()}.png`"
+                                            class="h-[15px] w-5 object-cover rounded-xs shadow-sm" />
+                                        <Icon v-else name="lucide:globe" size="16" />
+                                        <span>{{ option.label }}</span>
+                                    </div>
+                                </template>
+                                <template #value="{ value }">
+                                    <div v-if="value" class="flex items-center gap-2">
+                                        <img v-if="value !== 'Autre'"
+                                            :src="`https://flagcdn.com/w80/${value.toLowerCase()}.png`"
+                                            class="h-[15px] w-5 object-cover rounded-xs shadow-sm" />
+                                        <Icon v-else name="lucide:globe" size="16" />
+                                        <span>{{nationalityOptions.flatMap(g => g.items).find(o => o.value ===
+                                            value)?.label }}</span>
+                                    </div>
+                                </template>
+                            </Select>
+                        </div>
                     </div>
+                    <template #footer>
+                        <div class="flex gap-2 w-full">
+                            <Button type="button" label="Annuler" severity="secondary" outlined
+                                @click="streamerModal = false" class="flex-1">
+                                <Icon name="lucide:x" size="18" class="shrink-0" />
+                                <span class="text-xs sm:text-base shrink-0">Annuler</span>
+                            </Button>
+                            <Button type="button" label="Mettre à jour" severity="contrast" @click="handleSave"
+                                :disabled="!username || !!usernameError" class="flex-1">
+                                <Icon name="lucide:check" size="18" class="shrink-0" />
+                                <span class="text-xs sm:text-base shrink-0">Mettre à jour</span>
+                            </Button>
+                        </div>
+                    </template>
                 </Dialog>
             </div>
         </div>
@@ -145,7 +217,7 @@
                                         <div class="flex justify-between items-center">
                                             <div class="mt-2 hover:cursor-pointer w-max flex items-center">
                                                 <Button severity="secondary" size="small"
-                                                    v-tooltip.bottom="{ value: 'Modifier l\'icone', pt: { text: '!text-sm' } }"
+                                                    v-tooltip.bottom="{ value: 'Modifier l\'icone du lien', pt: { text: '!text-sm' } }"
                                                     @click="openVignetteModal(element)">
                                                     <Icon name="lucide:image" size="18"
                                                         class="shrink-0 text-gray-300/60" />
@@ -158,7 +230,7 @@
                                                         <template v-if="statsPending">-</template>
                                                         <template v-else>
                                                             {{stats?.links?.findLast(l => l.link_id ===
-                                                            element.id)?.total_clicks ?? 0 }} clics
+                                                                element.id)?.total_clicks ?? 0}} clics
                                                         </template>
                                                     </span>
                                                 </Button>
@@ -177,28 +249,28 @@
                     </Draggable>
 
                     <!-- Modal Icone ou image -->
-                    <Dialog v-model:visible="thumbnailModal" dismissableMask modal header="Modifier l'icone"
-                        :style="{ width: '30rem' }">
+                    <Dialog v-model:visible="thumbnailModal" dismissableMask modal header="Modifier l'icone du lien"
+                        :style="{ width: '30rem', margin: '1rem' }" :draggable="false">
                         <Stepper value="1">
                             <StepPanels>
                                 <StepPanel v-slot="{ activateCallback }" value="1">
-                                    <div class="flex flex-col gap-4 items-center">
+                                    <div class="flex flex-col space-y-5 mb-2">
                                         <!-- Étape 1 : Upload -->
-                                        <div v-if="!imageUrl" class="flex flex-col gap-2">
+                                        <div v-if="!imageUrl" class="flex flex-col gap-3">
                                             <div class="flex flex-row gap-2">
                                                 <FileUpload mode="basic" @select="onFileSelect" auto
-                                                    chooseLabel="Choisir une image" class="p-button-contrast"
+                                                    chooseLabel="Choisir une image" class="p-button-contrast flex-1"
                                                     accept="image/*" @click="showIcons = false" />
-                                                <Button severity="contrast" variant="outlined"
+                                                <Button severity="contrast" variant="outlined" class="flex-1"
                                                     @click="activateCallback('2')">
-                                                    <Icon name="lucide:layout-grid" size="20px" />
-                                                    <span>Choisir une icone</span>
+                                                    <Icon name="lucide:layout-grid" size="18" class="shrink-0" />
+                                                    <span class="text-xs sm:text-base">Choisir une icône</span>
                                                 </Button>
                                             </div>
                                             <Button severity="danger" @click="deleteIcon"
                                                 :disabled="!currentLinkRef.icon_url">
-                                                <Icon name="lucide:trash-2" size="20px" />
-                                                <span>Supprimer l'icone</span>
+                                                <Icon name="lucide:trash-2" size="18" class="shrink-0" />
+                                                <span class="text-xs sm:text-base">Supprimer l'icône</span>
                                             </Button>
                                         </div>
                                         <!-- Étape 2 : Crop -->
@@ -211,33 +283,37 @@
                                                     :style="{ width: '100%', height: '100%' }"
                                                     :default-size="defaultSize" />
                                             </div>
-                                            <div class="flex flex-col w-full mt-4 gap-2">
-                                                <Button label="Sauvegarder" severity="contrast" @click="saveImage"
-                                                    :disabled="!croppedImage" />
-                                                <Button label="Retour" severity="secondary"
-                                                    @click="imageUrl = null, croppedImage = null" />
+                                            <div class="flex w-full mt-4 gap-2">
+                                                <Button severity="secondary" outlined
+                                                    @click="imageUrl = null, croppedImage = null" class="flex-1">
+                                                    <Icon name="lucide:arrow-left" size="18" class="shrink-0" />
+                                                    <span class="text-xs sm:text-base">Retour</span>
+                                                </Button>
+                                                <Button severity="contrast" :disabled="!croppedImage" @click="saveImage"
+                                                    class="flex-1">
+                                                    <Icon name="lucide:check" size="18" class="shrink-0" />
+                                                    <span class="text-xs sm:text-base">Mettre à jour</span>
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>
                                 </StepPanel>
                                 <StepPanel v-slot="{ activateCallback }" value="2">
-                                    <div class="flex flex-col h-full gap-4">
+                                    <div class="flex flex-col space-y-5 mb-2">
                                         <!-- Barre de recherche -->
-                                        <div class="mb-2 relative">
-                                            <IconField>
-                                                <InputIcon>
-                                                    <Icon name="lucide:search" />
-                                                </InputIcon>
-                                                <InputText v-model="searchIcon" placeholder="Rechercher une icône..."
-                                                    class="w-full" />
-                                            </IconField>
-                                        </div>
+                                        <IconField>
+                                            <InputIcon>
+                                                <Icon name="lucide:search" size="16" />
+                                            </InputIcon>
+                                            <InputText v-model="searchIcon" placeholder="Rechercher une icône..." fluid
+                                                style="--p-inputtext-focus-border-color: #ffffff" />
+                                        </IconField>
                                         <!-- Liste des icônes filtrées -->
                                         <div class="flex flex-wrap gap-6 overflow-y-auto h-[35vh]">
                                             <div v-for="(icons, category) in filteredIconsByCategory" :key="category"
                                                 class="flex flex-col gap-3">
                                                 <!-- Titre de la catégorie -->
-                                                <h3 class="text-lg font-semibold text-left">
+                                                <h3 class="font-semibold text-xs sm:text-sm text-left">
                                                     {{ category }}
                                                 </h3>
 
@@ -253,10 +329,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col justify-between w-full mt-4 gap-2">
-                                        <Button label="Sauvegarder" severity="contrast" :disabled="!selectedIcon"
-                                            @click="saveImage" />
-                                        <Button label="Retour" severity="secondary" @click="activateCallback('1')" />
+                                    <div class="flex gap-2 w-full mt-4">
+                                        <Button severity="secondary" outlined @click="activateCallback('1')"
+                                            class="flex-1">
+                                            <Icon name="lucide:arrow-left" size="18" class="shrink-0" />
+                                            <span class="text-xs sm:text-base">Retour</span>
+                                        </Button>
+                                        <Button severity="contrast" :disabled="!selectedIcon" @click="saveImage"
+                                            class="flex-1">
+                                            <Icon name="lucide:check" size="18" class="shrink-0" />
+                                            <span class="text-xs sm:text-base">Mettre à jour</span>
+                                        </Button>
                                     </div>
                                 </StepPanel>
                             </StepPanels>
@@ -265,21 +348,45 @@
 
                     <!-- Modal Ajouter / Modifier -->
                     <Dialog v-model:visible="newlinkModal" dismissableMask modal header="Ajouter un lien"
-                        :style="{ width: '25rem' }">
-                        <div class="flex flex-col gap-4">
+                        :style="{ width: '25rem', margin: '1rem' }" :draggable="false">
+                        <div class="flex flex-col space-y-5 mb-2">
+
+                            <!-- Titre -->
                             <div class="flex flex-col gap-2">
-                                <label for="title">Titre</label>
+                                <label for="title" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                                    <Icon name="lucide:type" size="16" class="shrink-0" />
+                                    Titre
+                                    <span class="text-red-500">*</span>
+                                </label>
                                 <InputText id="title" v-model="form.title" placeholder="Ex: Twitch, TikTok, Discord..."
-                                    style="--p-inputtext-focus-border-color : #ffffff" />
+                                    fluid style="--p-inputtext-focus-border-color : #ffffff" />
                             </div>
+
+                            <!-- URL -->
                             <div class="flex flex-col gap-2">
-                                <label for="url">URL</label>
-                                <InputText id="url" v-model="form.url" placeholder="https://..."
+                                <label for="url" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                                    <Icon name="lucide:link" size="16" class="shrink-0" />
+                                    URL
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <InputText id="url" v-model="form.url" placeholder="https://..." fluid
                                     style="--p-inputtext-focus-border-color : #ffffff" />
                             </div>
-                            <Button type="button" label="Sauvegarder" severity="contrast"
-                                :disabled="!form.title || !form.url" @click="saveNewLink()" class="w-full" />
                         </div>
+                        <template #footer>
+                            <div class="flex gap-2 w-full">
+                                <Button type="button" severity="secondary" outlined @click="newlinkModal = false"
+                                    class="flex-1">
+                                    <Icon name="lucide:x" size="18" class="shrink-0" />
+                                    <span class="text-xs sm:text-base shrink-0">Annuler</span>
+                                </Button>
+                                <Button type="button" label="Sauvegarder" severity="contrast"
+                                    :disabled="!form.title || !form.url" @click="saveNewLink()" class="flex-1">
+                                    <Icon name="lucide:save" size="18" class="shrink-0" />
+                                    <span class="text-xs sm:text-base shrink-0">Enregistrer</span>
+                                </Button>
+                            </div>
+                        </template>
                     </Dialog>
                 </div>
             </div>
@@ -304,10 +411,13 @@ const streamerModal = ref(false)
 const username = ref('')
 const bio = ref('')
 const usernameError = ref('')
+const nationality = ref(streamer?.value?.nationality ?? null)
 
+// Initialisation des champs du modal avec les données du streamer
 watchEffect(() => {
     username.value = streamer?.value?.username || ''
     bio.value = streamer?.value?.bio || ''
+    nationality.value = streamer?.value?.nationality || null
 })
 
 watch(username, () => {
@@ -316,13 +426,16 @@ watch(username, () => {
 
 const openStreamerModal = async () => {
     username.value = streamer?.value?.username
+    nationality.value = streamer?.value?.nationality ?? null
     streamerModal.value = true;
 }
 
+// Sauvegarder les modifications du streamer
 const handleSave = async () => {
     const result = await streamerStore.updateStreamer({
         username: username.value,
-        bio: bio.value
+        bio: bio.value,
+        nationality: nationality.value
     })
     // Gestion de l'erreur
     if (result.error) {
@@ -355,6 +468,7 @@ const newLink = ref(null)
 const inputRefs = ref({})
 const { getDefaultIcon } = useLinkIcon()
 
+// Ajouter un nouveau lien
 const saveNewLink = async () => {
     const icon = getDefaultIcon(form.url)
     const maxOrder = links.value.length ? Math.max(...links.value.map(l => l.order || 0)) : 0
@@ -369,6 +483,7 @@ const editing = ref({
     value: ''
 })
 
+// Editer un champ (titre ou url)
 const editField = (link, field) => {
     editing.value.id = link.id
     editing.value.field = field
@@ -382,6 +497,7 @@ const editField = (link, field) => {
     })
 }
 
+// Sauvegarder les modifications d'un champ
 const saveEdit = async (link) => {
     if (!editing.value.id || !editing.value.field) return
 
@@ -406,6 +522,7 @@ const saveEdit = async (link) => {
     editing.value = { id: null, field: null, value: '' }
 }
 
+// Réinitialiser le formulaire d'ajout de lien
 const resetForm = () => {
     form.title = ''
     form.url = ''
@@ -414,6 +531,7 @@ const resetForm = () => {
     newlinkModal.value = false
 }
 
+// Supprimer un lien avec confirmation
 const confirm = useConfirm();
 const confirmDeletePopup = (event, id) => {
     confirm.require({
@@ -459,6 +577,7 @@ const {
     removeVignette
 } = useVignetteUploader(currentLinkRef)
 
+// Ouvrir le modal de modification de l'icone
 const openVignetteModal = (link) => {
     currentLinkRef.value = link
     thumbnailModal.value = true
@@ -473,11 +592,13 @@ const closeModal = () => {
     iconModal.value = false
 }
 
+// Sauvegarder l'icone
 const saveImage = async () => {
     await saveVignette()
     closeModal()
 }
 
+// Supprimer l'icone
 const deleteIcon = async () => {
     await removeVignette()
     closeModal()
@@ -490,4 +611,58 @@ const defaultSize = ({ imageSize, visibleArea }) => {
         height: (visibleArea || imageSize).height,
     };
 };
+
+const nationalityOptions = ref([
+    {
+        label: 'Francophonie',
+        items: [
+            { value: 'FR', label: 'France' },
+            { value: 'BE', label: 'Belgique' },
+            { value: 'CH', label: 'Suisse' },
+            { value: 'CA', label: 'Canada' },
+            { value: 'DZ', label: 'Algérie' },
+            { value: 'MA', label: 'Maroc' },
+            { value: 'TN', label: 'Tunisie' },
+            { value: 'SN', label: 'Sénégal' },
+            { value: 'CI', label: "Côte d'Ivoire" },
+            { value: 'CM', label: 'Cameroun' },
+        ]
+    },
+    {
+        label: 'Europe',
+        items: [
+            { value: 'DE', label: 'Allemagne' },
+            { value: 'ES', label: 'Espagne' },
+            { value: 'IT', label: 'Italie' },
+            { value: 'PT', label: 'Portugal' },
+            { value: 'GB', label: 'Royaume-Uni' },
+            { value: 'NL', label: 'Pays-Bas' },
+            { value: 'PL', label: 'Pologne' },
+            { value: 'RO', label: 'Roumanie' },
+        ]
+    },
+    {
+        label: 'Amériques',
+        items: [
+            { value: 'US', label: 'États-Unis' },
+            { value: 'BR', label: 'Brésil' },
+            { value: 'MX', label: 'Mexique' },
+            { value: 'AR', label: 'Argentine' },
+        ]
+    },
+    {
+        label: 'Asie',
+        items: [
+            { value: 'JP', label: 'Japon' },
+            { value: 'KR', label: 'Corée du Sud' },
+        ]
+    },
+    {
+        label: 'Autre',
+        items: [
+            { value: 'Autre', label: 'Autre' },
+        ]
+    }
+])
+
 </script>

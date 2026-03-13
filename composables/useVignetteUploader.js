@@ -11,7 +11,7 @@ export const useVignetteUploader = (linkRef) => {
     const availableIcons = ({
         'Réseaux sociaux': [
             'simple-icons:facebook',
-            'simple-icons:twitter',
+            'simple-icons:x',
             'simple-icons:instagram',
             'simple-icons:linkedin',
             'simple-icons:tiktok',

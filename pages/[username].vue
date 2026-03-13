@@ -33,9 +33,15 @@
                 </div>
                 <!-- Pseudo et description -->
                 <div class="flex flex-col flex-1 min-w-0">
-                    <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="flex items-center gap-2">
                         <span :class="['font-bold tracking-wide', usernameSizeClass]" :style="{ color: usernameColor }">
                             {{ user?.username }}
+                        </span>
+                        <img v-if="user?.nationality && user.nationality !== 'Autre'"
+                            :src="`https://flagcdn.com/w80/${user.nationality.toLowerCase()}.png`"
+                            class="w-5 h-[15px] object-cover rounded-xs shadow-sm hover:cursor-pointer" />
+                        <span v-else-if="user?.nationality === 'Autre'" class="flex items-center">
+                            <Icon name="lucide:globe" size="18" />
                         </span>
                     </div>
                     <span class="text-xs sm:text-sm mt-1 break-words line-clamp-5" :style="{ color: descriptionColor }">
@@ -244,12 +250,12 @@
 <script setup lang="ts">
 
 definePageMeta({
-    layout: 'links'
+    layout: 'public-page'
 })
 
 // Récupération des données du user public
 const route = useRoute()
-const { data: publicUser, pending } = await useFetch(`/api/publicUser/${route.params.username}`)
+const { data: publicUser, pending } = await useFetch(`/api/streamers/${route.params.username}`)
 
 // Données extraites pour faciliter l’accès dans le template
 const user_id = publicUser.value?.user_id || null

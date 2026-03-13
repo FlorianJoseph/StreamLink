@@ -11,10 +11,16 @@
                                 class="w-full h-full object-cover rounded-xl ring-2 ring-zinc-700"
                                 :alt="streamer.username" />
                         </div>
-                        <div class="flex-1 min-w-0">
+                        <div class="flex-1 min-w-0 flex items-center gap-2">
                             <h3 class="text-base font-semibold truncate text-white">
                                 {{ streamer.username }}
                             </h3>
+                            <img v-if="streamer?.nationality && streamer.nationality !== 'Autre'"
+                                :src="`https://flagcdn.com/w80/${streamer.nationality.toLowerCase()}.png`"
+                                class="w-4 h-[12px] object-cover rounded-xs shadow-sm" />
+                            <span v-else-if="streamer?.nationality === 'Autre'" class="flex items-center">
+                                <Icon name="lucide:globe" size="16" />
+                            </span>
                         </div>
                     </div>
 

@@ -6,7 +6,6 @@ export const useDesignStore = defineStore('design', () => {
     const { uid, safe } = useSupabase()
     const repo = useDesignRepository()
     const design = ref<Design | null>(null)
-    const publicDesign = ref<Design | null>(null)
     const savedDesign = ref<Design | null>(null)
     const history = ref<Design[]>([])
     const future = ref<Design[]>([])
@@ -44,16 +43,6 @@ export const useDesignStore = defineStore('design', () => {
         if (result.data) {
             design.value = structuredClone(result.data)
             savedDesign.value = structuredClone(result.data)
-        }
-        return result
-    }
-
-    // Récupérer le design d'un utilisateur pour la page publique
-    const fetchPublicDesign = async (userId: string) => {
-        const result = await safe(() => repo.findByUserId(userId))
-
-        if (result.data) {
-            publicDesign.value = result.data
         }
         return result
     }
@@ -166,9 +155,7 @@ export const useDesignStore = defineStore('design', () => {
 
     return {
         design,
-        publicDesign,
         fetchDesign,
-        fetchPublicDesign,
         updateSection,
         applyTheme,
         saveDesign,
