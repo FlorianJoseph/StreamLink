@@ -16,7 +16,7 @@
                 </h1>
                 <!-- Sous-titre -->
                 <p class="text-sm sm:text-base text-center max-w-xl sm:whitespace-nowrap">
-                    Explore la communauté StreamLink et connecte-toi avec d'autres créateurs
+                    Explore la communauté et connecte-toi avec d'autres créateurs
                 </p>
             </div>
         </div>

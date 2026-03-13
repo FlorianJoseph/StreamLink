@@ -5,11 +5,11 @@
             <div class="flex flex-col lg:items-start items-center justify-end">
                 <!-- Titre -->
                 <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
-                    Modifier mon StreamLink
+                    Modifier ma page de liens
                 </h1>
                 <!-- Sous-titre -->
                 <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
-                    Créez votre page de liens personnalisée à partager avec votre audience
+                    Crée ta page de liens personnalisée à partager avec ton audience
                 </p>
             </div>
         </div>

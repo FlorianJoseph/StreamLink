@@ -4,11 +4,11 @@
             <div class="flex flex-col items-center justify-end">
                 <!-- Titre -->
                 <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
-                    Aperçu du StreamLink
+                    Aperçu de ma page
                 </h1>
                 <!-- Sous-titre -->
                 <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
-                    Voici comment votre page apparaîtra à vos visiteurs
+                    Voici comment ta page apparaîtra à tes visiteurs
                 </p>
             </div>
         </div>

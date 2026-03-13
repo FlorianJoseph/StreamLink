@@ -5,11 +5,11 @@
                 <div class="flex flex-col lg:items-start items-center justify-end">
                     <!-- Titre -->
                     <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
-                        Personnaliser mon StreamLink
+                        Personnaliser ma page de liens
                     </h1>
                     <!-- Sous-titre -->
                     <p class="text-sm sm:text-base text-center lg:text-left max-w-xl" id="header">
-                        Choisissez vos couleurs, polices et styles pour refléter votre identité
+                        Choisis tes couleurs et styles pour refléter ton identité
                     </p>
                 </div>
             </div>

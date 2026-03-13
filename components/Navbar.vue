@@ -1,5 +1,5 @@
 <template>
-    <Menubar :model="menuItems" class="h-13" style="--p-menubar-border-radius:0; --p-menubar-border-color: transparent">
+    <Menubar :model="menuItems" class="h-13 relative z-60" style="--p-menubar-border-radius:0; --p-menubar-border-color: transparent">
         <template #start>
             <NuxtLink v-ripple :to="'/'">
                 <Home :size="20" />
@@ -26,7 +26,7 @@
         </template>
         <template #end>
             <div class="flex items-center gap-2">
-                 <a href="https://discord.gg/fVFguWc76b" target="_blank"
+                <a href="https://discord.gg/fVFguWc76b" target="_blank"
                     class="flex items-center gap-2 px-1.5 py-1.5 rounded-full hover:bg-zinc-300/10"
                     v-tooltip.bottom="{ value: 'Rejoindre le Discord', pt: { text: '!text-sm' } }">
                     <Icon name="simple-icons:discord" size="20" />
@@ -50,7 +50,8 @@
                     </button>
                 </template>
             </div>
-            <Menu ref="menu" id="overlay_menu" :model="filteredPopoverItems" :popup="true" class="w-52" :pt="{ root: { style: 'right: 0.5rem; left: auto !important' } }">
+            <Menu ref="menu" id="overlay_menu" :model="filteredPopoverItems" :popup="true" class="w-52"
+                :pt="{ root: { style: 'right: 0.5rem; left: auto !important' } }">
                 <template #item="{ item, props }">
                     <NuxtLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
                         <a v-ripple :href="href" v-bind="props.action" @click="navigate">
@@ -74,7 +75,7 @@ import { Home } from 'lucide-vue-next';
 
 const menuItems = ref([
     {
-        label: 'Découvrir des streameurs',
+        label: 'Découverte',
         icon: 'lucide:user-search',
         route: '/discover',
     },
@@ -84,18 +85,18 @@ const menuItems = ref([
         route: '/dashboard',
     },
     {
-        label: 'Mon StreamLink',
+        label: 'Ma page',
         icon: 'lucide:grid-2x2-plus',
         items: [
             {
-                route: '/admin/links',
                 label: 'Liens',
                 icon: 'lucide:link',
+                command: () => navigateTo('/admin/links')
             },
             {
-                route: '/admin/design',
                 label: 'Design',
-                icon: 'lucide:palette'
+                icon: 'lucide:palette',
+                command: () => navigateTo('/admin/design')
             },
         ]
     },

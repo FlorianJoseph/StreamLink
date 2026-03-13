@@ -1,5 +1,5 @@
 <template>
-    <div v-if="visible" class="relative bg-indigo-600 lg:top-13 w-full z-50 lg:mb-[-20px]">
+    <div v-if="visible" class="relative bg-indigo-600 w-full z-50 lg:mb-[-20px]">
         <div class="bg-surface-900 text-surface-100 py-3 sm:py-4 px-4 sm:px-6 lg:px-20">
             <div class="flex items-center justify-between gap-3 sm:gap-4">
                 <!-- Badge Nouveauté -->
@@ -13,33 +13,27 @@
                     <p class="text-xs sm:text-sm lg:text-base leading-relaxed">
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
-                            Le Discord est ouvert !
-                            <a href="https://discord.gg/fVFguWc76b" target="_blank"
-                                class="font-bold underline hover:text-indigo-200">
-                                <span>Rejoindre le Discord</span>
-                            </a>
+                            <NuxtLink to="/admin/links" class="font-bold underline hover:text-indigo-200">
+                                Choisir ma nationalité
+                            </NuxtLink>
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Le Discord est ouvert, rejoins la communauté et influence les prochaines fonctionnalités !
-                            <!-- <NuxtLink :to="'https://discord.gg/fVFguWc76b'" target="_blank"
-                                class="font-bold underline hover:text-indigo-200">
-                                <span>Rejoindre le Discord</span>
-                            </NuxtLink> -->
+                            Vous pouvez maintenant choisir votre nationalité dans votre page de lien !
                         </span>
                     </p>
                 </div>
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <a href="https://discord.gg/fVFguWc76b" target="_blank"
+                    <NuxtLink to="/admin/links"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <Icon name="simple-icons:discord" size="18" />
-                            Rejoindre le Discord
+                            <Icon name="lucide:flag" size="18" />
+                            Choisir ma nationalité
                         </div>
-                    </a>
+                    </NuxtLink>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
                         <Icon name="lucide:x" size="18" class="sm:w-5 sm:h-5" />
                     </Button>
@@ -50,7 +44,7 @@
 </template>
 
 <script setup>
-const STORAGE_KEY = 'Discord'
+const STORAGE_KEY = 'nationality'
 const visible = ref(false)
 
 

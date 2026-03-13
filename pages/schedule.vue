@@ -11,7 +11,7 @@
                 <div class="flex flex-col lg:items-start items-center">
                     <!-- Titre -->
                     <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
-                        Planning
+                        Mon planning
                     </h1>
                     <!-- Sous-titre -->
                     <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
@@ -356,7 +356,7 @@
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer"
-                                                    :class="autoSubtitle ? 'pointer-events-none' : ''"
+                                                        :class="autoSubtitle ? 'pointer-events-none' : ''"
                                                         @click="editField('subtitle')">
                                                         <div class="text-base font-semibold"> {{ schedule?.subtitle }}
                                                         </div>
