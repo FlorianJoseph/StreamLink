@@ -35,7 +35,7 @@
                         <Button severity="contrast" :disabled="!isDirty" @click="saveDesign">
                             <Icon name="lucide:save" size="18" />
                             <span
-                                class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Sauvegarder</span>
+                                class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Enregistrer</span>
                         </Button>
                     </div>
                 </template>

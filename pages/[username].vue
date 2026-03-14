@@ -39,7 +39,7 @@
                         </span>
                         <img v-if="user?.nationality && user.nationality !== 'Autre'"
                             :src="`https://flagcdn.com/w80/${user.nationality.toLowerCase()}.png`"
-                            class="w-5 h-[15px] object-cover rounded-xs shadow-sm hover:cursor-pointer" />
+                            class="w-5 h-[15px] object-cover rounded-xs shadow-sm" />
                         <span v-else-if="user?.nationality === 'Autre'" class="flex items-center">
                             <Icon name="lucide:globe" size="18" />
                         </span>
@@ -192,7 +192,7 @@
             <div class="flex flex-col items-center gap-2">
                 <p class="text-sm sm:text-base text-center font-semibold tracking-wide"
                     :style="{ color: textColor + 'CC' }">
-                    Votre univers, en une page.
+                    Ton univers, en une page.
                 </p>
                 <NuxtLink :to="'/admin/links'">
                     <button :class="['py-2.5 px-5 rounded-lg font-semibold tracking-wide transition-all shadow-md text-sm sm:text-base group',

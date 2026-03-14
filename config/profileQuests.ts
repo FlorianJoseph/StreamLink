@@ -24,7 +24,7 @@ export const PROFILE_QUESTS: Quest[] = [
     {
         id: 'avatar',
         type: 'required',
-        label: 'Ajouter une photo de profil',
+        label: 'Ajoute une photo de profil',
         to: '/admin/design',
         condition: ({ streamer }) => !!streamer?.avatar_url
     },
@@ -32,7 +32,7 @@ export const PROFILE_QUESTS: Quest[] = [
     {
         id: 'link',
         type: 'required',
-        label: 'Ajouter au moins un lien',
+        label: 'Ajoute au moins un lien',
         to: '/admin/links',
         condition: ({ hasLinks }) => hasLinks
     },
@@ -41,14 +41,21 @@ export const PROFILE_QUESTS: Quest[] = [
     {
         id: 'bio',
         type: 'optional',
-        label: 'Rédiger une description',
+        label: 'Rédige une description',
         to: '/admin/links',
         condition: ({ streamer }) => !!streamer?.bio
     },
     {
+        id: 'nationality',
+        type: 'optional',
+        label: 'Indique ta nationalité',
+        to: '/admin/links',
+        condition: ({ streamer }) => !!streamer?.nationality
+    },
+    {
         id: 'schedule',
         type: 'optional',
-        label: 'Ajouter ton prochain stream',
+        label: 'Ajoute ton prochain stream',
         to: '/schedule',
         condition: ({ hasSlots }) => hasSlots
     },
