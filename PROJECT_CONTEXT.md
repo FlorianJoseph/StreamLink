@@ -123,7 +123,16 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
     - CTA découvrir d'autres streamers
 
 ### Monnaie virtuelle 
-    - Gains automatiques avec les quêtes du dashboard + solde visible + 3-4 cosmétiques simples (thème ou badge), pas de boutique d'achat
+    - Nom : **les Éclats**
+    - Cohérent avec Shard (éclat en anglais)
+    - Gains automatiques via quêtes dashboard
+    - Solde visible
+    - 3-4 cosmétiques simples (thème ou badge)
+    - Objectifs avant boutique d'achat :
+        ✦ 800+ utilisateurs
+        ✦ 60%+ profils actifs
+        ✦ 40%+ users avec des coins dépensés
+        ✦ Retours qualitatifs de users qui veulent "aller plus vite"
 
 ### Optimisation pédagogique
     - Propostion de couleur texte dans le designen fonction du thème
@@ -140,14 +149,6 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
 
 ### Réseaux
     - Export story insta/X
-
-### Page Inventaire / Boutique complète
-    - Inventaire cosmétiques + accès premium temporaires en coins
-    Objectif avant d'ouvrir l'achat de coins :
-    ✦ 800+ utilisateurs
-    ✦ 60%+ profils actifs
-    ✦ 40%+ users avec des coins dépensés (valide que le système est utilisé)
-    ✦ Des retours qualitatifs de users qui veulent "aller plus vite"
 
 ## Roadmap long terme – Premium & fonctionnalités avancées
 Objectif : créer de la valeur payante et améliorer la rétention des pros.
@@ -192,6 +193,11 @@ Objectifs KPI :
     - Marketplace de templates ou événements pour streamers
 
 ## Rebranding (Devis signé 03/03/26)
+    - Nouveau nom envisagé : **Sharaid**
+    - Prononciation : "shared" (anglais)
+    - Sémantique : Shard (éclat) + Share (partager) + Raid (raid viking + raid Twitch)
+    - Logo : drakkar stylisé qui guide/emmène, mise en évidence de "raid"
+    - Univers : nord, viking, étoile polaire
 
 ### DIRECTION ARTISTIQUE & BRANDING WEB 150€
     • Recherche et définition de l’univers visuel

@@ -15,15 +15,18 @@
               La plateforme tout-en-un pensée pour les streameurs
             </p>
             <p class="text-sm md:text-base text-gray-400 leading-normal mb-8 max-w-xl lg:max-w-none drop-shadow">
-              Centralise tes liens, planifie tes streams et découvre de nouveaux créateurs.
+              Crée ta page de liens, planifie tes streams et découvre de nouveaux créateurs.
             </p>
-            <NuxtLink to="/admin/links">
-              <button
-                class="flex items-center justify-center gap-2 px-6 py-3 text-base md:text-lg font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all shadow-lg hover:shadow-xl">
-                <span>{{ user ? "Mon StreamLink" : "Créer mon StreamLink" }}</span>
-                <Icon name="lucide:arrow-right" size="20" />
-              </button>
-            </NuxtLink>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start items-center">
+              <NuxtLink to="/admin/links"
+                class="flex items-center justify-center gap-2 px-5 py-2.5 bg-purple-600 font-medium text-white rounded-md hover:bg-purple-700 transition-all">
+                <span>{{ user ? "Voir ma page" : "Créer ma page" }}</span>
+              </NuxtLink>
+              <NuxtLink to="/discover"
+                class="px-5 py-2.5 border border-white/20 font-medium text-white rounded-md hover:bg-white/10 transition-all">
+                <span>Découvrir</span>
+              </NuxtLink>
+            </div>
           </div>
         </div>
       </div>
@@ -88,16 +91,15 @@
         Prêt à développer ta chaîne ?
       </h2>
       <p class="text-lg text-gray-400 mb-8">
-        Crée ton StreamLink gratuitement et commence à grandir dès aujourd'hui
+        Crée ta page gratuitement et commence à grandir dès aujourd'hui
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <NuxtLink to="/admin/links">
           <button
-            class="bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl transition-all px-8 py-4 rounded-lg flex items-center gap-3">
+            class="bg-purple-600 hover:bg-purple-700 transition-all px-6 py-3 rounded-md">
             <span class="text-base md:text-lg font-semibold">
-              {{ user ? "Accéder à mon compte" : "Créer mon StreamLink gratuitement" }}
+              {{ user ? "Accéder à ma page" : "Créer ma page de liens gratuitement" }}
             </span>
-            <Icon name="lucide:arrow-right" size="20" />
           </button>
         </NuxtLink>
       </div>
@@ -139,7 +141,7 @@ const backgroundImg = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/objec
 const features = [
   {
     icon: 'lucide:link',
-    title: "StreamLink personnalisé",
+    title: "Page de liens personnalisée",
     description: "Crée ta page personnalisée pour centraliser tous tes liens importants."
   },
   {

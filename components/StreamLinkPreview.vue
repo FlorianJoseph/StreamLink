@@ -63,7 +63,7 @@
                         <Icon name="lucide:calendar-days" size="14" class="flex-shrink-0"
                             :style="{ color: textColor }" />
                         <span class="text-xs font-semibold flex-shrink-0" :style="{ color: textColor }">
-                            Affichez votre statut grâce au planning
+                            Affiche ton statut grâce au planning
                         </span>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                 <!-- Footer CTA -->
                 <div class="flex flex-col items-center gap-2 text-center">
                     <p class="text-sm text-center font-semibold tracking-wide" :style="{ color: textColor + 'CC' }">
-                        Votre univers, en une page.
+                        Ton univers, en une page.
                     </p>
                     <div :class="['py-2.5 px-5 rounded-lg font-semibold tracking-wide transition-all shadow-md text-sm group cursor-pointer',
                         isColorDark(buttonBackgroundColor) ? 'hover:brightness-110' : 'hover:brightness-90']"

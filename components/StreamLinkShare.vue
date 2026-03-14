@@ -1,12 +1,12 @@
 <template>
     <div class="card flex justify-center">
         <Button type="button" severity="contrast" @click="toggle">
-            <span>{{ streamlinkUrl }}</span>
-            <Icon name="lucide:share" size="20" />
+            <span >{{ streamlinkUrl }}</span>
+            <Icon name="lucide:share" size="18" />
         </Button>
         <Popover ref="op">
             <div class="flex flex-col gap-2 w-[25rem]">
-                <h1 class="font-semibold text-lg">Partagez votre StreamLink</h1>
+                <p class="font-semibold text-lg">Partager ma page</p>
                 <Divider />
                 <!-- Aperçu du lien -->
                 <div class="flex items-center bg-gray-100/10 rounded-2xl justify-between pr-4 cursor-pointer"
@@ -33,7 +33,6 @@
 <script setup>
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
-const route = useRoute()
 
 // computed qui retourne l'URL complète basée sur la route
 const streamlinkUrl = computed(() => {

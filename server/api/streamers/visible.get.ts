@@ -6,11 +6,11 @@ export default defineEventHandler(async (event) => {
     const { data, error } = await client
         .from('user_visible')
         .select(`
-            *,
+            username,
+            avatar_url,
+            nationality,
             Schedule (
-                id,
                 ScheduleSlot (
-                    id,
                     game,
                     day,
                     start_at,

@@ -13,14 +13,14 @@
             <div class="space-y-5">
                 <!-- Bloc principal fusionné -->
                 <div :class="stats.profileVisible
-                    ? 'border-green-500/30'
+                    ? 'border-emerald-500/30'
                     : 'border-yellow-500/30'"
                     class="p-4 rounded-lg border space-y-3 bg-zinc-800/30 ring-1 ring-white/5">
 
                     <!-- Ligne statut -->
                     <div class="flex items-start gap-2">
                         <Icon :name="stats.profileVisible ? 'lucide:check-circle' : 'lucide:alert-circle'"
-                            :class="stats.profileVisible ? 'text-green-400' : 'text-yellow-400'" size="18" />
+                            :class="stats.profileVisible ? 'text-emerald-400' : 'text-yellow-400'" size="18" />
 
                         <div class="flex-1">
                             <p class="text-sm font-semibold"
@@ -70,12 +70,12 @@
                 <div>
                     <div class="flex items-center gap-2 mb-2 px-2">
                         <Icon name="lucide:shield-check" size="18" class="shrink-0"
-                            :class="stats.completedRequired >= getRequiredCount() ? 'text-green-400' : 'text-red-400'" />
+                            :class="stats.completedRequired >= getRequiredCount() ? 'text-emerald-400' : 'text-red-400'" />
                         <span class="font-bold text-sm sm:text-base">
                             Essentielles
                         </span>
                         <span class="text-xs px-2 py-1 rounded-full font-medium ml-auto"
-                            :class="stats.completedRequired >= getRequiredCount() ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'">
+                            :class="stats.completedRequired >= getRequiredCount() ? 'bg-emerald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'">
                             {{ stats.completedRequired }}/{{ getRequiredCount() }}
                         </span>
                     </div>
@@ -95,7 +95,7 @@
 
                             <div v-else
                                 class="flex items-center gap-3 p-3 rounded-lg border border-zinc-700 bg-zinc-800/30">
-                                <Icon name="lucide:circle-check" size="18" class="text-green-400 shrink-0" />
+                                <Icon name="lucide:circle-check" size="18" class="text-emerald-400 shrink-0" />
                                 <div class="flex-1">
                                     <p class="text-sm font-medium text-gray-300">{{ item.label }}</p>
                                 </div>
@@ -115,7 +115,7 @@
                             Planning
                         </span>
                         <span v-if="hasPlanning"
-                            class="text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-400 font-medium ml-auto">
+                            class="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-medium ml-auto">
                             Actif
                         </span>
                         <span v-else
@@ -139,7 +139,7 @@
                     </NuxtLink>
 
                     <div v-else class="flex items-center gap-3 p-3 rounded-lg border border-zinc-700 bg-zinc-800/30">
-                        <Icon name="lucide:circle-check" size="18" class="text-green-400 shrink-0" />
+                        <Icon name="lucide:circle-check" size="18" class="text-emerald-400 shrink-0" />
                         <div class="flex-1">
                             <p class="text-sm font-medium text-gray-300">Planning configuré</p>
                         </div>
@@ -178,7 +178,7 @@
 
                             <div v-else
                                 class="flex items-center gap-3 p-3 rounded-lg border border-zinc-700 bg-zinc-800/30">
-                                <Icon name="lucide:circle-check" size="18" class="text-green-400 shrink-0" />
+                                <Icon name="lucide:circle-check" size="18" class="text-emerald-400 shrink-0" />
                                 <p class="text-sm text-gray-300 flex-1">{{ item.label }}</p>
                             </div>
                         </div>
