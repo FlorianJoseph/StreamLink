@@ -46,11 +46,11 @@ export const PROFILE_QUESTS: Quest[] = [
         condition: ({ streamer }) => !!streamer?.bio
     },
     {
-        id: 'nationality',
+        id: 'language',
         type: 'optional',
-        label: 'Indique ta nationalité',
+        label: 'Choisis ta langue',
         to: '/admin/links',
-        condition: ({ streamer }) => !!streamer?.nationality
+        condition: ({ streamer }) => !!streamer?.language
     },
     {
         id: 'schedule',
