@@ -37,10 +37,10 @@
                         <span :class="['font-bold tracking-wide', usernameSizeClass]" :style="{ color: usernameColor }">
                             {{ user?.username }}
                         </span>
-                        <img v-if="user?.nationality && user.nationality !== 'Autre'"
-                            :src="`https://flagcdn.com/w80/${user.nationality.toLowerCase()}.png`"
+                        <img v-if="user?.language && user.language !== 'OTHER'"
+                            :src="`https://flagcdn.com/w80/${user.language.toLowerCase()}.png`"
                             class="w-5 h-[15px] object-cover rounded-xs shadow-sm" />
-                        <span v-else-if="user?.nationality === 'Autre'" class="flex items-center">
+                        <span v-else-if="user?.language === 'OTHER'" class="flex items-center">
                             <Icon name="lucide:globe" size="18" />
                         </span>
                     </div>

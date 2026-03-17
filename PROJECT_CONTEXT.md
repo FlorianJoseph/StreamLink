@@ -17,72 +17,19 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 
 ## Principes produit
 
-- Simplicité avant tout
-- Chaque feature doit apporter visibilité ou confort
-- Pas d’over‑engineering
-- UI orientée cartes
-- Empty states pédagogiques
-- Naming clair (anglais dans le code)
+- Simplicité et confort avant tout
+- UI cartes, empty states pédagogiques
+- Features orientées visibilité et engagement
+- Naming clair et compréhensible
 
-## Features actuelles
+## Features principales
 
-- Consentement RGPD & newsletter
-    - Email auto de bienvenue
-    - Email auto segmenté Profil invisible/Sans planning
-    - Templates React Email
-
-- Page publique StreamLink (type Linktree)
-    - Profil streamer : avatar, pseudo, bio, couleurs et style personnalisables
-    - Statut live & prochain stream en temps réel, planning semaine affiché
-    - Liens personnalisables : icônes/images, boutons stylisés, feedback hover/copie
-    - Switcher Liens / Planning pour voir tous les contenus facilement
-    - Stats basiques
-        - vues de la page
-        - clics sur les liens
-        - stats journalières
-        - totaux et 7 derniers jours
-    - CTA vers création de page et footer infos (contact/confidentialité)
-
-- Dashboard Progression & Outils
-    - Guide les utilisateurs pour compléter leur profil et planning
-    - Montre la progression des quêtes essentielles et optionnelles
-    - Permet un accès rapide aux outils et au partage de la page publique
-    - Informe des fonctionnalités à venir et pousse à l’inscription à la newsletter
-
-- Page Découverte
-    - Recherche & filtres : barre de recherche par pseudo + filtres rapides (Tous, Live, Aujourd’hui, À venir)
-    - Affichage des streamers :
-        Cartes avec avatar, pseudo, prochain stream, statut live
-        Indication visuelle du stream en direct (pulse rouge) ou du prochain stream prévu
-        Planning simplifié : aujourd’hui / demain / autre jour
-    - Pagination responsive :
-        Grid adaptée selon taille d’écran
-        Chevron et navigation clavier pour desktop
-        Pagination mobile/tablette simplifiée
-    - État vide : messages contextuels si aucun streamer ne correspond aux filtres/recherche
-    - Expérience utilisateur fluide : loader pendant le fetch, animation fade-in, rafraîchissement automatique des progressions live
-
-- Gestion de planning de streams
-    - Chargement & UX fluide : loader pendant le fetch, animation fade-in.
-    - Configuration des créneaux :
-        Ajouter, modifier ou supprimer des créneaux pour chaque jour de la semaine
-        Vue en accordéon par jour pour l’édition rapide
-        Affichage visuel clair avec couleurs et jeux associés
-        Choix de la taille du créneau fixe (demie-journée) ou automatique
-    - Design & personnalisation :
-        Choix de l’arrière-plan (couleur ou image)
-        Couleur et style du texte, opacité du background
-        Toggle pour afficher ou masquer titres, heures de fin, jours sans stream
-    - Outils & export :
-        Aperçu du planning en temps réel
-        Téléchargement/export de l’image du planning
-        Navigation et interaction intuitives avec hover actions et zones ajout “avant/après”
-    - Structure responsive : adaptable desktop/mobile, barre d’outils fixe, grille de créneaux flexible
-    - Footer branding : mention “Made with StreamLink” intégrée sur l’export
-
-- Admin
-    - Dashboard d'analyse
-    - Segments Newsletter et historique d'envoi
+- Consentement RGPD & newsletter : email de bienvenue, segments, templates React Email
+- Page publique type Linktree : profil customisable, statut live, planning, liens stylisés, stats basiques
+- Dashboard progression & outils : guide complet des quêtes essentielles et optionnelles, accès rapide aux outils
+- Page découverte : recherche, filtres, cartes streamer, pagination responsive, feedback live
+- Gestion planning : ajout/modification créneaux, export, personnalisation visuelle, responsive, footer branding
+- Admin : dashboard analytique, segments newsletter, historique envoi
     
 ## État du produit
 
@@ -93,9 +40,9 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - 24/02/26 283 utilisateurs, 136 profils actifs, 556 liens, 348 streams planifiés, newsletter 117 inscrits
 - 02/03/26 345 utilisateurs, 188 profils actifs, 779 liens, 535 streams planifiés, newsletter 150 inscrits
 - 10/03/26 428 utilisateurs, 252 profils actifs, 1036 liens, 728 streams planifiés, 778 vues de pages, newsletter 180 inscrits
-- 12/03/26 428 utilisateurs, 264 profils actifs, 1104 liens, 782 streams planifiés, 1147 vues de pages, newsletter 195 inscrits
+- 16/03/26 473 utilisateurs, 283 profils actifs, 1186 liens, 827 streams planifiés, 1838 vues de pages, newsletter 208 inscrits
 
-## Roadmap déjà réalisée
+## Historique Roadmap
 
 - En production 19/10/25
 - Confidentialité 28/10/25
@@ -118,25 +65,16 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
     - Alertes nouvelles fonctionnalités ou tips rapides (ex : Ton lien Twitch a reçu 12 clics aujourd’hui !)
 
 ### Page publique
-    - Choisir sa nationalité
-    - Créer des catégories ?
+    - Créer des catégories de lien ?
     - CTA découvrir d'autres streamers
 
 ### Monnaie virtuelle 
-    - Nom : **les Éclats**
-    - Cohérent avec Shard (éclat en anglais)
-    - Gains automatiques via quêtes dashboard
-    - Solde visible
-    - 3-4 cosmétiques simples (thème ou badge)
-    - Objectifs avant boutique d'achat :
-        ✦ 800+ utilisateurs
-        ✦ 60%+ profils actifs
-        ✦ 40%+ users avec des coins dépensés
-        ✦ Retours qualitatifs de users qui veulent "aller plus vite"
+    - Nom : Shards (éclats)
+    - Gains via quêtes, solde visible, cosmétiques simples
+    - Objectif : 800+ utilisateurs (473), 60% profils actifs (atteint), 40% dépenses coins
 
 ### Optimisation pédagogique
-    - Propostion de couleur texte dans le designen fonction du thème
-
+    - Proposition de couleur texte dans le design en fonction du thème
 
 ## Roadmap moyen terme – Découverte & visibilité
 
@@ -181,23 +119,20 @@ Positionnement : Plus visible. Plus professionnel.
     - Personnalisation avancée
 Positionnement : Une page qui te ressemble vraiment.
 
-Objectifs KPI :
-    - Conversion planning → 60% (atteint en 4j)
-    - Funnel intégrité lien → stream → 70% (45 26/02 -> 53% 01/03) (57% 08/03)
-    - Engagement newsletter → 40% (41%)
-
 ### Fonctionnalités additionnelles
 
+    - Evènements (caritatifs...)
     - Roue aléatoire (giveaway)
     - Tournois rapides via chat
     - Marketplace de templates ou événements pour streamers
 
 ## Rebranding (Devis signé 03/03/26)
-    - Nouveau nom envisagé : **Sharaid**
-    - Prononciation : "shared" (anglais)
-    - Sémantique : Shard (éclat) + Share (partager) + Raid (raid viking + raid Twitch)
-    - Logo : drakkar stylisé qui guide/emmène, mise en évidence de "raid"
-    - Univers : nord, viking, étoile polaire
+    - Nouveau nom envisagé : **Charmi**
+    - Prononciation : "charmi" (FR/EN identique)
+    - Sémantique : Share me (partage de moi) + Charm (charme, attractivité)
+    - Logo : compagnon stylisé, esprit Discord/Twitch/Streamlabs
+    - Monnaie virtuelle : **Shards** (éclats)
+    - Univers : partage, communauté, attractivité, gamification
 
 ### DIRECTION ARTISTIQUE & BRANDING WEB 150€
     • Recherche et définition de l’univers visuel
@@ -229,46 +164,13 @@ Avant d’ajouter une fonctionnalité :
 
 ### KPIs suivis
 
-- Utilisateurs totaux
-- Profils visibles (activation)
-- Liens créés
-- Streams planifiés
-- Conversion lien (% utilisateurs avec au moins un lien)
-- Conversion slot (% utilisateurs avec au moins un stream)
-- Newsletter (total + profils visibles)
-(ajouter pages vues / profils actifs)
-
-### Indicateurs stratégiques
-
-- Activation rate = profils visibles / utilisateurs
-- Engagement lien = utilisateurs avec lien / profils visibles
-- Engagement planning = utilisateurs avec stream / utilisateurs avec lien
-- Funnel integrity (lien → stream)
-- Growth week-over-week profils visibles
-
-### Infrastructure
-
-- Materialized view Supabase pour agrégats
-- Refresh planifié (cron)
-- Dashboard admin temps réel
-
-### Objectif
-
-Mesurer les leviers qui augmentent :
-
-- visibilité
-- rétention
-- engagement planning
+- Suivi utilisateurs, profils visibles, liens, streams, pages vues, newsletter
+- Activation rate, engagement liens et planning, funnel integrity, growth semaine/semaine
+- Infrastructure : materialized view Supabase + dashboard admin temps réel
 
 ### North Star 
 
     - Streamers actifs avec planning public → c’est le signal principal pour la rétention et l’engagement.
-
-### Levier premium
-
-    - Sync Twitch automatique → gros gain de temps et valeur ajoutée pour les utilisateurs Pro.
-    - Stats avancées et design premium → améliore la visibilité et donne un avantage compétitif.
-    - Export Discord → pousse à l’engagement régulier.
 
 ### Lien avec ma chaine Twitch
 Pour fidéliser tes viewers twitch quand tu auras fait ton système de monnaie virtuelle tu peux aussi proposer d’échanger des points de chaine twitch contre de la monnaie virtuelle

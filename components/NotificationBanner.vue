@@ -14,13 +14,13 @@
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
                             <NuxtLink to="/admin/links" class="font-bold underline hover:text-indigo-200">
-                                Choisir ma nationalité
+                                Choisir ma langue de streaming
                             </NuxtLink>
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Vous pouvez maintenant choisir votre nationalité dans votre page de lien !
+                            Tu peux maintenant choisir ta langue de streaming dans ta page de lien !
                         </span>
                     </p>
                 </div>
@@ -30,8 +30,8 @@
                     <NuxtLink to="/admin/links"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <Icon name="lucide:flag" size="18" />
-                            Choisir ma nationalité
+                            <Icon name="lucide:globe" size="18" />
+                            Choisir ma langue
                         </div>
                     </NuxtLink>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
@@ -45,7 +45,7 @@
 
 <script setup>
 const STORAGE_KEY = 'nationality'
-const visible = ref(false)
+const visible = ref(true)
 
 
 const closeBanner = () => {
