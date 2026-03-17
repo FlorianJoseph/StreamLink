@@ -22,14 +22,14 @@
                         <span class="font-medium hover:underline cursor-pointer">
                             {{ streamer?.username }}
                         </span>
-                        <img v-if="streamer?.nationality && streamer.nationality !== 'Autre'"
-                            :src="`https://flagcdn.com/w80/${streamer.nationality.toLowerCase()}.png`"
+                        <img v-if="streamer?.language && streamer.language !== 'OTHER'"
+                            :src="`https://flagcdn.com/w80/${streamer.language.toLowerCase()}.png`"
                             class="w-4 h-[12px] object-cover rounded-xs shadow-sm hover:cursor-pointer" />
-                        <span v-else-if="streamer?.nationality === 'Autre'" class="flex items-center">
+                        <span v-else-if="streamer?.language === 'OTHER'" class="flex items-center">
                             <Icon name="lucide:globe" size="16" />
                         </span>
                         <span v-else class="text-xs text-gray-400 hover:underline cursor-pointer">
-                            Ajouter ma nationalité
+                            Choisir une langue
                         </span>
                     </div>
                     <span class="block text-sm font-medium text-gray-400 hover:underline cursor-pointer truncate">
@@ -47,8 +47,9 @@
                                 Nom
                                 <span class="text-red-500">*</span>
                             </label>
-                            <InputText id="username" v-model="username" maxlength="30" placeholder="Entrez votre nom"
-                                fluid style="--p-inputtext-focus-border-color : #ffffff" />
+                            <InputText id="username" v-model="username" maxlength="30"
+                                placeholder="Entre ton pseudo de streamer" fluid
+                                style="--p-inputtext-focus-border-color : #ffffff" />
                             <span class="absolute right-2 bottom-1 text-xs text-zinc-500">
                                 {{ username.length }}/30
                             </span>
@@ -66,24 +67,23 @@
                                 Description
                             </label>
                             <Textarea id="description" v-model="bio" rows="4" autoResize maxlength="120"
-                                placeholder="Écrivez une courte description..." fluid
+                                placeholder="Écris une courte description" fluid
                                 style="--p-textarea-focus-border-color : #ffffff" />
                             <span class="absolute right-2 bottom-1 text-xs text-zinc-500">
                                 {{ bio.length }}/120
                             </span>
                         </div>
 
-                        <!-- Nationalité -->
+                        <!-- Langue de streaming -->
                         <div class="flex flex-col gap-2">
-                            <label for="nationality" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <label for="streamLanguage"
+                                class="font-semibold text-xs sm:text-sm flex items-center gap-2">
                                 <Icon name="lucide:globe" size="16" class="shrink-0" />
-                                Nationalité
+                                Langue
                             </label>
-                            <Select id="nationality" v-model="nationality" :options="nationalityOptions"
-                                optionLabel="label" optionValue="value" optionGroupLabel="label"
-                                optionGroupChildren="items" placeholder="Sélectionnez votre nationalité" showClear
-                                :highlightOnSelect="false" filter fluid style="--p-select-focus-border-color: #ffffff"
-                                :pt="{
+                            <Select id="streamLanguage" v-model="language" :options="streamLanguageOptions"
+                                optionLabel="label" optionValue="value" placeholder="Sélectionne une langue" showClear
+                                :highlightOnSelect="false" fluid style="--p-select-focus-border-color: #ffffff" :pt="{
                                     pcFilter: {
                                         root: {
                                             style: '--p-inputtext-focus-border-color: #ffffff'
@@ -92,8 +92,8 @@
                                 }">
                                 <template #option="{ option }">
                                     <div class="flex items-center gap-2">
-                                        <img v-if="option.value !== 'Autre'"
-                                            :src="`https://flagcdn.com/w80/${option.value.toLowerCase()}.png`"
+                                        <img v-if="option.value !== 'OTHER'"
+                                            :src="`https://flagcdn.com/w80/${option.flag}.png`"
                                             class="h-[15px] w-5 object-cover rounded-xs shadow-sm" />
                                         <Icon v-else name="lucide:globe" size="16" />
                                         <span>{{ option.label }}</span>
@@ -101,12 +101,11 @@
                                 </template>
                                 <template #value="{ value }">
                                     <div v-if="value" class="flex items-center gap-2">
-                                        <img v-if="value !== 'Autre'"
-                                            :src="`https://flagcdn.com/w80/${value.toLowerCase()}.png`"
+                                        <img v-if="value !== 'OTHER'"
+                                            :src="`https://flagcdn.com/w80/${streamLanguageOptions.find(o => o.value === value)?.flag}.png`"
                                             class="h-[15px] w-5 object-cover rounded-xs shadow-sm" />
                                         <Icon v-else name="lucide:globe" size="16" />
-                                        <span>{{nationalityOptions.flatMap(g => g.items).find(o => o.value ===
-                                            value)?.label }}</span>
+                                        <span>{{streamLanguageOptions.find(o => o.value === value)?.label}}</span>
                                     </div>
                                 </template>
                             </Select>
@@ -411,13 +410,13 @@ const streamerModal = ref(false)
 const username = ref('')
 const bio = ref('')
 const usernameError = ref('')
-const nationality = ref(streamer?.value?.nationality ?? null)
+const language = ref(streamer?.value?.language ?? null)
 
 // Initialisation des champs du modal avec les données du streamer
 watchEffect(() => {
     username.value = streamer?.value?.username || ''
     bio.value = streamer?.value?.bio || ''
-    nationality.value = streamer?.value?.nationality || null
+    language.value = streamer?.value?.language || null
 })
 
 watch(username, () => {
@@ -426,7 +425,7 @@ watch(username, () => {
 
 const openStreamerModal = async () => {
     username.value = streamer?.value?.username
-    nationality.value = streamer?.value?.nationality ?? null
+    language.value = streamer?.value?.language ?? null
     streamerModal.value = true;
 }
 
@@ -435,7 +434,7 @@ const handleSave = async () => {
     const result = await streamerStore.updateStreamer({
         username: username.value,
         bio: bio.value,
-        nationality: nationality.value
+        language: language.value
     })
     // Gestion de l'erreur
     if (result.error) {
@@ -612,57 +611,16 @@ const defaultSize = ({ imageSize, visibleArea }) => {
     };
 };
 
-const nationalityOptions = ref([
-    {
-        label: 'Francophonie',
-        items: [
-            { value: 'FR', label: 'France' },
-            { value: 'BE', label: 'Belgique' },
-            { value: 'CH', label: 'Suisse' },
-            { value: 'CA', label: 'Canada' },
-            { value: 'DZ', label: 'Algérie' },
-            { value: 'MA', label: 'Maroc' },
-            { value: 'TN', label: 'Tunisie' },
-            { value: 'SN', label: 'Sénégal' },
-            { value: 'CI', label: "Côte d'Ivoire" },
-            { value: 'CM', label: 'Cameroun' },
-        ]
-    },
-    {
-        label: 'Europe',
-        items: [
-            { value: 'DE', label: 'Allemagne' },
-            { value: 'ES', label: 'Espagne' },
-            { value: 'IT', label: 'Italie' },
-            { value: 'PT', label: 'Portugal' },
-            { value: 'GB', label: 'Royaume-Uni' },
-            { value: 'NL', label: 'Pays-Bas' },
-            { value: 'PL', label: 'Pologne' },
-            { value: 'RO', label: 'Roumanie' },
-        ]
-    },
-    {
-        label: 'Amériques',
-        items: [
-            { value: 'US', label: 'États-Unis' },
-            { value: 'BR', label: 'Brésil' },
-            { value: 'MX', label: 'Mexique' },
-            { value: 'AR', label: 'Argentine' },
-        ]
-    },
-    {
-        label: 'Asie',
-        items: [
-            { value: 'JP', label: 'Japon' },
-            { value: 'KR', label: 'Corée du Sud' },
-        ]
-    },
-    {
-        label: 'Autre',
-        items: [
-            { value: 'Autre', label: 'Autre' },
-        ]
-    }
+const streamLanguageOptions = ref([
+    { value: 'FR', label: 'Français', flag: 'fr' },
+    { value: 'EN', label: 'English', flag: 'us' },
+    { value: 'ES', label: 'Español', flag: 'es' },
+    { value: 'DE', label: 'Deutsch', flag: 'de' },
+    { value: 'IT', label: 'Italiano', flag: 'it' },
+    { value: 'PT', label: 'Português', flag: 'br' },
+    { value: 'ja', label: '日本語', flag: 'jp' },
+    { value: 'ko', label: '한국어', flag: 'kr' },
+    { value: 'OTHER', label: 'Autre' },
 ])
 
 </script>
