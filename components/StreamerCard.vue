@@ -16,7 +16,7 @@
                                 {{ streamer.username }}
                             </h3>
                             <img v-if="streamer?.language && streamer.language !== 'OTHER'"
-                                :src="`https://flagcdn.com/w80/${streamer.language.toLowerCase()}.png`"
+                                :src="`https://flagcdn.com/w80/${getFlag(streamer.language)}.png`"
                                 class="w-4 h-[12px] object-cover rounded-xs shadow-sm" />
                             <span v-else-if="streamer?.language === 'OTHER'" class="flex items-center">
                                 <Icon name="lucide:globe" size="16" />
@@ -117,7 +117,7 @@
                                 Aucun stream prévu
                             </p>
                             <p class="text-[11px] text-gray-500 mt-1">
-                                Ce streameur n'a pas encore configuré son planning.
+                                Ce streamer n'a pas encore configuré son planning.
                             </p>
                         </div>
                     </div>

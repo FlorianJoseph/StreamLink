@@ -12,7 +12,7 @@
             <div class="flex flex-col items-center justify-end">
                 <!-- Titre -->
                 <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
-                    Découvrir des streameurs
+                    Découvrir des streamers
                 </h1>
                 <!-- Sous-titre -->
                 <p class="text-sm sm:text-base text-center max-w-xl sm:whitespace-nowrap">
@@ -20,32 +20,45 @@
                 </p>
             </div>
         </div>
-        <!-- <div class="flex justify-center gap-2">
-            <Button class="whitespace-nowrap" outlined severity="contrast">
-                <Shuffle class="w-4 h-4" />
-                <span>Raid aléatoire</span>
-            </Button>
-            <Button class="whitespace-nowrap" severity="contrast">
-                <Zap class="w-4 h-4" />
-                <span>Trouver une collab</span>
-            </Button>
-        </div> -->
         <div class="sticky top-0 z-40 bg-zinc-900 py-2 sm:py-3 px-2 sm:px-4 rounded">
             <!-- Recherche -->
-            <IconField class="w-full mb-2 sm:mb-3">
-                <InputIcon>
-                    <Icon name="lucide:search" size="18" class="text-gray-400" />
-                </InputIcon>
-                <InputText v-model="search" placeholder="Rechercher par nom" fluid
-                    style="--p-inputtext-focus-border-color: #ffffff" />
-            </IconField>
-
+            <div class="flex gap-2 w-full mb-2 sm:mb-3">
+                <IconField class="flex-1">
+                    <InputIcon>
+                        <Icon name="lucide:search" size="16" class="text-gray-400" />
+                    </InputIcon>
+                    <InputText v-model="search" placeholder="Rechercher par nom" fluid size="small"
+                        style="--p-inputtext-focus-border-color: #ffffff" />
+                </IconField>
+                <!-- Filtre langue -->
+                <Select v-model="selectedLanguage" :options="languageOptions" optionLabel="label" optionValue="value"
+                    placeholder="Langue" showClear size="small" :highlightOnSelect="false"
+                    style="--p-select-focus-border-color: #ffffff; min-width: 160px">
+                    <template #option="{ option }">
+                        <div class="flex items-center gap-2">
+                            <img v-if="option.flag" :src="`https://flagcdn.com/w40/${option.flag}.png`"
+                                class="w-4 h-[12px] object-cover rounded-xs shadow-sm" />
+                            <Icon v-else name="lucide:globe" size="16" />
+                            <span class="text-sm">{{ option.label }}</span>
+                        </div>
+                    </template>
+                    <template #value="{ value }">
+                        <div v-if="value" class="flex items-center gap-2">
+                            <img v-if="getFlag(value)" :src="`https://flagcdn.com/w40/${getFlag(value)}.png`"
+                                class="w-4 h-[12px] object-cover rounded-xs shadow-sm" />
+                            <Icon v-else name="lucide:globe" size="16" />
+                            <span class="text-sm">{{ getLabel(value) }}</span>
+                        </div>
+                        <span v-else class="text-sm">Langue</span>
+                    </template>
+                </Select>
+            </div>
             <!-- Filtres -->
             <div class="flex flex-col sm:flex-row justify-between items-center">
                 <!-- Filtres rapides (boutons) -->
                 <div class="flex gap-2 flex-wrap justify-center sm:justify-start ">
                     <button v-for="filter in filters" :key="filter.key" @click="selectedFilter = filter.key" :class="[
-                        'px-3 py-1.5 rounded text-sm sm:text-base font-medium transition-all duration-200',
+                        'px-3 py-1.5 rounded text-sm font-medium transition-all duration-200',
                         selectedFilter === filter.key
                             ? 'bg-purple-500 text-white'
                             : 'text-gray-400 hover:text-white hover:bg-purple-500/20'
@@ -53,9 +66,9 @@
                         {{ filter.label }}
                     </button>
                 </div>
-                <!-- Compteur de résultats -->
-                <div class="mt-1 sm:mt-0 text-sm sm:text-base text-purple-300/80">
-                    {{ filteredStreamers.length }} streameur{{ filteredStreamers.length > 1 ? 's' : '' }}
+                <!-- Compteur -->
+                <div class="text-sm text-purple-300/80 whitespace-nowrap">
+                    {{ filteredStreamers.length }} streamer{{ filteredStreamers.length > 1 ? 's' : '' }}
                 </div>
             </div>
         </div>
@@ -65,7 +78,7 @@
             <Icon name="lucide:search-x" size="64" class="text-gray-600" />
             <div class="text-center">
                 <h3 class="text-xl font-semibold text-white mb-2">
-                    Aucun streameur trouvé
+                    Aucun streamer trouvé
                 </h3>
                 <p class="text-sm text-gray-400">
                     {{ getEmptyStateMessage() }}
@@ -158,6 +171,7 @@ const search = ref('')
 const loading = ref(true)
 const { streamers, fetchStreamersWithNextSlot } = useDiscoverStreamers()
 const selectedFilter = ref('all')
+const selectedLanguage = ref(null)
 const filters = [
     { key: 'all', label: 'Tous' },
     { key: 'live', label: 'En live' },
@@ -194,7 +208,7 @@ function previousPage() {
 }
 
 // Watch pour réinitialiser la page lors des changements
-watch([search, selectedFilter], () => {
+watch([search, selectedFilter, selectedLanguage], () => {
     currentPage.value = 0
 })
 
@@ -211,6 +225,8 @@ const filteredStreamers = computed(() => {
 
         // Filtre : à venir seulement (streamers avec un prochain stream programmé, qu'il soit aujourd'hui ou plus tard)
         if (selectedFilter.value === 'future' && (!s.nextSlot || s.nextSlot.isLive || s.nextSlot.slotDate?.getDay() === today)) return false
+
+        if (selectedLanguage.value && s.language !== selectedLanguage.value) return false
 
         // Filtre recherche
         if (search.value && !s.username.toLowerCase().includes(search.value.toLowerCase())) return false
@@ -236,7 +252,7 @@ function getEmptyStateMessage() {
     if (selectedFilter.value === 'future') {
         return 'Aucun stream à venir pour le moment'
     }
-    return 'Aucun streameur disponible pour le moment'
+    return 'Aucun streamer disponible pour le moment'
 }
 
 // Label lisible pour le filtre actif

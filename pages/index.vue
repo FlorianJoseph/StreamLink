@@ -12,7 +12,7 @@
               <span class="text-purple-500">avec StreamLink</span>
             </h1>
             <p class="text-base md:text-lg text-gray-300 leading-normal mb-2 max-w-xl lg:max-w-none drop-shadow">
-              La plateforme tout-en-un pensée pour les streameurs
+              La plateforme tout-en-un pensée pour les streamers
             </p>
             <p class="text-sm md:text-base text-gray-400 leading-normal mb-8 max-w-xl lg:max-w-none drop-shadow">
               Crée ta page de liens, planifie tes streams et découvre de nouveaux créateurs.
@@ -49,7 +49,7 @@
           <span class="text-purple-500">en un seul endroit</span>
         </div>
         <div class="text-gray-400 leading-tight">
-          Conçu pour les streameurs qui veulent grandir sans se prendre la tête.
+          Conçu pour les streamers qui veulent grandir sans se prendre la tête.
         </div>
       </div>
 
@@ -115,7 +115,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <div class="text-4xl font-bold text-purple-500 mb-2">{{ totalStreamers }}+</div>
-          <div class="text-gray-400">Streameurs actifs</div>
+          <div class="text-gray-400">Streamers actifs</div>
         </div>
         <div>
           <div class="text-4xl font-bold text-purple-500 mb-2">{{ totalLinks }}+</div>

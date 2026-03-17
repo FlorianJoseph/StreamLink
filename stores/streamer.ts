@@ -72,7 +72,7 @@ export const useStreamerStore = defineStore('streamer', () => {
         return result
     }
 
-    // Supprimer le streameur et ses liens associés avec leurs vignettes + avatar
+    // Supprimer le streamer et ses liens associés avec leurs vignettes + avatar
     const deleteStreamerWithLinks = async (userId: string) => {
         try {
             // Sélectionner les liens + leurs vignettes
