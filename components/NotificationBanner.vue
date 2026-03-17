@@ -44,8 +44,8 @@
 </template>
 
 <script setup>
-const STORAGE_KEY = 'nationality'
-const visible = ref(true)
+const STORAGE_KEY = 'language'
+const visible = ref(false)
 
 
 const closeBanner = () => {
