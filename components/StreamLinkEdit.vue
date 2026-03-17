@@ -23,7 +23,7 @@
                             {{ streamer?.username }}
                         </span>
                         <img v-if="streamer?.language && streamer.language !== 'OTHER'"
-                            :src="`https://flagcdn.com/w80/${streamer.language.toLowerCase()}.png`"
+                            :src="`https://flagcdn.com/w80/${getFlag(streamer.language)}.png`"
                             class="w-4 h-[12px] object-cover rounded-xs shadow-sm hover:cursor-pointer" />
                         <span v-else-if="streamer?.language === 'OTHER'" class="flex items-center">
                             <Icon name="lucide:globe" size="16" />
@@ -76,12 +76,12 @@
 
                         <!-- Langue de streaming -->
                         <div class="flex flex-col gap-2">
-                            <label for="streamLanguage"
+                            <label for="language"
                                 class="font-semibold text-xs sm:text-sm flex items-center gap-2">
                                 <Icon name="lucide:globe" size="16" class="shrink-0" />
                                 Langue
                             </label>
-                            <Select id="streamLanguage" v-model="language" :options="streamLanguageOptions"
+                            <Select id="language" v-model="language" :options="languageOptions"
                                 optionLabel="label" optionValue="value" placeholder="Sélectionne une langue" showClear
                                 :highlightOnSelect="false" fluid style="--p-select-focus-border-color: #ffffff" :pt="{
                                     pcFilter: {
@@ -102,10 +102,10 @@
                                 <template #value="{ value }">
                                     <div v-if="value" class="flex items-center gap-2">
                                         <img v-if="value !== 'OTHER'"
-                                            :src="`https://flagcdn.com/w80/${streamLanguageOptions.find(o => o.value === value)?.flag}.png`"
+                                            :src="`https://flagcdn.com/w80/${getFlag(value)}.png`"
                                             class="h-[15px] w-5 object-cover rounded-xs shadow-sm" />
                                         <Icon v-else name="lucide:globe" size="16" />
-                                        <span>{{streamLanguageOptions.find(o => o.value === value)?.label}}</span>
+                                        <span>{{getLabel(value)}}</span>
                                     </div>
                                 </template>
                             </Select>
@@ -610,17 +610,5 @@ const defaultSize = ({ imageSize, visibleArea }) => {
         height: (visibleArea || imageSize).height,
     };
 };
-
-const streamLanguageOptions = ref([
-    { value: 'FR', label: 'Français', flag: 'fr' },
-    { value: 'US', label: 'English', flag: 'us' },
-    { value: 'ES', label: 'Español', flag: 'es' },
-    { value: 'DE', label: 'Deutsch', flag: 'de' },
-    { value: 'IT', label: 'Italiano', flag: 'it' },
-    { value: 'PT', label: 'Português', flag: 'br' },
-    { value: 'ja', label: '日本語', flag: 'jp' },
-    { value: 'ko', label: '한국어', flag: 'kr' },
-    { value: 'OTHER', label: 'Autre' },
-])
 
 </script>

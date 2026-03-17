@@ -13,7 +13,7 @@
                         Tableau de bord
                     </h1>
                     <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
-                        Bienvenue, {{ streamer?.username || 'Streameur' }}
+                        Bienvenue, {{ streamer?.username || 'Streamer' }}
                     </p>
                 </div>
             </div>
@@ -119,11 +119,7 @@
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <Icon name="lucide:users" class="text-purple-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Collabs & raids entre streameurs</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <Icon name="lucide:sliders-horizontal" class="text-orange-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Filtres découverte avancés</span>
+                                    <span class="text-gray-400 text-sm">Collabs & raids entre streamers</span>
                                 </div>
                             </div>
 

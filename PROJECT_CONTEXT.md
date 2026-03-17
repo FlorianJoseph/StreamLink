@@ -2,7 +2,7 @@
 
 ## Vision
 
-StreamLink centralise les liens, le planning de live et la visibilité des streameurs, dans un seul espace pensé pour être partagé.
+StreamLink centralise les liens, le planning de live et la visibilité des streamers, dans un seul espace pensé pour être partagé.
 Objectif : aider les streamers à mieux se présenter, gagner en visibilité et économiser du temps.
 
 ## Cible
