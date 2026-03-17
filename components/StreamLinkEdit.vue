@@ -613,7 +613,7 @@ const defaultSize = ({ imageSize, visibleArea }) => {
 
 const streamLanguageOptions = ref([
     { value: 'FR', label: 'Français', flag: 'fr' },
-    { value: 'EN', label: 'English', flag: 'us' },
+    { value: 'US', label: 'English', flag: 'us' },
     { value: 'ES', label: 'Español', flag: 'es' },
     { value: 'DE', label: 'Deutsch', flag: 'de' },
     { value: 'IT', label: 'Italiano', flag: 'it' },

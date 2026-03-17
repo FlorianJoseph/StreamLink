@@ -4,11 +4,11 @@ export default defineEventHandler(async (event) => {
     const client = await serverSupabaseClient(event)
 
     const { data, error } = await client
-        .from('user_visible')
+        .from('users_visible')
         .select(`
             username,
             avatar_url,
-            nationality,
+            language,
             Schedule (
                 ScheduleSlot (
                     game,
