@@ -43,12 +43,6 @@
                                 :style="{ color: usernameColor }">
                                 {{ streamer?.username }}
                             </span>
-                            <img v-if="streamer?.language && streamer.language !== 'OTHER'"
-                                :src="`https://flagcdn.com/w80/${streamer.language.toLowerCase()}.png`"
-                                class="w-4 h-[12px] object-cover rounded-xs shadow-sm" />
-                            <span v-else-if="streamer?.language === 'OTHER'" class="flex items-center">
-                                <Icon name="lucide:globe" size="16" />
-                            </span>
                         </div>
                         <span class="text-xs mt-1 break-words line-clamp-5" :style="{ color: descriptionColor }">
                             {{ streamer?.bio }}

@@ -3,7 +3,7 @@ export const useStatsRepository = () => {
 
     const countStreamers = async () => {
         const { count, error } = await supabase
-            .from('user_visible')
+            .from('users_visible')
             .select('*', { count: 'exact', head: true })
 
         if (error) throw error

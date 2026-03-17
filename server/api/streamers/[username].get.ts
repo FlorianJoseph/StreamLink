@@ -6,14 +6,14 @@ export default defineEventHandler(async (event) => {
     const { username } = event.context.params as { username: string }
 
     const { data, error } = await client
-        .from('user_public')
+        .from('user_page')
         .select('*')
         .eq('username', username)
         .limit(1)
         .maybeSingle()
 
     if (error) {
-        throw createError({ statusCode: 500, statusMessage: 'Erreur récupération user public' })
+        throw createError({ statusCode: 500, statusMessage: 'Erreur récupération user page' })
     }
 
     const parsedUser = {
