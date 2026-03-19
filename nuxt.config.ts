@@ -21,6 +21,16 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/styles/main.css', 'vue-advanced-cropper/dist/theme.classic.css'],
   vite: {
+    optimizeDeps: {
+      include: [
+        'lucide-vue-next',
+        'qrcode',
+        'modern-screenshot',
+        'node-vibrant/browser',
+        'vuedraggable',
+        'vue-advanced-cropper',
+      ]
+    },
     plugins: [
       tailwindcss(),
     ],
