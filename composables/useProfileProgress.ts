@@ -20,6 +20,7 @@ const dbQuests = ref<any[]>([])
 const dbQuestsLoading = ref(false)
 const isInitialized = ref(false)
 const isReady = ref(false)
+let watchHandle: (() => void) | null = null
 
 export const useProfileProgress = () => {
     const toast = useToast()
@@ -70,7 +71,7 @@ export const useProfileProgress = () => {
         })
 
         // Notification uniquement après l'initialisation
-        if (isInitialized.value && !isLoading.value) {
+        if (isInitialized.value) {
             newQuests.forEach((quest) => {
                 if (quest.completed && !completedQuestIds.value.has(quest.dbId)) {
                     notifyQuestCompleted(quest)
@@ -115,27 +116,14 @@ export const useProfileProgress = () => {
             life: 8000
         })
 
-        // Crédit en arrière-plan
-        if (!quest.reward || !quest.dbId || !streamer.value?.id) return
-
         try {
-            await Promise.all([
-                $fetch('/api/wallet/credit', {
-                    method: 'POST',
-                    body: { amount: quest.reward, type: 'quest', referenceId: quest.dbId }
-                }),
-                $fetch('/api/quests/completions', {
-                    method: 'POST',
-                    body: { questId: quest.dbId }
-                })
-            ])
-            fetchBalance()
+            await $fetch('/api/quests/check', { method: 'POST' })
+            await loadCompletions()
+            await fetchBalance()
         } catch (error) {
             console.error('Erreur crédit quête', quest.id, error)
         }
     }
-
-    let watchHandle: (() => void) | null = null
 
     // calculer dès que streamer / links / slots changent
     const startWatch = () => {
@@ -163,8 +151,6 @@ export const useProfileProgress = () => {
         if (s.profileVisible) return 'Ton profil est maintenant visible !'
         return 'Complète les quêtes essentielles pour apparaître sur la page Découverte'
     }
-
-    const isLoading = ref(false)
 
     const init = async () => {
         stopWatch()
