@@ -1,5 +1,6 @@
 <template>
-    <Menubar :model="menuItems" class="h-13 relative z-60" style="--p-menubar-border-radius:0; --p-menubar-border-color: transparent">
+    <Menubar :model="menuItems" class="h-13 relative z-60"
+        style="--p-menubar-border-radius:0; --p-menubar-border-color: transparent">
         <template #start>
             <NuxtLink v-ripple :to="'/'">
                 <Home :size="20" />
@@ -41,6 +42,12 @@
                     </NuxtLink>
                 </template>
                 <template v-else>
+                    <template v-if="user">
+                        <div class="flex items-center gap-1 px-2 py-1 rounded-md bg-zinc-300/10 text-sm font-semibold">
+                            <Icon name="lucide:coins" size="16" class="text-purple-400" />
+                            <span>{{ balance }}</span>
+                        </div>
+                    </template>
                     <button
                         class="flex items-center gap-2 py-1 px-2 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
                         @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
@@ -72,6 +79,8 @@
 
 <script setup>
 import { Home } from 'lucide-vue-next';
+
+const { balance } = useWallet()
 
 const menuItems = ref([
     {

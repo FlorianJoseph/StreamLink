@@ -29,6 +29,7 @@ export default defineNuxtConfig({
         'node-vibrant/browser',
         'vuedraggable',
         'vue-advanced-cropper',
+        '@vueuse/core',
       ]
     },
     plugins: [

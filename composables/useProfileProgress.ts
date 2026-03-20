@@ -1,76 +1,80 @@
+import { until } from '@vueuse/core'
 import { PROFILE_QUESTS } from '~/config/profileQuests'
 import { PROFILE_LEVELS } from '~/config/profileLevels'
 import type { Quest } from '~/config/profileQuests'
+
+// Singleton — refs partagées entre toutes les instances
+const quests = ref<Quest[]>([])
+const stats = ref({
+    completedRequired: 0,
+    completedOptional: 0,
+    completedTotal: 0,
+    total: 0,
+    completionPercentage: 0,
+    profileVisible: false,
+    level: PROFILE_LEVELS[0]
+})
+
+const completedQuestIds = ref<Set<string>>(new Set())
+const dbQuests = ref<any[]>([])
+const dbQuestsLoading = ref(false)
+const isInitialized = ref(false)
+const isReady = ref(false)
 
 export const useProfileProgress = () => {
     const toast = useToast()
     const streamerStore = useStreamerStore()
     const linkStore = useLinkStore()
+    const { isLoaded: linksLoaded } = storeToRefs(linkStore)
     const scheduleSlotStore = useScheduleSlotStore()
 
     const { streamer } = storeToRefs(streamerStore)
     const { links } = storeToRefs(linkStore)
     const { slots } = storeToRefs(scheduleSlotStore)
 
-    // Refs réactives pour stats et quêtes
-    const quests = ref<Quest[]>([])
-    const stats = ref({
-        completedRequired: 0,
-        completedOptional: 0,
-        completedTotal: 0,
-        total: 0,
-        completionPercentage: 0,
-        profileVisible: false,
-        level: PROFILE_LEVELS[0]
-    })
+    const { fetchBalance } = useWallet()
 
-    // Ensemble des quêtes déjà notifiées
-    const notifiedQuests = ref<Set<string>>(new Set())
 
-    // Flag pour savoir si c'est initialisé
-    const isInitialized = ref(false)
-
-    // Initialiser depuis localStorage uniquement côté client
-    if (import.meta.client) {
-        const stored = localStorage.getItem('notifiedQuests')
-        if (stored) {
-            try {
-                notifiedQuests.value = new Set(JSON.parse(stored))
-            } catch (e) {
-                console.error('Erreur lors du chargement des quêtes notifiées', e)
-            }
+    const loadCompletions = async () => {
+        if (!streamer.value?.id) {
+            // Attendre que le streamer soit chargé
+            await until(streamer).toMatch(s => !!s?.id)
         }
+        const ids = await $fetch('/api/quests/completions')
+        completedQuestIds.value = new Set(ids)
     }
 
-    // Fonction pour sauvegarder les quêtes notifiées
-    const saveNotifiedQuests = () => {
-        if (import.meta.client) {
-            localStorage.setItem(
-                'notifiedQuests',
-                JSON.stringify(Array.from(notifiedQuests.value))
-            )
-        }
+    const loadDbQuests = async () => {
+        if (dbQuests.value.length > 0) return // déjà chargé
+        dbQuestsLoading.value = true
+        dbQuests.value = await $fetch('/api/quests')
+        dbQuestsLoading.value = false
     }
 
     // Fonction pour calculer les quêtes et stats
-    const recalc = () => {
+    const recalc = async () => {
         const hasLinks = links.value.length > 0
-        const hasSlots = slots.value.length > 0 
+        const hasSlots = slots.value.length > 0
         const hasMultipleLinks = links.value.length >= 3
+        await loadDbQuests()
 
         // Calcul des quêtes
-        const newQuests = PROFILE_QUESTS.map((quest: Quest) => ({
-            ...quest,
-            completed: quest.condition({ streamer: streamer.value, hasLinks, hasSlots, hasMultipleLinks })
-        }))
+        const newQuests = PROFILE_QUESTS.map((quest) => {
+            const dbQuest = dbQuests.value.find(q => q.key === quest.id)
+            return {
+                ...quest,
+                dbId: dbQuest?.id,
+                reward: dbQuest?.reward ?? 0,
+                completed: quest.condition({ streamer: streamer.value, hasLinks, hasSlots, hasMultipleLinks })
+            }
+        })
 
         // Notification uniquement après l'initialisation
-        if (isInitialized.value) {
+        if (isInitialized.value && !isLoading.value) {
             newQuests.forEach((quest) => {
-                if (quest.completed && !notifiedQuests.value.has(quest.id)) {
+                if (quest.completed && !completedQuestIds.value.has(quest.dbId)) {
                     notifyQuestCompleted(quest)
-                    notifiedQuests.value.add(quest.id)
-                    saveNotifiedQuests()
+                    completedQuestIds.value.add(quest.dbId)
                 }
             })
         }
@@ -101,27 +105,54 @@ export const useProfileProgress = () => {
         }
     }
 
-    // Marquer comme initialisé après le premier calcul
-    if (!isInitialized.value) {
-        isInitialized.value = true
-    }
-
-    const notifyQuestCompleted = (quest: Quest) => {
+    const notifyQuestCompleted = async (quest: Quest) => {
+        // Toast immédiat, peu importe ce qui se passe après
         toast.add({
-            severity: 'success',
-            summary: 'Quête complétée !',
-            detail: quest.label,
-            life: 6500
+            severity: 'secondary',
+            summary: quest.label,
+            detail: quest.reward,
+            group: 'quest',
+            life: 8000
         })
+
+        // Crédit en arrière-plan
+        if (!quest.reward || !quest.dbId || !streamer.value?.id) return
+
+        try {
+            await Promise.all([
+                $fetch('/api/wallet/credit', {
+                    method: 'POST',
+                    body: { amount: quest.reward, type: 'quest', referenceId: quest.dbId }
+                }),
+                $fetch('/api/quests/completions', {
+                    method: 'POST',
+                    body: { questId: quest.dbId }
+                })
+            ])
+            fetchBalance()
+        } catch (error) {
+            console.error('Erreur crédit quête', quest.id, error)
+        }
     }
 
-    // Calcul initial
-    recalc()
+    let watchHandle: (() => void) | null = null
 
     // calculer dès que streamer / links / slots changent
-    watch([streamer, links, slots], () => {
-        recalc()
-    }, { deep: true })
+    const startWatch = () => {
+        watchHandle = watch(
+            [streamer, links, slots],
+            () => {
+                if (!isInitialized.value) return
+                recalc()
+            },
+            { deep: true, immediate: false }
+        )
+    }
+
+    const stopWatch = () => {
+        watchHandle?.()
+        watchHandle = null
+    }
 
     const getQuests = () => quests.value
     const getStats = () => stats.value
@@ -133,16 +164,34 @@ export const useProfileProgress = () => {
         return 'Complète les quêtes essentielles pour apparaître sur la page Découverte'
     }
 
-    // Fonction utile pour debug/reset
-    const resetNotifications = () => {
-        notifiedQuests.value.clear()
-        saveNotifiedQuests()
+    const isLoading = ref(false)
+
+    const init = async () => {
+        stopWatch()
+        // Attendre que le streamer ET les links soient prêts
+        await until(streamer).toMatch(s => !!s?.id)
+        await new Promise<void>((resolve) => {
+            if (linksLoaded.value) return resolve()
+            const stop = watch(linksLoaded, (val) => {
+                if (val) {
+                    stop()
+                    resolve()
+                }
+            })
+            setTimeout(() => { stop(); resolve() }, 3000)
+        })
+        await loadCompletions()
+        await recalc()
+        isInitialized.value = true
+        isReady.value = true
+        startWatch()
     }
 
     return {
         getQuests,
         getStats,
         getProfileMessage,
-        resetNotifications
+        isReady,
+        init
     }
 }

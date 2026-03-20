@@ -13,7 +13,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 
 ## Stack
 
-- Nuxt 3, TypeScript, Prisma, Supabase, Pinia, Tailwind, Resend, React Email
+- Nuxt 3, TypeScript, Supabase, Pinia, Tailwind, Resend, React Email
 
 ## Principes produit
 
