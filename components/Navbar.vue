@@ -44,7 +44,7 @@
                 <template v-else>
                     <template v-if="user">
                         <div class="flex items-center gap-1 px-2 py-1 rounded-md bg-zinc-300/10 text-sm font-semibold">
-                            <img src="/public/wallet/s.png" alt="Coin" class="w-5 h-5" />
+                            <img src="/public/wallet/s.png" alt="Shards" class="w-5 h-5" />
                             <span>{{ balance }}</span>
                         </div>
                     </template>

@@ -4,8 +4,8 @@ export default defineEventHandler(async (event) => {
     const supabase = serverSupabaseServiceRole(event)
 
     const { data, error } = await supabase
-        .from('Quests')
-        .select('*')
+        .from('Features')
+        .select('*, FeaturePrices(*)')
         .eq('is_active', true)
 
     if (error) throw createError({ statusCode: 500, message: error.message })

@@ -178,6 +178,7 @@ export const useProfileProgress = () => {
         getStats,
         getProfileMessage,
         isReady,
-        init
+        init,
+        fetchBalance
     }
 }

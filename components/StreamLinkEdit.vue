@@ -76,13 +76,12 @@
 
                         <!-- Langue de streaming -->
                         <div class="flex flex-col gap-2">
-                            <label for="language"
-                                class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <label for="language" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
                                 <Icon name="lucide:globe" size="16" class="shrink-0" />
                                 Langue
                             </label>
-                            <Select id="language" v-model="language" :options="languageOptions"
-                                optionLabel="label" optionValue="value" placeholder="Sélectionne une langue" showClear
+                            <Select id="language" v-model="language" :options="languageOptions" optionLabel="label"
+                                optionValue="value" placeholder="Sélectionne une langue" showClear
                                 :highlightOnSelect="false" fluid style="--p-select-focus-border-color: #ffffff" :pt="{
                                     pcFilter: {
                                         root: {
@@ -105,7 +104,7 @@
                                             :src="`https://flagcdn.com/w80/${getFlag(value)}.png`"
                                             class="h-[15px] w-5 object-cover rounded-xs shadow-sm" />
                                         <Icon v-else name="lucide:globe" size="16" />
-                                        <span>{{getLabel(value)}}</span>
+                                        <span>{{ getLabel(value) }}</span>
                                     </div>
                                 </template>
                             </Select>
@@ -146,6 +145,41 @@
                 </div>
             </div>
         </template>
+
+        <!-- Bloc branding -->
+        <div class="flex items-center justify-between p-4 rounded-xl border" :class="hasFeature('no_branding')
+            ? 'border-emerald-500/30 bg-emerald-500/5'
+            : 'border-zinc-700 bg-zinc-800/30'">
+            <div class="flex items-center gap-3">
+                <div class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
+                    :class="hasFeature('no_branding') ? 'bg-emerald-500/20' : 'bg-zinc-700'">
+                    <Icon name="lucide:badge-check" size="18"
+                        :class="hasFeature('no_branding') ? 'text-emerald-400' : 'text-zinc-400'" />
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold"
+                        :class="hasFeature('no_branding') ? 'text-emerald-300' : 'text-zinc-200'">
+                        Sans branding
+                    </span>
+                    <span class="text-xs text-zinc-400">
+                        <template v-if="hasFeature('no_branding')">
+                            Actif {{ getExpiryLabel('no_branding') }}
+                        </template>
+                        <template v-else>
+                            Supprime le logo StreamLink de ta page
+                        </template>
+                    </span>
+                </div>
+            </div>
+            <Button v-if="!hasFeature('no_branding')" severity="contrast" size="small" @click="brandingModal = true">
+                <Icon name="lucide:coins" size="16" />
+                <span class="text-xs">Débloquer</span>
+            </Button>
+            <span v-else class="text-xs text-emerald-400 font-medium">Actif</span>
+        </div>
+
+        <!-- Modal déblocage branding -->
+        <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
 
         <!-- Bouton Ajouter un lien -->
         <Button class="w-full" severity="contrast" @click="newlinkModal = true">
@@ -611,4 +645,7 @@ const defaultSize = ({ imageSize, visibleArea }) => {
     };
 };
 
+const { hasFeature, getExpiryLabel } = useFeatures()
+
+const brandingModal = ref(false)
 </script>
