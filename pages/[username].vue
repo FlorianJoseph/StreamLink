@@ -34,11 +34,13 @@
                 <!-- Pseudo et description -->
                 <div class="flex flex-col flex-1 min-w-0">
                     <div class="flex items-center gap-2">
-                        <span :class="['font-bold tracking-wide', usernameSizeClass]" :style="{ color: usernameColor }">
+                        <span :class="['font-bold tracking-wide', usernameSizeClass]"
+                            :style="{ color: usernameColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                             {{ user?.username }}
                         </span>
                     </div>
-                    <span class="text-xs sm:text-sm mt-1 break-words line-clamp-5" :style="{ color: descriptionColor }">
+                    <span class="text-xs sm:text-sm mt-1 break-words line-clamp-5"
+                        :style="{ color: descriptionColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                         {{ user?.bio }}
                     </span>
                 </div>
@@ -49,19 +51,21 @@
                 :style="{ borderColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor }">
                 <div class="flex flex-row items-center gap-1.5">
                     <Icon name="lucide:calendar-clock" size="14" class="flex-shrink-0" :style="{ color: textColor }" />
-                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0" :style="{ color: textColor }">
+                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0"
+                        :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                         Prochain stream
                     </span>
                 </div>
                 <div class="w-px h-8 sm:h-4 flex-shrink-0"
                     :style="{ backgroundColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '44' : buttonBackgroundColor }" />
                 <div class="flex flex-col sm:flex-row sm:items-center min-w-0 flex-1">
-                    <span class="text-xs sm:text-sm font-semibold truncate" :style="{ color: textColor }">
+                    <span class="text-xs sm:text-sm font-semibold truncate"
+                        :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                         {{ nextSlot.game?.label }}
                     </span>
-                    <span class="text-xs sm:text-sm sm:ml-auto sm:flex-shrink-0" :style="{ color: textColor }">
-                        {{ nextSlot.isToday ? 'Auj.' : formatDay(nextSlot.day) }} {{ formatTime(nextSlot.start_at)
-                        }}
+                    <span class="text-xs sm:text-sm sm:ml-auto sm:flex-shrink-0"
+                        :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
+                        {{ nextSlot.isToday ? 'Auj.' : formatDay(nextSlot.day) }} {{ formatTime(nextSlot.start_at) }}
                     </span>
                 </div>
             </div>
@@ -70,7 +74,8 @@
             <div v-if="isLive" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-b"
                 :style="{ borderColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor }">
                 <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
-                <span class="text-xs sm:text-sm font-semibold" :style="{ color: textColor }">
+                <span class="text-xs sm:text-sm font-semibold"
+                    :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                     En live sur {{ liveSlot?.game?.label }}
                 </span>
             </div>
@@ -79,7 +84,8 @@
                 :style="{ borderColor: isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor }">
                 <div class="flex items-center gap-1.5">
                     <Icon name="lucide:calendar-x" size="14" class="flex-shrink-0" :style="{ color: textColor }" />
-                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0" :style="{ color: textColor }">
+                    <span class="text-xs sm:text-sm font-semibold flex-shrink-0"
+                        :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                         Aucun stream prévu ici cette semaine
                     </span>
                 </div>
@@ -95,11 +101,12 @@
                     @mouseleave="hoveredTab = null"
                     class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm sm:text-base font-medium transition-all"
                     :style="activeTab === tab.id
-                        ? { backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000' }
+                        ? { backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000', fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }
                         : {
                             backgroundColor: hoveredTab === tab.id ?
                                 (isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor + '44') : 'transparent',
-                            color: textColor
+                            color: textColor,
+                            fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit'
                         }">
                     <Icon :name="tab.icon" size="14" />
                     {{ tab.label }}
@@ -115,7 +122,8 @@
                                 backgroundColor: buttonVariant === 'outlined'
                                     ? hoveredLink === link.id ? buttonBorderColor + '18' : 'transparent'
                                     : buttonBackgroundColor,
-                                borderColor: buttonBorderColor
+                                borderColor: buttonBorderColor,
+                                fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit'
                             }" @mouseenter="hoveredLink = link.id" @mouseleave="hoveredLink = null">
                             <!-- Icône ou image à gauche -->
                             <div
@@ -150,7 +158,7 @@
                         <div class="flex items-start gap-2">
                             <!-- Jour -->
                             <span class="text-xs font-bold tracking-wide flex-shrink-0 w-8 text-center mt-2"
-                                :style="{ color: textColor }">
+                                :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                                 {{ group.isToday ? 'Auj.' : formatDay(group.day) }}
                             </span>
                             <div class="w-px self-stretch"
@@ -163,10 +171,11 @@
                                     <img v-if="slot.game?.cover" :src="slot.game.cover"
                                         class="w-5 h-7 sm:w-7 sm:h-10 rounded object-fill flex-shrink-0" />
                                     <span class="text-xs sm:text-sm font-semibold truncate flex-1"
-                                        :style="{ color: textColor }">
+                                        :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                                         {{ slot.game?.label }}
                                     </span>
-                                    <span class="text-xs sm:text-sm flex-shrink-0" :style="{ color: textColor }">
+                                    <span class="text-xs sm:text-sm flex-shrink-0"
+                                        :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                                         {{ formatTime(slot.start_at) }}
                                     </span>
                                 </div>
@@ -183,7 +192,7 @@
             </div>
 
             <!-- Footer CTA -->
-            <div class="flex flex-col items-center gap-2">
+            <div v-if="!noBranding" class="flex flex-col items-center gap-2">
                 <p class="text-sm sm:text-base text-center font-semibold tracking-wide"
                     :style="{ color: textColor + 'CC' }">
                     Ton univers, en une page.
@@ -201,9 +210,9 @@
             <!-- Footer infos -->
             <div class="flex flex-col items-center gap-3 pb-10 text-xs">
                 <div class="flex items-center gap-2" :style="{ color: textColor }">
-                    <NuxtLink to="/contact" class="hover:underline font-medium">
+                    <a href="https://discord.gg/fVFguWc76b" class="hover:underline font-medium">
                         Contact
-                    </NuxtLink>
+                    </a>
                     <span>•</span>
                     <NuxtLink to="/privacy" class="hover:underline font-medium">
                         Confidentialité
@@ -257,6 +266,7 @@ const user = publicUser.value?.user || null
 const design = publicUser.value?.design || null
 const links = publicUser.value?.links ?? []
 const slots = publicUser.value?.slots ?? []
+const noBranding = computed(() => publicUser.value?.noBranding ?? false)
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
@@ -343,6 +353,19 @@ const buttonRadiusClass = computed(() => {
 const wallpaperColor = computed(() => {
     const color = design.wallpaper_style?.backgroundColor ?? '18181B'
     return `#${color}`
+})
+
+const fontFamily = computed(() => design.font_family ?? null)
+
+watchEffect(() => {
+    if (fontFamily.value) {
+        useHead({
+            link: [{
+                rel: 'stylesheet',
+                href: `https://fonts.googleapis.com/css2?family=${fontFamily.value.replace(/ /g, '+')}:wght@400;500;600;700&display=swap`
+            }]
+        })
+    }
 })
 
 // Fonction pour déterminer si le texte du footer et les boutons doivent être clairs ou sombres

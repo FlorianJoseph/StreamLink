@@ -40,11 +40,12 @@
                     <div class="flex flex-col flex-1 min-w-0">
                         <div class="flex items-center gap-2">
                             <span :class="['font-bold tracking-wide', usernameSizeClass]"
-                                :style="{ color: usernameColor }">
+                                :style="{ color: usernameColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                                 {{ streamer?.username }}
                             </span>
                         </div>
-                        <span class="text-xs mt-1 break-words line-clamp-5" :style="{ color: descriptionColor }">
+                        <span class="text-xs mt-1 break-words line-clamp-5"
+                            :style="{ color: descriptionColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
                             {{ streamer?.bio }}
                         </span>
                     </div>
@@ -56,8 +57,9 @@
                     <div class="flex flex-row items-center gap-1.5">
                         <Icon name="lucide:calendar-days" size="14" class="flex-shrink-0"
                             :style="{ color: textColor }" />
-                        <span class="text-xs font-semibold flex-shrink-0" :style="{ color: textColor }">
-                            Affiche ton statut grâce au planning
+                        <span class="text-xs font-semibold flex-shrink-0"
+                            :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
+                            Affiche ton stream grâce au planning
                         </span>
                     </div>
                 </div>
@@ -72,11 +74,12 @@
                         @mouseleave="hoveredTab = null"
                         class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all"
                         :style="activeTab === tab.id
-                            ? { backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000' }
+                            ? { backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000', fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }
                             : {
                                 backgroundColor: hoveredTab === tab.id ?
                                     (isColorDark(wallpaperColor) ? buttonBackgroundColor + '22' : buttonBackgroundColor + '44') : 'transparent',
-                                color: textColor
+                                color: textColor,
+                                fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit'
                             }">
                         <Icon :name="tab.icon" size="14" />
                         {{ tab.label }}
@@ -92,7 +95,8 @@
                                     backgroundColor: buttonVariant === 'outlined'
                                         ? hoveredLink === link.id ? buttonBorderColor + '18' : 'transparent'
                                         : buttonBackgroundColor,
-                                    borderColor: buttonBorderColor
+                                    borderColor: buttonBorderColor,
+                                    fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit'
                                 }" @mouseenter="hoveredLink = link.id" @mouseleave="hoveredLink = null">
                                 <!-- Icône ou image à gauche -->
                                 <div
@@ -121,7 +125,7 @@
                 </div>
 
                 <!-- Footer CTA -->
-                <div class="flex flex-col items-center gap-2 text-center">
+                <div v-if="!noBranding" class="flex flex-col items-center gap-2 text-center">
                     <p class="text-sm text-center font-semibold tracking-wide" :style="{ color: textColor + 'CC' }">
                         Ton univers, en une page.
                     </p>
@@ -232,6 +236,8 @@ const wallpaperColor = computed(() => {
     return `#${color}`
 })
 
+const fontFamily = computed(() => design.value?.font_family ?? null)
+
 // Fonction pour déterminer si le texte du footer et les boutons doivent être clairs ou sombres
 function isColorDark(hex) {
     if (!hex) return true
@@ -246,6 +252,19 @@ function isColorDark(hex) {
 // Couleur du texte basée sur la luminosité du wallpaper
 const textColor = computed(() => isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000')
 
+watchEffect(() => {
+    if (fontFamily.value) {
+        useHead({
+            link: [{
+                rel: 'stylesheet',
+                href: `https://fonts.googleapis.com/css2?family=${fontFamily.value.replace(/ /g, '+')}:wght@400;500;600;700&display=swap`
+            }]
+        })
+    }
+})
+
+const { hasFeature } = useFeatures()
+const noBranding = computed(() => hasFeature('no_branding'))
 </script>
 
 <style scoped>

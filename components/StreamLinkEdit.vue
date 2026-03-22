@@ -146,41 +146,6 @@
             </div>
         </template>
 
-        <!-- Bloc branding -->
-        <div class="flex items-center justify-between p-4 rounded-xl border" :class="hasFeature('no_branding')
-            ? 'border-emerald-500/30 bg-emerald-500/5'
-            : 'border-zinc-700 bg-zinc-800/30'">
-            <div class="flex items-center gap-3">
-                <div class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
-                    :class="hasFeature('no_branding') ? 'bg-emerald-500/20' : 'bg-zinc-700'">
-                    <Icon name="lucide:badge-check" size="18"
-                        :class="hasFeature('no_branding') ? 'text-emerald-400' : 'text-zinc-400'" />
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-sm font-semibold"
-                        :class="hasFeature('no_branding') ? 'text-emerald-300' : 'text-zinc-200'">
-                        Sans branding
-                    </span>
-                    <span class="text-xs text-zinc-400">
-                        <template v-if="hasFeature('no_branding')">
-                            Actif {{ getExpiryLabel('no_branding') }}
-                        </template>
-                        <template v-else>
-                            Supprime le logo StreamLink de ta page
-                        </template>
-                    </span>
-                </div>
-            </div>
-            <Button v-if="!hasFeature('no_branding')" severity="contrast" size="small" @click="brandingModal = true">
-                <Icon name="lucide:coins" size="16" />
-                <span class="text-xs">Débloquer</span>
-            </Button>
-            <span v-else class="text-xs text-emerald-400 font-medium">Actif</span>
-        </div>
-
-        <!-- Modal déblocage branding -->
-        <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
-
         <!-- Bouton Ajouter un lien -->
         <Button class="w-full" severity="contrast" @click="newlinkModal = true">
             <Icon name="lucide:plus" size="20" />
@@ -280,6 +245,48 @@
                             </div>
                         </template>
                     </Draggable>
+
+                    <Divider v-if="links.length > 0" class="my-4" />
+
+                    <div class="rounded-md p-4 bg-gray-100/10">
+                        <!-- Bloc branding -->
+                        <div v-if="!hasFeature('no_branding')"
+                            class="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:items-center justify-between">
+                            <div class="flex flex-col sm:gap-0.5">
+                                <span class="text-sm font-semibold">Masquer le footer</span>
+                                <span class="text-xs text-zinc-400">
+                                    <template v-if="hasFeature('no_branding')">
+                                        {{ getExpiryLabel('no_branding') }}
+                                    </template>
+                                    <template v-else>
+                                        Masque le footer de ta page de liens
+                                    </template>
+                                </span>
+                            </div>
+                            <Button v-if="!hasFeature('no_branding')" severity="contrast" size="small"
+                                @click="brandingModal = true">
+                                <Icon name="lucide:coins" size="16" class="shrink-0" />
+                                <span class="text-sm">Débloquer</span>
+                            </Button>
+                        </div>
+                        <div v-else class="flex gap-2 items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold">Masquer le footer</span>
+                                <span class="text-xs text-zinc-400">
+                                    <template v-if="hasFeature('no_branding')">
+                                        {{ getExpiryLabel('no_branding') }}
+                                    </template>
+                                    <template v-else>
+                                        Masque le footer de ta page de liens
+                                    </template>
+                                </span>
+                            </div>
+                            <span class="text-sm text-emerald-400 font-semibold">Actif</span>
+                        </div>
+
+                        <!-- Modal déblocage branding -->
+                        <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
+                    </div>
 
                     <!-- Modal Icone ou image -->
                     <Dialog v-model:visible="thumbnailModal" dismissableMask modal header="Modifier l'icone du lien"

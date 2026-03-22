@@ -5,25 +5,25 @@
             <p class="text-sm text-zinc-400">{{ feature?.description }}</p>
             <div class="flex flex-col gap-2">
                 <div v-for="price in prices" :key="price.id"
-                    class="flex items-center justify-between p-3 rounded-lg border hover:border-purple-500/60 cursor-pointer transition-all"
-                    :class="selectedPrice?.id === price.id ? 'border-purple-500/60 bg-purple-500/10' : 'border-zinc-700'"
+                    class="flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all"
+                    :class="selectedPrice?.id === price.id ? 'border-white bg-white/10' : 'border-zinc-700 hover:border-zinc-500'"
                     @click="selectedPrice = price">
                     <span class="text-sm font-medium">{{ price.label }}</span>
                     <div class="flex items-center gap-1">
-                        <img src="/public/wallet/s.png" alt="Shard" class="w-5 h-5" />
+                        <Icon name="lucide:coins" size="14" class="shrink-0" />
                         <span class="text-sm font-bold">{{ price.cost }}</span>
                     </div>
                 </div>
             </div>
             <div class="flex items-center justify-between text-xs text-zinc-500 px-1">
                 <span>Solde actuel</span>
-                <div class="flex items-center gap-0.5">
-                    <img src="/public/wallet/s.png" alt="Shard" class="w-4 h-4" />
+                <div class="flex items-center gap-1">
+                    <Icon name="lucide:coins" size="12" class="shrink-0" />
                     <span class="text-white font-semibold">{{ balance }}</span>
                 </div>
             </div>
             <p v-if="selectedPrice && balance < selectedPrice.cost" class="text-xs text-red-400">
-                Solde insuffisant — complète des quêtes pour gagner des Shards
+                Solde insuffisant : complète les quêtes pour gagner plus de monnaie ou achète en dans la boutique.
             </p>
         </div>
         <template #footer>
