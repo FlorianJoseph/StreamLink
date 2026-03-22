@@ -41,6 +41,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - 02/03/26 345 utilisateurs, 188 profils actifs, 779 liens, 535 streams planifiés, newsletter 150 inscrits
 - 10/03/26 428 utilisateurs, 252 profils actifs, 1036 liens, 728 streams planifiés, 778 vues de pages, newsletter 180 inscrits
 - 16/03/26 473 utilisateurs, 283 profils actifs, 1186 liens, 827 streams planifiés, 1838 vues de pages, newsletter 208 inscrits
+- 22/03/26 525 utilisateurs, 320 profils actifs, 1332 liens, 964 streams planifiés, 3124 vues de pages, newsletter 232 inscrits
 
 ## Historique Roadmap
 
@@ -56,22 +57,27 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Découverte V2 avec filtres (live, auj, à venir) 23/02/26
 - Page de lien V2 (design + statut live + planning) 28/02/26
 - Segmentation newsletter (tous, profil non visible et pas de planning) + templates + email auto de bienvenue 05/03/26
+- Taille de créneaux planning 05/03/26
 - Stats publiques (vues + clics + historique journalier) 07/03/26
+- UX Navigation (Navbar + Discord ajouté + scroll sous navbar) 09/03/26
+- Date auto planning 10/03/26
+- Choix de la langue + filtres découverte 13/03/26
+- Choix de Charmi 13/03/26
+- Monnaie virtuelle (Shards) + quêtes BDD + récompenses automatiques 22/03/26
+- Features premium (thèmes exclusifs + polices + suppression branding) déblocables en Shards 22/03/26
 
 ## Roadmap court terme – Augmenter la fréquence d'usage (priorité)
 Objectif : que les utilisateurs reviennent régulièrement et activent leur planning.
-
-### Notifications et rappels intelligents
-    - Alertes nouvelles fonctionnalités ou tips rapides (ex : Ton lien Twitch a reçu 12 clics aujourd’hui !)
 
 ### Page publique
     - Créer des catégories de lien ?
     - CTA découvrir d'autres streamers
 
 ### Monnaie virtuelle 
-    - Nom : Shards (éclats)
-    - Gains via quêtes, solde visible, cosmétiques simples
-    - Objectif : 800+ utilisateurs (473), 60% profils actifs (atteint), 40% dépenses coins
+    - Shards implémentés — gain via quêtes, solde navbar, toast notifications
+    - Features premium déblocables : thèmes exclusifs, polices premium, suppression branding
+    - Objectif : 800+ utilisateurs (525), 60% profils actifs (61%), 40% dépenses coins
+    - Prochaine étape : achat de Shards via Stripe
 
 ### Optimisation pédagogique
     - Proposition de couleur texte dans le design en fonction du thème
@@ -79,7 +85,7 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
 ## Roadmap moyen terme – Découverte & visibilité
 
 ### Améliorer discover
-    - Filtres (nationalité, jeu, horaire...)
+    - Filtres (jeu, horaire...)
     - Collabs/Raids
 
 ### Planning
@@ -92,6 +98,9 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
 Objectif : créer de la valeur payante et améliorer la rétention des pros.
 
 ### Premium et monétisation
+    - Système de features temporaires (FeatureAccess) en place
+    - 2 features déployées : no_branding + premium_theme
+
 #### Achat de coins via Stripe
     - Starter ✦500 2,99€ Débloquer un accès 7j direct
     - Popular ✦1500 6,99€ Un mois de premium complet

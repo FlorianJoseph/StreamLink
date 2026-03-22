@@ -20,7 +20,7 @@ export const THEME_PRESETS = {
         button_style: { variant: 'outlined', backgroundColor: 'FFFFFF', textColor: 'FFFFFF', borderRadius: 'rounded-md' },
     },
     cat: {
-        label: 'cat',
+        label: 'Cat',
         premium: true,
         featureKey: 'premium_theme',
         font_family: 'Shantell Sans',
