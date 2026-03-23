@@ -286,6 +286,13 @@
                     <!-- Barre d'outils -->
                     <Menubar class="w-full">
                         <template #start>
+                            <!-- Toggle format -->
+                            <SelectButton v-model="formatValue" :options="formatOptions">
+                                <template #option="{ option }">
+                                    <Icon :name="option === 'landscape' ? 'lucide:monitor' : 'lucide:smartphone'"
+                                        size="16" />
+                                </template>
+                            </SelectButton>
                         </template>
                         <template #end>
                             <div class="flex items-center gap-1 sm:gap-2">
@@ -294,14 +301,21 @@
                                     <span
                                     class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Partager</span>
                                 </Button> -->
-                                <Button severity="secondary" @click="previewSchedule">
-                                    <Icon name="lucide:eye" size="18" />
+                                <Button severity="secondary" :disabled="isPreviewing" :loading="isPreviewing"
+                                    @click="mobileFormat ? previewScheduleMobile() : previewSchedule()">
+                                    <Icon v-if="isPreviewing" name="lucide:loader-circle" size="18"
+                                        class="animate-spin" />
+                                    <Icon v-else name="lucide:eye" size="18" />
                                     <span
                                         class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base whitespace-nowrap">Aperçu
                                         du planning</span>
                                 </Button>
-                                <Button severity="contrast" @click="exportSchedule">
-                                    <Icon name="lucide:download" size="18" />
+                                <!-- Bouton export adaptatif -->
+                                <Button severity="contrast" :disabled="isExporting" :loading="isExporting"
+                                    @click="mobileFormat ? exportScheduleMobile() : exportSchedule()">
+                                    <Icon v-if="isExporting" name="lucide:loader-circle" size="18"
+                                        class="animate-spin" />
+                                    <Icon v-else name="lucide:download" size="18" />
                                     <span class="text-xs md:text-base lg:text-xs xl:text-base">Télécharger</span>
                                 </Button>
                             </div>
@@ -310,8 +324,16 @@
 
                     <!-- Planning hebdomadaire -->
                     <div ref="viewportRef" class="relative w-full flex justify-center">
+                        <!-- Planning mobile-->
+                        <div class="absolute" :style="scalerStyleMobile">
+                            <ScheduleMobileCard :schedule="schedule" :slots="slots" :daysOptions="daysOptions"
+                                :scheduleBgColor="scheduleBgColor" :scheduleTextColor="scheduleTextColor"
+                                :backgroundOpacity="backgroundOpacity" :formatTime="formatTime"
+                                :slotsForDay="slotsForDay" />
+                        </div>
                         <div class="absolute" :style="scalerStyle">
-                            <div id="scheduleCard">
+                            <!-- Planning desktop -->
+                            <div v-show="!mobileFormat" id="scheduleCard">
                                 <div class="p-4 relative rounded-lg export-footer" :style="{
                                     backgroundColor: scheduleBgColor,
                                     backgroundImage: schedule?.style?.backgroundUrl ? `url(${schedule.style.backgroundUrl})` : undefined,
@@ -335,7 +357,7 @@
                                                         @blur="saveEdit" @keyup.enter="saveEdit"
                                                         @keyup.esc.prevent.stop="cancelEdit"
                                                         class="text-4xl font-bold bg-transparent border-none focus:outline-none"
-                                                        maxlength="70" />
+                                                        maxlength="60" />
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer"
@@ -686,9 +708,12 @@
     </Dialog>
 
     <!-- Modal d'aperçu de planning -->
-    <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: '65vw' }" :draggable="false">
+    <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: mobileFormat ? '25vw' : '65vw' }"
+        :draggable="false" :pt="{ root: { style: 'border-radius: 8px; overflow: hidden' } }">
         <template #container="{ closeCallback }">
-            <img v-if="previewDataUrl" :src="previewDataUrl" class="w-full h-auto" />
+            <img v-if="previewDataUrl" :src="previewDataUrl" :style="mobileFormat
+                ? { height: '90vh', width: 'auto', display: 'block', margin: '0 auto' }
+                : { width: '100%', height: 'auto' }" />
         </template>
     </Dialog>
 
@@ -724,6 +749,10 @@ const scheduleSlotStore = useScheduleSlotStore()
 const { loading, schedule } = storeToRefs(scheduleStore)
 const { slots } = storeToRefs(scheduleSlotStore)
 const supabase = useSupabaseClient()
+
+const formatValue = ref('landscape')
+const formatOptions = ref(['landscape', 'mobile'])
+const mobileFormat = computed(() => formatValue.value === 'mobile')
 
 // Édition du titre et du sous-titre
 const editing = ref({ field: null as 'title' | 'subtitle' | null, value: '' })
@@ -959,9 +988,13 @@ function toggleDaysWithoutStreamVisibility() {
 // Gestion de la génération d'aperçu et de l'export du planning
 const {
     previewSchedule,
+    previewScheduleMobile,
     exportSchedule,
+    exportScheduleMobile,
     previewDataUrl,
-    showPreview
+    showPreview,
+    isExporting,
+    isPreviewing
 } = useScheduleScreenshot()
 
 const scheduleId = computed(() => schedule.value?.id)
@@ -1021,6 +1054,25 @@ const scalerStyle = computed(() => ({
     transform: `scale(${scale.value})`,
     transformOrigin: 'center top'
 }))
+
+// Gestion du redimensionnement et du scaling du planning en mobile (format vertical)
+const MOBILE_WIDTH = 1080
+const MOBILE_HEIGHT = 1920
+
+const scalerStyleMobile = computed(() => {
+    if (!viewportWidth.value) return {}
+
+    const scaleByWidth = viewportWidth.value / MOBILE_WIDTH
+    const scaleByHeight = (viewportWidth.value * 0.5) / MOBILE_HEIGHT // 80% de la hauteur viewport
+    const scale = Math.min(scaleByWidth, scaleByHeight, 0.4) // max 0.4 pour pas trop grand
+
+    return {
+        width: `${MOBILE_WIDTH}px`,
+        height: `${MOBILE_HEIGHT}px`,
+        transform: `scale(${scale})`,
+        transformOrigin: 'center top'
+    }
+})
 
 // Gestion de l'upload d'image d'arrière-plan
 const imageUrl = ref<string | null>(null)

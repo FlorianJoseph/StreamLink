@@ -1,6 +1,8 @@
 import { domToPng } from 'modern-screenshot'
 const BASE_WIDTH = 1280
 const BASE_HEIGHT = 720
+const isExporting = ref(false)
+const isPreviewing = ref(false)
 
 export const useScheduleScreenshot = () => {
     const previewDataUrl = ref<string | null>(null)
@@ -114,19 +116,59 @@ export const useScheduleScreenshot = () => {
     }
 
     const previewSchedule = async () => {
-        previewDataUrl.value = await renderSchedule(3)
+        isPreviewing.value = true
+        previewDataUrl.value = await renderSchedule(1)
         showPreview.value = true
+        isPreviewing.value = false
     }
 
     const exportSchedule = async () => {
-        const dataUrl = await renderSchedule(3)
+        isExporting.value = true
+        const dataUrl = await renderSchedule(2)
         if (!dataUrl) return
 
         const link = document.createElement('a')
         link.download = 'planning.png'
         link.href = dataUrl
         link.click()
+        isExporting.value = false
     }
+
+    const renderScheduleMobile = async (scale?: number): Promise<string | null> => {
+        const node = document.querySelector<HTMLElement>('#scheduleCardMobile')
+        if (!node) return null
+
+        return domToPng(node, {
+            scale,
+            width: 1080,
+            height: 1920,
+            onCloneEachNode: (cloned) => {
+                if (!(cloned instanceof HTMLElement)) return
+                if (cloned.classList.contains('ignore-export')) {
+                    cloned.style.display = 'none'
+                }
+            }
+        })
+    }
+
+    const previewScheduleMobile = async () => {
+        isPreviewing.value = true
+        previewDataUrl.value = await renderScheduleMobile(1)
+        showPreview.value = true
+        isPreviewing.value = false
+    }
+
+    const exportScheduleMobile = async () => {
+        isExporting.value = true
+        const dataUrl = await renderScheduleMobile(2)
+        if (!dataUrl) return
+        const link = document.createElement('a')
+        link.download = 'planning-mobile.png'
+        link.href = dataUrl
+        link.click()
+        isExporting.value = false
+    }
+
 
     return {
         previewDataUrl,
@@ -134,5 +176,9 @@ export const useScheduleScreenshot = () => {
         renderSchedule,
         previewSchedule,
         exportSchedule,
+        previewScheduleMobile,
+        exportScheduleMobile,
+        isExporting,
+        isPreviewing,
     }
 }
