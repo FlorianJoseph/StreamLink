@@ -287,12 +287,14 @@
                     <Menubar class="w-full">
                         <template #start>
                             <!-- Toggle format -->
-                            <SelectButton v-model="formatValue" :options="formatOptions">
+                            <SelectButton v-model="formatValue" :options="formatOptions" :allowEmpty="false"
+                                @update:modelValue="onFormatChange">
                                 <template #option="{ option }">
                                     <Icon :name="option === 'landscape' ? 'lucide:monitor' : 'lucide:smartphone'"
                                         size="16" />
                                 </template>
                             </SelectButton>
+                            <FeatureUnlockModal v-model="mobileExportModal" featureKey="mobile_export" />
                         </template>
                         <template #end>
                             <div class="flex items-center gap-1 sm:gap-2">
@@ -329,7 +331,8 @@
                             <ScheduleMobileCard :schedule="schedule" :slots="slots" :daysOptions="daysOptions"
                                 :scheduleBgColor="scheduleBgColor" :scheduleTextColor="scheduleTextColor"
                                 :backgroundOpacity="backgroundOpacity" :formatTime="formatTime"
-                                :slotsForDay="slotsForDay" :endTimeVisible="endTimeVisible" :titleVisible="titleVisible" />
+                                :slotsForDay="slotsForDay" :endTimeVisible="endTimeVisible"
+                                :titleVisible="titleVisible" />
                         </div>
                         <div class="absolute" :style="scalerStyle">
                             <!-- Planning desktop -->
@@ -1179,6 +1182,17 @@ onUnmounted(() => {
 definePageMeta({
     layout: 'fullscreen'
 })
+
+const { hasFeature } = useFeatures()
+
+const onFormatChange = (val: string) => {
+    if (val === 'mobile' && !hasFeature('mobile_export')) {
+        formatValue.value = 'landscape'
+        mobileExportModal.value = true
+    }
+}
+
+const mobileExportModal = ref(false)
 </script>
 
 <style scoped>
