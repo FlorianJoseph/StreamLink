@@ -357,17 +357,6 @@ const wallpaperColor = computed(() => {
 
 const fontFamily = computed(() => design.font_family ?? null)
 
-watchEffect(() => {
-    if (fontFamily.value) {
-        useHead({
-            link: [{
-                rel: 'stylesheet',
-                href: `https://fonts.googleapis.com/css2?family=${fontFamily.value.replace(/ /g, '+')}:wght@400;500;600;700&display=swap`
-            }]
-        })
-    }
-})
-
 // Fonction pour déterminer si le texte du footer et les boutons doivent être clairs ou sombres
 function isColorDark(hex: string) {
     if (!hex) return true

@@ -252,17 +252,6 @@ function isColorDark(hex) {
 // Couleur du texte basée sur la luminosité du wallpaper
 const textColor = computed(() => isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000')
 
-watchEffect(() => {
-    if (fontFamily.value) {
-        useHead({
-            link: [{
-                rel: 'stylesheet',
-                href: `https://fonts.googleapis.com/css2?family=${fontFamily.value.replace(/ /g, '+')}:wght@400;500;600;700&display=swap`
-            }]
-        })
-    }
-})
-
 const { hasFeature } = useFeatures()
 const noBranding = computed(() => hasFeature('no_branding'))
 </script>

@@ -30,53 +30,87 @@
             <p class="font-semibold truncate" :style="{
                 color: scheduleTextColor,
                 fontSize: '36px',
-                opacity: 0.8,
-                textShadow: '0 0 2px rgba(0,0,0,0.8)'
+                textShadow: '0 0 2px rgba(0,0,0,0.8)',
             }">
                 {{ schedule?.subtitle }}
             </p>
         </div>
 
         <!-- Jours -->
-        <div class="relative z-10 flex flex-col gap-6 flex-1">
+        <div class="relative z-10 flex flex-col gap-8 flex-1">
             <template v-for="day in daysOptions" :key="day.label">
-                <div v-if="slotsForDay(day.label).length > 0" class="flex flex-col gap-3">
-                    <!-- Nom du jour -->
-                    <div class="flex items-center gap-4">
+                <div v-if="slotsForDay(day.label).length > 0" class="flex gap-5 items-start">
+
+                    <!-- Jour en badge vertical à gauche -->
+                    <div class="flex flex-col items-center flex-shrink-0 pt-2" style="width: 80px">
                         <span class="font-bold" :style="{
                             color: scheduleTextColor,
-                            fontSize: '40px',
-                            textShadow: '0 0 2px rgba(0,0,0,0.8)'
+                            fontSize: '28px',
+                            lineHeight: '1',
+                            textShadow: '0 0 2px rgba(0,0,0,0.8)',
+                            opacity: 0.9,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.1em'
                         }">
-                            {{ day.label }}
+                            {{ day.label.slice(0, 3) }}
                         </span>
-                        <div class="flex-1 h-px opacity-30" :style="{ backgroundColor: scheduleTextColor }" />
                     </div>
+
                     <!-- Créneaux -->
-                    <div class="flex flex-col gap-2">
+                    <div class="flex flex-col gap-3 flex-1">
                         <div v-for="slot in slotsForDay(day.label)" :key="slot.id"
-                            class="flex items-center gap-4 px-5 py-4 rounded-xl" :style="{
-                                backgroundColor: 'rgba(0,0,0,0.3)',
-                                borderLeft: `6px solid #${slot.color}`
+                            class="relative overflow-hidden rounded-2xl" :style="{
+                                height: '160px',
+                                border: `3px solid #${slot.color}`,
                             }">
+                            <!-- Image de fond du jeu -->
                             <img v-if="slot.game?.cover" :src="slot.game.cover"
-                                style="width: 48px; height: 64px; border-radius: 6px; object-fit: cover; flex-shrink: 0" />
-                            <div v-else style="width: 48px; height: 64px; flex-shrink: 0" />
-                            <span class="font-semibold truncate flex-1" :style="{
-                                color: scheduleTextColor,
-                                fontSize: '34px',
-                                textShadow: '0 0 2px rgba(0,0,0,0.8)'
-                            }">
-                                {{ slot.game?.label }}
-                            </span>
-                            <span :style="{
-                                color: scheduleTextColor,
-                                fontSize: '30px',
-                                flexShrink: 0,
-                                opacity: 0.8
-                            }">
-                                {{ formatTime(slot.start_at) }}
-                            </span>
+                                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center" />
+
+                            <!-- Overlay gradient -->
+                            <div
+                                style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.1) 100%)" />
+
+                            <!-- Contenu -->
+                            <div
+                                style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px 30px; gap: 8px">
+                                <!-- Titre du stream -->
+                                <span v-if="titleVisible && slot.title" :style="{
+                                    color: 'white',
+                                    fontSize: '42px',
+                                    fontWeight: '800',
+                                    textShadow: '0 2px 4px rgba(0,0,0,0.9)',
+                                    lineHeight: '1.1',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.04em',
+                                    overflow: 'hidden',
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: '1',
+                                    WebkitBoxOrient: 'vertical'
+                                }">
+                                    {{ slot.title }}
+                                </span>
+                                <!-- Heure + Jeu -->
+                                <div :style="{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    color: 'white',
+                                    fontSize: '24px',
+                                    fontWeight: '500',
+                                    opacity: 0.7,
+                                    textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.06em'
+                                }">
+                                    <Icon name="lucide:clock" size="24" style="flex-shrink: 0" />
+                                    <span>{{ formatTime(slot.start_at) }}<span v-if="endTimeVisible"> – {{
+                                        formatTime(slot.end_at) }}</span></span>
+                                    <Icon v-if="slot.game?.label" name="lucide:gamepad-2" size="24"
+                                        style="flex-shrink: 0" />
+                                    <span v-if="slot.game?.label">{{ slot.game?.label }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -107,6 +141,8 @@ const props = defineProps<{
     scheduleBgColor: string
     scheduleTextColor: string
     backgroundOpacity: number
+    endTimeVisible: boolean
+    titleVisible: boolean
     formatTime: (time: string) => string
     slotsForDay: (day: string) => any[]
 }>()

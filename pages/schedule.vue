@@ -329,7 +329,7 @@
                             <ScheduleMobileCard :schedule="schedule" :slots="slots" :daysOptions="daysOptions"
                                 :scheduleBgColor="scheduleBgColor" :scheduleTextColor="scheduleTextColor"
                                 :backgroundOpacity="backgroundOpacity" :formatTime="formatTime"
-                                :slotsForDay="slotsForDay" />
+                                :slotsForDay="slotsForDay" :endTimeVisible="endTimeVisible" :titleVisible="titleVisible" />
                         </div>
                         <div class="absolute" :style="scalerStyle">
                             <!-- Planning desktop -->
