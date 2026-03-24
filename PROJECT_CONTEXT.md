@@ -64,7 +64,8 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Choix de la langue + filtres découverte 13/03/26
 - Choix de Charmi 13/03/26
 - Monnaie virtuelle (Shards) + quêtes BDD + récompenses automatiques 22/03/26
-- Features premium (thèmes exclusifs + polices + suppression branding) déblocables en Shards 22/03/26
+- Features premium (thèmes exclusifs + polices + suppression branding page de liens) déblocables en Shards 22/03/26
+- Features premium (format mobile + polices + suppression branding planning) déblocables en Shards 24/03/26
 
 ## Roadmap court terme – Augmenter la fréquence d'usage (priorité)
 Objectif : que les utilisateurs reviennent régulièrement et activent leur planning.
@@ -75,8 +76,8 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
 
 ### Monnaie virtuelle 
     - Shards implémentés — gain via quêtes, solde navbar, toast notifications
-    - Features premium déblocables : thèmes exclusifs, polices premium, suppression branding
-    - Objectif : 800+ utilisateurs (525), 60% profils actifs (61%), 40% dépenses coins
+    - Features premium déblocables : thèmes exclusifs, polices premium, suppression branding, planning format mobile
+    - Objectif : 800+ utilisateurs (525), 60% profils actifs (62%)
     - Prochaine étape : achat de Shards via Stripe
 
 ### Optimisation pédagogique
@@ -88,9 +89,6 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
     - Filtres (jeu, horaire...)
     - Collabs/Raids
 
-### Planning
-    - Export format mobile
-
 ### Réseaux
     - Export story insta/X
 
@@ -98,8 +96,8 @@ Objectif : que les utilisateurs reviennent régulièrement et activent leur plan
 Objectif : créer de la valeur payante et améliorer la rétention des pros.
 
 ### Premium et monétisation
-    - Système de features temporaires (FeatureAccess) en place
-    - 2 features déployées : no_branding + premium_theme
+    - Système de features temporaires 7j/30j (FeatureAccess) en place
+    - 3 features déployées : no_branding + premium_theme + mobile_export
 
 #### Achat de coins via Stripe
     - Starter ✦500 2,99€ Débloquer un accès 7j direct
