@@ -57,7 +57,11 @@ const spending = ref(false)
 
 const { data: features } = await useFetch('/api/features')
 const feature = computed(() => features.value?.find(f => f.key === props.featureKey))
-const prices = computed(() => feature.value?.FeaturePrices ?? [])
+const prices = computed(() =>
+    feature.value?.FeaturePrices
+        ?.slice()
+        .sort((a: { duration_days: number }, b: { duration_days: number }) => a.duration_days - b.duration_days) ?? []
+)
 
 const handleSpend = async () => {
     if (!selectedPrice.value) return

@@ -240,8 +240,8 @@
                                                     ? 'border-white bg-white/10'
                                                     : 'border-zinc-700 hover:border-zinc-500'"
                                                 @click="onFontClick(font)">
-                                                <span class="text-sm" :style="{ fontFamily: font.name }">{{ font.label
-                                                    }}</span>
+                                                <span class="text-sm" :style="{ fontFamily: font.name }">
+                                                    {{ font.label }}</span>
                                                 <span v-if="font.premium"
                                                     class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">
                                                     Premium
@@ -262,63 +262,58 @@
                                         </div>
                                         <div class="space-y-1">
                                             <!-- Avec séparateur subtil -->
-                                            <label for="toggle-subtitle"
-                                                class="flex justify-between items-center px-3 py-2.5">
+                                            <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:calendar" size="18"
                                                         class="text-gray-400 shrink-0" />
                                                     <span class="text-xs sm:text-sm">Date automatique</span>
                                                 </div>
-                                                <ToggleSwitch id="toggle-subtitle" v-model="autoSubtitle"
+                                                <ToggleSwitch v-model="autoSubtitle"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @change="toggleAutoSubtitle" />
-                                            </label>
-                                            <label for="toggle-title"
-                                                class="flex justify-between items-center px-3 py-2.5">
+                                            </div>
+                                            <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:type" size="18" class="text-gray-400 shrink-0" />
                                                     <span class="text-xs sm:text-sm">Afficher les titres</span>
                                                 </div>
-                                                <ToggleSwitch id="toggle-title" v-model="titleVisible"
+                                                <ToggleSwitch v-model="titleVisible"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @click="toggleTitleVisibility" />
-                                            </label>
+                                            </div>
 
-                                            <label for="toggle-endtime"
-                                                class="flex justify-between items-center px-3 py-2.5">
+                                            <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:clock" size="18"
                                                         class="text-gray-400 shrink-0" />
                                                     <span class="text-xs sm:text-sm">Afficher l'heure de fin</span>
                                                 </div>
-                                                <ToggleSwitch id="toggle-endtime" v-model="endTimeVisible"
+                                                <ToggleSwitch v-model="endTimeVisible"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @click="toggleEndTimeVisibility" />
-                                            </label>
+                                            </div>
 
-                                            <label for="toggle-days"
-                                                class="flex justify-between items-center px-3 py-2.5">
+                                            <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:calendar-off" size="18"
                                                         class="text-gray-400 shrink-0" />
                                                     <span class="text-xs sm:text-sm">Afficher les jours sans
                                                         stream</span>
                                                 </div>
-                                                <ToggleSwitch id="toggle-days" v-model="daysWithoutStreamVisible"
+                                                <ToggleSwitch v-model="daysWithoutStreamVisible"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @click="toggleDaysWithoutStreamVisibility" />
-                                            </label>
-                                            <label for="toggle-branding"
-                                                class="flex justify-between items-center px-3 py-2.5">
+                                            </div>
+                                            <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:badge-check" size="18"
                                                         class="text-gray-400 shrink-0" />
                                                     <span class="text-xs sm:text-sm">Masquer le branding</span>
                                                 </div>
-                                                <ToggleSwitch id="toggle-branding" :modelValue="brandingToggle"
+                                                <ToggleSwitch v-model="brandingToggle"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @click.prevent="onToggleBranding" />
-                                            </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1033,7 +1028,10 @@ async function updateStyle(newStyle: any) {
     if (!schedule.value) return
 
     // Merge l'ancien style avec le nouveau pour ne pas écraser les autres options
-    const updatedStyle = { ...newStyle }
+    const updatedStyle = {
+        ...(schedule.value.style as Record<string, any> ?? {}),  // ← merge avec le style existant
+        ...newStyle
+    }
 
     // Met à jour le store / BDD
     await scheduleStore.updateSchedule({ style: updatedStyle })
