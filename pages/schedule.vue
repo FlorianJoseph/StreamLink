@@ -215,8 +215,42 @@
                                                 :invalid="!isTextColorValid"
                                                 :style="{ color: !isTextColorValid ? '#f87171' : '#ffffff' }" />
                                         </InputGroup>
+                                        <div class="flex flex-col gap-2">
+                                            <p class="font-semibold text-sm">Police</p>
+                                            <button
+                                                class="flex items-center justify-between px-3 py-2.5 rounded-lg border border-zinc-700 hover:border-zinc-500 transition-all w-full"
+                                                @click="fontModal = true">
+                                                <span class="text-sm" :style="{ fontFamily: currentFont }">{{
+                                                    currentFont ??
+                                                    'Inter' }}</span>
+                                                <Icon name="lucide:chevron-right" size="16" class="text-zinc-400" />
+                                            </button>
+                                        </div>
                                     </div>
                                     <Divider />
+
+                                    <!-- Modal polices -->
+                                    <Dialog v-model:visible="fontModal" modal dismissableMask
+                                        header="Choisir une police" :style="{ width: '32rem', margin: '1rem' }"
+                                        :draggable="false">
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <button v-for="font in FONTS" :key="font.name"
+                                                class="relative flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all"
+                                                :class="currentFont === font.name
+                                                    ? 'border-white bg-white/10'
+                                                    : 'border-zinc-700 hover:border-zinc-500'"
+                                                @click="onFontClick(font)">
+                                                <span class="text-sm" :style="{ fontFamily: font.name }">{{ font.label
+                                                    }}</span>
+                                                <span v-if="font.premium"
+                                                    class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">
+                                                    Premium
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </Dialog>
+                                    <FeatureUnlockModal v-model="premiumModal" featureKey="premium_theme" />
+
 
                                     <!-- Section Options -->
                                     <div class="space-y-3">
@@ -274,6 +308,17 @@
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @click="toggleDaysWithoutStreamVisibility" />
                                             </label>
+                                            <label for="toggle-branding"
+                                                class="flex justify-between items-center px-3 py-2.5">
+                                                <div class="flex items-center gap-2">
+                                                    <Icon name="lucide:badge-check" size="18"
+                                                        class="text-gray-400 shrink-0" />
+                                                    <span class="text-xs sm:text-sm">Masquer le branding</span>
+                                                </div>
+                                                <ToggleSwitch id="toggle-branding" :modelValue="brandingToggle"
+                                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                                    @click.prevent="onToggleBranding" />
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -281,6 +326,9 @@
                         </TabPanels>
                     </Tabs>
                 </div>
+
+                <FeatureUnlockModal v-model="noBrandingModal" featureKey="no_branding" />
+
                 <div class="flex-1 min-w-0 flex flex-col gap-4">
 
                     <!-- Barre d'outils -->
@@ -294,7 +342,6 @@
                                         size="16" />
                                 </template>
                             </SelectButton>
-                            <FeatureUnlockModal v-model="mobileExportModal" featureKey="mobile_export" />
                         </template>
                         <template #end>
                             <div class="flex items-center gap-1 sm:gap-2">
@@ -304,7 +351,7 @@
                                     class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Partager</span>
                                 </Button> -->
                                 <Button severity="secondary" :disabled="isPreviewing" :loading="isPreviewing"
-                                    @click="mobileFormat ? previewScheduleMobile() : previewSchedule()">
+                                    @click="mobileFormat ? previewScheduleMobile(currentFont, showBranding) : previewSchedule(currentFont, showBranding)">
                                     <Icon v-if="isPreviewing" name="lucide:loader-circle" size="18"
                                         class="animate-spin" />
                                     <Icon v-else name="lucide:eye" size="18" />
@@ -314,7 +361,7 @@
                                 </Button>
                                 <!-- Bouton export adaptatif -->
                                 <Button severity="contrast" :disabled="isExporting" :loading="isExporting"
-                                    @click="mobileFormat ? exportScheduleMobile() : exportSchedule()">
+                                    @click="mobileFormat ? exportScheduleMobile(currentFont, showBranding) : exportSchedule(currentFont, showBranding)">
                                     <Icon v-if="isExporting" name="lucide:loader-circle" size="18"
                                         class="animate-spin" />
                                     <Icon v-else name="lucide:download" size="18" />
@@ -323,6 +370,7 @@
                             </div>
                         </template>
                     </Menubar>
+                    <FeatureUnlockModal v-model="mobileExportModal" featureKey="mobile_export" />
 
                     <!-- Planning hebdomadaire -->
                     <div ref="viewportRef" class="relative w-full flex justify-center">
@@ -331,8 +379,8 @@
                             <ScheduleMobileCard :schedule="schedule" :slots="slots" :daysOptions="daysOptions"
                                 :scheduleBgColor="scheduleBgColor" :scheduleTextColor="scheduleTextColor"
                                 :backgroundOpacity="backgroundOpacity" :formatTime="formatTime"
-                                :slotsForDay="slotsForDay" :endTimeVisible="endTimeVisible"
-                                :titleVisible="titleVisible" />
+                                :slotsForDay="slotsForDay" :endTimeVisible="endTimeVisible" :titleVisible="titleVisible"
+                                :showBranding="schedule?.style?.showBranding !== false" />
                         </div>
                         <div class="absolute" :style="scalerStyle">
                             <!-- Planning desktop -->
@@ -360,12 +408,14 @@
                                                         @blur="saveEdit" @keyup.enter="saveEdit"
                                                         @keyup.esc.prevent.stop="cancelEdit"
                                                         class="text-4xl font-bold bg-transparent border-none focus:outline-none"
-                                                        maxlength="60" />
+                                                        maxlength="60" :style="{ fontFamily: currentFont }" />
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer"
                                                         @click="editField('title')">
-                                                        <h1 class="text-4xl font-bold"> {{ schedule?.title }} </h1>
+                                                        <h1 class="text-4xl font-bold"
+                                                            :style="{ fontFamily: currentFont }"> {{ schedule?.title }}
+                                                        </h1>
                                                         <Icon name="lucide:pencil" size="34"
                                                             class="transition ignore-export" />
                                                     </div>
@@ -377,13 +427,15 @@
                                                         @blur="saveEdit" @keyup.enter="saveEdit"
                                                         @keyup.esc.prevent.stop="cancelEdit"
                                                         class="text-base font-semibold bg-transparent border-none focus:outline-none w-full"
-                                                        maxlength="100" />
+                                                        :style="{ fontFamily: currentFont }" maxlength="100" />
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer"
                                                         :class="autoSubtitle ? 'pointer-events-none' : ''"
                                                         @click="editField('subtitle')">
-                                                        <div class="text-base font-semibold"> {{ schedule?.subtitle }}
+                                                        <div class="text-base font-semibold"
+                                                            :style="{ fontFamily: currentFont }"> {{ schedule?.subtitle
+                                                            }}
                                                         </div>
                                                         <Icon v-if="!autoSubtitle" name="lucide:pencil" size="18"
                                                             class="transition ignore-export" />
@@ -400,7 +452,7 @@
                                                     class="flex flex-col items-center transition-all duration-500 ease-out">
                                                     <!-- Jour -->
                                                     <div class=" font-semibold mb-2 text-center text-xl"
-                                                        :style="{ color: scheduleTextColor, textShadow: '0 0 2px rgba(0,0,0,0.8)' }">
+                                                        :style="{ color: scheduleTextColor, textShadow: '0 0 2px rgba(0,0,0,0.8)', fontFamily: currentFont }">
                                                         {{ day.label }}</div>
                                                     <!-- Créneaux -->
                                                     <div class="h-130 w-full">
@@ -446,12 +498,13 @@
                                                                                 <div class="flex-1"></div>
                                                                                 <!-- Tag titre -->
                                                                                 <div class="bg-black/80 text-sm font-bold px-2 py-1 rounded-b-md z-60 line-clamp-1"
-                                                                                    v-if="titleVisible">
+                                                                                    v-if="titleVisible"
+                                                                                    :style="{ fontFamily: currentFont }">
                                                                                     {{ slot.title }}
                                                                                 </div>
                                                                                 <!-- Heure -->
                                                                                 <div class="absolute top-[-1px] left-[-1px] z-100 px-2 py-1 text-base font-semibold rounded-br-md rounded-tl-sm"
-                                                                                    :style="slot.game.cover ? { backgroundColor: `#${slot.color}` } : {}">
+                                                                                    :style="slot.game.cover ? { backgroundColor: `#${slot.color}`, fontFamily: currentFont } : { fontFamily: currentFont }">
                                                                                     {{ formatTime(slot.start_at) }}
                                                                                     <span v-if="endTimeVisible">
                                                                                         -
@@ -495,7 +548,8 @@
                                         </div>
                                     </div>
                                     <!-- Footer -->
-                                    <div class="absolute bottom-4 right-6 z-20 pointer-events-none ignore-export">
+                                    <div v-if="schedule?.style?.showBranding !== false"
+                                        class="absolute bottom-4 right-6 z-20 pointer-events-none ignore-export">
                                         <div class="text-right leading-none select-none">
                                             <div class="text-[10px] font-light uppercase tracking-widest text-white/70"
                                                 style="text-shadow: 0 1px 3px rgba(0,0,0,0.8)">
@@ -947,6 +1001,21 @@ const scheduleTextColor = computed(() => {
     return `#${schedule.value?.style?.textColor || ''}`
 })
 
+// Police actuelle
+const currentFont = computed(() => schedule.value?.style?.fontFamily ?? null)
+const fontModal = ref(false)
+const premiumModal = ref(false)
+
+// Mise à jour de la police
+const onFontClick = (font: any) => {
+    if (font.premium && !hasFeature('premium_theme')) {
+        premiumModal.value = true
+        fontModal.value = false
+        return
+    }
+    scheduleStore.updateSchedule({ style: { fontFamily: font.name } })
+}
+
 // Gestion de l'affichage des éléments du planning
 const titleVisible = ref(true)
 const endTimeVisible = ref(false)
@@ -986,6 +1055,19 @@ function toggleEndTimeVisibility() {
 
 function toggleDaysWithoutStreamVisibility() {
     updateStyle({ showDaysWithoutStream: !daysWithoutStreamVisible.value })
+}
+
+// Toggle du branding
+const brandingToggle = computed(() => hasFeature('no_branding') && schedule.value?.style?.showBranding === false)
+const showBranding = computed(() => schedule.value?.style?.showBranding !== false)
+const noBrandingModal = ref(false)
+
+const onToggleBranding = () => {
+    if (!hasFeature('no_branding')) {
+        noBrandingModal.value = true
+        return
+    }
+    updateStyle({ showBranding: brandingToggle.value ? true : false })
 }
 
 // Gestion de la génération d'aperçu et de l'export du planning
@@ -1187,9 +1269,13 @@ const { hasFeature } = useFeatures()
 
 const onFormatChange = (val: string) => {
     if (val === 'mobile' && !hasFeature('mobile_export')) {
-        formatValue.value = 'landscape'
         mobileExportModal.value = true
+        nextTick(() => {
+            formatValue.value = 'landscape'
+        })
+        return
     }
+    formatValue.value = val
 }
 
 const mobileExportModal = ref(false)

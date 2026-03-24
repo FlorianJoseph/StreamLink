@@ -11,6 +11,7 @@
         display: 'flex',
         flexDirection: 'column',
         gap: '48px',
+        fontFamily: schedule?.style?.fontFamily
     }">
         <!-- Overlay image de fond -->
         <div v-if="schedule?.style?.backgroundUrl" class="absolute inset-0" :style="{
@@ -108,7 +109,7 @@
                                         formatTime(slot.end_at) }}</span></span>
                                     <Icon v-if="slot.game?.label" name="lucide:gamepad-2" size="24"
                                         style="flex-shrink: 0" />
-                                    <span v-if="slot.game?.label">{{ slot.game?.label }}</span>
+                                    <span v-if="slot.game?.label" class="truncate">{{ slot.game?.label }}</span>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +119,7 @@
         </div>
 
         <!-- Footer branding -->
-        <div class="absolute z-20" style="bottom: 60px; right: 60px">
+        <div v-if="showBranding !== false" class="absolute z-20" style="bottom: 60px; right: 60px">
             <div style="text-align: right; line-height: 1.1; font-family: Inter, sans-serif">
                 <div
                     style="font-size: 18px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.7); text-shadow: 0 1px 3px #000">
@@ -143,6 +144,7 @@ const props = defineProps<{
     backgroundOpacity: number
     endTimeVisible: boolean
     titleVisible: boolean
+    showBranding?: boolean
     formatTime: (time: string) => string
     slotsForDay: (day: string) => any[]
 }>()

@@ -4,19 +4,25 @@ const BASE_HEIGHT = 720
 const isExporting = ref(false)
 const isPreviewing = ref(false)
 
+const loadFontForExport = async (fontFamily: string): Promise<string> => {
+    return await $fetch<string>(`/api/fonts/${fontFamily.replace(/ /g, '+')}`)
+}
+
 export const useScheduleScreenshot = () => {
     const previewDataUrl = ref<string | null>(null)
     const showPreview = ref(false)
 
-    const renderSchedule = async (scale?: number): Promise<string | null> => {
+    const renderSchedule = async (scale?: number, fontFamily?: string, showBranding?: boolean): Promise<string | null> => {
         const node = document.querySelector<HTMLElement>('#scheduleCard')
         if (!node) return null
         let footerInjected = false
+        const fontCssText = fontFamily ? await loadFontForExport(fontFamily) : undefined
 
         return domToPng(node, {
             scale,
             width: BASE_WIDTH,
             height: BASE_HEIGHT,
+            font: fontCssText ? { cssText: fontCssText } : undefined,
             onCloneEachNode: (cloned) => {
                 if (!(cloned instanceof HTMLElement)) return
 
@@ -74,6 +80,7 @@ export const useScheduleScreenshot = () => {
 
                 if (cloned.classList.contains('export-footer') && !footerInjected) {
                     footerInjected = true
+                    if (showBranding === false) return
 
                     const wrapper = document.createElement('div')
                     wrapper.style.position = 'absolute'
@@ -115,16 +122,16 @@ export const useScheduleScreenshot = () => {
         })
     }
 
-    const previewSchedule = async () => {
+    const previewSchedule = async (fontFamily?: string, showBranding?: boolean) => {
         isPreviewing.value = true
-        previewDataUrl.value = await renderSchedule(1)
+        previewDataUrl.value = await renderSchedule(1, fontFamily, showBranding)
         showPreview.value = true
         isPreviewing.value = false
     }
 
-    const exportSchedule = async () => {
+    const exportSchedule = async (fontFamily?: string, showBranding?: boolean) => {
         isExporting.value = true
-        const dataUrl = await renderSchedule(2)
+        const dataUrl = await renderSchedule(2, fontFamily, showBranding)
         if (!dataUrl) return
 
         const link = document.createElement('a')
@@ -134,33 +141,78 @@ export const useScheduleScreenshot = () => {
         isExporting.value = false
     }
 
-    const renderScheduleMobile = async (scale?: number): Promise<string | null> => {
+    const renderScheduleMobile = async (scale?: number, fontFamily?: string, showBranding?: boolean): Promise<string | null> => {
         const node = document.querySelector<HTMLElement>('#scheduleCardMobile')
         if (!node) return null
+        let mobileFooterInjected = false
+        const fontCssText = fontFamily ? await loadFontForExport(fontFamily) : undefined
 
         return domToPng(node, {
             scale,
             width: 1080,
             height: 1920,
+            font: fontCssText ? { cssText: fontCssText } : undefined,
             onCloneEachNode: (cloned) => {
                 if (!(cloned instanceof HTMLElement)) return
                 if (cloned.classList.contains('ignore-export')) {
                     cloned.style.display = 'none'
                 }
+
+
+                if (cloned.classList.contains('export-footer') && !mobileFooterInjected) {
+                    mobileFooterInjected = true
+                    if (showBranding === false) return
+                    
+                    const wrapper = document.createElement('div')
+                    wrapper.style.position = 'absolute'
+                    wrapper.style.bottom = '60px'
+                    wrapper.style.right = '60px'
+                    wrapper.style.zIndex = '20'
+                    wrapper.style.pointerEvents = 'none'
+                    wrapper.style.userSelect = 'none'
+
+                    const container = document.createElement('div')
+                    container.style.textAlign = 'right'
+                    container.style.lineHeight = '1.1'
+                    container.style.fontFamily = 'Inter, sans-serif'
+
+                    const madeWith = document.createElement('div')
+                    madeWith.textContent = 'Made with'
+                    madeWith.style.fontSize = '18px'
+                    madeWith.style.fontWeight = '400'
+                    madeWith.style.textTransform = 'uppercase'
+                    madeWith.style.letterSpacing = '0.12em'
+                    madeWith.style.color = 'rgba(255,255,255,0.7)'
+                    madeWith.style.textShadow = '0 1px 3px #000'
+
+                    const brand = document.createElement('div')
+                    brand.textContent = 'StreamLink'
+                    brand.style.fontSize = '22px'
+                    brand.style.fontWeight = '600'
+                    brand.style.textTransform = 'uppercase'
+                    brand.style.letterSpacing = '0.04em'
+                    brand.style.color = 'rgba(255,255,255,0.9)'
+                    brand.style.textShadow = '0 1px 3px #000'
+
+                    container.appendChild(madeWith)
+                    container.appendChild(brand)
+                    wrapper.appendChild(container)
+                    cloned.appendChild(wrapper)
+                }
             }
         })
     }
 
-    const previewScheduleMobile = async () => {
+    const previewScheduleMobile = async (fontFamily?: string, showBranding?: boolean) => {
         isPreviewing.value = true
-        previewDataUrl.value = await renderScheduleMobile(1)
+        previewDataUrl.value = await renderScheduleMobile(1, fontFamily, showBranding)
         showPreview.value = true
         isPreviewing.value = false
     }
 
-    const exportScheduleMobile = async () => {
+    const exportScheduleMobile = async (fontFamily?: string, showBranding?: boolean) => {
         isExporting.value = true
-        const dataUrl = await renderScheduleMobile(2)
+        const dataUrl = await renderScheduleMobile(2, fontFamily, showBranding)
         if (!dataUrl) return
         const link = document.createElement('a')
         link.download = 'planning-mobile.png'
