@@ -1,7 +1,26 @@
 const featureAccess = ref<{ feature_key: string, expires_at: string | null }[]>([])
+const subscription = ref<{ status: string, current_period_end: string | null } | null>(null)
 
 export const useFeatures = () => {
     const { fetchBalance } = useWallet()
+
+    const fetchSubscription = async () => {
+        try {
+            subscription.value = await $fetch('/api/features/subscription')
+        } catch {
+            subscription.value = null
+        }
+    }
+
+    const isSub = computed(() => {
+        if (!subscription.value) return false
+        if (subscription.value.status === 'active') return true
+        if (subscription.value.status === 'canceled' && subscription.value.current_period_end) {
+            return new Date(subscription.value.current_period_end) > new Date()
+        }
+        return false
+    })
+
     const fetchAccess = async () => {
         try {
             featureAccess.value = await $fetch('/api/features/access')
@@ -11,6 +30,7 @@ export const useFeatures = () => {
     }
 
     const hasFeature = (key: string) => {
+        if (isSub.value) return true
         return featureAccess.value.some(f => f.feature_key === key)
     }
 
@@ -40,5 +60,5 @@ export const useFeatures = () => {
         return { success, expiresAt }
     }
 
-    return { featureAccess, fetchAccess, hasFeature, getExpiryLabel, spend }
+    return { featureAccess, fetchAccess, hasFeature, getExpiryLabel, spend, isSub, fetchSubscription }
 }

@@ -30,6 +30,7 @@ export default defineNuxtConfig({
         'vuedraggable',
         'vue-advanced-cropper',
         '@vueuse/core',
+        '@stripe/stripe-js',
       ]
     },
     plugins: [
@@ -53,15 +54,17 @@ export default defineNuxtConfig({
   runtimeConfig: {
     stripeSecretKey: '',
     stripeWebhookSecret: '',
+    stripePriceSub: '',
+    stripePriceCoinsStarter: '',
+    stripePriceCoinsPopular: '',
+    stripePriceCoinsPro: '',
     public: {
       stripePublishableKey: '',
       appUrl: 'http://localhost:3000',
+      stripePriceSub: '',
       stripePriceCoinsStarter: '',
       stripePriceCoinsPopular: '',
       stripePriceCoinsPro: '',
-      stripePriceSubStarter: '',
-      stripePriceSubPopular: '',
-      stripePriceSubPro: '',
     }
   },
 })

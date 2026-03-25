@@ -1,83 +1,111 @@
-// import { loadStripe } from '@stripe/stripe-js';
-// import { serverSupabaseServiceRole } from '#supabase/server'
+import Stripe from 'stripe'
+import { serverSupabaseServiceRole } from '#supabase/server'
 
-// export default defineEventHandler(async (event) => {
-//     const config = useRuntimeConfig()
-//     const stripe = await loadStripe(config.stripeSecretKey);
+export default defineEventHandler(async (event) => {
+    const config = useRuntimeConfig()
+    const stripe = new Stripe(config.stripeSecretKey)
 
-//     const body = await readRawBody(event)
-//     const sig = getHeader(event, 'stripe-signature')
+    const body = await readRawBody(event)
+    const sig = getHeader(event, 'stripe-signature')
 
-//     let stripeEvent: stripe.Event
+    let stripeEvent: Stripe.Event
 
-//     try {
-//         stripeEvent = stripe.webhooks.constructEvent(body!, sig!, config.stripeWebhookSecret)
-//     } catch (err) {
-//         throw createError({ statusCode: 400, message: `Webhook error: ${err}` })
-//     }
+    try {
+        stripeEvent = stripe.webhooks.constructEvent(body!, sig!, config.stripeWebhookSecret)
+    } catch (err) {
+        throw createError({ statusCode: 400, message: `Webhook error: ${err}` })
+    }
 
-//     const supabase = serverSupabaseServiceRole(event)
+    const supabase = serverSupabaseServiceRole(event)
 
-//     if (stripeEvent.type === 'checkout.session.completed') {
-//         const session = stripeEvent.data.object as Stripe.Checkout.Session
-//         const userId = session.metadata?.user_id
-//         const mode = session.metadata?.mode
+    if (stripeEvent.type === 'checkout.session.completed') {
+        const session = stripeEvent.data.object as Stripe.Checkout.Session
+        const userId = session.metadata?.user_id
+        const mode = session.metadata?.mode
 
-//         if (!userId) return { received: true }
+        if (!userId) return { received: true }
 
-//         if (mode === 'payment') {
-//             // Récupérer les line items pour savoir quel pack
-//             const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
-//             const priceId = lineItems.data[0]?.price?.id
+        if (mode === 'payment') {
+            // Récupérer les line items pour savoir quel pack
+            const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
+            const priceId = lineItems.data[0]?.price?.id
 
-//             // Mapper priceId → Shards
-//             const shardsMap: Record<string, number> = {
-//                 [process.env.STRIPE_PRICE_STARTER!]: 500,
-//                 [process.env.STRIPE_PRICE_POPULAR!]: 1500,
-//                 [process.env.STRIPE_PRICE_PRO!]: 3500,
-//             }
+            // Mapper priceId → Coins
+            const coinsMap: Record<string, number> = {
+                [config.public.stripePriceCoinsStarter]: 300,
+                [config.public.stripePriceCoinsPopular]: 750,
+                [config.public.stripePriceCoinsPro]: 1500,
+            }
 
-//             const shards = shardsMap[priceId!] ?? 0
+            const coins = coinsMap[priceId!] ?? 0
 
-//             if (shards > 0) {
-//                 await supabase.from('WalletTransactions').insert({
-//                     user_id: userId,
-//                     amount: shards,
-//                     operation: 'credit',
-//                     type: 'purchase',
-//                     reference_id: null
-//                 })
-//             }
-//         }
+            if (coins > 0) {
+                await supabase.from('WalletTransactions').insert({
+                    user_id: userId,
+                    amount: coins,
+                    operation: 'credit',
+                    type: 'purchase',
+                    reference_id: null
+                })
+            }
+        }
 
-//         if (mode === 'subscription') {
-//             // Activer toutes les features pour l'abonné
-//             const features = ['premium_theme', 'no_branding', 'mobile_export']
-//             for (const featureKey of features) {
-//                 await supabase.from('FeatureAccess').upsert({
-//                     user_id: userId,
-//                     feature_key: featureKey,
-//                     expires_at: null, // illimité
-//                     source: 'subscription'
-//                 }, { onConflict: 'user_id, feature_key' })
-//             }
-//         }
-//     }
+        if (mode === 'subscription') {
+            // Activer toutes les features pour l'abonné
+            await supabase.from('Subscriptions').upsert({
+                user_id: userId,
+                status: 'active',
+                stripe_customer_id: session.customer as string,
+                current_period_end: null
+            }, { onConflict: 'user_id' })
+        }
+    }
 
-//     if (stripeEvent.type === 'customer.subscription.deleted') {
-//         const subscription = stripeEvent.data.object as Stripe.Subscription
-//         // Récupérer le user_id depuis les metadata du customer
-//         const customer = await stripe.customers.retrieve(subscription.customer as string)
-//         const userId = (customer as Stripe.Customer).metadata?.user_id
+    if (stripeEvent.type === 'customer.subscription.updated') {
+        const subscription = stripeEvent.data.object as Stripe.Subscription
+        const customer = await stripe.customers.retrieve(subscription.customer as string)
+        const userId = (customer as Stripe.Customer).metadata?.user_id
 
-//         if (userId) {
-//             await supabase
-//                 .from('FeatureAccess')
-//                 .update({ expires_at: new Date().toISOString() })
-//                 .eq('user_id', userId)
-//                 .eq('source', 'subscription')
-//         }
-//     }
+        if (!userId) return { received: true }
 
-//     return { received: true }
-// })
+        if (subscription.cancel_at) {
+            await supabase.from('Subscriptions').upsert({
+                user_id: userId,
+                status: 'canceled',
+                stripe_customer_id: subscription.customer as string,
+                current_period_end: new Date(subscription.cancel_at * 1000).toISOString()
+            }, { onConflict: 'user_id' })
+        }
+
+        if (subscription.status === 'canceled') {
+            await supabase.from('Subscriptions').upsert({
+                user_id: userId,
+                status: 'deleted',
+                stripe_customer_id: subscription.customer as string,
+                current_period_end: null
+            }, { onConflict: 'user_id' })
+
+            await supabase
+                .from('Streamer')
+                .update({ is_sub: false })
+                .eq('id', userId)
+        }
+    }
+
+    if (stripeEvent.type === 'customer.subscription.deleted') {
+        const subscription = stripeEvent.data.object as Stripe.Subscription
+        const customer = await stripe.customers.retrieve(subscription.customer as string)
+        const userId = (customer as Stripe.Customer).metadata?.user_id
+
+        if (userId) {
+            await supabase.from('Subscriptions').upsert({
+                user_id: userId,
+                status: 'deleted',
+                stripe_customer_id: subscription.customer as string,
+                current_period_end: null
+            }, { onConflict: 'user_id' })
+        }
+    }
+
+    return { received: true }
+})

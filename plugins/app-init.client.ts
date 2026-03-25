@@ -3,7 +3,7 @@ import { useProfileProgress } from '~/composables/useProfileProgress'
 
 export default defineNuxtPlugin((nuxtApp) => {
     const profileProgress = useProfileProgress()
-    const { fetchAccess } = useFeatures()
+    const { fetchAccess, fetchSubscription } = useFeatures()
     const { uid } = useSupabase()
 
     nuxtApp.hook('app:mounted', async () => {
@@ -18,6 +18,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             linkStore.fetchLinks(),
             scheduleStore.fetchSchedule(),
             fetchAccess(),
+            fetchSubscription(),
         ])
 
         const scheduleId = scheduleStore.schedule?.id

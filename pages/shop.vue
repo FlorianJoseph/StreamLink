@@ -17,20 +17,35 @@
             <span class="text-sm text-gray-500">Coins</span>
         </div>
 
-        <!-- Section Abonnement Pro -->
+        <div v-if="isSub"
+            class="flex items-center justify-between p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5">
+            <div class="flex items-center gap-3">
+                <Icon name="lucide:crown" size="20" class="text-amber-400" />
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold">Abonnement Pro actif</span>
+                    <span class="text-xs text-gray-400">Accès illimité à toutes les features</span>
+                </div>
+            </div>
+            <Button severity="secondary" outlined @click="openPortal">
+                <Icon name="lucide:settings" size="16" />
+                <span class="text-sm">Gérer</span>
+            </Button>
+        </div>
+
+        <!-- Section Abonnement -->
         <div id="pro-section">
             <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Icon name="lucide:crown" size="20" class="text-amber-400" />
-                Abonnement Pro
+                Abonnement
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div v-for="pack in proPacks" :key="pack.label"
+                <div v-for="pack in subPacks" :key="pack.label"
                     class="relative flex flex-col gap-3 p-5 rounded-xl border-2 transition-all cursor-pointer" :class="pack.popular
                         ? 'border-amber-500/60 bg-amber-500/5 hover:border-amber-500'
                         : 'border-zinc-700 bg-zinc-800/30 hover:border-zinc-500'">
                     <div v-if="pack.popular"
                         class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs font-semibold bg-amber-500 text-amber-950">
-                        Populaire
+                        Meilleur choix
                     </div>
                     <div class="flex flex-col gap-1">
                         <span class="font-bold text-base">{{ pack.label }}</span>
@@ -40,18 +55,18 @@
                         </div>
                     </div>
                     <span class="text-sm font-semibold text-amber-400">✦ {{ pack.access }}</span>
-                    <Button :severity="pack.popular ? 'contrast' : 'secondary'" class="w-full mt-auto">
+                    <div v-if="pack.features" class="flex flex-col gap-1 mt-2">
+                        <div v-for="feature in pack.features" :key="feature"
+                            class="flex items-center gap-2 text-xs text-gray-400">
+                            <Icon name="lucide:check" size="14" class="text-emerald-400 shrink-0" />
+                            {{ feature }}
+                        </div>
+                    </div>
+                    <Button @click="openCheckout(pack.priceId, 'subscription')"
+                        :severity="pack.popular ? 'contrast' : 'secondary'" class="w-full mt-auto">
                         <Icon name="lucide:zap" size="16" />
                         <span class="text-sm">Choisir ce plan</span>
                     </Button>
-                </div>
-            </div>
-            <!-- Avantages communs -->
-            <div class="flex flex-wrap gap-3 mt-4">
-                <div v-for="benefit in proBenefits" :key="benefit"
-                    class="flex items-center gap-2 text-xs text-gray-300">
-                    <Icon name="lucide:check" size="14" class="text-emerald-400 shrink-0" />
-                    {{ benefit }}
                 </div>
             </div>
         </div>
@@ -62,7 +77,7 @@
         <div
             class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-400 font-medium">
             <Icon name="lucide:flame" size="14" class="shrink-0" />
-            Astuce : le Pro devient rentable dès 2 fonctionnalités utilisées
+            Astuce : l'abonnement devient rentable dès 2 fonctionnalités utilisées
         </div>
         <!-- Section Features à débloquer -->
         <div>
@@ -236,11 +251,19 @@
 
 <script setup lang="ts">
 const { balance, fetchBalance } = useWallet()
-const { hasFeature, getExpiryLabel, spend, fetchAccess } = useFeatures()
+const { hasFeature, getExpiryLabel, spend, fetchAccess, isSub } = useFeatures()
 const config = useRuntimeConfig()
+
+const openPortal = async () => {
+    const { url } = await $fetch('/api/stripe/portal', { method: 'POST' })
+    window.open(url, '_blank')
+}
 
 // Features depuis l'API
 const { data: features, pending: featuresLoading } = await useFetch('/api/features')
+
+const route = useRoute()
+const toast = useToast()
 
 // Modales par feature
 const featureModals = ref<Record<string, boolean>>({})
@@ -273,26 +296,48 @@ const confirmSpend = async () => {
 }
 
 // Packs Pro
-const proPacks = [
-    { label: 'Starter', price: 4.99, duration: '/ 7 jours', access: 'Ta page devient unique — 7 jours', popular: false },
-    { label: 'Popular', price: 9.99, duration: '/ mois', access: 'Tu te démarques instantanément', popular: true },
-    { label: 'Pro', price: 79.99, duration: '/ an', access: 'Plus pro que 90% des streamers', popular: false },
-]
-
-const proBenefits = [
-    '15 thèmes exclusifs et 23 polices premium pour une page unique',
-    'Planning au format story Instagram / X en 1 clic',
-    'Zéro logo StreamLink, 100% toi',
+const subPacks = [
+    {
+        label: 'Mensuel',
+        price: 9.99,
+        duration: '/ mois',
+        priceId: 'sub',
+        access: 'Tu te démarques instantanément',
+        popular: true,
+        features: [
+            '15 thèmes exclusifs et 23 polices premium',
+            'Planning au format story Instagram / X en 1 clic',
+            'Zéro logo StreamLink, 100% toi',
+        ]
+    },
 ]
 
 // Packs Coins
 const coinPacks = [
-    { label: 'Starter', coins: 300, price: 2.99, best: false, priceId: 'coins_starter', description: 'Parfait pour tester une feature' },
-    { label: 'Popular', coins: 700, price: 6.99, best: true, priceId: 'coins_popular', bonus: '+50 offerts', description: 'Le plus rentable pour les créateurs actifs' },
-    { label: 'Pro', coins: 1500, price: 14.99, best: false, priceId: 'coins_pro', bonus: '+200 offerts', description: 'Maximise ta visibilité sur plusieurs semaines' },
+    {
+        label: 'Essai rapide',
+        coins: 300, price: 2.99, best: false,
+        priceId: 'coins_starter',
+        description: 'Parfait pour tester une feature'
+    },
+    {
+        label: 'Le plus rentable',
+        coins: 750, price: 6.99, best: true,
+        priceId: 'coins_popular',
+        bonus: '+50 offerts',
+        description: 'Le choix des créateurs actifs'
+    },
+    {
+        label: 'Boost créateur',
+        coins: 1700, price: 14.99, best: false,
+        priceId: 'coins_pro',
+        bonus: '+200 offerts',
+        description: 'Maximise ta visibilité sur plusieurs semaines'
+    },
 ]
 
 const priceIdMap: Record<string, string> = {
+    sub: config.public.stripePriceSub,
     coins_starter: config.public.stripePriceCoinsStarter,
     coins_popular: config.public.stripePriceCoinsPopular,
     coins_pro: config.public.stripePriceCoinsPro,
@@ -344,16 +389,33 @@ const scrollToCoins = () => {
 const checkoutClientSecret = ref<string | null>(null)
 const checkoutModal = ref(false)
 
-const openCheckout = async (packPriceId: string) => {
+const openCheckout = async (packPriceId: string, mode: 'payment' | 'subscription' = 'payment') => {
     const priceId = priceIdMap[packPriceId]
     const { clientSecret } = await $fetch('/api/stripe/checkout', {
         method: 'POST',
-        body: { priceId }
+        body: { priceId, mode }
     })
     checkoutClientSecret.value = clientSecret
     checkoutModal.value = true
 }
 
+onMounted(async () => {
+    if (route.query.session_id) {
+        const { coins, mode } = await $fetch('/api/stripe/session', {
+            query: { session_id: route.query.session_id }
+        })
+        toast.add({
+            severity: 'secondary',
+            group: 'payment',
+            summary: mode === 'subscription' ? 'Abonnement Pro activé !' : 'Coins ajoutés à ton solde',
+            detail: mode === 'subscription' ? 'Toutes les features sont débloquées' : String(coins),
+            life: 8000,
+        })
+        navigateTo('/shop', { replace: true })
+        await fetchBalance()
+        await fetchAccess()
+    }
+})
 
 definePageMeta({
     layout: 'fullscreen'

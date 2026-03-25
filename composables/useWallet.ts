@@ -5,6 +5,7 @@ export const useWallet = () => {
     const { streamer } = storeToRefs(streamerStore)
 
     const fetchBalance = async () => {
+        if (!import.meta.client) return
         if (!streamer.value?.id) return
 
         try {
