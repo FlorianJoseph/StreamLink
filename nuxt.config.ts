@@ -49,5 +49,19 @@ export default defineNuxtConfig({
         jsxImportSource: 'react'
       }
     }
-  }
+  },
+  runtimeConfig: {
+    stripeSecretKey: '',
+    stripeWebhookSecret: '',
+    public: {
+      stripePublishableKey: '',
+      appUrl: 'http://localhost:3000',
+      stripePriceCoinsStarter: '',
+      stripePriceCoinsPopular: '',
+      stripePriceCoinsPro: '',
+      stripePriceSubStarter: '',
+      stripePriceSubPopular: '',
+      stripePriceSubPro: '',
+    }
+  },
 })

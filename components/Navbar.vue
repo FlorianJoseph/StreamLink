@@ -45,7 +45,7 @@
                     <template v-if="user">
                         <div class="flex items-center gap-1 px-2 py-1 rounded-md bg-zinc-300/10 text-sm font-semibold">
                             <Icon name="lucide:coins" size="14" class="shrink-0" />
-                            <span>{{ balance }}</span>
+                            <span>{{ balance }} Coins</span>
                         </div>
                     </template>
                     <button
@@ -113,6 +113,12 @@ const menuItems = ref([
         label: 'Planning',
         icon: 'lucide:calendar-days',
         route: '/schedule',
+    },
+    {
+        label: 'Boutique',
+        icon: 'lucide:shopping-bag',
+        route: '/shop',
+        badge: 'Nouveau'
     },
 ]);
 
