@@ -450,7 +450,7 @@ const onMessage = async (e: MessageEvent) => {
             group: 'payment',
             summary: mode === 'subscription' ? 'Abonnement activé !' : 'Coins ajoutés à ton solde',
             detail: mode === 'subscription' ? 'Toutes les features sont débloquées' : String(coins),
-            life: 5000,
+            life: 4000,
         })
     }
 }

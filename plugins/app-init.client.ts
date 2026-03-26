@@ -4,6 +4,7 @@ import { useProfileProgress } from '~/composables/useProfileProgress'
 export default defineNuxtPlugin((nuxtApp) => {
     const profileProgress = useProfileProgress()
     const { fetchAccess, fetchSubscription } = useFeatures()
+    const { fetchBalance } = useWallet()
     const { uid } = useSupabase()
 
     watch(uid, async (newUid) => {
@@ -27,7 +28,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
         await $fetch('/api/quests/check', { method: 'POST' })
         await profileProgress.init()
-        await profileProgress.fetchBalance()
+        await fetchBalance()
     })
 
     nuxtApp.hook('app:mounted', async () => {
@@ -50,7 +51,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
         await $fetch('/api/quests/check', { method: 'POST' })
         await profileProgress.init()
-        await profileProgress.fetchBalance()
+        await fetchBalance()
     })
 
     nuxtApp.provide('profileProgress', profileProgress)

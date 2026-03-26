@@ -1,4 +1,5 @@
 const balance = ref<number>(0)
+let fetchPromise: Promise<void> | null = null
 
 export const useWallet = () => {
     const streamerStore = useStreamerStore()
@@ -9,16 +10,19 @@ export const useWallet = () => {
         if (!streamer.value?.id) return
 
         try {
-            const { balance: b } = await $fetch('/api/wallet/balance')
-            balance.value = b
+            if (!fetchPromise) {
+                fetchPromise = $fetch('/api/wallet/balance')
+                    .then(({ balance: b }) => {
+                        balance.value = b
+                    }).finally(() => {
+                        fetchPromise = null
+                    })
+            }
+            await fetchPromise
         } catch (error) {
             console.error('Erreur chargement solde', error)
         }
     }
-
-    watch(() => streamer.value?.id, (id) => {
-        if (id) fetchBalance()
-    }, { immediate: true })
 
     return { balance, fetchBalance }
 }
