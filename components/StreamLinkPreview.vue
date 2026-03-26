@@ -7,7 +7,7 @@
                     Aperçu de ma page
                 </h1>
                 <!-- Sous-titre -->
-                <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
                     Voici comment ta page apparaîtra à tes visiteurs
                 </p>
             </div>

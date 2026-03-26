@@ -1,6 +1,6 @@
 <template>
     <Dialog v-model:visible="visible" modal dismissableMask :header="feature?.label"
-        :style="{ width: '22rem', margin: '1rem' }" :draggable="false">
+        :style="{ width: '25rem', margin: '1rem' }" :draggable="false">
         <div class="flex flex-col gap-4">
             <p class="text-sm text-zinc-400">{{ feature?.description }}</p>
             <div class="flex flex-col gap-2">
@@ -23,8 +23,24 @@
                 </div>
             </div>
             <p v-if="selectedPrice && balance < selectedPrice.cost" class="text-xs text-red-400">
-                Solde insuffisant : complète les quêtes pour gagner plus de monnaie ou achète en dans la boutique.
+                Solde insuffisant :
+                <NuxtLink to="/shop" class="underline text-amber-400" @click="visible = false">
+                    achète des Coins
+                </NuxtLink>
+                ou complète les quêtes pour en gagner.
             </p>
+            <!-- Upsell abonnement -->
+            <div class="flex items-center justify-between p-3 rounded-lg border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 cursor-pointer transition-all"
+                @click="visible = false; navigateTo('/shop#sub-section')">
+                <div class="flex flex-col gap-0.5">
+                    <div class="flex items-center gap-2">
+                        <Icon name="lucide:crown" size="14" class="text-amber-400 shrink-0" />
+                        <span class="text-xs font-semibold text-amber-400">S'abonner pour 7,99€/mois</span>
+                    </div>
+                    <p class="text-[11px] text-gray-400">Accès illimité à toutes les fonctionnalités</p>
+                </div>
+                <Icon name="lucide:arrow-right" size="14" class="text-amber-400 shrink-0" />
+            </div>
         </div>
         <template #footer>
             <div class="flex gap-2 w-full">

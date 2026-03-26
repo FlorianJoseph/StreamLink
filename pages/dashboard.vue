@@ -12,7 +12,7 @@
                     <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
                         Tableau de bord
                     </h1>
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
                         Bienvenue, {{ streamer?.username || 'Streamer' }}
                     </p>
                 </div>

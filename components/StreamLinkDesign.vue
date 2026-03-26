@@ -8,7 +8,7 @@
                         Personnaliser ma page de liens
                     </h1>
                     <!-- Sous-titre -->
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl" id="header">
+                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400" id="header">
                         Choisis tes couleurs et styles pour refléter ton identité
                     </p>
                 </div>

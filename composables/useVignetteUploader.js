@@ -153,7 +153,6 @@ export const useVignetteUploader = (linkRef) => {
         await linkStore.updateLink(linkRef.value.id, { icon_url: null, custom_icon: true })
         imageUrl.value = null
         croppedImage.value = null
-        selectedIcon.value = null
     }
 
     return {

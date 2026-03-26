@@ -21,14 +21,8 @@
                     </p>
                 </div>
             </div>
+
             <div class="flex flex-col gap-6">
-                <!-- Solde actuel -->
-                <div class="flex items-center gap-3 p-4 rounded-xl border border-zinc-700 bg-zinc-800/30 w-fit">
-                    <Icon name="lucide:coins" size="20" class="text-amber-400 shrink-0" />
-                    <span class="text-sm text-gray-400">Ton solde</span>
-                    <span class="text-xl font-bold text-amber-400">{{ balance }}</span>
-                    <span class="text-sm text-gray-500">Coins</span>
-                </div>
 
                 <!-- Section Abonnement -->
                 <div id="sub-section">
@@ -161,6 +155,10 @@
                     <h2 class="text-lg font-semibold mb-1 flex items-center gap-2">
                         <Icon name="lucide:coins" size="20" class="text-amber-400" />
                         Acheter des Coins
+                        <div class="flex items-center gap-1.5 ml-auto text-xs text-gray-400 font-normal">
+                            <Icon name="lucide:coins" size="14" class="text-amber-400" />
+                            <span>{{ balance }} disponibles</span>
+                        </div>
                     </h2>
                     <p class="text-xs text-gray-500 mb-4">Utilise tes Coins pour débloquer des fonctionnalités à la
                         carte
@@ -174,10 +172,17 @@
                                 Meilleur choix
                             </div>
                             <!-- Header : coins + prix -->
-                            <div class="flex items-baseline gap-2">
-                                <Icon name="lucide:coins" size="18" class="text-amber-400 shrink-0" />
-                                <span class="text-xl font-bold text-amber-400">{{ pack.coins }}</span>
-                                <span v-if="pack.bonus" class="text-[11px] text-amber-500/70">{{ pack.bonus }}</span>
+                            <div class="flex items-start justify-between">
+                                <div class="flex flex-col">
+                                    <div class="flex items-baseline gap-2">
+                                        <Icon name="lucide:coins" size="18" class="text-amber-400 shrink-0" />
+                                        <span class="text-xl font-bold text-amber-400">{{ pack.coins }}</span>
+                                        <span v-if="pack.bonus" class="text-[11px] text-amber-500/70">
+                                            {{ pack.bonus }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="text-lg font-bold text-white">{{ pack.price }}€</span>
                             </div>
 
                             <!-- Label + description -->

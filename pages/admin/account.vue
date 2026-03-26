@@ -11,11 +11,11 @@
             <div class="flex flex-col items-center h-12 justify-end">
                 <!-- Titre -->
                 <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
-                    Mon Profil
+                    Mon Compte
                 </h1>
                 <!-- Sous-titre -->
-                <p class="text-sm sm:text-base text-center max-w-xl">
-                    Modifiez vos informations personnelles
+                <p class="text-sm sm:text-base text-center max-w-xl text-gray-400">
+                    Gère tes informations et tes préférences
                 </p>
             </div>
         </div>
@@ -85,6 +85,7 @@ const streamerStore = useStreamerStore()
 const supabase = useSupabaseClient();
 const newsletterStore = useNewsletterStore()
 const { loading } = storeToRefs(newsletterStore)
+const { isSub } = useFeatures()
 
 onMounted(() => newsletterStore.fetchStatus())
 

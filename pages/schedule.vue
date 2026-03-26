@@ -14,7 +14,7 @@
                         Mon planning
                     </h1>
                     <!-- Sous-titre -->
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
                         Crée, personnalise et partage ton planning de stream
                     </p>
                 </div>

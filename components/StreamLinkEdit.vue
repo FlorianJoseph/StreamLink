@@ -8,7 +8,7 @@
                     Modifier ma page de liens
                 </h1>
                 <!-- Sous-titre -->
-                <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
                     Crée ta page de liens personnalisée à partager avec ton audience
                 </p>
             </div>
