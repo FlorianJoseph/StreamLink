@@ -370,14 +370,20 @@
                     <!-- Planning hebdomadaire -->
                     <div ref="viewportRef" class="relative w-full flex justify-center">
                         <!-- Planning mobile-->
-                        <div class="absolute" :style="scalerStyleMobile">
+                        <div class="absolute" :style="[scalerStyleMobile, {
+                            opacity: mobileFormat ? 1 : 0,
+                            pointerEvents: mobileFormat ? 'auto' : 'none'
+                        }]">
                             <ScheduleMobileCard :schedule="schedule" :slots="slots" :daysOptions="daysOptions"
                                 :scheduleBgColor="scheduleBgColor" :scheduleTextColor="scheduleTextColor"
                                 :backgroundOpacity="backgroundOpacity" :formatTime="formatTime"
                                 :slotsForDay="slotsForDay" :endTimeVisible="endTimeVisible" :titleVisible="titleVisible"
                                 :showBranding="schedule?.style?.showBranding !== false" />
                         </div>
-                        <div class="absolute" :style="scalerStyle">
+                        <div class="absolute" :style="[scalerStyle, {
+                            opacity: mobileFormat ? 0 : 1,
+                            pointerEvents: mobileFormat ? 'none' : 'auto'
+                        }]">
                             <!-- Planning desktop -->
                             <div v-show="!mobileFormat" id="scheduleCard">
                                 <div class="p-4 relative rounded-lg export-footer" :style="{
