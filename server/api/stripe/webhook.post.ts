@@ -33,8 +33,8 @@ export default defineEventHandler(async (event) => {
             // Mapper priceId → Coins
             const coinsMap: Record<string, number> = {
                 [config.public.stripePriceCoinsStarter]: 300,
-                [config.public.stripePriceCoinsPopular]: 750,
-                [config.public.stripePriceCoinsPro]: 1500,
+                [config.public.stripePriceCoinsPopular]: 800,
+                [config.public.stripePriceCoinsPro]: 2000,
             }
 
             const coins = coinsMap[priceId!] ?? 0

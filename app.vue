@@ -18,7 +18,7 @@
                         <span class="text-[11px] font-semibold uppercase tracking-widest text-purple-400">Quête
                             complétée</span>
                         <span class="text-[13px] font-medium text-zinc-200">{{ slotProps.message.summary }}</span>
-                        <span class="text-[13px] font-bold text-amber-400">+{{ slotProps.message.detail }} Shards</span>
+                        <span class="text-[13px] font-bold text-amber-400">+{{ slotProps.message.detail }} Coins</span>
                     </div>
                 </div>
             </template>
@@ -40,8 +40,10 @@
                         <span class="text-[11px] font-semibold uppercase tracking-widest text-purple-400">Paiement
                             réussi</span>
                         <span class="text-[13px] font-medium text-zinc-200">{{ slotProps.message.summary }}</span>
-                        <span class="text-[13px] font-bold text-amber-400">+{{ slotProps.message.detail }} Coins
-                            crédités</span>
+                        <span v-if="!isNaN(Number(slotProps.message.detail))"
+                            class="text-[13px] font-bold text-amber-400">
+                            +{{ slotProps.message.detail }} Coins crédités
+                        </span>
                     </div>
                 </div>
             </template>

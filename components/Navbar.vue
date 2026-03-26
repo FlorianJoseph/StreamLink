@@ -145,6 +145,11 @@ const popoverItems = ref([
                 route: '/admin/account'
             },
             {
+                label: 'Facturation',
+                icon: 'lucide:credit-card',
+                route: '/admin/billing'
+            },
+            {
                 label: 'Déconnexion',
                 icon: 'lucide:log-out',
                 command: () => {

@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
 
     if (accessError) throw createError({ statusCode: 500, message: accessError.message })
 
-    // Débiter les Shards
+    // Débiter les Coins
     const { error: walletError } = await supabase
         .from('WalletTransactions')
         .insert({

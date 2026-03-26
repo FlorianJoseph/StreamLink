@@ -41,7 +41,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - 02/03/26 345 utilisateurs, 188 profils actifs, 779 liens, 535 streams planifiés, newsletter 150 inscrits
 - 10/03/26 428 utilisateurs, 252 profils actifs, 1036 liens, 728 streams planifiés, 778 vues de pages, newsletter 180 inscrits
 - 16/03/26 473 utilisateurs, 283 profils actifs, 1186 liens, 827 streams planifiés, 1838 vues de pages, newsletter 208 inscrits
-- 22/03/26 525 utilisateurs, 320 profils actifs, 1332 liens, 964 streams planifiés, 3124 vues de pages, newsletter 232 inscrits
+- 26/03/26 549 utilisateurs, 341 profils actifs, 1404 liens, 1030 streams planifiés, 3890 vues de pages, newsletter 246 inscrits
 
 ## Historique Roadmap
 
@@ -63,51 +63,38 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Date auto planning 10/03/26
 - Choix de la langue + filtres découverte 13/03/26
 - Choix de Charmi 13/03/26
-- Monnaie virtuelle (Shards) + quêtes BDD + récompenses automatiques 22/03/26
-- Features premium (thèmes exclusifs + polices + suppression branding page de liens) déblocables en Shards 22/03/26
-- Features premium (format mobile + polices + suppression branding planning) déblocables en Shards 24/03/26
-- Boutique + achats packs de coins ou abonnement avec Stripe 26/03/26
+- Premium et monétisation 24/03/26
+    - Monnaie virtuelle (Coins) + quêtes BDD + récompenses automatiques 22/03/26
+    - Système de features temporaires 7j/30j en place
+    - 3 features déployées : no_branding + premium_theme + mobile_export
+- Boutique + achats packs de coins ou abonnement avec Stripe + coins connexion quotidienne 26/03/26
 
-## Roadmap court terme – Augmenter la fréquence d'usage (priorité)
-Objectif : que les utilisateurs reviennent régulièrement et activent leur planning.
+## Roadmap court terme – Augmenter la visibilité et promouvoir le réseau interne
+
+### Découverte V3
+    - Filtres par catégories
+    - Raids avec Coins
+    - API Twitch
 
 ### Page publique
-    - Créer des catégories de lien ?
     - CTA découvrir d'autres streamers
 
-### Monnaie virtuelle 
-    - Shards implémentés — gain via quêtes, solde navbar, toast notifications
-    - Features premium déblocables : thèmes exclusifs, polices premium, suppression branding, planning format mobile
-    - Objectif : 800+ utilisateurs (525), 60% profils actifs (62%)
-    - Prochaine étape : achat de Shards via Stripe
+## Roadmap moyen terme – Améliorer le premium
+
+### Réseaux
+    - Export story insta/X (premium)
+
+### Page publique
+    - Créer des catégories de lien (premium)
+
+### 
+
+## Roadmap long terme – Premium & fonctionnalités additionnelles
 
 ### Optimisation pédagogique
     - Proposition de couleur texte dans le design en fonction du thème
 
-## Roadmap moyen terme – Découverte & visibilité
-
-### Améliorer discover
-    - Filtres (jeu, horaire...)
-    - Collabs/Raids
-
-### Réseaux
-    - Export story insta/X
-
-## Roadmap long terme – Premium & fonctionnalités avancées
-Objectif : créer de la valeur payante et améliorer la rétention des pros.
-
-### Premium et monétisation
-    - Système de features temporaires 7j/30j (FeatureAccess) en place
-    - 3 features déployées : no_branding + premium_theme + mobile_export
-
-#### Achat de coins via Stripe
-    - Starter ✦500 2,99€ Débloquer un accès 7j direct
-    - Popular ✦1500 6,99€ Un mois de premium complet
-    - Pro ✦3500 14,99€ Plusieurs mois + cosmétiques
-Logique de conversion : après avoir consommé un accès temporaire, afficher un CTA "Profiter de ça en illimité → Pack Pro" avec le prix. C'est le funnel le plus naturel qui soit.
-
 #### Pack Pro – Gain de temps
-    - Twitch live
     - Branding supprimé Planning et Page de Liens
     - Sync Twitch automatique
     - Export Discord
@@ -115,20 +102,16 @@ Positionnement : Tu te concentres sur ton stream, on s’occupe du reste.
 
 #### Pack Boost – Plus de visibilité
     - Mise en avant Discover
-    - Badge créateur vérifié
-    - Priorité affichage live
     - Stats avancées
 Positionnement : Plus visible. Plus professionnel.
 
 #### Pack Studio – Identité premium
     - Thèmes exclusifs
-    - Layout custom
     - Background animé
     - Personnalisation avancée
 Positionnement : Une page qui te ressemble vraiment.
 
-### Fonctionnalités additionnelles
-
+### Fonctionnalités additionnelles (le plus éloigné)
     - Evènements (caritatifs...)
     - Roue aléatoire (giveaway)
     - Tournois rapides via chat
@@ -138,7 +121,7 @@ Positionnement : Une page qui te ressemble vraiment.
     - Nouveau nom envisagé : **Charmi**
     - Prononciation : "charmi" (FR/EN identique)
     - Sémantique : Share me (partage de moi) + Charm (charme, attractivité)
-    - Logo : compagnon stylisé, esprit Discord/Twitch/Streamlabs
+    - Logo : compagnon stylisé, esprit Discord/Twitch/Streamlabs (1ère piste : petite mascote un peu nuage/étoile/navy)
     - Monnaie virtuelle : **Shards** (éclats)
     - Univers : partage, communauté, attractivité, gamification
 
@@ -154,10 +137,6 @@ Positionnement : Une page qui te ressemble vraiment.
     • Versions secondaires 
     • Icône / favicon
     • Exports optimisés web
-
-### NAMING 100€
-    • Recherche de noms (3 à 5 propositions) 
-    • Justification sémantique
     
 ## Règles de décision
 
@@ -171,18 +150,16 @@ Avant d’ajouter une fonctionnalité :
 ## Data et analytics
 
 ### KPIs suivis
-
-- Suivi utilisateurs, profils visibles, liens, streams, pages vues, newsletter
-- Activation rate, engagement liens et planning, funnel integrity, growth semaine/semaine
-- Infrastructure : materialized view Supabase + dashboard admin temps réel
+    - Suivi utilisateurs, profils visibles, liens, streams, pages vues, newsletter
+    - Activation rate, engagement liens et planning, funnel integrity, growth semaine/semaine
+    - Infrastructure : materialized view Supabase + dashboard admin temps réel
 
 ### North Star 
-
     - Streamers actifs avec planning public → c’est le signal principal pour la rétention et l’engagement.
 
 ### Lien avec ma chaine Twitch
-Pour fidéliser tes viewers twitch quand tu auras fait ton système de monnaie virtuelle tu peux aussi proposer d’échanger des points de chaine twitch contre de la monnaie virtuelle
+    Pour fidéliser tes viewers twitch quand tu auras fait ton système de monnaie virtuelle tu peux aussi proposer d’échanger des points de chaine twitch contre de la monnaie virtuelle
 
-1 coût = 0
-2 apport de nouveau viewers sur la chaîne et farm gratuit 
-3 augmentation globale de ta visibilité twitch
+    1 coût = 0
+    2 apport de nouveau viewers sur la chaîne et farm gratuit 
+    3 augmentation globale de ta visibilité twitch

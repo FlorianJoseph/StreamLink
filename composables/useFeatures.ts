@@ -60,5 +60,5 @@ export const useFeatures = () => {
         return { success, expiresAt }
     }
 
-    return { featureAccess, fetchAccess, hasFeature, getExpiryLabel, spend, isSub, fetchSubscription }
+    return { featureAccess, fetchAccess, hasFeature, getExpiryLabel, spend, isSub, fetchSubscription, subscription }
 }

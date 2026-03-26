@@ -76,6 +76,34 @@
 
                         <!-- Carte Partage rapide -->
                         <QRCode />
+
+                        <!-- Card Coins quotidiens -->
+                        <Card class="border border-zinc-700 sm:col-span-2" style="--p-card-body-padding: 7px">
+                            <template #content>
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-1">
+                                    <div class="flex items-center gap-3">
+                                        <Icon name="lucide:coins" size="20" class="text-amber-400 shrink-0" />
+                                        <div>
+                                            <h2 class="text-lg font-semibold">Coins quotidiens</h2>
+                                            <p class="text-xs sm:text-sm text-gray-400">
+                                                {{ dailyClaimed ? 'Déjà récupéré aujourd\'hui, reviens demain !' :
+                                                    'Connecte-toi chaque jour pour gagner des Coins' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <Button :disabled="dailyClaimed || dailyLoading" severity="contrast"
+                                        class="flex items-center gap-2 w-full sm:w-auto justify-center"
+                                        @click="claimDaily">
+                                        <Icon v-if="dailyLoading" name="lucide:loader-circle" size="16"
+                                            class="animate-spin shrink-0" />
+                                        <Icon v-else-if="dailyClaimed" name="lucide:check" size="16" class="shrink-0" />
+                                        <Icon v-else name="lucide:coins" size="16" class="shrink-0" />
+                                        <span class="text-sm sm:text-base">
+                                            {{ dailyClaimed ? 'Récupéré' : '+5 Coins' }}</span>
+                                    </Button>
+                                </div>
+                            </template>
+                        </Card>
                     </div>
 
                     <!-- Carte Nouvelles fonctionnalités / Coming soon -->
@@ -215,6 +243,32 @@ const { streamer } = storeToRefs(streamerStore)
 const newsletterStore = useNewsletterStore()
 const loading = ref(true)
 const { uid } = useSupabase()
+const { fetchBalance } = useWallet()
+const toast = useToast()
+const dailyClaimed = ref(false)
+const dailyLoading = ref(false)
+
+const claimDaily = async () => {
+    dailyLoading.value = true
+    try {
+        const { credited } = await $fetch('/api/quests/daily', { method: 'POST' })
+        if (credited) {
+            dailyClaimed.value = true
+            await fetchBalance()
+            toast.add({
+                severity: 'secondary',
+                group: 'quest',
+                summary: 'Connexion quotidienne',
+                detail: '5',
+                life: 4000,
+            })
+        } else {
+            dailyClaimed.value = true
+        }
+    } finally {
+        dailyLoading.value = false
+    }
+}
 
 watch(uid, async (val) => {
     if (val) {
@@ -248,6 +302,11 @@ onMounted(async () => {
         await scheduleSlotStore.fetchSlots(schedule.id)
     }
     await linkStore.fetchLinks()
+
+    // Vérifier si daily déjà récupéré
+    const { credited } = await $fetch('/api/quests/daily', { method: 'POST' })
+    dailyClaimed.value = !credited
+
     loading.value = false
 })
 
