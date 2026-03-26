@@ -13,7 +13,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 
 ## Stack
 
-- Nuxt 3, TypeScript, Supabase, Pinia, Tailwind, Resend, React Email
+- Nuxt 3, TypeScript, Supabase, Tailwind, Resend, React Email, Stripe
 
 ## Principes produit
 
@@ -66,6 +66,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Monnaie virtuelle (Shards) + quêtes BDD + récompenses automatiques 22/03/26
 - Features premium (thèmes exclusifs + polices + suppression branding page de liens) déblocables en Shards 22/03/26
 - Features premium (format mobile + polices + suppression branding planning) déblocables en Shards 24/03/26
+- Boutique + achats packs de coins ou abonnement avec Stripe 26/03/26
 
 ## Roadmap court terme – Augmenter la fréquence d'usage (priorité)
 Objectif : que les utilisateurs reviennent régulièrement et activent leur planning.

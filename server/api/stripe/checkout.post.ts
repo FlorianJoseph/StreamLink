@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
         ui_mode: 'embedded',
         mode,
         line_items: [{ price: priceId, quantity: 1 }],
-        return_url: `${config.public.appUrl}/shop?session_id={CHECKOUT_SESSION_ID}`,
+        return_url: `${config.public.appUrl}/checkout?session_id={CHECKOUT_SESSION_ID}`,
         metadata: {
             user_id: user.sub,
             mode,

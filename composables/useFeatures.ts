@@ -45,7 +45,7 @@ export const useFeatures = () => {
         if (diffHours <= 24) return `Expire dans ${diffHours}h`
         if (diffDays <= 7) return `Expire dans ${diffDays} jours`
 
-        return `Jusqu'au ${new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}`
+        return `Actif jusqu'au ${new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}`
     }
 
     const spend = async (featureKey: string, priceId: string) => {

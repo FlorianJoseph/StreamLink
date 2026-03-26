@@ -242,7 +242,7 @@
                                                 @click="onFontClick(font)">
                                                 <span class="text-sm" :style="{ fontFamily: font.name }">
                                                     {{ font.label }}</span>
-                                                <span v-if="font.premium"
+                                                <span v-if="font.premium && !isSub && !hasFeature('premium_theme')"
                                                     class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">
                                                     Premium
                                                 </span>
@@ -1263,7 +1263,7 @@ definePageMeta({
     layout: 'fullscreen'
 })
 
-const { hasFeature } = useFeatures()
+const { hasFeature, isSub } = useFeatures()
 
 const onFormatChange = (val: string) => {
     if (val === 'mobile' && !hasFeature('mobile_export')) {

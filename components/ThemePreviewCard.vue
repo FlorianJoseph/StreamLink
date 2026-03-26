@@ -22,7 +22,7 @@
             </div>
 
             <!-- Badge exclusif -->
-            <div v-if="theme.premium"
+            <div v-if="theme.premium && !hasAccess"
                 class="absolute top-1.5 right-1.5 z-10 flex items-center gap-1 py-0.5 px-1.5 rounded-full text-[9px] font-semibold bg-amber-500 text-amber-950 overflow-hidden transition-all duration-200">
                 <span class="whitespace-nowrap overflow-hidden transition-all duration-200"
                     :style="{ maxWidth: hovered ? '60px' : '0px', opacity: hovered ? 1 : 0, marginRight: hovered ? '0' : '-4px' }">
@@ -44,6 +44,7 @@ const hovered = ref(false)
 const props = defineProps({
     theme: { type: Object, required: true },
     isSelected: { type: Boolean, default: false },
+    hasAccess: { type: Boolean, default: false },
 })
 
 const buttonClass = computed(() => {

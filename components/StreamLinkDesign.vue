@@ -91,7 +91,8 @@
                     <div
                         class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-6 gap-4 justify-items-center">
                         <ThemePreviewCard v-for="(theme, key) in THEME_PRESETS" :key="key" :theme="theme"
-                            @click="designStore.applyTheme(theme)" :isSelected="isThemeActive(theme).value" />
+                            @click="designStore.applyTheme(theme)" :isSelected="isThemeActive(theme).value"
+                            :hasAccess="isSub || hasFeature('premium_theme')" />
                     </div>
                 </Fieldset>
 
@@ -193,7 +194,7 @@
                                 ? 'border-white bg-white/10'
                                 : 'border-zinc-700 hover:border-zinc-500'" @click="onFontClick(font)">
                             <span class="text-sm" :style="{ fontFamily: font.name }">{{ font.label }}</span>
-                            <span v-if="font.premium"
+                            <span v-if="font.premium && !isSub && !hasFeature('premium_theme')"
                                 class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">
                                 Premium
                             </span>
@@ -315,15 +316,14 @@
                         <div class="flex flex-col">
                             <span class="text-sm font-semibold">Masquer le footer</span>
                             <span class="text-xs text-zinc-400">
-                                <template v-if="hasFeature('no_branding')">
-                                    {{ getExpiryLabel('no_branding') }}
-                                </template>
-                                <template v-else>
+                                <template v-if="!hasFeature('no_branding')">
                                     Masque le footer de ta page de liens
                                 </template>
                             </span>
                         </div>
-                        <span class="text-sm text-emerald-400 font-semibold">Actif</span>
+                        <span v-if="isSub" class="text-sm text-gray-400  font-semibold">Inclus dans
+                            l'abonnement</span>
+                        <span v-else class="text-sm text-emerald-400">{{ getExpiryLabel('no_branding') }}</span>
                     </div>
                     <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
                 </Fieldset>
@@ -521,7 +521,7 @@ onBeforeRouteLeave(() => {
 })
 
 // Accès aux fonctionnalités premium
-const { hasFeature, getExpiryLabel } = useFeatures()
+const { hasFeature, getExpiryLabel, isSub } = useFeatures()
 // Modales de déblocage
 const premiumThemeModal = ref(false)
 const brandingModal = ref(false)

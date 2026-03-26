@@ -281,7 +281,9 @@
                                     </template>
                                 </span>
                             </div>
-                            <span class="text-sm text-emerald-400 font-semibold">Actif</span>
+                            <span v-if="isSub" class="text-sm text-gray-400  font-semibold">Inclus dans
+                                l'abonnement</span>
+                            <span v-else class="text-sm text-emerald-400">{{ getExpiryLabel('no_branding') }}</span>
                         </div>
 
                         <!-- Modal déblocage branding -->
@@ -652,7 +654,7 @@ const defaultSize = ({ imageSize, visibleArea }) => {
     };
 };
 
-const { hasFeature, getExpiryLabel } = useFeatures()
+const { hasFeature, getExpiryLabel, isSub } = useFeatures()
 
 const brandingModal = ref(false)
 </script>
