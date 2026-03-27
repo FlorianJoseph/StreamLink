@@ -366,20 +366,20 @@ const coinPacks = [
     {
         label: 'Essai rapide',
         coins: 300, price: 2.99, best: false,
-        priceId: 'coins_starter',
+        priceId: 'coins_little',
         description: 'Parfait pour tester une fonctionnalité'
     },
     {
         label: 'Le plus rentable',
         coins: 800, price: 6.99, best: true,
-        priceId: 'coins_popular',
+        priceId: 'coins_middle',
         bonus: '750 + 50 offerts',
         description: 'Le choix des créateurs actifs'
     },
     {
         label: 'Boost créateur',
         coins: 2000, price: 14.99, best: false,
-        priceId: 'coins_pro',
+        priceId: 'coins_big',
         bonus: '1800 + 200 offerts',
         description: 'Maximise ta visibilité sur plusieurs semaines'
     },
@@ -387,9 +387,9 @@ const coinPacks = [
 
 const priceIdMap: Record<string, string> = {
     sub: config.public.stripePriceSub,
-    coins_starter: config.public.stripePriceCoinsStarter,
-    coins_popular: config.public.stripePriceCoinsPopular,
-    coins_pro: config.public.stripePriceCoinsPro,
+    coins_little: config.public.stripePriceCoinsLittle,
+    coins_middle: config.public.stripePriceCoinsMiddle,
+    coins_big: config.public.stripePriceCoinsBig,
 }
 
 const coinToEuro = (coins: number) => {

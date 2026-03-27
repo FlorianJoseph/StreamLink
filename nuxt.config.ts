@@ -55,16 +55,16 @@ export default defineNuxtConfig({
     stripeSecretKey: '',
     stripeWebhookSecret: '',
     stripePriceSub: '',
-    stripePriceCoinsStarter: '',
-    stripePriceCoinsPopular: '',
-    stripePriceCoinsPro: '',
+    stripePriceCoinsLittle: '',
+    stripePriceCoinsMiddle: '',
+    stripePriceCoinsBig: '',
     public: {
       stripePublishableKey: '',
       appUrl: 'http://localhost:3000',
       stripePriceSub: '',
-      stripePriceCoinsStarter: '',
-      stripePriceCoinsPopular: '',
-      stripePriceCoinsPro: '',
+      stripePriceCoinsLittle: '',
+      stripePriceCoinsMiddle: '',
+      stripePriceCoinsBig: '',
     }
   },
 })

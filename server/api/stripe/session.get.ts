@@ -14,9 +14,9 @@ export default defineEventHandler(async (event) => {
     const priceId = lineItems.data[0]?.price?.id
 
     const coinsMap: Record<string, number> = {
-        [config.public.stripePriceCoinsStarter]: 300,
-        [config.public.stripePriceCoinsPopular]: 800,
-        [config.public.stripePriceCoinsPro]: 2000,
+        [config.public.stripePriceCoinsLittle]: 300,
+        [config.public.stripePriceCoinsMiddle]: 800,
+        [config.public.stripePriceCoinsBig]: 2000,
     }
 
     return { coins: coinsMap[priceId!] ?? 0, mode: session.metadata?.mode }
