@@ -43,9 +43,10 @@
                 </template>
                 <template v-else>
                     <template v-if="user">
-                        <div class="flex items-center gap-1 px-2 py-1 rounded-md bg-zinc-300/10 text-sm font-semibold">
-                            <Icon name="lucide:coins" size="14" class="shrink-0" />
-                            <span>{{ balance }} Coins</span>
+                        <div
+                            class="flex items-center gap-1 px-2 py-1 rounded-md bg-zinc-300/10 text-xs sm:text-sm font-semibold">
+                            <Icon name="lucide:coins" size="14" class="shrink-0 text-amber-400" />
+                            <span class="text-amber-400">{{ balance }} <span class="hidden sm:inline-block">Coins</span></span>
                         </div>
                     </template>
                     <button

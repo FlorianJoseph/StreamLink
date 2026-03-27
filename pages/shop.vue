@@ -207,11 +207,10 @@
 
     <!-- Modale confirmation achat -->
     <Dialog v-model:visible="confirmModal" modal dismissableMask header="Confirmer l'achat"
-        :style="{ width: '22rem', margin: '1rem' }" :draggable="false">
+        :style="{ width: '25rem', margin: '1rem' }" :draggable="false">
         <div class="flex flex-col gap-4">
             <p class="text-sm text-gray-400">
                 Tu vas dépenser <span class="font-bold text-amber-400">{{ pendingPrice?.cost }} Coins</span>
-                <span class="text-gray-500"> (~{{ coinToEuro(pendingPrice?.cost) }}€)</span>
                 pour <span>
                     {{ hasFeature(pendingFeature.key) ? 'prolonger ' : 'débloquer ' }}
                 </span> <span class="font-semibold text-white">{{ pendingFeature?.label }}</span>
@@ -234,7 +233,6 @@
                             ~{{ savedWithSubAllFeatures }}€/mois</span> vs acheter les fonctionnalités à la carte
                     </p>
                 </div>
-                <Icon name="lucide:arrow-right" size="14" class="text-amber-400 shrink-0" />
             </div>
 
             <!-- Soldes -->
@@ -347,8 +345,8 @@ const subPacks = [
         popular: true,
         features: [
             '15 thèmes exclusifs et 23 polices premium',
-            'Planning au format story Instagram / X en 1 clic',
-            'Zéro logo, 100% toi',
+            'Génère ton planning au format story Instagram / X en 1 clic',
+            'Masque le footer sur ta page et ton planning',
         ]
     },
 ]
@@ -409,7 +407,7 @@ const savedWithSubAllFeatures = computed(() =>
 const upsellDiff = computed(() => {
     if (!pendingPrice.value) return 0
     const coinCost = parseFloat(coinToEuro(pendingPrice.value.cost))
-    if (coinCost < 3) return null
+    if (coinCost < 2) return null
     const diff = parseFloat((7.99 - coinCost).toFixed(2))
     return diff > 0 ? diff : null
 })
@@ -431,7 +429,7 @@ const openCheckout = async (packPriceId: string, mode: 'payment' | 'subscription
     sessionStorage.setItem('stripe_client_secret', clientSecret)
 
     const width = 500
-    const height = Math.min(800, window.screen.height * 0.9)
+    const height = 700
     const left = window.screenX + (window.outerWidth - width) / 2
     const top = window.screenY + (window.outerHeight - height) / 2
 

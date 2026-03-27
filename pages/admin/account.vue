@@ -81,11 +81,9 @@
 const user = useSupabaseUser();
 const confirm = useConfirm();
 const router = useRouter();
-const streamerStore = useStreamerStore()
 const supabase = useSupabaseClient();
 const newsletterStore = useNewsletterStore()
 const { loading } = storeToRefs(newsletterStore)
-const { isSub } = useFeatures()
 
 onMounted(() => newsletterStore.fetchStatus())
 
@@ -105,8 +103,7 @@ const confirmDelete = () => {
         accept: async () => {
             try {
                 // Supprimer le streamer et les liens
-                const success = await streamerStore.deleteStreamerWithLinks(user.value?.sub);
-                if (!success) throw new Error('La suppression a échoué');
+                await $fetch('/api/account/delete', { method: 'DELETE' });
 
                 // Déconnexion
                 await supabase.auth.signOut();

@@ -23,7 +23,11 @@ onMounted(async () => {
 
     const clientSecret = sessionStorage.getItem('stripe_client_secret')
     sessionStorage.removeItem('stripe_client_secret')
-    if (!clientSecret) return
+    
+    if (!clientSecret) {
+        navigateTo('/shop')
+        return
+    }
 
     const stripe = await loadStripe(config.public.stripePublishableKey)
     if (!stripe) return

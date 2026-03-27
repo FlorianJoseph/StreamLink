@@ -119,6 +119,7 @@ export const useProfileProgress = () => {
         try {
             await $fetch('/api/quests/check', { method: 'POST' })
             await loadCompletions()
+            await fetchBalance()
         } catch (error) {
             console.error('Erreur crédit quête', quest.id, error)
         }

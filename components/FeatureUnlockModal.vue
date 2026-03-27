@@ -8,26 +8,32 @@
                     class="flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all"
                     :class="selectedPrice?.id === price.id ? 'border-white bg-white/10' : 'border-zinc-700 hover:border-zinc-500'"
                     @click="selectedPrice = price">
-                    <span class="text-sm font-medium">{{ price.label }}</span>
+                    <span class="text-sm font-medium text-gray-300">{{ price.label }}</span>
                     <div class="flex items-center gap-1">
-                        <Icon name="lucide:coins" size="14" class="shrink-0" />
-                        <span class="text-sm font-bold">{{ price.cost }}</span>
+                        <Icon name="lucide:coins" size="14" class="text-amber-400 shrink-0" />
+                        <span class="text-sm font-bold text-amber-400">{{ price.cost }}</span>
                     </div>
                 </div>
             </div>
             <div class="flex items-center justify-between text-xs text-zinc-500 px-1">
                 <span>Solde actuel</span>
                 <div class="flex items-center gap-1">
-                    <Icon name="lucide:coins" size="12" class="shrink-0" />
-                    <span class="text-white font-semibold">{{ balance }}</span>
+                    <Icon name="lucide:coins" size="12" class="text-amber-400 shrink-0" />
+                    <span class="text-amber-400 font-semibold">{{ balance }}</span>
+                </div>
+            </div>
+            <div v-if="selectedPrice?.id" class="flex items-center justify-between text-xs text-zinc-500 px-1">
+                <span>Solde après achat</span>
+                <div class="flex items-center gap-1">
+                    <Icon name="lucide:coins" size="12" class="text-amber-400 shrink-0" />
+                    <span class="font-semibold"
+                        :class="balance - (selectedPrice?.cost ?? 0) < 0 ? 'text-red-400' : 'text-amber-400'">
+                        {{ balance - (selectedPrice?.cost ?? 0) }}
+                    </span>
                 </div>
             </div>
             <p v-if="selectedPrice && balance < selectedPrice.cost" class="text-xs text-red-400">
-                Solde insuffisant :
-                <NuxtLink to="/shop" class="underline text-amber-400" @click="visible = false">
-                    achète des Coins
-                </NuxtLink>
-                ou complète les quêtes pour en gagner.
+                Il te manque {{ selectedPrice.cost - balance }} Coins
             </p>
             <!-- Upsell abonnement -->
             <div class="flex items-center justify-between p-3 rounded-lg border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 cursor-pointer transition-all"
@@ -43,13 +49,14 @@
             </div>
         </div>
         <template #footer>
-            <div class="flex gap-2 w-full">
-                <Button severity="secondary" outlined @click="visible = false" class="flex-1">
-                    <Icon name="lucide:x" size="18" />
-                    <span class="text-xs sm:text-base">Annuler</span>
+            <div class="w-full">
+                <Button v-if="selectedPrice && balance < selectedPrice.cost" severity="contrast" class="w-full"
+                    @click="visible = false; navigateTo('/shop#coins-section')">
+                    <Icon name="lucide:coins" size="18" />
+                    <span class="text-xs sm:text-base">Acheter des Coins</span>
                 </Button>
-                <Button severity="contrast" class="flex-1"
-                    :disabled="!selectedPrice || balance < selectedPrice.cost || spending" @click="handleSpend">
+                <Button v-else severity="contrast" class="w-full" :disabled="!selectedPrice || spending"
+                    @click="handleSpend">
                     <Icon name="lucide:unlock" size="18" />
                     <span class="text-xs sm:text-base">Débloquer</span>
                 </Button>
