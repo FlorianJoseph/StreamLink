@@ -121,7 +121,7 @@
                             </TabPanel>
                             <TabPanel value="1" as="p" class="m-0">
                                 <!-- Design du planning -->
-                                <div class="flex flex-col space-y-6">
+                                <div class="flex flex-col space-y-5">
 
                                     <!-- Section Arrière-plan -->
                                     <div class="space-y-3">
