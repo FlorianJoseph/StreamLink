@@ -263,7 +263,7 @@
                                     </template>
                                 </span>
                             </div>
-                            <Button v-if="!hasFeature('no_branding')" severity="contrast" size="small"
+                            <Button severity="contrast" size="small"
                                 @click="brandingModal = true">
                                 <Icon name="lucide:coins" size="16" class="shrink-0" />
                                 <span class="text-sm">Débloquer</span>
@@ -273,10 +273,10 @@
                             <div class="flex flex-col">
                                 <span class="text-sm font-semibold">Masquer le footer</span>
                                 <span class="text-xs text-zinc-400">
-                                    <template v-if="hasFeature('no_branding')">
+                                    <!-- <template v-if="hasFeature('no_branding')">
                                         {{ getExpiryLabel('no_branding') }}
-                                    </template>
-                                    <template v-else>
+                                    </template> -->
+                                    <template>
                                         Masque le footer de ta page de liens
                                     </template>
                                 </span>
