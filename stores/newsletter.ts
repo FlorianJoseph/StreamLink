@@ -20,6 +20,7 @@ export const useNewsletterStore = defineStore('newsletter', () => {
             await unsubscribe(uid.value)
             subscribed.value = false
             toast.add({
+                group: 'app',
                 severity: 'info',
                 summary: 'Nouveautés',
                 detail: 'Vous ne recevrez plus les nouveautés',
@@ -29,6 +30,7 @@ export const useNewsletterStore = defineStore('newsletter', () => {
             await subscribe(uid.value)
             subscribed.value = true
             toast.add({
+                group: 'app',
                 severity: 'success',
                 summary: 'Nouveautés',
                 detail: 'Vous recevrez désormais les nouveautés',

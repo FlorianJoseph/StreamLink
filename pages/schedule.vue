@@ -14,7 +14,7 @@
                         Mon planning
                     </h1>
                     <!-- Sous-titre -->
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
                         Crée, personnalise et partage ton planning de stream
                     </p>
                 </div>
@@ -215,8 +215,42 @@
                                                 :invalid="!isTextColorValid"
                                                 :style="{ color: !isTextColorValid ? '#f87171' : '#ffffff' }" />
                                         </InputGroup>
+                                        <div class="flex flex-col gap-2">
+                                            <p class="font-semibold text-sm">Police</p>
+                                            <button
+                                                class="flex items-center justify-between px-3 py-2.5 rounded-lg border border-zinc-700 hover:border-zinc-500 transition-all w-full"
+                                                @click="fontModal = true">
+                                                <span class="text-sm" :style="{ fontFamily: currentFont }">{{
+                                                    currentFont ??
+                                                    'Inter' }}</span>
+                                                <Icon name="lucide:chevron-right" size="16" class="text-zinc-400" />
+                                            </button>
+                                        </div>
                                     </div>
                                     <Divider />
+
+                                    <!-- Modal polices -->
+                                    <Dialog v-model:visible="fontModal" modal dismissableMask
+                                        header="Choisir une police" :style="{ width: '32rem', margin: '1rem' }"
+                                        :draggable="false">
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <button v-for="font in FONTS" :key="font.name"
+                                                class="relative flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all"
+                                                :class="currentFont === font.name
+                                                    ? 'border-white bg-white/10'
+                                                    : 'border-zinc-700 hover:border-zinc-500'"
+                                                @click="onFontClick(font)">
+                                                <span class="text-sm" :style="{ fontFamily: font.name }">
+                                                    {{ font.label }}</span>
+                                                <span v-if="font.premium && !isSub && !hasFeature('premium_theme')"
+                                                    class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">
+                                                    Premium
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </Dialog>
+                                    <FeatureUnlockModal v-model="premiumModal" featureKey="premium_theme" />
+
 
                                     <!-- Section Options -->
                                     <div class="space-y-3">
@@ -228,52 +262,58 @@
                                         </div>
                                         <div class="space-y-1">
                                             <!-- Avec séparateur subtil -->
-                                            <label for="toggle-subtitle"
-                                                class="flex justify-between items-center px-3 py-2.5">
+                                            <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:calendar" size="18"
                                                         class="text-gray-400 shrink-0" />
                                                     <span class="text-xs sm:text-sm">Date automatique</span>
                                                 </div>
-                                                <ToggleSwitch id="toggle-subtitle" v-model="autoSubtitle"
+                                                <ToggleSwitch v-model="autoSubtitle"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @change="toggleAutoSubtitle" />
-                                            </label>
-                                            <label for="toggle-title"
-                                                class="flex justify-between items-center px-3 py-2.5">
+                                            </div>
+                                            <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:type" size="18" class="text-gray-400 shrink-0" />
                                                     <span class="text-xs sm:text-sm">Afficher les titres</span>
                                                 </div>
-                                                <ToggleSwitch id="toggle-title" v-model="titleVisible"
+                                                <ToggleSwitch v-model="titleVisible"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @click="toggleTitleVisibility" />
-                                            </label>
+                                            </div>
 
-                                            <label for="toggle-endtime"
-                                                class="flex justify-between items-center px-3 py-2.5">
+                                            <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:clock" size="18"
                                                         class="text-gray-400 shrink-0" />
                                                     <span class="text-xs sm:text-sm">Afficher l'heure de fin</span>
                                                 </div>
-                                                <ToggleSwitch id="toggle-endtime" v-model="endTimeVisible"
+                                                <ToggleSwitch v-model="endTimeVisible"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @click="toggleEndTimeVisibility" />
-                                            </label>
+                                            </div>
 
-                                            <label for="toggle-days"
-                                                class="flex justify-between items-center px-3 py-2.5">
+                                            <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:calendar-off" size="18"
                                                         class="text-gray-400 shrink-0" />
                                                     <span class="text-xs sm:text-sm">Afficher les jours sans
                                                         stream</span>
                                                 </div>
-                                                <ToggleSwitch id="toggle-days" v-model="daysWithoutStreamVisible"
+                                                <ToggleSwitch v-model="daysWithoutStreamVisible"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
                                                     @click="toggleDaysWithoutStreamVisibility" />
-                                            </label>
+                                            </div>
+                                            <div class="flex justify-between items-center px-3 py-2.5">
+                                                <div class="flex items-center gap-2">
+                                                    <Icon name="lucide:badge-check" size="18"
+                                                        class="text-gray-400 shrink-0" />
+                                                    <span class="text-xs sm:text-sm">Masquer le branding</span>
+                                                </div>
+                                                <ToggleSwitch v-model="brandingToggle"
+                                                    style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
+                                                    @click.prevent="onToggleBranding" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -281,11 +321,22 @@
                         </TabPanels>
                     </Tabs>
                 </div>
+
+                <FeatureUnlockModal v-model="noBrandingModal" featureKey="no_branding" />
+
                 <div class="flex-1 min-w-0 flex flex-col gap-4">
 
                     <!-- Barre d'outils -->
                     <Menubar class="w-full">
                         <template #start>
+                            <!-- Toggle format -->
+                            <SelectButton v-model="formatValue" :options="formatOptions" :allowEmpty="false"
+                                @update:modelValue="onFormatChange">
+                                <template #option="{ option }">
+                                    <Icon :name="option === 'landscape' ? 'lucide:monitor' : 'lucide:smartphone'"
+                                        size="16" />
+                                </template>
+                            </SelectButton>
                         </template>
                         <template #end>
                             <div class="flex items-center gap-1 sm:gap-2">
@@ -294,24 +345,47 @@
                                     <span
                                     class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Partager</span>
                                 </Button> -->
-                                <Button severity="secondary" @click="previewSchedule">
-                                    <Icon name="lucide:eye" size="18" />
+                                <Button severity="secondary" :disabled="isPreviewing" :loading="isPreviewing"
+                                    @click="mobileFormat ? previewScheduleMobile(currentFont, showBranding) : previewSchedule(currentFont, showBranding)">
+                                    <Icon v-if="isPreviewing" name="lucide:loader-circle" size="18"
+                                        class="animate-spin" />
+                                    <Icon v-else name="lucide:eye" size="18" />
                                     <span
                                         class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base whitespace-nowrap">Aperçu
                                         du planning</span>
                                 </Button>
-                                <Button severity="contrast" @click="exportSchedule">
-                                    <Icon name="lucide:download" size="18" />
+                                <!-- Bouton export adaptatif -->
+                                <Button severity="contrast" :disabled="isExporting" :loading="isExporting"
+                                    @click="mobileFormat ? exportScheduleMobile(currentFont, showBranding) : exportSchedule(currentFont, showBranding)">
+                                    <Icon v-if="isExporting" name="lucide:loader-circle" size="18"
+                                        class="animate-spin" />
+                                    <Icon v-else name="lucide:download" size="18" />
                                     <span class="text-xs md:text-base lg:text-xs xl:text-base">Télécharger</span>
                                 </Button>
                             </div>
                         </template>
                     </Menubar>
+                    <FeatureUnlockModal v-model="mobileExportModal" featureKey="mobile_export" />
 
                     <!-- Planning hebdomadaire -->
                     <div ref="viewportRef" class="relative w-full flex justify-center">
-                        <div class="absolute" :style="scalerStyle">
-                            <div id="scheduleCard">
+                        <!-- Planning mobile-->
+                        <div class="absolute" :style="[scalerStyleMobile, {
+                            opacity: mobileFormat ? 1 : 0,
+                            pointerEvents: mobileFormat ? 'auto' : 'none'
+                        }]">
+                            <ScheduleMobileCard :schedule="schedule" :slots="slots" :daysOptions="daysOptions"
+                                :scheduleBgColor="scheduleBgColor" :scheduleTextColor="scheduleTextColor"
+                                :backgroundOpacity="backgroundOpacity" :formatTime="formatTime"
+                                :slotsForDay="slotsForDay" :endTimeVisible="endTimeVisible" :titleVisible="titleVisible"
+                                :showBranding="schedule?.style?.showBranding !== false" />
+                        </div>
+                        <div class="absolute" :style="[scalerStyle, {
+                            opacity: mobileFormat ? 0 : 1,
+                            pointerEvents: mobileFormat ? 'none' : 'auto'
+                        }]">
+                            <!-- Planning desktop -->
+                            <div v-show="!mobileFormat" id="scheduleCard">
                                 <div class="p-4 relative rounded-lg export-footer" :style="{
                                     backgroundColor: scheduleBgColor,
                                     backgroundImage: schedule?.style?.backgroundUrl ? `url(${schedule.style.backgroundUrl})` : undefined,
@@ -335,12 +409,14 @@
                                                         @blur="saveEdit" @keyup.enter="saveEdit"
                                                         @keyup.esc.prevent.stop="cancelEdit"
                                                         class="text-4xl font-bold bg-transparent border-none focus:outline-none"
-                                                        maxlength="70" />
+                                                        maxlength="60" :style="{ fontFamily: currentFont }" />
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer"
                                                         @click="editField('title')">
-                                                        <h1 class="text-4xl font-bold"> {{ schedule?.title }} </h1>
+                                                        <h1 class="text-4xl font-bold"
+                                                            :style="{ fontFamily: currentFont }"> {{ schedule?.title }}
+                                                        </h1>
                                                         <Icon name="lucide:pencil" size="34"
                                                             class="transition ignore-export" />
                                                     </div>
@@ -352,13 +428,15 @@
                                                         @blur="saveEdit" @keyup.enter="saveEdit"
                                                         @keyup.esc.prevent.stop="cancelEdit"
                                                         class="text-base font-semibold bg-transparent border-none focus:outline-none w-full"
-                                                        maxlength="100" />
+                                                        :style="{ fontFamily: currentFont }" maxlength="100" />
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer"
                                                         :class="autoSubtitle ? 'pointer-events-none' : ''"
                                                         @click="editField('subtitle')">
-                                                        <div class="text-base font-semibold"> {{ schedule?.subtitle }}
+                                                        <div class="text-base font-semibold"
+                                                            :style="{ fontFamily: currentFont }"> {{ schedule?.subtitle
+                                                            }}
                                                         </div>
                                                         <Icon v-if="!autoSubtitle" name="lucide:pencil" size="18"
                                                             class="transition ignore-export" />
@@ -375,7 +453,7 @@
                                                     class="flex flex-col items-center transition-all duration-500 ease-out">
                                                     <!-- Jour -->
                                                     <div class=" font-semibold mb-2 text-center text-xl"
-                                                        :style="{ color: scheduleTextColor, textShadow: '0 0 2px rgba(0,0,0,0.8)' }">
+                                                        :style="{ color: scheduleTextColor, textShadow: '0 0 2px rgba(0,0,0,0.8)', fontFamily: currentFont }">
                                                         {{ day.label }}</div>
                                                     <!-- Créneaux -->
                                                     <div class="h-130 w-full">
@@ -421,12 +499,13 @@
                                                                                 <div class="flex-1"></div>
                                                                                 <!-- Tag titre -->
                                                                                 <div class="bg-black/80 text-sm font-bold px-2 py-1 rounded-b-md z-60 line-clamp-1"
-                                                                                    v-if="titleVisible">
+                                                                                    v-if="titleVisible"
+                                                                                    :style="{ fontFamily: currentFont }">
                                                                                     {{ slot.title }}
                                                                                 </div>
                                                                                 <!-- Heure -->
                                                                                 <div class="absolute top-[-1px] left-[-1px] z-100 px-2 py-1 text-base font-semibold rounded-br-md rounded-tl-sm"
-                                                                                    :style="slot.game.cover ? { backgroundColor: `#${slot.color}` } : {}">
+                                                                                    :style="slot.game.cover ? { backgroundColor: `#${slot.color}`, fontFamily: currentFont } : { fontFamily: currentFont }">
                                                                                     {{ formatTime(slot.start_at) }}
                                                                                     <span v-if="endTimeVisible">
                                                                                         -
@@ -470,7 +549,8 @@
                                         </div>
                                     </div>
                                     <!-- Footer -->
-                                    <div class="absolute bottom-4 right-6 z-20 pointer-events-none ignore-export">
+                                    <div v-if="schedule?.style?.showBranding !== false"
+                                        class="absolute bottom-4 right-6 z-20 pointer-events-none ignore-export">
                                         <div class="text-right leading-none select-none">
                                             <div class="text-[10px] font-light uppercase tracking-widest text-white/70"
                                                 style="text-shadow: 0 1px 3px rgba(0,0,0,0.8)">
@@ -686,9 +766,12 @@
     </Dialog>
 
     <!-- Modal d'aperçu de planning -->
-    <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: '65vw' }" :draggable="false">
+    <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: mobileFormat ? '25vw' : '65vw' }"
+        :draggable="false" :pt="{ root: { style: 'border-radius: 8px; overflow: hidden' } }">
         <template #container="{ closeCallback }">
-            <img v-if="previewDataUrl" :src="previewDataUrl" class="w-full h-auto" />
+            <img v-if="previewDataUrl" :src="previewDataUrl" :style="mobileFormat
+                ? { height: '90vh', width: 'auto', display: 'block', margin: '0 auto' }
+                : { width: '100%', height: 'auto' }" />
         </template>
     </Dialog>
 
@@ -724,6 +807,10 @@ const scheduleSlotStore = useScheduleSlotStore()
 const { loading, schedule } = storeToRefs(scheduleStore)
 const { slots } = storeToRefs(scheduleSlotStore)
 const supabase = useSupabaseClient()
+
+const formatValue = ref('landscape')
+const formatOptions = ref(['landscape', 'mobile'])
+const mobileFormat = computed(() => formatValue.value === 'mobile')
 
 // Édition du titre et du sous-titre
 const editing = ref({ field: null as 'title' | 'subtitle' | null, value: '' })
@@ -915,6 +1002,21 @@ const scheduleTextColor = computed(() => {
     return `#${schedule.value?.style?.textColor || ''}`
 })
 
+// Police actuelle
+const currentFont = computed(() => schedule.value?.style?.fontFamily ?? null)
+const fontModal = ref(false)
+const premiumModal = ref(false)
+
+// Mise à jour de la police
+const onFontClick = (font: any) => {
+    if (font.premium && !hasFeature('premium_theme')) {
+        premiumModal.value = true
+        fontModal.value = false
+        return
+    }
+    scheduleStore.updateSchedule({ style: { fontFamily: font.name } })
+}
+
 // Gestion de l'affichage des éléments du planning
 const titleVisible = ref(true)
 const endTimeVisible = ref(false)
@@ -932,7 +1034,10 @@ async function updateStyle(newStyle: any) {
     if (!schedule.value) return
 
     // Merge l'ancien style avec le nouveau pour ne pas écraser les autres options
-    const updatedStyle = { ...newStyle }
+    const updatedStyle = {
+        ...(schedule.value.style as Record<string, any> ?? {}),  // ← merge avec le style existant
+        ...newStyle
+    }
 
     // Met à jour le store / BDD
     await scheduleStore.updateSchedule({ style: updatedStyle })
@@ -956,12 +1061,29 @@ function toggleDaysWithoutStreamVisibility() {
     updateStyle({ showDaysWithoutStream: !daysWithoutStreamVisible.value })
 }
 
+// Toggle du branding
+const brandingToggle = computed(() => hasFeature('no_branding') && schedule.value?.style?.showBranding === false)
+const showBranding = computed(() => schedule.value?.style?.showBranding !== false)
+const noBrandingModal = ref(false)
+
+const onToggleBranding = () => {
+    if (!hasFeature('no_branding')) {
+        noBrandingModal.value = true
+        return
+    }
+    updateStyle({ showBranding: brandingToggle.value ? true : false })
+}
+
 // Gestion de la génération d'aperçu et de l'export du planning
 const {
     previewSchedule,
+    previewScheduleMobile,
     exportSchedule,
+    exportScheduleMobile,
     previewDataUrl,
-    showPreview
+    showPreview,
+    isExporting,
+    isPreviewing
 } = useScheduleScreenshot()
 
 const scheduleId = computed(() => schedule.value?.id)
@@ -1021,6 +1143,25 @@ const scalerStyle = computed(() => ({
     transform: `scale(${scale.value})`,
     transformOrigin: 'center top'
 }))
+
+// Gestion du redimensionnement et du scaling du planning en mobile (format vertical)
+const MOBILE_WIDTH = 1080
+const MOBILE_HEIGHT = 1920
+
+const scalerStyleMobile = computed(() => {
+    if (!viewportWidth.value) return {}
+
+    const scaleByWidth = viewportWidth.value / MOBILE_WIDTH
+    const scaleByHeight = (viewportWidth.value * 0.5) / MOBILE_HEIGHT // 80% de la hauteur viewport
+    const scale = Math.min(scaleByWidth, scaleByHeight, 0.4) // max 0.4 pour pas trop grand
+
+    return {
+        width: `${MOBILE_WIDTH}px`,
+        height: `${MOBILE_HEIGHT}px`,
+        transform: `scale(${scale})`,
+        transformOrigin: 'center top'
+    }
+})
 
 // Gestion de l'upload d'image d'arrière-plan
 const imageUrl = ref<string | null>(null)
@@ -1127,6 +1268,21 @@ onUnmounted(() => {
 definePageMeta({
     layout: 'fullscreen'
 })
+
+const { hasFeature, isSub } = useFeatures()
+
+const onFormatChange = (val: string) => {
+    if (val === 'mobile' && !hasFeature('mobile_export')) {
+        mobileExportModal.value = true
+        nextTick(() => {
+            formatValue.value = 'landscape'
+        })
+        return
+    }
+    formatValue.value = val
+}
+
+const mobileExportModal = ref(false)
 </script>
 
 <style scoped>

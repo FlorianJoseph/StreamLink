@@ -8,7 +8,7 @@
                     Modifier ma page de liens
                 </h1>
                 <!-- Sous-titre -->
-                <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
                     Crée ta page de liens personnalisée à partager avec ton audience
                 </p>
             </div>
@@ -76,13 +76,12 @@
 
                         <!-- Langue de streaming -->
                         <div class="flex flex-col gap-2">
-                            <label for="language"
-                                class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <label for="language" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
                                 <Icon name="lucide:globe" size="16" class="shrink-0" />
                                 Langue
                             </label>
-                            <Select id="language" v-model="language" :options="languageOptions"
-                                optionLabel="label" optionValue="value" placeholder="Sélectionne une langue" showClear
+                            <Select id="language" v-model="language" :options="languageOptions" optionLabel="label"
+                                optionValue="value" placeholder="Sélectionne une langue" showClear
                                 :highlightOnSelect="false" fluid style="--p-select-focus-border-color: #ffffff" :pt="{
                                     pcFilter: {
                                         root: {
@@ -105,7 +104,7 @@
                                             :src="`https://flagcdn.com/w80/${getFlag(value)}.png`"
                                             class="h-[15px] w-5 object-cover rounded-xs shadow-sm" />
                                         <Icon v-else name="lucide:globe" size="16" />
-                                        <span>{{getLabel(value)}}</span>
+                                        <span>{{ getLabel(value) }}</span>
                                     </div>
                                 </template>
                             </Select>
@@ -246,6 +245,50 @@
                             </div>
                         </template>
                     </Draggable>
+
+                    <Divider v-if="links.length > 0" class="my-4" />
+
+                    <div class="rounded-md p-4 bg-gray-100/10">
+                        <!-- Bloc branding -->
+                        <div v-if="!hasFeature('no_branding')"
+                            class="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:items-center justify-between">
+                            <div class="flex flex-col sm:gap-0.5">
+                                <span class="text-sm font-semibold">Masquer le footer</span>
+                                <span class="text-xs text-zinc-400">
+                                    <template v-if="hasFeature('no_branding')">
+                                        {{ getExpiryLabel('no_branding') }}
+                                    </template>
+                                    <template v-else>
+                                        Masque le footer de ta page de liens
+                                    </template>
+                                </span>
+                            </div>
+                            <Button severity="contrast" size="small"
+                                @click="brandingModal = true">
+                                <Icon name="lucide:coins" size="16" class="shrink-0" />
+                                <span class="text-sm">Débloquer</span>
+                            </Button>
+                        </div>
+                        <div v-else class="flex gap-2 items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold">Masquer le footer</span>
+                                <span class="text-xs text-zinc-400">
+                                    <!-- <template v-if="hasFeature('no_branding')">
+                                        {{ getExpiryLabel('no_branding') }}
+                                    </template> -->
+                                    <template>
+                                        Masque le footer de ta page de liens
+                                    </template>
+                                </span>
+                            </div>
+                            <span v-if="isSub" class="text-sm text-gray-400  font-semibold">Inclus dans
+                                l'abonnement</span>
+                            <span v-else class="text-sm text-emerald-400">{{ getExpiryLabel('no_branding') }}</span>
+                        </div>
+
+                        <!-- Modal déblocage branding -->
+                        <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
+                    </div>
 
                     <!-- Modal Icone ou image -->
                     <Dialog v-model:visible="thumbnailModal" dismissableMask modal header="Modifier l'icone du lien"
@@ -611,4 +654,7 @@ const defaultSize = ({ imageSize, visibleArea }) => {
     };
 };
 
+const { hasFeature, getExpiryLabel, isSub } = useFeatures()
+
+const brandingModal = ref(false)
 </script>

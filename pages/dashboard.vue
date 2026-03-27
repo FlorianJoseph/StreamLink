@@ -12,7 +12,7 @@
                     <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
                         Tableau de bord
                     </h1>
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl">
+                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
                         Bienvenue, {{ streamer?.username || 'Streamer' }}
                     </p>
                 </div>
@@ -76,6 +76,34 @@
 
                         <!-- Carte Partage rapide -->
                         <QRCode />
+
+                        <!-- Card Coins quotidiens -->
+                        <Card class="border border-zinc-700 sm:col-span-2" style="--p-card-body-padding: 7px">
+                            <template #content>
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-1">
+                                    <div class="flex items-center gap-3">
+                                        <Icon name="lucide:coins" size="20" class="text-amber-400 shrink-0" />
+                                        <div>
+                                            <h2 class="text-lg font-semibold">Coins quotidiens</h2>
+                                            <p class="text-xs sm:text-sm text-gray-400">
+                                                {{ dailyClaimed ? 'Déjà récupéré aujourd\'hui, reviens demain !' :
+                                                    'Connecte-toi chaque jour pour gagner des Coins' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <Button :disabled="dailyClaimed || dailyLoading" severity="contrast"
+                                        class="flex items-center gap-2 w-full sm:w-auto justify-center"
+                                        @click="claimDaily">
+                                        <Icon v-if="dailyLoading" name="lucide:loader-circle" size="16"
+                                            class="animate-spin shrink-0" />
+                                        <Icon v-else-if="dailyClaimed" name="lucide:check" size="16" class="shrink-0" />
+                                        <Icon v-else name="lucide:coins" size="16" class="shrink-0" />
+                                        <span class="text-sm sm:text-base">
+                                            {{ dailyClaimed ? 'Récupéré' : '+5 Coins' }}</span>
+                                    </Button>
+                                </div>
+                            </template>
+                        </Card>
                     </div>
 
                     <!-- Carte Nouvelles fonctionnalités / Coming soon -->
@@ -95,6 +123,7 @@
                                 <button @click="roadmapModal = true"
                                     class="flex items-center justify-center gap-2 px-4 py-2 border-2 border-white/20 font-medium text-white rounded-md hover:bg-white/10 transition-all">
                                     <span class="text-sm sm:text-base">Découvrir</span>
+                                    <Icon name="lucide:arrow-right" size="16" class="shrink-0" />
                                 </button>
                             </div>
                         </template>
@@ -114,56 +143,20 @@
                                     <span class="text-gray-400 text-sm">Notifications in-app</span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <Icon name="lucide:coins" class="text-pink-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Monnaie virtuelle</span>
-                                </div>
-                                <div class="flex items-center gap-2">
                                     <Icon name="lucide:users" class="text-purple-400" size="16" />
                                     <span class="text-gray-400 text-sm">Collabs & raids entre streamers</span>
                                 </div>
-                            </div>
-
-                            <!-- Premium -->
-                            <div class="space-y-2 border-t border-zinc-700 pt-4">
-                                <span class="text-xs font-semibold text-purple-400 uppercase tracking-wide">
-                                    Pour les créateurs ambitieux
-                                </span>
-                                <p class="text-xs text-gray-500 italic">
-                                    Accède à des fonctionnalités avancées et exclusives grâce à la monnaie
-                                    virtuelle, gratuite ou acquise
-                                </p>
-                                <p class="text-xs text-purple-300">
-                                    Les créateurs actifs auront un accès anticipé aux nouvelles fonctionnalités
-                                </p>
-                                <!-- Planning -->
-                                <div class="space-y-1">
-                                    <span class="text-xs text-zinc-500 uppercase tracking-wide">Planning</span>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="simple-icons:twitch" class="text-purple-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Synchronisation Twitch</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="simple-icons:discord" class="text-indigo-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Export Discord</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="lucide:smartphone" class="text-green-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Export format mobile</span>
-                                    </div>
+                                <div class="flex items-center gap-2">
+                                    <Icon name="simple-icons:twitch" class="text-purple-400" size="16" />
+                                    <span class="text-gray-400 text-sm">Synchronisation Twitch</span>
                                 </div>
-
-                                <!-- Page de liens -->
-                                <div class="space-y-1">
-                                    <span class="text-xs text-zinc-500 uppercase tracking-wide">Page de liens</span>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="lucide:chart-column" class="text-blue-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Stats avancées</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="lucide:palette" class="text-pink-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Thèmes exclusifs & personnalisation
-                                            avancée</span>
-                                    </div>
+                                <div class="flex items-center gap-2">
+                                    <Icon name="simple-icons:discord" class="text-indigo-400" size="16" />
+                                    <span class="text-gray-400 text-sm">Export Discord</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <Icon name="lucide:chart-column" class="text-blue-400" size="16" />
+                                    <span class="text-gray-400 text-sm">Stats avancées</span>
                                 </div>
                             </div>
                             <!-- CTA Newsletter -->
@@ -215,6 +208,32 @@ const { streamer } = storeToRefs(streamerStore)
 const newsletterStore = useNewsletterStore()
 const loading = ref(true)
 const { uid } = useSupabase()
+const { fetchBalance } = useWallet()
+const toast = useToast()
+const dailyClaimed = ref(false)
+const dailyLoading = ref(false)
+
+const claimDaily = async () => {
+    dailyLoading.value = true
+    try {
+        const { credited } = await $fetch('/api/quests/daily', { method: 'POST' })
+        if (credited) {
+            dailyClaimed.value = true
+            await fetchBalance()
+            toast.add({
+                severity: 'secondary',
+                group: 'quest',
+                summary: 'Connexion quotidienne',
+                detail: '5',
+                life: 4000,
+            })
+        } else {
+            dailyClaimed.value = true
+        }
+    } finally {
+        dailyLoading.value = false
+    }
+}
 
 watch(uid, async (val) => {
     if (val) {
@@ -248,6 +267,11 @@ onMounted(async () => {
         await scheduleSlotStore.fetchSlots(schedule.id)
     }
     await linkStore.fetchLinks()
+
+    // Vérifier si daily déjà récupéré
+    const { credited } = await $fetch('/api/quests/daily', { method: 'POST' })
+    dailyClaimed.value = !credited
+
     loading.value = false
 })
 

@@ -1,10 +1,7 @@
 const shallowEqual = (a = {}, b = {}) => {
-    const aKeys = Object.keys(a ?? {})
-    const bKeys = Object.keys(b ?? {})
-
-    if (aKeys.length !== bKeys.length) return false
-
-    return aKeys.every(key => a[key] === b[key])
+    if (!a || !b) return false
+    // Vérifier uniquement les clés du preset (b) dans le design (a)
+    return Object.keys(b).every(key => a[key] === b[key])
 }
 
 export const useDesignActive = (design) => {
@@ -16,22 +13,11 @@ export const useDesignActive = (design) => {
             if (!design.value) return false
 
             return (
-                shallowEqual(
-                    design.value.wallpaper_style,
-                    themePreset.wallpaper_style
-                ) &&
-                shallowEqual(
-                    design.value.button_style,
-                    themePreset.button_style
-                ) &&
-                shallowEqual(
-                    design.value.username_style,
-                    themePreset.username_style
-                ) &&
-                shallowEqual(
-                    design.value.bio_style,
-                    themePreset.bio_style
-                )
+                shallowEqual(design.value.wallpaper_style, themePreset.wallpaper_style) &&
+                shallowEqual(design.value.button_style, themePreset.button_style) &&
+                shallowEqual(design.value.username_style, themePreset.username_style) &&
+                shallowEqual(design.value.bio_style, themePreset.bio_style) &&
+                design.value.font_family === themePreset.font_family
             )
         })
 

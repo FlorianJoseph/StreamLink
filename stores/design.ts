@@ -65,6 +65,13 @@ export const useDesignStore = defineStore('design', () => {
         design.value[section] = newSection
     }
 
+    const updateFont = (fontName: string | null) => {
+        if (!design.value) return
+        history.value.push(structuredClone(toRaw(design.value)))
+        future.value = []
+        design.value.font_family = fontName
+    }
+
     // Undo / Redo
     const undo = () => {
         if (!history.value.length) return
@@ -108,6 +115,11 @@ export const useDesignStore = defineStore('design', () => {
                 }
             }
         })
+
+        // Appliquer la police du thème
+        if (theme.font_family !== undefined) {
+            design.value.font_family = theme.font_family
+        }
     }
 
     // Sauvegarder le design actuel dans la base de données
@@ -125,9 +137,10 @@ export const useDesignStore = defineStore('design', () => {
         history.value = []
         future.value = []
         toast.add({
+            group: 'app',
             severity: 'success',
-            summary: 'Design sauvegardé',
-            detail: 'Vos modifications ont été sauvegardées',
+            summary: 'Design enregistré',
+            detail: 'Tes modifications ont été enregistrées',
             life: 4000,
         })
     }
@@ -139,9 +152,10 @@ export const useDesignStore = defineStore('design', () => {
         history.value = []
         future.value = []
         toast.add({
+            group: 'app',
             severity: 'info',
             summary: 'Design réinitialisé',
-            detail: 'Le design a été restauré à la dernière version sauvegardée',
+            detail: 'Le design a été restauré à la dernière version enregistrée',
             life: 4000,
         })
     }
@@ -157,6 +171,7 @@ export const useDesignStore = defineStore('design', () => {
         design,
         fetchDesign,
         updateSection,
+        updateFont,
         applyTheme,
         saveDesign,
         resetDesign,

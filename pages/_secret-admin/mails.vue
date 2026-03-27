@@ -299,10 +299,10 @@ async function sendEmails() {
             method: 'POST',
             body: { segment: selectedSegment.value }
         })
-        toast.add({ severity: 'success', summary: 'Emails envoyés', detail: `${res.sent} emails envoyés avec succès`, life: 4000 })
+        toast.add({ group: 'app', severity: 'success', summary: 'Emails envoyés', detail: `${res.sent} emails envoyés avec succès`, life: 4000 })
     } catch (err) {
         console.error(err)
-        toast.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de l’envoi des emails', life: 4000 })
+        toast.add({ group: 'app', severity: 'error', summary: 'Erreur', detail: 'Erreur lors de l’envoi des emails', life: 4000 })
     } finally {
         sending.value = false
     }
@@ -333,7 +333,7 @@ async function loadEmails() {
         nextCursor.value = res.nextCursor
     } catch (err) {
         console.error(err)
-        toast.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors du chargement des emails', life: 4000 })
+        toast.add({ group: 'app', severity: 'error', summary: 'Erreur', detail: 'Erreur lors du chargement des emails', life: 4000 })
     } finally {
         emailsLoading.value = false
     }

@@ -18,3 +18,11 @@ a {
 * {
     scrollbar-color: #9F9F9F transparent;
 }
+
+.p-toast-close-button {
+    color: #a1a1aa !important;
+}
+
+.p-toast-message {
+    border-color: transparent !important;
+}

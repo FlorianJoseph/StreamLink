@@ -17,5 +17,5 @@ export const getCurrentWeekSubtitle = () => {
     const mondayStr = monday.toLocaleDateString('fr-FR', options)
     const sundayStr = sunday.toLocaleDateString('fr-FR', options)
 
-    return `Du ${mondayStr} au ${sundayStr}`
+    return `${mondayStr} au ${sundayStr}`
 }

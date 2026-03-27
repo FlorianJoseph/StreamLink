@@ -12,6 +12,8 @@ type QuestCondition = (ctx: QuestContext) => boolean
 
 export interface Quest {
     id: string
+    dbId?: string
+    reward?: number
     type: 'required' | 'optional'
     label: string
     to: string

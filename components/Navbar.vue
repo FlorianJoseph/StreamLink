@@ -1,5 +1,6 @@
 <template>
-    <Menubar :model="menuItems" class="h-13 relative z-60" style="--p-menubar-border-radius:0; --p-menubar-border-color: transparent">
+    <Menubar :model="menuItems" class="h-13 relative z-60"
+        style="--p-menubar-border-radius:0; --p-menubar-border-color: transparent">
         <template #start>
             <NuxtLink v-ripple :to="'/'">
                 <Home :size="20" />
@@ -41,6 +42,13 @@
                     </NuxtLink>
                 </template>
                 <template v-else>
+                    <template v-if="user">
+                        <div
+                            class="flex items-center gap-1 px-2 py-1 rounded-md bg-zinc-300/10 text-xs sm:text-sm font-semibold">
+                            <Icon name="lucide:coins" size="14" class="shrink-0 text-amber-400" />
+                            <span class="text-amber-400">{{ balance }} <span class="hidden sm:inline-block">Coins</span></span>
+                        </div>
+                    </template>
                     <button
                         class="flex items-center gap-2 py-1 px-2 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
                         @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
@@ -72,6 +80,8 @@
 
 <script setup>
 import { Home } from 'lucide-vue-next';
+
+const { balance } = useWallet()
 
 const menuItems = ref([
     {
@@ -105,6 +115,12 @@ const menuItems = ref([
         icon: 'lucide:calendar-days',
         route: '/schedule',
     },
+    {
+        label: 'Boutique',
+        icon: 'lucide:shopping-bag',
+        route: '/shop',
+        badge: 'Nouveau'
+    },
 ]);
 
 const menu = ref();
@@ -128,6 +144,11 @@ const popoverItems = ref([
                 label: 'Compte',
                 icon: 'lucide:user',
                 route: '/admin/account'
+            },
+            {
+                label: 'Facturation',
+                icon: 'lucide:credit-card',
+                route: '/admin/billing'
             },
             {
                 label: 'Déconnexion',

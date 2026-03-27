@@ -9,7 +9,7 @@
             </div>
         </template>
 
-        <template #content>
+        <template #content v-if="isReady">
             <div class="space-y-5">
                 <!-- Bloc principal fusionné -->
                 <div :class="stats.profileVisible
@@ -184,31 +184,13 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Bouton reset en bas -->
-                <!-- <div class="px-2">
-                    <Button label="Réinitialiser les notifications" severity="secondary" text size="small"
-                        @click="showResetDialog = true" class="w-full justify-center" />
-                </div> -->
             </div>
         </template>
     </Card>
-
-    <!-- Dialog de confirmation reset -->
-    <Dialog v-model:visible="showResetDialog" header="Réinitialiser les notifications ?" :modal="true"
-        :style="{ width: '25rem' }">
-        <p class="text-sm text-gray-300 mb-2">
-            Tu recevras à nouveau toutes les notifications pour les quêtes déjà complétées.
-        </p>
-        <template #footer>
-            <Button label="Annuler" severity="secondary" @click="showResetDialog = false" text />
-            <Button label="Réinitialiser" severity="danger" @click="handleReset" />
-        </template>
-    </Dialog>
 </template>
 
 <script setup lang="ts">
-const { getQuests, getStats, getProfileMessage, resetNotifications } = useProfileProgress()
+const { getQuests, getStats, getProfileMessage, isReady } = useProfileProgress()
 
 const stats = computed(() => getStats())
 
@@ -222,13 +204,6 @@ const getOptionalCount = () => getOptionalQuests().length
 const getOptionalCompletedCount = () => getOptionalQuests().filter(q => q.completed).length
 
 const hasPlanning = computed(() => getPlanningQuest()?.completed || false)
-
-const showResetDialog = ref(false)
-
-const handleReset = () => {
-    resetNotifications()
-    showResetDialog.value = false
-}
 
 const getNextStepMessage = () => {
     const stats = getStats()
@@ -249,14 +224,14 @@ const getNextStepMessage = () => {
 }
 
 // Icons selon le niveau
-const getLevelIcon = (color: string) => {
-    const icons = {
-        bronze: 'lucide:shield',
-        silver: 'lucide:award',
-        gold: 'lucide:crown',
-        platinum: 'lucide:diamond',
-        diamond: 'lucide:gem'
-    }
-    return icons[color] || 'lucide:star'
-}
+// const getLevelIcon = (color: string) => {
+//     const icons = {
+//         bronze: 'lucide:shield',
+//         silver: 'lucide:award',
+//         gold: 'lucide:crown',
+//         platinum: 'lucide:diamond',
+//         diamond: 'lucide:gem'
+//     }
+//     return icons[color] || 'lucide:star'
+// }
 </script>

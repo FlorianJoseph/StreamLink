@@ -13,25 +13,25 @@
                     <p class="text-xs sm:text-sm lg:text-base leading-relaxed">
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
-                            <NuxtLink to="/admin/links" class="font-bold underline hover:text-indigo-200">
-                                Choisir ma langue de streaming
+                            <NuxtLink to="/dashboard" class="font-bold underline hover:text-indigo-200">
+                                Découvre les Coins
                             </NuxtLink>
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Tu peux maintenant choisir ta langue de streaming dans ta page de lien !
+                            Gagne des Coins en complétant les quêtes du tableau de bord et en te connectant chaque jour !
                         </span>
                     </p>
                 </div>
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <NuxtLink to="/admin/links"
+                    <NuxtLink to="/dashboard"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <Icon name="lucide:globe" size="18" />
-                            Choisir ma langue
+                            <Icon name="lucide:coins" size="18" />
+                            Gagner des Coins
                         </div>
                     </NuxtLink>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-const STORAGE_KEY = 'language'
+const STORAGE_KEY = 'coins'
 const visible = ref(false)
 
 

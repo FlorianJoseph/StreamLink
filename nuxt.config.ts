@@ -21,6 +21,18 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/styles/main.css', 'vue-advanced-cropper/dist/theme.classic.css'],
   vite: {
+    optimizeDeps: {
+      include: [
+        'lucide-vue-next',
+        'qrcode',
+        'modern-screenshot',
+        'node-vibrant/browser',
+        'vuedraggable',
+        'vue-advanced-cropper',
+        '@vueuse/core',
+        '@stripe/stripe-js',
+      ]
+    },
     plugins: [
       tailwindcss(),
     ],
@@ -38,5 +50,21 @@ export default defineNuxtConfig({
         jsxImportSource: 'react'
       }
     }
-  }
+  },
+  runtimeConfig: {
+    stripeSecretKey: '',
+    stripeWebhookSecret: '',
+    stripePriceSub: '',
+    stripePriceCoinsLittle: '',
+    stripePriceCoinsMiddle: '',
+    stripePriceCoinsBig: '',
+    public: {
+      stripePublishableKey: '',
+      appUrl: 'http://localhost:3000',
+      stripePriceSub: '',
+      stripePriceCoinsLittle: '',
+      stripePriceCoinsMiddle: '',
+      stripePriceCoinsBig: '',
+    }
+  },
 })
