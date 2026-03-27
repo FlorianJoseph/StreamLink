@@ -41,7 +41,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - 02/03/26 345 utilisateurs, 188 profils actifs, 779 liens, 535 streams planifiés, newsletter 150 inscrits
 - 10/03/26 428 utilisateurs, 252 profils actifs, 1036 liens, 728 streams planifiés, 778 vues de pages, newsletter 180 inscrits
 - 16/03/26 473 utilisateurs, 283 profils actifs, 1186 liens, 827 streams planifiés, 1838 vues de pages, newsletter 208 inscrits
-- 26/03/26 549 utilisateurs, 341 profils actifs, 1404 liens, 1030 streams planifiés, 3890 vues de pages, newsletter 246 inscrits
+- 27/03/26 555 utilisateurs, 345 profils actifs, 1440 liens, 1062 streams planifiés, 4015 vues de pages, newsletter 248 inscrits + premium
 
 ## Historique Roadmap
 
@@ -67,7 +67,8 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
     - Monnaie virtuelle (Coins) + quêtes BDD + récompenses automatiques 22/03/26
     - Système de features temporaires 7j/30j en place
     - 3 features déployées : no_branding + premium_theme + mobile_export
-- Boutique + achats packs de coins ou abonnement avec Stripe + coins connexion quotidienne 26/03/26
+- Historique transaction des Coins
+- Boutique + Stripe (packs Coins + abonnement 7,99€/mois) + connexion quotidienne 27/03/26
 
 ## Roadmap court terme – Augmenter la visibilité et promouvoir le réseau interne
 

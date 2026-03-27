@@ -66,6 +66,8 @@
 </template>
 
 <script setup lang="ts">
+const toast = useToast()
+
 const props = defineProps<{
     featureKey: string
 }>()
@@ -92,9 +94,22 @@ const handleSpend = async () => {
     try {
         await spend(props.featureKey, selectedPrice.value.id)
         visible.value = false
+        toast.add({
+            group: 'app',
+            severity: 'success',
+            summary: `${feature.value?.label} débloqué`,
+            detail: `Actif pendant ${selectedPrice.value.label}`,
+            life: 4000,
+        })
         selectedPrice.value = null
     } catch (error) {
-        console.error('Erreur déblocage', props.featureKey, error)
+        toast.add({
+            group: 'app',
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Impossible de débloquer la fonctionnalité',
+            life: 4000,
+        })
     } finally {
         spending.value = false
     }

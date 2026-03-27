@@ -123,6 +123,7 @@
                                 <button @click="roadmapModal = true"
                                     class="flex items-center justify-center gap-2 px-4 py-2 border-2 border-white/20 font-medium text-white rounded-md hover:bg-white/10 transition-all">
                                     <span class="text-sm sm:text-base">Découvrir</span>
+                                    <Icon name="lucide:arrow-right" size="16" class="shrink-0" />
                                 </button>
                             </div>
                         </template>
@@ -142,56 +143,20 @@
                                     <span class="text-gray-400 text-sm">Notifications in-app</span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <Icon name="lucide:coins" class="text-pink-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Monnaie virtuelle</span>
-                                </div>
-                                <div class="flex items-center gap-2">
                                     <Icon name="lucide:users" class="text-purple-400" size="16" />
                                     <span class="text-gray-400 text-sm">Collabs & raids entre streamers</span>
                                 </div>
-                            </div>
-
-                            <!-- Premium -->
-                            <div class="space-y-2 border-t border-zinc-700 pt-4">
-                                <span class="text-xs font-semibold text-purple-400 uppercase tracking-wide">
-                                    Pour les créateurs ambitieux
-                                </span>
-                                <p class="text-xs text-gray-500 italic">
-                                    Accède à des fonctionnalités avancées et exclusives grâce à la monnaie
-                                    virtuelle, gratuite ou acquise
-                                </p>
-                                <p class="text-xs text-purple-300">
-                                    Les créateurs actifs auront un accès anticipé aux nouvelles fonctionnalités
-                                </p>
-                                <!-- Planning -->
-                                <div class="space-y-1">
-                                    <span class="text-xs text-zinc-500 uppercase tracking-wide">Planning</span>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="simple-icons:twitch" class="text-purple-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Synchronisation Twitch</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="simple-icons:discord" class="text-indigo-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Export Discord</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="lucide:smartphone" class="text-green-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Export format mobile</span>
-                                    </div>
+                                <div class="flex items-center gap-2">
+                                    <Icon name="simple-icons:twitch" class="text-purple-400" size="16" />
+                                    <span class="text-gray-400 text-sm">Synchronisation Twitch</span>
                                 </div>
-
-                                <!-- Page de liens -->
-                                <div class="space-y-1">
-                                    <span class="text-xs text-zinc-500 uppercase tracking-wide">Page de liens</span>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="lucide:chart-column" class="text-blue-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Stats avancées</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <Icon name="lucide:palette" class="text-pink-400" size="16" />
-                                        <span class="text-gray-400 text-sm">Thèmes exclusifs & personnalisation
-                                            avancée</span>
-                                    </div>
+                                <div class="flex items-center gap-2">
+                                    <Icon name="simple-icons:discord" class="text-indigo-400" size="16" />
+                                    <span class="text-gray-400 text-sm">Export Discord</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <Icon name="lucide:chart-column" class="text-blue-400" size="16" />
+                                    <span class="text-gray-400 text-sm">Stats avancées</span>
                                 </div>
                             </div>
                             <!-- CTA Newsletter -->

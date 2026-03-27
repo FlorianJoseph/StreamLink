@@ -128,10 +128,7 @@
                                 <template v-else>
                                     <div v-for="price in feature.FeaturePrices?.slice().sort((a, b) => a.duration_days - b.duration_days)"
                                         :key="price.id"
-                                        class="flex items-center justify-between px-3 py-2 rounded-lg border transition-all cursor-pointer"
-                                        :class="hasFeature(feature.key)
-                                            ? 'border-emerald-500/30 hover:border-emerald-500/60'
-                                            : 'border-zinc-700 hover:border-zinc-500'"
+                                        class="flex items-center justify-between px-3 py-2 rounded-lg border transition-all cursor-pointer border-zinc-700 hover:border-zinc-500"
                                         @click="handleSpend(feature, price)">
                                         <span class="text-xs text-gray-300">
                                             {{ hasFeature(feature.key) ? 'Prolonger de ' : 'Débloquer pendant ' }}{{
@@ -325,8 +322,21 @@ const confirmSpend = async () => {
         await fetchBalance()
         await fetchAccess()
         confirmModal.value = false
+        toast.add({
+            group: 'app',
+            severity: 'success',
+            summary: `${pendingFeature.value.label} débloqué`,
+            detail: `Actif pendant ${pendingPrice.value.label}`,
+            life: 4000,
+        })
     } catch (e) {
-        console.error('Erreur achat', e)
+        toast.add({
+            group: 'app',
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Impossible de débloquer la fonctionnalité',
+            life: 4000,
+        })
     } finally {
         spending.value = false
         pendingFeature.value = null
