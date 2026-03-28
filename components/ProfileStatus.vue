@@ -89,6 +89,10 @@
                                 <div class="flex-1">
                                     <p class="text-sm font-medium text-gray-200">{{ item.label }}</p>
                                 </div>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    <Icon name="lucide:coins" size="14" class="text-amber-400" />
+                                    <span class="text-xs font-bold text-amber-400">+{{ item.reward }}</span>
+                                </div>
                                 <Icon name="lucide:arrow-right" size="18"
                                     class="text-gray-400 group-hover:text-yellow-400 transition-colors" />
                             </NuxtLink>
@@ -134,6 +138,10 @@
                                 <span>Ton prochain stream sera mis en avant sur la page Découverte</span>
                             </div>
                         </div>
+                        <div class="flex items-center gap-1 shrink-0 mt-0.5">
+                            <Icon name="lucide:coins" size="14" class="text-amber-400" />
+                            <span class="text-xs font-bold text-amber-400">+{{ getPlanningQuest()?.reward }}</span>
+                        </div>
                         <Icon name="lucide:arrow-right" size="18"
                             class="text-gray-400 group-hover:text-blue-400 transition-colors shrink-0 mt-0.5" />
                     </NuxtLink>
@@ -171,6 +179,10 @@
                                 <Icon name="lucide:circle" size="18" class="text-gray-500 shrink-0" />
                                 <div class="flex-1">
                                     <p class="text-sm text-gray-300">{{ item.label }}</p>
+                                </div>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    <Icon name="lucide:coins" size="14" class="text-amber-400" />
+                                    <span class="text-xs font-bold text-amber-400">+{{ item.reward }}</span>
                                 </div>
                                 <Icon name="lucide:arrow-right" size="16"
                                     class="text-gray-500 group-hover:text-gray-400 transition-colors" />

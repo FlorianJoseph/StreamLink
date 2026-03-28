@@ -308,7 +308,7 @@
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:badge-check" size="18"
                                                         class="text-gray-400 shrink-0" />
-                                                    <span class="text-xs sm:text-sm">Masquer le branding</span>
+                                                    <span class="text-xs sm:text-sm">Masquer le footer</span>
                                                 </div>
                                                 <ToggleSwitch v-model="brandingToggle"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"

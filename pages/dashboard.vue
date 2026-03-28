@@ -269,8 +269,8 @@ onMounted(async () => {
     await linkStore.fetchLinks()
 
     // Vérifier si daily déjà récupéré
-    const { credited } = await $fetch('/api/quests/daily', { method: 'POST' })
-    dailyClaimed.value = !credited
+    const { claimed } = await $fetch('/api/quests/daily')
+    dailyClaimed.value = claimed
 
     loading.value = false
 })
