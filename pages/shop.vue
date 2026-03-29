@@ -68,7 +68,11 @@
                             </div>
 
                             <!-- Footer : date si sub, bouton sinon -->
-                            <div class="mt-auto">
+                            <div class="mt-auto flex flex-col gap-2">
+                                <div class="flex items-center gap-1.5 text-xs text-gray-500">
+                                    <Icon name="lucide:lock" size="12" class="shrink-0" />
+                                    <span>Paiement sécurisé par Stripe</span>
+                                </div>
                                 <Button :severity="isSub ? 'secondary' : pack.popular ? 'contrast' : 'secondary'"
                                     class="w-full"
                                     @click="isSub ? openPortal() : openCheckout(pack.priceId, 'subscription')">
@@ -193,6 +197,10 @@
                                 <span class="text-sm font-bold">Acheter {{ pack.coins }} Coins</span>
                             </Button>
                         </div>
+                    </div>
+                    <div class="flex items-center justify-center gap-2 text-xs text-gray-500 mt-2">
+                        <Icon name="lucide:lock" size="12" class="shrink-0" />
+                        <span>Paiement sécurisé par Stripe</span>
                     </div>
                 </div>
             </div>

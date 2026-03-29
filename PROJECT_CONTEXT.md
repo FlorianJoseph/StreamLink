@@ -64,7 +64,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Choix de la langue + filtres découverte 13/03/26
 - Choix de Charmi 13/03/26
 - Premium et monétisation 24/03/26
-    - Monnaie virtuelle (Coins) + quêtes BDD + récompenses automatiques 22/03/26
+    - Monnaie virtuelle : Coins (temporaire, deviendra autre chose au rebranding Charmi) + quêtes BDD + récompenses automatiques 22/03/26
     - Système de features temporaires 7j/30j en place
     - 3 features déployées : no_branding + premium_theme + mobile_export
 - Historique transaction des Coins
@@ -83,7 +83,8 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 ## Roadmap moyen terme – Améliorer le premium
 
 ### Réseaux
-    - Export story insta/X (premium)
+    - Export Discord
+    - Sync Twitch automatique
 
 ### Page publique
     - Créer des catégories de lien (premium)
@@ -95,22 +96,13 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 ### Optimisation pédagogique
     - Proposition de couleur texte dans le design en fonction du thème
 
-#### Pack Pro – Gain de temps
-    - Branding supprimé Planning et Page de Liens
-    - Sync Twitch automatique
-    - Export Discord
-Positionnement : Tu te concentres sur ton stream, on s’occupe du reste.
-
-#### Pack Boost – Plus de visibilité
-    - Mise en avant Discover
-    - Stats avancées
-Positionnement : Plus visible. Plus professionnel.
-
-#### Pack Studio – Identité premium
-    - Thèmes exclusifs
-    - Background animé
+### Abonnement — enrichissement progressif
+    - Background gradient/image/animé
     - Personnalisation avancée
-Positionnement : Une page qui te ressemble vraiment.
+    - Sync Twitch automatique
+    - Export Discord (bot Discord)
+    - Stats avancées
+    - Mise en avant sur la Découverte
 
 ### Fonctionnalités additionnelles (le plus éloigné)
     - Evènements (caritatifs...)
