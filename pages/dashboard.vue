@@ -121,7 +121,7 @@
                                     </div>
                                 </div>
                                 <button @click="roadmapModal = true"
-                                    class="flex items-center justify-center gap-2 px-4 py-2 border-2 border-white/20 font-medium text-white rounded-md hover:bg-white/10 transition-all">
+                                    class="flex items-center justify-center gap-2 px-4 py-2 border border-white/20 font-medium text-white rounded-md hover:bg-white/10 transition-all">
                                     <span class="text-sm sm:text-base">Découvrir</span>
                                     <Icon name="lucide:arrow-right" size="16" class="shrink-0" />
                                 </button>
