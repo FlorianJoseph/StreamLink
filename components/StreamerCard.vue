@@ -145,7 +145,7 @@
                     <div class="hidden lg:block w-72 flex-shrink-0 border-l border-zinc-800"
                         style="aspect-ratio: unset">
                         <iframe v-if="showModal"
-                            :src="`https://www.twitch.tv/embed/${streamer.username}/chat?parent=stream-link.fr&parent=localhost&darkpopout`"
+                            :src="`https://www.twitch.tv/embed/${streamer.username}/chat?parent=stream-link.fr&&parent=www.stream-link.fr&parent=localhost&darkpopout`"
                             class="w-full h-full" style="min-height: 300px"
                             sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals" />
                     </div>
@@ -183,7 +183,7 @@ watch(showModal, (val) => {
                     width,
                     height,
                     channel: props.streamer.username,
-                    parent: ['stream-link.fr', 'localhost'],
+                    parent: ['stream-link.fr', 'www.stream-link.fr', 'localhost'],
                     layout: 'video',
                     autoplay: true,
                     theme: 'dark',
