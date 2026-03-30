@@ -13,25 +13,25 @@
                     <p class="text-xs sm:text-sm lg:text-base leading-relaxed">
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
-                            <NuxtLink to="/dashboard" class="font-bold underline hover:text-indigo-200">
-                                Découvre les Coins
+                            <NuxtLink to="/discover" class="font-bold underline hover:text-indigo-200">
+                                Regarde les lives sans quitter StreamLink
                             </NuxtLink>
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Gagne des Coins en complétant les quêtes du tableau de bord et en te connectant chaque jour !
+                            Regarde les streams en direct intégrés à StreamLink, sans quitter la page !
                         </span>
                     </p>
                 </div>
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <NuxtLink to="/dashboard"
+                    <NuxtLink to="/discover"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <Icon name="lucide:coins" size="18" />
-                            Gagner des Coins
+                            <Icon name="lucide:tv-2" size="18" />
+                            Regarder
                         </div>
                     </NuxtLink>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
@@ -44,9 +44,8 @@
 </template>
 
 <script setup>
-const STORAGE_KEY = 'coins'
+const STORAGE_KEY = 'discovery'
 const visible = ref(false)
-
 
 const closeBanner = () => {
     visible.value = false
