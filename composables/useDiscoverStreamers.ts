@@ -57,6 +57,7 @@ export function useDiscoverStreamers() {
   // Fonction pour récupérer les streamers et calculer leur prochain stream
   const fetchStreamersWithNextSlot = async () => {
     loading.value = true
+
     try {
       // 1. Récupération Supabase — inchangé
       const allStreamers = await $fetch('/api/streamers/visible')
@@ -80,25 +81,22 @@ export function useDiscoverStreamers() {
       // Affichage immédiat avec le isLive planning (pas d'attente Twitch)
       streamers.value = mapped
 
-      // 3. Enrichissement Twitch en arrière-plan
-      const usernames = mapped
-        .map(s => s.username)
-        .filter(Boolean)
+      // 3. Enrichissement Twitch
+      const usernames = mapped.map(s => s.username).filter(Boolean)
 
       if (usernames.length > 0) {
-        const liveStatuses = await $fetch<Record<string, LiveStatus>>(
-          '/api/twitch/live-batch',
-          {
-            method: 'POST',
-            body: { usernames },
-          }
-        ).catch(err => {
-          // Echec silencieux : on garde le isLive planning comme fallback
-          console.warn('[useDiscoverStreamers] Twitch live-batch échoué, fallback planning', err)
-          return null
-        })
+        let liveStatuses: Record<string, LiveStatus> | null = null
+        try {
+          liveStatuses = await $fetch<Record<string, LiveStatus>>(
+            '/api/twitch/live-batch',
+            { method: 'POST', body: { usernames } }
+          )
+        } catch (err) {
+          console.warn('[useDiscoverStreamers] Twitch live-batch échoué', err)
+        }
+
         if (liveStatuses) {
-          // 4. Merge : on écrase isLive + on ajoute gameName/viewerCount/title depuis Twitch
+          // 4. Merge
           const merged = mapped.map(streamer => {
             const twitchStatus = liveStatuses[streamer.username?.toLowerCase()]
             if (!twitchStatus) return streamer
@@ -109,17 +107,42 @@ export function useDiscoverStreamers() {
                 ? {
                   ...streamer.nextSlot,
                   isLive: twitchStatus.isLive,
-                  // Nouvelles données Twitch disponibles sur la carte
                   twitchGameName: twitchStatus.gameName,
                   twitchViewerCount: twitchStatus.viewerCount,
                   twitchTitle: twitchStatus.title,
                   twitchThumbnailUrl: twitchStatus.thumbnailUrl,
+                  twitchGameId: twitchStatus.gameId,
                   twitchStartedAt: twitchStatus.startedAt,
                 }
                 : streamer.nextSlot,
             }
           })
-          // 5. Tri final : lives en premier (par heure de début Twitch asc), puis prochain slot asc, puis sans planning
+
+          // 5. Enrichissement covers IGDB pour les streamers en live
+          const liveGameIds = merged
+            .filter(s => s.nextSlot?.isLive && s.nextSlot?.twitchGameId)
+            .map(s => s.nextSlot.twitchGameId)
+            .filter((id, i, arr) => arr.indexOf(id) === i) // dédupliquer
+
+          if (liveGameIds.length > 0) {
+            let covers: Record<string, string> = {}
+            try {
+              covers = await $fetch('/api/twitch/game-covers',
+                { method: 'POST', body: { gameIds: liveGameIds } }
+              )
+            } catch (err) {
+              console.warn('[useDiscoverStreamers] Twitch game-covers échoué', err)
+            }
+
+            for (const streamer of merged) {
+              const gameId = streamer.nextSlot?.twitchGameId
+              if (gameId && covers[gameId]) {
+                streamer.nextSlot.twitchGameCover = covers[gameId]
+              }
+            }
+          }
+
+          // 6. Tri final : lives en premier (par viewers asc), puis prochain slot asc, puis sans planning
           streamers.value = merged.sort((a, b) => {
             const aLive = a.nextSlot?.isLive === true
             const bLive = b.nextSlot?.isLive === true
@@ -142,6 +165,6 @@ export function useDiscoverStreamers() {
   return {
     streamers,
     loading,
-    fetchStreamersWithNextSlot
+    fetchStreamersWithNextSlot,
   }
 }

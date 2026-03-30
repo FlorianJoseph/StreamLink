@@ -3,6 +3,7 @@ import { getCachedTwitchToken } from '~/server/utils/twitchToken'
 export interface LiveStatus {
     isLive: boolean
     gameName: string | null
+    gameId: string | null
     viewerCount: number | null
     title: string | null
     thumbnailUrl: string | null
@@ -34,6 +35,7 @@ export async function fetchLiveStatuses(
         results[username.toLowerCase()] = {
             isLive: false,
             gameName: null,
+            gameId: null,
             viewerCount: null,
             title: null,
             thumbnailUrl: null,
@@ -70,6 +72,7 @@ export async function fetchLiveStatuses(
             results[stream.user_login.toLowerCase()] = {
                 isLive: true,
                 gameName: stream.game_name || null,
+                gameId: stream.game_id || null,
                 viewerCount: stream.viewer_count ?? null,
                 title: stream.title || null,
                 thumbnailUrl: stream.thumbnail_url?.replace('{width}x{height}', '440x248') ?? null,

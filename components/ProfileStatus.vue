@@ -135,7 +135,7 @@
                             <p class="text-sm font-medium text-gray-200 mb-1">Ajoute ton planning</p>
                             <div class="flex items-center gap-1 text-xs text-blue-400">
                                 <Icon name="lucide:trending-up" size="14" class="shrink-0" />
-                                <span>Ton prochain stream sera mis en avant sur la page Découverte</span>
+                                <span>Tes streams seront mis en avant sur la page Découverte</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-1 shrink-0 mt-0.5">

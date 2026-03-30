@@ -20,13 +20,13 @@ export default defineEventHandler(async (event) => {
 
     if (existing) return { credited: false, coins: 0 }
 
-    // Créditer 5 coins
+    // Créditer 3 coins
     await supabase.from('WalletTransactions').insert({
         user_id: user.sub,
-        amount: 5,
+        amount: 3,
         operation: 'credit',
         type: 'daily',
     })
 
-    return { credited: true, coins: 5 }
+    return { credited: true, coins: 3 }
 })
