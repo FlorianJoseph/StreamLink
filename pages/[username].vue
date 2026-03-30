@@ -76,7 +76,7 @@
                 <span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 animate-pulse" />
                 <span class="text-xs sm:text-sm font-semibold"
                     :style="{ color: textColor, fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit' }">
-                    En live sur {{ liveSlot?.game?.label }}
+                    En live sur {{ liveGameLabel }}
                 </span>
             </div>
             <!-- Aucun stream prévu -->
@@ -456,36 +456,13 @@ const nextSlot = computed(() => {
     return null
 })
 
-// Recherche du créneau en cours pour déterminer le statut live
-const liveSlot = computed(() => {
-    const now = new Date()
-    const todayIndex = now.getDay()
-    const nowMinutes = now.getHours() * 60 + now.getMinutes()
+// Statut live Twitch
+const twitchIsLive = ref(publicUser.value?.twitchLive?.isLive ?? false)
+const twitchGameName = ref(publicUser.value?.twitchLive?.gameName ?? null)
+const isLive = computed(() => twitchIsLive.value)
+const liveGameLabel = computed(() => twitchGameName.value ?? '')
 
-    for (const slot of slots) {
-        const normalizedDay = slot.day?.toLowerCase()
-        const targetIndex = DAY_INDEX[normalizedDay]
-        if (targetIndex === undefined) continue
-
-        if (targetIndex !== todayIndex) continue
-
-        const [startH, startM] = slot.start_at.split(':').map(Number)
-        const [endH, endM] = slot.end_at.split(':').map(Number)
-
-        const start = startH * 60 + startM
-        const end = endH * 60 + endM
-
-        if (nowMinutes >= start && nowMinutes < end) {
-            return slot
-        }
-    }
-
-    return null
-})
-
-// Détermination du statut live en vérifiant si le créneau en cours correspond à l’heure actuelle
-const isLive = computed(() => !!liveSlot.value)
-
+// Tracking des clics sur les liens
 const trackLinkClick = async (linkId: string) => {
     if (user_id) {
         await $fetch('/api/trackingStats/track', {
@@ -496,6 +473,7 @@ const trackLinkClick = async (linkId: string) => {
 }
 
 onMounted(async () => {
+    // Tracking de la visite de la page
     if (user_id) {
         await $fetch('/api/trackingStats/track', {
             method: 'POST',

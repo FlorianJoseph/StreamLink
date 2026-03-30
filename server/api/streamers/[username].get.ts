@@ -44,5 +44,20 @@ export default defineEventHandler(async (event) => {
         noBranding: !!brandingAccess || isSub
     }
 
-    return parsedUser
+    // Statut live Twitch
+    let twitchLive = { isLive: false, gameName: null }
+    try {
+        const twitchUsername = parsedUser.user?.username
+        if (twitchUsername) {
+            const statuses = await fetchLiveStatuses([twitchUsername])
+            const status = statuses[twitchUsername.toLowerCase()]
+            if (status) {
+                twitchLive = { isLive: status.isLive, gameName: status.gameName }
+            }
+        }
+    } catch {
+        // fallback silencieux
+    }
+
+    return { ...parsedUser, twitchLive }
 })
