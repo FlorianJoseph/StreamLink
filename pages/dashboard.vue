@@ -99,7 +99,7 @@
                                         <Icon v-else-if="dailyClaimed" name="lucide:check" size="16" class="shrink-0" />
                                         <Icon v-else name="lucide:coins" size="16" class="shrink-0" />
                                         <span class="text-sm sm:text-base">
-                                            {{ dailyClaimed ? 'Récupéré' : '+5 Coins' }}</span>
+                                            {{ dailyClaimed ? 'Récupéré' : '+3 Coins' }}</span>
                                     </Button>
                                 </div>
                             </template>
@@ -121,7 +121,7 @@
                                     </div>
                                 </div>
                                 <button @click="roadmapModal = true"
-                                    class="flex items-center justify-center gap-2 px-4 py-2 border-2 border-white/20 font-medium text-white rounded-md hover:bg-white/10 transition-all">
+                                    class="flex items-center justify-center gap-2 px-4 py-2 border border-white/20 font-medium text-white rounded-md hover:bg-white/10 transition-all">
                                     <span class="text-sm sm:text-base">Découvrir</span>
                                     <Icon name="lucide:arrow-right" size="16" class="shrink-0" />
                                 </button>
@@ -224,7 +224,7 @@ const claimDaily = async () => {
                 severity: 'secondary',
                 group: 'quest',
                 summary: 'Connexion quotidienne',
-                detail: '5',
+                detail: '3',
                 life: 4000,
             })
         } else {
