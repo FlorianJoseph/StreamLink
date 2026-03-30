@@ -69,32 +69,18 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
     - 3 features déployées : no_branding + premium_theme + mobile_export
 - Historique transaction des Coins
 - Boutique + Stripe (packs Coins + abonnement 7,99€/mois) + connexion quotidienne 27/03/26
+- Intégration API Twitch pour la page découverte et page publique 30/03/26
 
 ## Roadmap court terme – Augmenter la visibilité et promouvoir le réseau interne
 
 ### Découverte V3
     - Filtres par catégories
     - Raids avec Coins
-    - API Twitch
 
 ### Page publique
     - CTA découvrir d'autres streamers
 
 ## Roadmap moyen terme – Améliorer le premium
-
-### Réseaux
-    - Export Discord
-    - Sync Twitch automatique
-
-### Page publique
-    - Créer des catégories de lien (premium)
-
-### 
-
-## Roadmap long terme – Premium & fonctionnalités additionnelles
-
-### Optimisation pédagogique
-    - Proposition de couleur texte dans le design en fonction du thème
 
 ### Abonnement — enrichissement progressif
     - Background gradient/image/animé
@@ -103,6 +89,12 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
     - Export Discord (bot Discord)
     - Stats avancées
     - Mise en avant sur la Découverte
+    - Créer des catégories de lien (premium)
+
+## Roadmap long terme – Premium & fonctionnalités additionnelles
+
+### Optimisation pédagogique
+    - Proposition de couleur texte dans le design en fonction du thème
 
 ### Fonctionnalités additionnelles (le plus éloigné)
     - Evènements (caritatifs...)

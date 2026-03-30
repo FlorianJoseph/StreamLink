@@ -69,16 +69,23 @@
 
                             <!-- Footer : date si sub, bouton sinon -->
                             <div class="mt-auto flex flex-col gap-2">
-                                <div class="flex items-center gap-1.5 text-xs text-gray-500">
-                                    <Icon name="lucide:lock" size="12" class="shrink-0" />
-                                    <span>Paiement sécurisé par Stripe</span>
-                                </div>
                                 <Button :severity="isSub ? 'secondary' : pack.popular ? 'contrast' : 'secondary'"
                                     class="w-full"
                                     @click="isSub ? openPortal() : openCheckout(pack.priceId, 'subscription')">
                                     <Icon :name="isSub ? 'lucide:settings' : 'lucide:zap'" size="16" />
                                     <span class="text-sm">{{ isSub ? 'Gérer mon abonnement' : 'S\'abonner' }}</span>
                                 </Button>
+                                <div class="flex items-center justify-center gap-3 text-xs text-gray-500">
+                                    <div class="flex items-center gap-1">
+                                        <Icon name="lucide:lock" size="12" class="shrink-0" />
+                                        <span>Paiement sécurisé par Stripe</span>
+                                    </div>
+                                    <span>·</span>
+                                    <div class="flex items-center gap-1">
+                                        <Icon name="lucide:calendar-x" size="12" class="shrink-0" />
+                                        <span>Sans engagement</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
