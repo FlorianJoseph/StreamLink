@@ -495,7 +495,7 @@ onMounted(async () => {
             method: 'POST',
             body: {
                 type: 'shop_visit',
-                source: route.query.utm_source,
+                utm_source: route.query.utm_source,
                 utm_campaign: route.query.utm_campaign ?? null,
                 userId: uid.value
             }
