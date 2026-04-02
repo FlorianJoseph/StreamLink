@@ -17,6 +17,10 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 500, statusMessage: 'Erreur récupération user page' })
     }
 
+    if (!data) {
+        throw createError({ statusCode: 404, statusMessage: 'Utilisateur introuvable' })
+    }
+
     const { data: brandingAccess } = await client
         .from('FeatureAccess')
         .select('id')

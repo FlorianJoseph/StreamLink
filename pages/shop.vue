@@ -294,6 +294,7 @@
 const { balance, fetchBalance } = useWallet()
 const { hasFeature, getExpiryLabel, spend, fetchAccess, fetchSubscription, isSub } = useFeatures()
 const config = useRuntimeConfig()
+const { uid } = useSupabase()
 
 const openPortal = async () => {
     const { url } = await $fetch('/api/stripe/portal', { method: 'POST' })
@@ -486,6 +487,22 @@ const onMessage = async (e: MessageEvent) => {
 const loading = ref(true)
 onMounted(async () => {
     await fetchSubscription()
+
+    const alreadyTracked = sessionStorage.getItem('tracked_shop_visit') === 'true'
+
+    if (route.query.utm_source && !alreadyTracked) {
+        $fetch('/api/marketing/event', {
+            method: 'POST',
+            body: {
+                type: 'shop_visit',
+                source: route.query.utm_source,
+                utm_campaign: route.query.utm_campaign ?? null,
+                userId: uid.value
+            }
+        })
+
+        sessionStorage.setItem('tracked_shop_visit', 'true')
+    }
     loading.value = false
     window.addEventListener('message', onMessage)
 })

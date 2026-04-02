@@ -222,11 +222,11 @@ const whenLabel = computed(() => {
 
 const raidCoins = computed(() => {
     const viewers = twitchViewerCount.value ?? 0
-    if (viewers < 5) return 10
-    if (viewers < 15) return 8
-    if (viewers < 50) return 4
-    if (viewers < 150) return 2
-    return 1
+    if (viewers < 5) return 7
+    if (viewers < 15) return 6
+    if (viewers < 50) return 5
+    if (viewers < 150) return 4
+    return 3
 })
 
 function formatTime(time: string) {

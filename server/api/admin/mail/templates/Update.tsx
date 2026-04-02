@@ -32,21 +32,30 @@ interface UpdateEmailProps {
 
 const defaultFeatures: Feature[] = [
     {
-        title: "Nouvelles fonctionnalités",
-        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/wrench.png",
+        title: "Monnaie virtuelle : Coins",
+        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/coins.png",
         details: [
-            "Choix de la taille des créneaux et de la date du planning (auto ou manuel)",
-            "Page de liens : Statistiques de vues et de clics",
+            "Commence avec 200 Coins offerts à la complétion des quêtes du tableau de bord (automatique si déjà faites)",
+            "+3 Coins chaque jour depuis le tableau de bord",
+            "Gagne des Coins en raidant d'autres streamers (bientôt)",
         ],
     },
     {
-        title: "Améliorations",
+        title: "Personnalise vraiment ta page",
+        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/sparkles.png",
+        details: [
+            "Crée une page unique avec 13 thèmes et 23 polices premium",
+            "Transforme ton planning en story Instagram / X en 1 clic",
+            "Supprime le branding StreamLink pour une image 100% pro",
+        ],
+    },
+    {
+        title: "Débloque tout, comme tu veux",
         icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/zap.png",
         details: [
-            "Navigation repensée avec accès Discord et profil",
-            "Scroll fluide sous le menu",
-            "Roadmap mise à jour dans tableau de bord",
-            "Planning : les boutons de modification et suppression de créneaux ont été repensés",
+            "Active une fonctionnalité quand tu en as besoin (7 ou 30 jours)",
+            "Ou abonne-toi à 7,99€/mois pour tout débloquer sans engagement",
+            "Garde le contrôle avec un historique clair de tes dépenses dans la page Facturation",
         ],
     },
 ];
@@ -55,8 +64,8 @@ const DEFAULT_ICON = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object
 
 export const UpdateEmail = ({
     username,
-    updateTitle = "Quoi de neuf sur StreamLink ?",
-    previewText = "Voici les dernières nouveautés",
+    updateTitle = "Tu peux maintenant débloquer tout ton potentiel",
+    previewText = "Coins, thèmes premium, format story… tout est prêt",
     features = defaultFeatures,
 }: UpdateEmailProps & { username: string }) => (
     <Html>
@@ -90,9 +99,12 @@ export const UpdateEmail = ({
                         <Text className="text-white text-sm font-semibold mt-0 mb-1">
                             Salut {username},
                         </Text>
-                        <Heading className="text-white text-2xl font-bold tracking-tight mt-0">
+                        <Heading className="text-white text-xl font-bold tracking-tight mt-0 mb-2">
                             {updateTitle}
                         </Heading>
+                        <Text className="text-zinc-400 text-sm mt-2 mb-0">
+                            Personnalise ta page, débloque des fonctionnalités à la demande ou active tout en illimité.
+                        </Text>
                     </Section>
 
                     <Hr className="border-zinc-800 m-0" />
@@ -100,7 +112,7 @@ export const UpdateEmail = ({
                     {/* Liste des features */}
                     <Section className="px-8 py-7" style={{ backgroundColor: "#121212" }}>
                         <Text className="text-purple-400 text-xs font-semibold uppercase tracking-widest m-0 mb-5">
-                            ✦ Mise à jour
+                            ✦ Nouveautés
                         </Text>
 
                         {features.map((feature, index) => (
@@ -129,7 +141,7 @@ export const UpdateEmail = ({
                                 <td align="center">
                                     <Button
                                         className="box-border w-full rounded-[8px] bg-buttonBg px-[16px] py-[8px]"
-                                        href={`${baseUrl}/dashboard`}>
+                                        href={`${baseUrl}/shop?utm_source=email&utm_campaign=premium_launch`}>
                                         <table>
                                             <tr>
                                                 <td className="pr-[4px] pt-[2px]">
@@ -141,7 +153,7 @@ export const UpdateEmail = ({
                                                 </td>
                                                 <td>
                                                     <span className="text-white text-sm font-semibold">
-                                                        Découvrir les nouveautés
+                                                        Activer mes fonctionnalités
                                                     </span>
                                                 </td>
                                             </tr>
@@ -179,7 +191,7 @@ export const UpdateEmail = ({
                             </tr>
                         </table>
                         <Text className="text-zinc-400 text-sm leading-relaxed mt-3 mb-5">
-                            Viens donner ton avis sur ces nouveautés et influencer les prochaines features directement sur Discord.
+                            Viens donner ton avis sur ces nouveautés et influencer les prochaines fonctionnalités directement sur Discord.
                         </Text>
                         <table width="100%">
                             <tr>
