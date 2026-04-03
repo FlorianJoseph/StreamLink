@@ -231,8 +231,13 @@
 
                                     <!-- Modal polices -->
                                     <Dialog v-model:visible="fontModal" modal dismissableMask
-                                        header="Choisir une police" :style="{ width: '32rem', margin: '1rem' }"
-                                        :draggable="false">
+                                        header="Choisir une police" :style="{
+                                            width: isMobile ? 'auto' : '32rem',
+                                            margin: '1rem',
+                                            position: isMobile ? 'relative' : 'absolute',
+                                            left: isMobile ? 'auto' : '1rem',
+                                            top: isMobile ? 'auto' : '3rem'
+                                        }" :draggable="false">
                                         <div class="grid grid-cols-2 gap-2">
                                             <button v-for="font in FONTS" :key="font.name"
                                                 class="relative flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all"
@@ -249,8 +254,8 @@
                                             </button>
                                         </div>
                                     </Dialog>
-                                    <FeatureUnlockModal v-model="premiumModal" featureKey="premium_theme" />
 
+                                    <FeatureUnlockModal v-model="premiumModal" featureKey="premium_theme" />
 
                                     <!-- Section Options -->
                                     <div class="space-y-3">
@@ -513,7 +518,8 @@
                                                                                     </span>
                                                                                 </div>
                                                                                 <!-- Overlay desktop -->
-                                                                                <div class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 rounded-sm overflow-hidden"
+                                                                                <div v-if="!isPreviewing && !isExporting"
+                                                                                    class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 rounded-sm overflow-hidden"
                                                                                     :class="slotOverlayDirection(slot, day.label)">
                                                                                     <!-- Modifier -->
                                                                                     <div class="flex-1 flex items-center justify-center bg-black/50 hover:bg-black/70 cursor-pointer"
@@ -766,12 +772,13 @@
     </Dialog>
 
     <!-- Modal d'aperçu de planning -->
-    <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: mobileFormat ? '25vw' : '65vw' }"
-        :draggable="false" :pt="{ root: { style: 'border-radius: 8px; overflow: hidden' } }">
+    <Dialog v-model:visible="showPreview" dismissableMask modal
+        :style="{ width: isMobile ? '95vw' : (mobileFormat ? 'auto' : '65vw'), maxHeight: '95vh' }" :draggable="false"
+        :pt="{ root: { style: 'border-radius: 8px; overflow: hidden' } }">
         <template #container="{ closeCallback }">
             <img v-if="previewDataUrl" :src="previewDataUrl" :style="mobileFormat
-                ? { height: '90vh', width: 'auto', display: 'block', margin: '0 auto' }
-                : { width: '100%', height: 'auto' }" />
+                ? { maxHeight: '90vh', maxWidth: '95vw', width: 'auto', display: 'block', margin: '0 auto', borderRadius: '8px' }
+                : { maxWidth: '95vw', maxHeight: '90vh', width: '100%', height: 'auto', borderRadius: '8px' }" />
         </template>
     </Dialog>
 
@@ -1245,6 +1252,8 @@ const updateBackgroundOpacity = (value: number) => {
     }, 300)
 }
 
+const isMobile = ref(false)
+
 onMounted(async () => {
     await scheduleStore.getOrCreateSchedule()
     await loadSlots()
@@ -1259,6 +1268,11 @@ onMounted(async () => {
 
     update()
     window.addEventListener('resize', update)
+
+    isMobile.value = window.innerWidth < 768
+    window.addEventListener('resize', () => {
+        isMobile.value = window.innerWidth < 768
+    })
 })
 
 onUnmounted(() => {
@@ -1269,7 +1283,7 @@ definePageMeta({
     layout: 'fullscreen'
 })
 
-const { hasFeature, isSub } = useFeatures()
+const { hasFeature, isSub, featuresReady } = useFeatures()
 
 const onFormatChange = (val: string) => {
     if (val === 'mobile' && !hasFeature('mobile_export')) {
@@ -1283,6 +1297,17 @@ const onFormatChange = (val: string) => {
 }
 
 const mobileExportModal = ref(false)
+
+watch(
+    [() => featuresReady.value, () => schedule.value?.id],
+    async ([ready]) => {
+        if (!ready || !schedule.value) return
+        if (!hasFeature('no_branding') && schedule.value?.style?.showBranding === false) {
+            await updateStyle({ showBranding: true })
+        }
+    },
+    { immediate: true }
+)
 </script>
 
 <style scoped>

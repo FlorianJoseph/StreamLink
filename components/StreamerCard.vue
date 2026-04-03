@@ -142,8 +142,8 @@
                     <div class="flex-1 bg-black min-w-0">
                         <div v-if="showModal" id="twitch-embed" class="w-full" style="aspect-ratio: 16/9" />
                     </div>
-                    <div class="hidden lg:block w-72 flex-shrink-0 border-l border-zinc-800"
-                        style="aspect-ratio: unset">
+                    <div class="hidden lg:block flex-shrink-0 border-l border-zinc-800"
+                        style="aspect-ratio: unset; width: 340px">
                         <iframe v-if="showModal"
                             :src="`https://www.twitch.tv/embed/${streamer.username}/chat?parent=stream-link.fr&&parent=www.stream-link.fr&parent=localhost&darkpopout`"
                             class="w-full h-full" style="min-height: 300px"

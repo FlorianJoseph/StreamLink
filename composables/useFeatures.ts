@@ -1,5 +1,6 @@
 const featureAccess = ref<{ feature_key: string, expires_at: string | null }[]>([])
 const subscription = ref<{ status: string, current_period_end: string | null } | null>(null)
+const featuresReady = ref(false)
 
 export const useFeatures = () => {
     const { fetchBalance } = useWallet()
@@ -26,6 +27,8 @@ export const useFeatures = () => {
             featureAccess.value = await $fetch('/api/features/access')
         } catch (error) {
             console.error('Erreur chargement features', error)
+        } finally {
+            featuresReady.value = true  // ← toujours true après le fetch, même en erreur
         }
     }
 
@@ -60,5 +63,5 @@ export const useFeatures = () => {
         return { success, expiresAt }
     }
 
-    return { featureAccess, fetchAccess, hasFeature, getExpiryLabel, spend, isSub, fetchSubscription, subscription }
+    return { featureAccess, fetchAccess, hasFeature, getExpiryLabel, spend, isSub, fetchSubscription, subscription, featuresReady }
 }
