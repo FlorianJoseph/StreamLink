@@ -767,12 +767,13 @@
     </Dialog>
 
     <!-- Modal d'aperçu de planning -->
-    <Dialog v-model:visible="showPreview" dismissableMask modal :style="{ width: mobileFormat ? '25vw' : '65vw' }"
-        :draggable="false" :pt="{ root: { style: 'border-radius: 8px; overflow: hidden' } }">
+    <Dialog v-model:visible="showPreview" dismissableMask modal
+        :style="{ width: isMobile ? '95vw' : (mobileFormat ? 'auto' : '65vw'), maxHeight: '95vh' }" :draggable="false"
+        :pt="{ root: { style: 'border-radius: 8px; overflow: hidden' } }">
         <template #container="{ closeCallback }">
             <img v-if="previewDataUrl" :src="previewDataUrl" :style="mobileFormat
-                ? { height: '90vh', width: 'auto', display: 'block', margin: '0 auto' }
-                : { width: '100%', height: 'auto' }" />
+                ? { maxHeight: '90vh', maxWidth: '95vw', width: 'auto', display: 'block', margin: '0 auto', borderRadius: '8px' }
+                : { maxWidth: '95vw', maxHeight: '90vh', width: '100%', height: 'auto', borderRadius: '8px' }" />
         </template>
     </Dialog>
 
@@ -1246,6 +1247,8 @@ const updateBackgroundOpacity = (value: number) => {
     }, 300)
 }
 
+const isMobile = ref(false)
+
 onMounted(async () => {
     await scheduleStore.getOrCreateSchedule()
     await loadSlots()
@@ -1260,6 +1263,11 @@ onMounted(async () => {
 
     update()
     window.addEventListener('resize', update)
+
+    isMobile.value = window.innerWidth < 768
+    window.addEventListener('resize', () => {
+        isMobile.value = window.innerWidth < 768
+    })
 })
 
 onUnmounted(() => {
