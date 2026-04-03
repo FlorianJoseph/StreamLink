@@ -231,8 +231,13 @@
 
                                     <!-- Modal polices -->
                                     <Dialog v-model:visible="fontModal" modal dismissableMask
-                                        header="Choisir une police" :style="{ width: '32rem', margin: '1rem' }"
-                                        :draggable="false">
+                                        header="Choisir une police" :style="{
+                                            width: isMobile ? 'auto' : '32rem',
+                                            margin: '1rem',
+                                            position: isMobile ? 'relative' : 'absolute',
+                                            left: isMobile ? 'auto' : '1rem',
+                                            top: isMobile ? 'auto' : '3rem'
+                                        }" :draggable="false">
                                         <div class="grid grid-cols-2 gap-2">
                                             <button v-for="font in FONTS" :key="font.name"
                                                 class="relative flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all"
@@ -249,8 +254,8 @@
                                             </button>
                                         </div>
                                     </Dialog>
-                                    <FeatureUnlockModal v-model="premiumModal" featureKey="premium_theme" />
 
+                                    <FeatureUnlockModal v-model="premiumModal" featureKey="premium_theme" />
 
                                     <!-- Section Options -->
                                     <div class="space-y-3">
