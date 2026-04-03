@@ -36,6 +36,11 @@ export function useDiscoverStreamers() {
         slotDate.setDate(now.getDate() + diff)
         slotDate.setHours(startH, startM, 0, 0)
 
+        // Si la date calculée est dans le passé, reporter à la semaine prochaine
+        if (slotDate <= now) {
+          slotDate.setDate(slotDate.getDate() + 7)
+        }
+
         const isToday = slotDate.toDateString() === now.toDateString()
         const tomorrow = new Date(now)
         tomorrow.setDate(now.getDate() + 1)
