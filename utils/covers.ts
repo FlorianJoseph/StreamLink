@@ -11,6 +11,7 @@ export const CUSTOM_CATEGORY_COVERS: Record<string, string> = {
     'Sports': '/covers/sports.jpg',
     'Art': '/covers/art.jpg',
     'Pokémon Red/Blue': '/covers/pokemon-red-blue.jpg',
+    'Retro': '/covers/retro.jpg',
 }
 
 export const resolveCategoryCover = ({

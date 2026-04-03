@@ -513,7 +513,8 @@
                                                                                     </span>
                                                                                 </div>
                                                                                 <!-- Overlay desktop -->
-                                                                                <div class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 rounded-sm overflow-hidden"
+                                                                                <div v-if="!isPreviewing && !isExporting"
+                                                                                    class="hidden lg:flex absolute opacity-0 group-hover:opacity-100 z-50 transition-opacity h-full w-full top-0 left-0 rounded-sm overflow-hidden"
                                                                                     :class="slotOverlayDirection(slot, day.label)">
                                                                                     <!-- Modifier -->
                                                                                     <div class="flex-1 flex items-center justify-center bg-black/50 hover:bg-black/70 cursor-pointer"
@@ -1269,7 +1270,7 @@ definePageMeta({
     layout: 'fullscreen'
 })
 
-const { hasFeature, isSub } = useFeatures()
+const { hasFeature, isSub, featuresReady } = useFeatures()
 
 const onFormatChange = (val: string) => {
     if (val === 'mobile' && !hasFeature('mobile_export')) {
@@ -1283,6 +1284,17 @@ const onFormatChange = (val: string) => {
 }
 
 const mobileExportModal = ref(false)
+
+watch(
+    [() => featuresReady.value, () => schedule.value?.id],
+    async ([ready]) => {
+        if (!ready || !schedule.value) return
+        if (!hasFeature('no_branding') && schedule.value?.style?.showBranding === false) {
+            await updateStyle({ showBranding: true })
+        }
+    },
+    { immediate: true }
+)
 </script>
 
 <style scoped>
