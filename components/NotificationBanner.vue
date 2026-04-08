@@ -44,8 +44,17 @@
 </template>
 
 <script setup>
-const { streamer } = useStreamerStore()
-const destination = computed(() => streamer?.username ? `/${streamer.username}` : '/discover')
+const streamerStore = useStreamerStore()
+const { streamer } = storeToRefs(streamerStore)
+const destination = ref('/discover')
+
+watchEffect(() => {
+    if (streamer.value?.username) {
+        destination.value = `/${streamer.value.username}`
+    }
+})
+
+const user = useSupabaseUser()
 
 const STORAGE_KEY = 'similar_streamers'
 const visible = ref(false)
@@ -55,10 +64,21 @@ const closeBanner = () => {
     localStorage.setItem(STORAGE_KEY, 'true')
 }
 
-onMounted(() => {
+onMounted(async () => {
     if (localStorage.getItem(STORAGE_KEY) !== 'true') {
         visible.value = true
     }
+    // Attend que l'user soit disponible
+    if (user.value && !streamer.value) {
+        await streamerStore.fetchStreamer()
+    }
 })
+
+// Si l'user arrive après le montage
+watch(user, async (newUser) => {
+    if (newUser && !streamer.value) {
+        await streamerStore.fetchStreamer()
+    }
+}, { immediate: true })
 
 </script>
