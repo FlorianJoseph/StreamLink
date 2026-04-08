@@ -230,11 +230,11 @@
                         value: s.isLive
                             ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>En live sur ${s.twitchGameName ?? s.nextSlot?.game?.label ?? ''}</span>`
                             : s.nextSlot?.isToday
-                                ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>Auj. ${s.nextSlot.start_at?.slice(0, 5).replace(':', 'h')} · ${s.nextSlot.game?.label ?? ''}</span>`
+                                ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>Auj. à ${s.nextSlot.start_at?.slice(0, 5).replace(':', 'h')} · ${s.nextSlot.game?.label ?? ''}</span>`
                                 : s.nextSlot?.isTomorrow
-                                    ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>Demain · ${s.nextSlot.game?.label ?? ''}</span>`
+    ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>Demain à ${s.nextSlot.start_at?.slice(0, 5).replace(':', 'h')} · ${s.nextSlot.game?.label ?? ''}</span>`
                                     : s.nextSlot
-                                        ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>${s.nextSlot.day?.slice(0, 3)} · ${s.nextSlot.game?.label ?? ''}</span>`
+                                        ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>${s.nextSlot.day?.slice(0, 3)} à ${s.nextSlot.start_at?.slice(0, 5).replace(':', 'h')} · ${s.nextSlot.game?.label ?? ''}</span>`
                                         : `<span class='font-semibold'>${s.username}</span>`,
                         escape: false,
                         pt: { text: '!text-xs' }
