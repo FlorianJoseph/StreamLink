@@ -220,6 +220,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- Streamers similaires — fixed bas droite -->
+        <div v-if="user && similarStreamers.length > 0"
+            class="hidden sm:flex fixed bottom-4 right-4 z-50 flex flex-col gap-2 items-end">
+            <div class="flex gap-2">
+                <NuxtLink v-for="(s, i) in similarStreamers" :key="s.username" :to="`/${s.username}`" target="_blank"
+                    class="relative group avatar-reveal" :style="{ animationDelay: `${i * 80}ms` }" v-tooltip.top="{
+                        value: s.isLive
+                            ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>En live sur ${s.twitchGameName ?? s.nextSlot?.game?.label ?? ''}</span>`
+                            : s.nextSlot?.isToday
+                                ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>Auj. ${s.nextSlot.start_at?.slice(0, 5).replace(':', 'h')} · ${s.nextSlot.game?.label ?? ''}</span>`
+                                : s.nextSlot?.isTomorrow
+                                    ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>Demain · ${s.nextSlot.game?.label ?? ''}</span>`
+                                    : s.nextSlot
+                                        ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>${s.nextSlot.day?.slice(0, 3)} · ${s.nextSlot.game?.label ?? ''}</span>`
+                                        : `<span class='font-semibold'>${s.username}</span>`,
+                        escape: false,
+                        pt: { text: '!text-xs' }
+                    }">
+                    <img :src="s.avatar_url || defaultAvatar" :alt="s.username"
+                        class="w-12 h-12 rounded-full object-cover border-2 transition-all duration-200 group-hover:scale-110"
+                        :style="{ borderColor: textColor + '30', '--hover-color': textColor + '80' }" />
+                    <span v-if="s.isLive"
+                        class="absolute bottom-0.5 right-0.5 w-2 h-2 bg-red-500 rounded-full animate-pulse"
+                        :style="{ boxShadow: `0 0 0 2px ${wallpaperColor}` }" />
+                </NuxtLink>
+            </div>
+            <span :style="{ color: textColor, animationDelay: '360ms' }"
+                class="text-[12px] avatar-reveal similar-label">
+                Streamers similaires
+            </span>
+        </div>
     </div>
 
     <!-- Page d’erreur si le user n’existe pas -->
@@ -462,9 +494,13 @@ const twitchGameName = ref(publicUser.value?.twitchLive?.gameName ?? null)
 const isLive = computed(() => twitchIsLive.value)
 const liveGameLabel = computed(() => twitchGameName.value ?? '')
 
+// Récupération de l’utilisateur courant pour le tracking (si connecté et différent du user de la page)
+const supabase = useSupabaseClient()
+const { data: { user: currentUser } } = await supabase.auth.getUser()
+
 // Tracking des clics sur les liens
 const trackLinkClick = async (linkId: string) => {
-    if (user_id) {
+    if (user_id && currentUser?.id !== user_id) {
         await $fetch('/api/trackingStats/track', {
             method: 'POST',
             body: { userId: user_id, type: 'LINK_CLICK', linkId }
@@ -472,13 +508,36 @@ const trackLinkClick = async (linkId: string) => {
     }
 }
 
+const similarStreamers = ref<any[]>([])
+const STORAGE_KEY = `seen_similar_${user?.username}`
+const MAX_SEEN = 20
+
 onMounted(async () => {
     // Tracking de la visite de la page
-    if (user_id) {
+    if (user_id && currentUser?.id !== user_id) {
         await $fetch('/api/trackingStats/track', {
             method: 'POST',
             body: { userId: user_id, type: 'PAGE_VIEW' }
         })
+    }
+
+    if (user?.username) {
+        try {
+            // Récupère les déjà vus
+            const seen: string[] = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]')
+
+            // Passe les seen au serveur
+            const data = await $fetch(`/api/streamers/similar/${user.username}`, {
+                method: 'POST',
+                body: { exclude: seen }
+            }) as any[]
+
+            similarStreamers.value = data
+
+            // Mémorise les nouveaux affichés
+            const newSeen = [...new Set([...seen, ...data.map((s: any) => s.username)])]
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newSeen.slice(-MAX_SEEN)))
+        } catch { }
     }
 })
 </script>
@@ -507,6 +566,41 @@ onMounted(async () => {
     /* sm */
     .avatar-ring {
         border-width: 3px;
+    }
+}
+
+.avatar-reveal {
+    animation: avatarReveal 0.3s ease forwards;
+    opacity: 0;
+}
+
+.similar-label {
+    animation: similarLabelReveal 0.3s ease forwards;
+    animation-delay: 360ms;
+    opacity: 0;
+}
+
+@keyframes similarLabelReveal {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 0.6;
+        transform: translateY(0);
+    }
+}
+
+@keyframes avatarReveal {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
 </style>

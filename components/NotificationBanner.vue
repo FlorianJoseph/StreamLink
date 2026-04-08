@@ -14,24 +14,24 @@
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
                             <NuxtLink to="/discover" class="font-bold underline hover:text-indigo-200">
-                                Regarde les lives sans quitter StreamLink
+                                Découvre des streamers similaires sur chaque page
                             </NuxtLink>
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Regarde les streams en direct intégrés à StreamLink, sans quitter la page !
+                            Visite la page d'un streamer et découvre des profils similaires en bas à droite !
                         </span>
                     </p>
                 </div>
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <NuxtLink to="/discover"
+                    <NuxtLink :to="destination" target="_blank"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <Icon name="lucide:tv-2" size="18" />
-                            Regarder
+                            <Icon name="lucide:sparkles" size="18" />
+                            Voir ma page
                         </div>
                     </NuxtLink>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
@@ -44,7 +44,10 @@
 </template>
 
 <script setup>
-const STORAGE_KEY = 'discovery'
+const { streamer } = useStreamerStore()
+const destination = computed(() => streamer?.username ? `/${streamer.username}` : '/discover')
+
+const STORAGE_KEY = 'similar_streamers'
 const visible = ref(false)
 
 const closeBanner = () => {

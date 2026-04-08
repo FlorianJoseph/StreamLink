@@ -72,11 +72,13 @@
                     <Icon name="lucide:user" size="16" />
                     <span>Profil</span>
                 </NuxtLink>
-                <button @click="showModal = true"
-                    class="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md border text-sm font-medium transition-all duration-150 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white border-zinc-700/60">
+                <component :is="isLive ? 'button' : 'a'"
+                    v-bind="isLive ? {} : { href: `https://twitch.tv/${streamer.username}`, target: '_blank', rel: 'noopener noreferrer' }"
+                    @click="isLive ? showModal = true : undefined"
+                    class="flex-1 flex items-center justify-center gap-2 !px-3 !py-1.5 rounded-md border !text-sm font-medium transition-all duration-150 !bg-zinc-800 hover:!bg-zinc-700 !text-zinc-400 hover:!text-white !border-zinc-700/60 !no-underline">
                     <Icon name="simple-icons:twitch" size="16" />
                     <span>{{ isLive ? 'Regarder' : 'Twitch' }}</span>
-                </button>
+                </component>
             </div>
 
         </div>

@@ -119,7 +119,7 @@ const menuItems = ref([
         label: 'Boutique',
         icon: 'lucide:shopping-bag',
         route: '/shop',
-        badge: 'Nouveau'
+        // badge: 'Nouveau'
     },
 ]);
 
