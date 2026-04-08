@@ -223,10 +223,10 @@
 
         <!-- Streamers similaires — fixed bas droite -->
         <div v-if="user && similarStreamers.length > 0"
-            class="hidden sm:flex fixed bottom-4 right-4 z-50 flex flex-col gap-2 items-end similar-fade-in">
+            class="hidden sm:flex fixed bottom-4 right-4 z-50 flex flex-col gap-2 items-end">
             <div class="flex gap-2">
-                <NuxtLink v-for="s in similarStreamers" :key="s.username" :to="`/${s.username}`" target="_blank"
-                    class="relative group" v-tooltip.top="{
+                <NuxtLink v-for="(s, i) in similarStreamers" :key="s.username" :to="`/${s.username}`" target="_blank"
+                    class="relative group avatar-reveal" :style="{ animationDelay: `${i * 80}ms` }" v-tooltip.top="{
                         value: s.isLive
                             ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>En live sur ${s.twitchGameName ?? s.nextSlot?.game?.label ?? ''}</span>`
                             : s.nextSlot?.isToday
@@ -240,15 +240,17 @@
                         pt: { text: '!text-xs' }
                     }">
                     <img :src="s.avatar_url || defaultAvatar" :alt="s.username"
-                        class="w-12 h-12 rounded-full object-cover border-2 transition-all"
+                        class="w-12 h-12 rounded-full object-cover border-2 transition-all duration-200 group-hover:scale-110"
                         :style="{ borderColor: textColor + '30', '--hover-color': textColor + '80' }" />
                     <span v-if="s.isLive"
                         class="absolute bottom-0.5 right-0.5 w-2 h-2 bg-red-500 rounded-full animate-pulse"
                         :style="{ boxShadow: `0 0 0 2px ${wallpaperColor}` }" />
                 </NuxtLink>
             </div>
-            <span :style="{ color: textColor, opacity: 0.6 }" class="text-[12px]">Streamers
-                similaires</span>
+            <span :style="{ color: textColor, animationDelay: '360ms' }"
+                class="text-[12px] avatar-reveal similar-label">
+                Streamers similaires
+            </span>
         </div>
     </div>
 
@@ -563,20 +565,31 @@ onMounted(async () => {
     }
 }
 
-.similar-fade-in {
-    animation: similarFadeIn 0.4s ease forwards;
+.avatar-reveal {
+    animation: avatarReveal 0.3s ease forwards;
     opacity: 0;
 }
 
-@keyframes similarFadeIn {
+.similar-label {
+    animation: similarLabelReveal 0.3s ease forwards;
+    animation-delay: 360ms;
+    opacity: 0;
+}
+
+@keyframes similarLabelReveal {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 0.6; transform: translateY(0); }
+}
+
+@keyframes avatarReveal {
     from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: scale(0.8);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1);
     }
 }
 </style>
