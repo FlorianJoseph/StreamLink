@@ -13,7 +13,7 @@
                     <p class="text-xs sm:text-sm lg:text-base leading-relaxed">
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
-                            <NuxtLink to="/discover" class="font-bold underline hover:text-indigo-200">
+                            <NuxtLink :to="destination" class="font-bold underline hover:text-indigo-200">
                                 Découvre des streamers similaires sur chaque page
                             </NuxtLink>
                         </span>
