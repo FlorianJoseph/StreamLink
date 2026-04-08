@@ -494,9 +494,13 @@ const twitchGameName = ref(publicUser.value?.twitchLive?.gameName ?? null)
 const isLive = computed(() => twitchIsLive.value)
 const liveGameLabel = computed(() => twitchGameName.value ?? '')
 
+// Récupération de l’utilisateur courant pour le tracking (si connecté et différent du user de la page)
+const supabase = useSupabaseClient()
+const { data: { user: currentUser } } = await supabase.auth.getUser()
+
 // Tracking des clics sur les liens
 const trackLinkClick = async (linkId: string) => {
-    if (user_id) {
+    if (user_id && currentUser?.id !== user_id) {
         await $fetch('/api/trackingStats/track', {
             method: 'POST',
             body: { userId: user_id, type: 'LINK_CLICK', linkId }
@@ -510,7 +514,7 @@ const MAX_SEEN = 20
 
 onMounted(async () => {
     // Tracking de la visite de la page
-    if (user_id) {
+    if (user_id && currentUser?.id !== user_id) {
         await $fetch('/api/trackingStats/track', {
             method: 'POST',
             body: { userId: user_id, type: 'PAGE_VIEW' }
@@ -577,8 +581,15 @@ onMounted(async () => {
 }
 
 @keyframes similarLabelReveal {
-    from { opacity: 0; transform: translateY(4px); }
-    to   { opacity: 0.6; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 0.6;
+        transform: translateY(0);
+    }
 }
 
 @keyframes avatarReveal {
