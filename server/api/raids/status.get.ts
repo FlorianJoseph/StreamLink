@@ -1,0 +1,32 @@
+import { serverSupabaseClient } from '#supabase/server'
+
+const MAX_RAIDS_PER_WEEK = 4
+
+export default defineEventHandler(async (event) => {
+    const client = await serverSupabaseClient(event)
+
+    const { data: { user } } = await client.auth.getUser()
+    if (!user) return { remaining: 0, used: 0, total: MAX_RAIDS_PER_WEEK }
+
+    // Début de la semaine (lundi)
+    const now = new Date()
+    const day = now.getDay()
+    const diff = (day === 0 ? -6 : 1 - day)
+    const weekStart = new Date(now)
+    weekStart.setDate(now.getDate() + diff)
+    weekStart.setHours(0, 0, 0, 0)
+
+    const { count } = await client
+        .from('Raid')
+        .select('id', { count: 'exact', head: true })
+        .eq('raider_id', user.id)
+        .gte('created_at', weekStart.toISOString())
+
+    const used = count ?? 0
+
+    return {
+        remaining: Math.max(0, MAX_RAIDS_PER_WEEK - used),
+        used,
+        total: MAX_RAIDS_PER_WEEK,
+    }
+})

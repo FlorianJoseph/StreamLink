@@ -71,15 +71,13 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Historique transaction des Coins
 - Boutique + Stripe (packs Coins + abonnement 7,99€/mois) + connexion quotidienne 27/03/26
 - Intégration API Twitch pour la page découverte et page publique 30/03/26
+- Streamers similaires (scoring jeux/horaires/langue/live + widget page publique) 08/04/26
 
 ## Roadmap court terme – Augmenter la visibilité et promouvoir le réseau interne
 
 ### Découverte V3
     - Filtres par catégories
     - Raids avec Coins
-
-### Page publique
-    - CTA découvrir d'autres streamers
 
 ## Roadmap moyen terme – Améliorer le premium
 
