@@ -75,6 +75,9 @@
                     <Icon name="simple-icons:twitch" size="16" class="shrink-0" />
                     <span>{{ isLive ? 'Regarder' : 'Twitch' }}</span>
                 </component>
+                <button @click="showModal = true">
+                    Test
+                </button>
             </div>
         </div>
 
@@ -243,16 +246,20 @@ onMounted(async () => {
 // Calcul si le raid est possible
 const canRaid = computed(() => {
     if (!user.value) return false
-    if (!isLive.value) return false
+    // if (!isLive.value) return false
+    // if (!raidStatus.value.canRaidToday) return false
+    if (currentStreamer.value?.username?.toLowerCase() === props.streamer.username?.toLowerCase()) return false
     return raidStatus.value.remaining > 0
 })
 
 // Tooltip dynamique du bouton raid
 const raidTooltip = computed(() => {
-    if (!user.value) return 'Connectez-vous pour raider'
-    if (!isLive.value) return 'Le streamer doit être en live'
+    if (!user.value) return 'Connecte-toi pour raid'
+    // if (!isLive.value) return 'Le streamer doit être en live'
+    if (currentStreamer.value?.username?.toLowerCase() === props.streamer.username?.toLowerCase()) return 'Tu ne peux pas te raid toi-même'
+    if (!raidStatus.value.canRaidToday) return 'Tu as déjà raid aujourd\'hui'
     if (raidStatus.value.remaining === 0) return 'Limite de raids atteinte cette semaine'
-    return `Raider ${props.streamer.username} et gagner ${raidCoins.value} Coins`
+    return `Raid ${props.streamer.username} et gagner ${raidCoins.value} Coins`
 })
 
 function openRaidModal() {
@@ -264,22 +271,18 @@ function openRaidModal() {
 async function confirmRaid() {
     raidLoading.value = true
     try {
-        const supabase = useSupabaseClient()
-        const { data: { session } } = await supabase.auth.getSession()
-        const providerToken = session?.provider_token
-
         const { coinsEarned, raidedViaApi } = await $fetch<{ success: boolean; coinsEarned: number; raidedViaApi: boolean }>('/api/raids/create', {
             method: 'POST',
             body: {
                 targetUsername: props.streamer.username,
                 coinsEarned: raidCoins.value,
-                providerToken,
             }
         })
 
         showRaidModal.value = false
         raidStatus.value.remaining--
         raidStatus.value.used++
+        raidStatus.value.canRaidToday = false
 
         // Si pas de token Twitch → copie la commande dans le presse-papier
         if (!raidedViaApi) {
@@ -287,23 +290,23 @@ async function confirmRaid() {
             toast.add({
                 severity: 'success',
                 summary: 'Raid en cours !',
-                detail: `+${coinsEarned} Coins gagnés`,
+                detail: `+${coinsEarned} Coins · Commande /raid ${props.streamer.username} copiée`,
                 group: 'app',
-                life: 3000,
+                life: 4000,
             })
         } else {
             toast.add({
                 severity: 'success',
                 summary: 'Raid en cours !',
-                detail: `+${coinsEarned} Coins · Commande /raid ${props.streamer.username} copiée`,
+                detail: `+${coinsEarned} Coins gagnés`,
                 group: 'app',
                 life: 4000,
             })
         }
     } catch (err: any) {
         toast.add({
-            severity: 'error',
-            summary: 'Erreur',
+            severity: 'warn',
+            summary: 'Raid impossible',
             detail: err?.data?.message ?? 'Une erreur est survenue',
             group: 'app',
             life: 4000,

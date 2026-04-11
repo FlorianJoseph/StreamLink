@@ -92,7 +92,8 @@ async function twitchAuth() {
         const { data, error: authError } = await supabase.auth.signInWithOAuth({
             provider: 'twitch',
             options: {
-                redirectTo: callback
+                redirectTo: callback,
+                scopes: 'channel:manage:raids'
             }
         })
         if (authError) throw authError

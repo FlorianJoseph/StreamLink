@@ -26,7 +26,16 @@ export default defineNuxtPlugin((nuxtApp) => {
         const scheduleId = scheduleStore.schedule?.id
         if (scheduleId) await scheduleSlotStore.fetchSlots(scheduleId)
 
-        await $fetch('/api/quests/check', { method: 'POST' })
+        try {
+            await $fetch('/api/quests/check', { method: 'POST' })
+        } catch (err: any) {
+            if (err?.statusCode === 401) {
+                const supabase = useSupabaseClient()
+                await supabase.auth.signOut()
+                navigateTo('/')
+                return
+            }
+        }
         await profileProgress.init()
         await fetchBalance()
     })
@@ -49,7 +58,16 @@ export default defineNuxtPlugin((nuxtApp) => {
         const scheduleId = scheduleStore.schedule?.id
         if (scheduleId) await scheduleSlotStore.fetchSlots(scheduleId)
 
-        await $fetch('/api/quests/check', { method: 'POST' })
+        try {
+            await $fetch('/api/quests/check', { method: 'POST' })
+        } catch (err: any) {
+            if (err?.statusCode === 401) {
+                const supabase = useSupabaseClient()
+                await supabase.auth.signOut()
+                navigateTo('/')
+                return
+            }
+        }
         await profileProgress.init()
         await fetchBalance()
     })

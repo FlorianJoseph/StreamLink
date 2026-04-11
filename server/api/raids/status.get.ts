@@ -22,11 +22,21 @@ export default defineEventHandler(async (event) => {
         .eq('raider_id', user.id)
         .gte('created_at', weekStart.toISOString())
 
+    const today = new Date(now)
+    today.setHours(0, 0, 0, 0)
+
+    const { count: dailyCount } = await client
+        .from('Raid')
+        .select('id', { count: 'exact', head: true })
+        .eq('raider_id', user.id)
+        .gte('created_at', today.toISOString())
+
     const used = count ?? 0
 
     return {
         remaining: Math.max(0, MAX_RAIDS_PER_WEEK - used),
         used,
         total: MAX_RAIDS_PER_WEEK,
+        canRaidToday: (dailyCount ?? 0) === 0,
     }
 })
