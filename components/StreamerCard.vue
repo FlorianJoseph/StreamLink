@@ -130,12 +130,12 @@
                                 <Icon name="lucide:coins" size="10" /> +{{ raidCoins }}
                             </span>
                         </button>
-                        <button v-else disabled class="w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium border transition-all duration-150
-                            bg-zinc-800 text-zinc-600 border-zinc-700/40 cursor-not-allowed "
+                        <button v-else disabled
+                            class="w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-zinc-800 text-zinc-600 border border-zinc-700/40 cursor-not-allowed"
                             v-tooltip.bottom="{ value: 'Bientôt disponible', pt: { text: '!text-sm' } }">
                             <Icon name="lucide:swords" size="16" />
                             Lancer un raid
-                            <span class="flex items-center gap-0.5 text-[10px] ml-1 text-amber-400">
+                            <span class="flex items-center gap-0.5 text-[10px] text-yellow-600/70 ml-1">
                                 <Icon name="lucide:coins" size="10" /> +{{ raidCoins }}
                             </span>
                         </button>
