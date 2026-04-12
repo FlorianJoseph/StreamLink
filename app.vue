@@ -84,6 +84,20 @@ useHead({
     }
 })
 
+const supabase = useSupabaseClient()
+
+supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session?.provider_token) {
+        await $fetch('/api/auth/store-token', {
+            method: 'POST',
+            body: {
+                accessToken: session.provider_token,
+                refreshToken: session.provider_refresh_token,
+            }
+        })
+    }
+})
+
 const severityGradient = (severity: string) => {
     const map: Record<string, string> = {
         success: 'linear-gradient(135deg, #059669, #10b981)',

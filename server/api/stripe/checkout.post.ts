@@ -29,15 +29,13 @@ export default defineEventHandler(async (event) => {
             })
             customerId = customer.id
 
-            const { error } = await supabase
+            await supabase
                 .from('Subscriptions')
                 .upsert({
                     user_id: user.sub,
                     stripe_customer_id: customerId,
                     status: 'pending'
                 }, { onConflict: 'user_id' })
-
-            console.log('upsert error:', error?.message)
         }
     }
 

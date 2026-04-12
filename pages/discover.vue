@@ -16,7 +16,7 @@
                 </h1>
                 <!-- Sous-titre -->
                 <p class="text-sm sm:text-base text-center max-w-xl sm:whitespace-nowrap text-gray-400">
-                    Explore la communauté et connecte-toi avec d'autres créateurs
+                    Explore la communauté, connecte-toi et raid des streamers en live
                 </p>
             </div>
         </div>
@@ -287,16 +287,24 @@ function handleKeydown(e: KeyboardEvent) {
     }
 }
 
+const { fetchStatus } = useRaidStatus()
+const user = useSupabaseUser()
+
 // Charger tous les streamers
 onMounted(async () => {
     loading.value = true
     try {
         await fetchStreamersWithNextSlot()
+
         updateRowsPerPage()
         window.addEventListener('resize', updateRowsPerPage)
         window.addEventListener('keydown', handleKeydown)
     } finally {
         loading.value = false
+    }
+    // Charge le statut des raids au montage
+    if (user.value) {
+        await fetchStatus()
     }
 })
 
