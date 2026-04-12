@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
     weekStart.setDate(now.getDate() + diff)
     weekStart.setHours(0, 0, 0, 0)
 
+    // Nombre de raids cette semaine
     const { count } = await client
         .from('Raid')
         .select('id', { count: 'exact', head: true })
@@ -25,6 +26,7 @@ export default defineEventHandler(async (event) => {
     const today = new Date(now)
     today.setHours(0, 0, 0, 0)
 
+    // Nombre de raids aujourd'hui
     const { count: dailyCount } = await client
         .from('Raid')
         .select('id', { count: 'exact', head: true })
@@ -33,10 +35,18 @@ export default defineEventHandler(async (event) => {
 
     const used = count ?? 0
 
+    // Récupère les raids de la semaine pour afficher les streamers raidés
+    const { data: weeklyRaids } = await client
+        .from('Raid')
+        .select('target_username')
+        .eq('raider_id', user.id)
+        .gte('created_at', weekStart.toISOString())
+
     return {
         remaining: Math.max(0, MAX_RAIDS_PER_WEEK - used),
         used,
         total: MAX_RAIDS_PER_WEEK,
         canRaidToday: (dailyCount ?? 0) === 0,
+        raidedThisWeek: weeklyRaids?.map(r => r.target_username) ?? [],
     }
 })

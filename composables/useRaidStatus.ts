@@ -1,4 +1,4 @@
-const raidStatus = ref({ remaining: 0, used: 0, total: 4, canRaidToday: true })
+const raidStatus = ref({ remaining: 0, used: 0, total: 4, canRaidToday: true, raidedThisWeek: [] as string[] })
 
 export function useRaidStatus() {
     const user = useSupabaseUser()
@@ -6,7 +6,7 @@ export function useRaidStatus() {
     async function fetchStatus() {
         if (!user.value) return
         try {
-            const data = await $fetch<{ remaining: number; used: number; total: number; canRaidToday: boolean }>('/api/raids/status')
+            const data = await $fetch<{ remaining: number; used: number; total: number; canRaidToday: boolean, raidedThisWeek: string[] }>('/api/raids/status')
             raidStatus.value = data
         } catch { }
     }

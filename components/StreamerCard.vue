@@ -75,9 +75,6 @@
                     <Icon name="simple-icons:twitch" size="16" class="shrink-0" />
                     <span>{{ isLive ? 'Regarder' : 'Twitch' }}</span>
                 </component>
-                <button @click="showModal = true">
-                    Test
-                </button>
             </div>
         </div>
 
@@ -120,7 +117,7 @@
                             Voir sur Twitch
                         </a>
                         <!-- Bouton raid -->
-                        <button v-if="isAdmin" @click="openRaidModal" :disabled="!canRaid || raidLoading" :class="[
+                        <button @click="openRaidModal" :disabled="!canRaid || raidLoading" :class="[
                             'w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium border transition-all duration-150',
                             canRaid && !raidLoading
                                 ? 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border-yellow-500/30 hover:border-yellow-500/50 cursor-pointer'
@@ -130,15 +127,6 @@
                             Lancer un raid
                             <span class="flex items-center gap-0.5 text-[10px] ml-1"
                                 :class="canRaid ? 'text-yellow-500/70' : 'text-zinc-600'">
-                                <Icon name="lucide:coins" size="10" /> +{{ raidCoins }}
-                            </span>
-                        </button>
-                        <button v-else disabled
-                            class="w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-zinc-800 text-zinc-600 border border-zinc-700/40 cursor-not-allowed"
-                            v-tooltip.bottom="{ value: 'Bientôt disponible', pt: { text: '!text-sm' } }">
-                            <Icon name="lucide:swords" size="16" />
-                            Lancer un raid
-                            <span class="flex items-center gap-0.5 text-[10px] text-yellow-600/70 ml-1">
                                 <Icon name="lucide:coins" size="10" /> +{{ raidCoins }}
                             </span>
                         </button>
@@ -170,7 +158,7 @@
             <template #container>
                 <!-- État post-raid dans la modale -->
                 <div v-if="raidConfirmed"
-                    class="flex flex-col gap-4 p-6 bg-zinc-900 rounded-2xl border border-zinc-700/60">
+                    class="flex flex-col gap-4 p-6">
                     <div class="flex items-center gap-3">
                         <img :src="streamer.avatar_url || defaultAvatar"
                             class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
@@ -190,7 +178,7 @@
                         Annuler le raid
                     </button>
                 </div>
-                <div v-else class="flex flex-col gap-5 p-6 bg-zinc-900 rounded-2xl border border-zinc-700/60">
+                <div v-else class="flex flex-col gap-5 p-6">
                     <!-- Header -->
                     <div class="flex items-center gap-3">
                         <img :src="streamer.avatar_url || defaultAvatar"
@@ -213,7 +201,7 @@
                     <div
                         class="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
                         <Icon name="lucide:coins" size="16" class="text-yellow-400 flex-shrink-0" />
-                        <span class="text-sm text-yellow-300 font-medium">+{{ raidCoins }} Coins</span>
+                        <span class="text-xs sm:text-sm text-yellow-300 font-medium">+{{ raidCoins }} Coins</span>
                         <span class="text-xs text-zinc-500 ml-auto">{{ raidStatus.remaining }}/{{ raidStatus.total }}
                             raids restants cette semaine</span>
                     </div>
@@ -222,11 +210,11 @@
                     <div class="flex gap-2">
                         <Button severity="secondary" outlined @click="showRaidModal = false" class="flex-1">
                             <Icon name="lucide:x" size="18" class="shrink-0" />
-                            <span class="text-xs sm:text-base shrink-0">Annuler</span>
+                            <span class="text-sm sm:text-base shrink-0">Annuler</span>
                         </Button>
                         <Button severity="contrast" @click="confirmRaid" :loading="raidLoading" class="flex-1">
                             <Icon name="lucide:swords" size="18" class="shrink-0" />
-                            <span class="text-xs sm:text-base shrink-0">Raid</span>
+                            <span class="text-sm sm:text-base shrink-0">Raid</span>
                         </Button>
                     </div>
                 </div>
@@ -239,7 +227,6 @@
 
 const streamerStore = useStreamerStore()
 const { streamer: currentStreamer } = storeToRefs(streamerStore)
-const isAdmin = computed(() => currentStreamer.value?.is_admin === true)
 
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png"
@@ -260,19 +247,21 @@ const { raidStatus } = useRaidStatus()
 // Calcul si le raid est possible
 const canRaid = computed(() => {
     if (!user.value) return false
-    // if (!isLive.value) return false
+    if (!isLive.value) return false
     if (!raidStatus.value.canRaidToday) return false
     if (currentStreamer.value?.username?.toLowerCase() === props.streamer.username?.toLowerCase()) return false
+    if (raidStatus.value.raidedThisWeek?.includes(props.streamer.username?.toLowerCase())) return false
     return raidStatus.value.remaining > 0
 })
 
 // Tooltip dynamique du bouton raid
 const raidTooltip = computed(() => {
     if (!user.value) return 'Connecte-toi pour raid'
-    // if (!isLive.value) return 'Le streamer doit être en live'
+    if (!isLive.value) return 'Le streamer doit être en live'
     if (currentStreamer.value?.username?.toLowerCase() === props.streamer.username?.toLowerCase()) return 'Tu ne peux pas te raid toi-même'
     if (!raidStatus.value.canRaidToday) return 'Tu as déjà raid aujourd\'hui'
     if (raidStatus.value.remaining === 0) return 'Limite de raids atteinte cette semaine'
+    if (raidStatus.value.raidedThisWeek?.includes(props.streamer.username?.toLowerCase())) return 'Tu as déjà raid ce streamer cette semaine'
     return `Raid ${props.streamer.username} et gagner ${raidCoins.value} Coins`
 })
 
@@ -285,12 +274,13 @@ const raidConfirmed = ref(false)
 const raidCountdown = ref(15)
 const earnedCoins = ref(0)
 let countdownInterval: ReturnType<typeof setInterval> | null = null
+const { fetchBalance } = useWallet()
 
 // Appelle l'API pour confirmer le raid
 async function confirmRaid() {
     raidLoading.value = true
     try {
-        const { coinsEarned, raidedViaApi } = await $fetch<{ success: boolean; coinsEarned: number; raidedViaApi: boolean }>('/api/raids/create', {
+        const { coinsEarned } = await $fetch<{ success: boolean; coinsEarned: number; raidedViaApi: boolean }>('/api/raids/create', {
             method: 'POST',
             body: {
                 targetUsername: props.streamer.username,
@@ -301,18 +291,20 @@ async function confirmRaid() {
         raidStatus.value.remaining--
         raidStatus.value.used++
         raidStatus.value.canRaidToday = false
+        raidStatus.value.raidedThisWeek = [...(raidStatus.value.raidedThisWeek ?? []), props.streamer.username.toLowerCase()]
 
         // Lance le countdown
         raidConfirmed.value = true
         raidCountdown.value = 15
         earnedCoins.value = coinsEarned
 
-        countdownInterval = setInterval(() => {
+        countdownInterval = setInterval(async () => {
             raidCountdown.value--
             if (raidCountdown.value <= 0) {
                 clearInterval(countdownInterval!)
                 showRaidModal.value = false
                 raidConfirmed.value = false
+                await fetchBalance()
                 toast.add({
                     severity: 'secondary',
                     summary: 'Raid lancé !',
@@ -345,18 +337,11 @@ async function cancelRaid() {
     raidStatus.value.remaining++
     raidStatus.value.used--
     raidStatus.value.canRaidToday = true
+    raidStatus.value.raidedThisWeek = raidStatus.value.raidedThisWeek?.filter(u => u !== props.streamer.username.toLowerCase()) ?? []
 
     showRaidModal.value = false
     raidConfirmed.value = false
     raidCountdown.value = 15
-
-    toast.add({
-        severity: 'info',
-        summary: 'Raid annulé',
-        detail: 'Tes Coins ne seront pas ajoutés',
-        group: 'app',
-        life: 3000,
-    })
 }
 
 // Watch pour charger le player Twitch quand la modale s'ouvre

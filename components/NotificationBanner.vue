@@ -14,24 +14,24 @@
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
                             <NuxtLink :to="destination" class="font-bold underline hover:text-indigo-200">
-                                Découvre des streamers similaires sur chaque page
+                                Raid des streamers en live depuis la page découverte et gagne des Coins !
                             </NuxtLink>
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Visite la page d'un streamer et découvre des profils similaires en bas à droite !
+                            Raid des streamers en live depuis la page découverte et gagne des Coins !
                         </span>
                     </p>
                 </div>
 
                 <!-- Actions -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <NuxtLink :to="destination" target="_blank"
+                    <NuxtLink :to="destination"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <Icon name="lucide:sparkles" size="18" />
-                            Voir ma page
+                            <Icon name="lucide:swords" size="18" />
+                            Voir les raids
                         </div>
                     </NuxtLink>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
@@ -44,19 +44,19 @@
 </template>
 
 <script setup>
-const streamerStore = useStreamerStore()
-const { streamer } = storeToRefs(streamerStore)
+// const streamerStore = useStreamerStore()
+// const { streamer } = storeToRefs(streamerStore)
 const destination = ref('/discover')
 
-watchEffect(() => {
-    if (streamer.value?.username) {
-        destination.value = `/${streamer.value.username}`
-    }
-})
+// watchEffect(() => {
+//     if (streamer.value?.username) {
+//         destination.value = `/${streamer.value.username}`
+//     }
+// })
 
 const user = useSupabaseUser()
 
-const STORAGE_KEY = 'similar_streamers'
+const STORAGE_KEY = 'raids'
 const visible = ref(false)
 
 const closeBanner = () => {
@@ -69,16 +69,16 @@ onMounted(async () => {
         visible.value = true
     }
     // Attend que l'user soit disponible
-    if (user.value && !streamer.value) {
-        await streamerStore.fetchStreamer()
-    }
+    // if (user.value && !streamer.value) {
+    //     await streamerStore.fetchStreamer()
+    // }
 })
 
 // Si l'user arrive après le montage
-watch(user, async (newUser) => {
-    if (newUser && !streamer.value) {
-        await streamerStore.fetchStreamer()
-    }
-}, { immediate: true })
+// watch(user, async (newUser) => {
+//     if (newUser && !streamer.value) {
+//         await streamerStore.fetchStreamer()
+//     }
+// }, { immediate: true })
 
 </script>
