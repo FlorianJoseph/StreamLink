@@ -287,16 +287,24 @@ function handleKeydown(e: KeyboardEvent) {
     }
 }
 
+const { fetchStatus } = useRaidStatus()
+const user = useSupabaseUser()
+
 // Charger tous les streamers
 onMounted(async () => {
     loading.value = true
     try {
         await fetchStreamersWithNextSlot()
+
         updateRowsPerPage()
         window.addEventListener('resize', updateRowsPerPage)
         window.addEventListener('keydown', handleKeydown)
     } finally {
         loading.value = false
+    }
+    // Charge le statut des raids au montage
+    if (user.value) {
+        await fetchStatus()
     }
 })
 

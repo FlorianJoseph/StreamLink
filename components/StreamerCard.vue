@@ -82,7 +82,7 @@
         </div>
 
         <!-- Modale player Twitch -->
-        <Dialog v-model:visible="showModal" modal :dismissableMask="true"
+        <Dialog v-model:visible="showModal" modal
             :style="{ width: '80vw', maxWidth: '80vw', background: '#18181b', border: '1px solid #3f3f46', borderRadius: '16px', padding: 0, overflow: 'hidden' }"
             :pt="{ header: { style: 'display:none' }, content: { style: 'padding:0; background:#18181b; border-radius:16px; overflow:hidden' } }">
             <div class="flex flex-col">
@@ -166,17 +166,38 @@
         </Dialog>
 
         <!-- Modale de confirmation raid -->
-        <Dialog v-model:visible="showRaidModal" modal :dismissableMask="true" :draggable="false"
-            :style="{ width: '24rem', margin: '1rem' }">
+        <Dialog v-model:visible="showRaidModal" modal :draggable="false" :style="{ width: '24rem', margin: '1rem' }">
             <template #container>
-                <div class="flex flex-col gap-5 p-6 bg-zinc-900 rounded-2xl border border-zinc-700/60">
+                <!-- État post-raid dans la modale -->
+                <div v-if="raidConfirmed"
+                    class="flex flex-col gap-4 p-6 bg-zinc-900 rounded-2xl border border-zinc-700/60">
+                    <div class="flex items-center gap-3">
+                        <img :src="streamer.avatar_url || defaultAvatar"
+                            class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
+                        <div>
+                            <p class="font-semibold text-white text-sm">Raid en cours vers {{ streamer.username }}</p>
+                            <p class="text-xs text-zinc-400">{{ raidCountdown }}s restantes</p>
+                        </div>
+                    </div>
+                    <div class="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-yellow-500 rounded-full transition-all duration-500"
+                            :style="{ width: `${(raidCountdown / 15) * 100}%` }" />
+                    </div>
+                    <p class="text-xs text-zinc-500 text-center">Tes Coins seront crédités dans
+                        {{ raidCountdown }}s</p>
+                    <button @click="cancelRaid"
+                        class="w-full text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+                        Annuler le raid
+                    </button>
+                </div>
+                <div v-else class="flex flex-col gap-5 p-6 bg-zinc-900 rounded-2xl border border-zinc-700/60">
                     <!-- Header -->
                     <div class="flex items-center gap-3">
                         <img :src="streamer.avatar_url || defaultAvatar"
                             class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
                         <div>
                             <p class="font-semibold text-white text-sm">{{ streamer.username }}</p>
-                            <p class="text-xs text-zinc-400">{{ gameLabel }} · {{ twitchViewerCount }} viewers</p>
+                            <p class="text-xs text-zinc-400">{{ gameLabel }}</p>
                         </div>
                     </div>
 
@@ -184,7 +205,7 @@
                     <div class="flex flex-col gap-1">
                         <p class="text-sm text-white font-medium">Lancer un raid vers {{ streamer.username }} ?</p>
                         <p class="text-xs text-zinc-400">
-                            Vos viewers seront redirigés vers sa chaîne Twitch.
+                            Tes viewers seront redirigés vers sa chaîne Twitch.
                         </p>
                     </div>
 
@@ -200,12 +221,12 @@
                     <!-- Actions -->
                     <div class="flex gap-2">
                         <Button severity="secondary" outlined @click="showRaidModal = false" class="flex-1">
-                            <Icon name="lucide:x" size="16" />
-                            Annuler
+                            <Icon name="lucide:x" size="18" class="shrink-0" />
+                            <span class="text-xs sm:text-base shrink-0">Annuler</span>
                         </Button>
                         <Button severity="contrast" @click="confirmRaid" :loading="raidLoading" class="flex-1">
-                            <Icon name="lucide:swords" size="16" />
-                            Raider
+                            <Icon name="lucide:swords" size="18" class="shrink-0" />
+                            <span class="text-xs sm:text-base shrink-0">Raid</span>
                         </Button>
                     </div>
                 </div>
@@ -234,20 +255,13 @@ const showModal = ref(false)
 const showRaidModal = ref(false)
 const raidLoading = ref(false)
 
-const { raidStatus, fetchStatus } = useRaidStatus()
-
-// Charge le statut des raids au montage
-onMounted(async () => {
-    if (user.value) {
-        await fetchStatus()
-    }
-})
+const { raidStatus } = useRaidStatus()
 
 // Calcul si le raid est possible
 const canRaid = computed(() => {
     if (!user.value) return false
     // if (!isLive.value) return false
-    // if (!raidStatus.value.canRaidToday) return false
+    if (!raidStatus.value.canRaidToday) return false
     if (currentStreamer.value?.username?.toLowerCase() === props.streamer.username?.toLowerCase()) return false
     return raidStatus.value.remaining > 0
 })
@@ -267,6 +281,11 @@ function openRaidModal() {
     showRaidModal.value = true
 }
 
+const raidConfirmed = ref(false)
+const raidCountdown = ref(15)
+const earnedCoins = ref(0)
+let countdownInterval: ReturnType<typeof setInterval> | null = null
+
 // Appelle l'API pour confirmer le raid
 async function confirmRaid() {
     raidLoading.value = true
@@ -279,30 +298,31 @@ async function confirmRaid() {
             }
         })
 
-        showRaidModal.value = false
         raidStatus.value.remaining--
         raidStatus.value.used++
         raidStatus.value.canRaidToday = false
 
-        // Si pas de token Twitch → copie la commande dans le presse-papier
-        if (!raidedViaApi) {
-            navigator.clipboard.writeText(`/raid ${props.streamer.username}`)
-            toast.add({
-                severity: 'success',
-                summary: 'Raid en cours !',
-                detail: `+${coinsEarned} Coins · Commande /raid ${props.streamer.username} copiée`,
-                group: 'app',
-                life: 4000,
-            })
-        } else {
-            toast.add({
-                severity: 'success',
-                summary: 'Raid en cours !',
-                detail: `+${coinsEarned} Coins gagnés`,
-                group: 'app',
-                life: 4000,
-            })
-        }
+        // Lance le countdown
+        raidConfirmed.value = true
+        raidCountdown.value = 15
+        earnedCoins.value = coinsEarned
+
+        countdownInterval = setInterval(() => {
+            raidCountdown.value--
+            if (raidCountdown.value <= 0) {
+                clearInterval(countdownInterval!)
+                showRaidModal.value = false
+                raidConfirmed.value = false
+                toast.add({
+                    severity: 'secondary',
+                    summary: 'Raid lancé !',
+                    detail: `${earnedCoins.value}`,
+                    group: 'quest',
+                    life: 4000
+                })
+            }
+        }, 1000)
+
     } catch (err: any) {
         toast.add({
             severity: 'warn',
@@ -314,6 +334,29 @@ async function confirmRaid() {
     } finally {
         raidLoading.value = false
     }
+}
+
+// Appelle l'API pour annuler le raid
+async function cancelRaid() {
+    clearInterval(countdownInterval!)
+    await $fetch('/api/raids/cancel', { method: 'POST' }).catch(() => { })
+
+    // Remet les compteurs à jour
+    raidStatus.value.remaining++
+    raidStatus.value.used--
+    raidStatus.value.canRaidToday = true
+
+    showRaidModal.value = false
+    raidConfirmed.value = false
+    raidCountdown.value = 15
+
+    toast.add({
+        severity: 'info',
+        summary: 'Raid annulé',
+        detail: 'Tes Coins ne seront pas ajoutés',
+        group: 'app',
+        life: 3000,
+    })
 }
 
 // Watch pour charger le player Twitch quand la modale s'ouvre
