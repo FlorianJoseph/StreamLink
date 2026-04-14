@@ -191,8 +191,8 @@
                     <div :ref="(el: any) => setRowRef(row.key, el)"
                         class="flex gap-3 overflow-x-auto scrollbar-hide px-8 sm:px-12 pb-2">
                         <template v-if="row.key === 'live'">
-                            <div v-for="s in row.streamers" :key="s.username" class="flex-shrink-0 w-72 sm:w-80">
-                                <StreamerCardFeatured :streamer="s" />
+                            <div v-for="s in row.streamers" :key="s.username" class="flex-shrink-0 w-[312px] sm:w-[336px]">
+                                <StreamerCard :streamer="s" />
                             </div>
                         </template>
                         <template v-else>

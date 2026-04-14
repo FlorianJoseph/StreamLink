@@ -1,73 +1,120 @@
 <template>
     <div class="relative w-full">
-        <div class="flex flex-col gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900">
+        <div class="rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 hover:border-zinc-700 transition-colors duration-200">
 
-            <div class="flex items-center gap-4">
+            <!-- ── Thumbnail 16/9 ── -->
+            <div class="relative aspect-video overflow-hidden bg-zinc-800">
+                <template v-if="isLive && thumbnailUrl">
+                    <!-- Vrai thumbnail Twitch en live -->
+                    <img :src="thumbnailUrl"
+                        class="absolute inset-0 w-full h-full object-cover" />
+                    <!-- Titre du stream en overlay bas -->
+                    <div class="absolute inset-x-0 bottom-0 z-20 px-2.5 pb-2 pt-6 bg-gradient-to-t from-zinc-950 to-transparent">
+                        <p class="text-[11px] text-white font-medium leading-tight line-clamp-2">{{ streamer.nextSlot?.twitchTitle }}</p>
+                    </div>
+                </template>
+                <template v-else>
+                    <!-- Game cover flouté en fond (offline) -->
+                    <img v-if="gameCover" :src="gameCover"
+                        class="absolute inset-0 w-full h-full object-cover scale-110 blur-sm opacity-50" />
+                    <div v-else class="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-950" />
 
-                <!-- Badge "À découvrir" -->
-                <span v-if="categoryBadge"
-                    class="absolute top-3 right-3 flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-md font-medium border"
+                    <!-- Avatar centré -->
+                    <div class="relative z-10 flex items-center justify-center h-full">
+                        <img :src="streamer.avatar_url || defaultAvatar"
+                            class="w-[72px] h-[72px] rounded-2xl object-cover shadow-2xl"
+                            :class="isLive ? 'ring-2 ring-red-500' : 'ring-1 ring-zinc-600/80'" />
+                        <!-- Mini pochette jeu -->
+                        <img v-if="gameCover" :src="gameCover"
+                            class="absolute bottom-2 right-2 w-9 h-[52px] rounded object-cover border border-zinc-700/50 shadow-lg" />
+                    </div>
+                    <!-- Dégradé bas -->
+                    <div class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-zinc-900 to-transparent z-10" />
+                </template>
+
+                <!-- Badge live -->
+                <div v-if="isLive"
+                    class="absolute top-2 left-2 z-20 flex items-center gap-1 bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">
+                    <span class="w-1 h-1 rounded-full bg-white animate-pulse flex-shrink-0" />
+                    live
+                </div>
+                <!-- Viewers -->
+                <div v-if="isLive && twitchViewerCount !== null"
+                    class="absolute top-2 right-2 z-20 flex items-center gap-1 bg-zinc-900/75 backdrop-blur-sm text-zinc-300 text-[10px] px-1.5 py-0.5 rounded">
+                    <Icon name="lucide:eye" size="10" />{{ twitchViewerCount }}
+                </div>
+                <!-- Badge catégorie (offline) -->
+                <span v-if="categoryBadge && !isLive"
+                    class="absolute top-2 left-2 z-20 flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-md font-medium border"
                     :class="categoryBadgeClass">
                     <Icon :name="categoryBadgeIcon" size="10" /> {{ categoryBadge }}
                 </span>
-
-                <!-- Avatar -->
-                <div class="relative flex-shrink-0">
-                    <img :src="streamer.avatar_url || defaultAvatar" class="w-14 h-14 object-cover rounded-xl"
-                        :class="isLive ? 'ring-2 ring-red-500/70' : 'ring-1 ring-zinc-700/80'"
-                        :alt="streamer.username" />
-                    <span v-if="isLive"
-                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded leading-none uppercase tracking-widest whitespace-nowrap">
-                        <span class="w-1 h-1 rounded-full bg-white animate-pulse flex-shrink-0" />
-                        live
-                    </span>
-                </div>
-
-                <!-- Infos -->
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 min-w-0">
-                        <span class="font-semibold text-white truncate text-sm sm:text-base">
-                            {{ streamer.username }}
-                        </span>
-                        <img v-if="streamer?.language && streamer.language !== 'OTHER'"
-                            :src="`https://flagcdn.com/w80/${getFlag(streamer.language)}.png`"
-                            class="w-4 h-[11px] object-cover rounded-xs opacity-90 flex-shrink-0" />
-                        <Icon v-else-if="streamer?.language === 'OTHER'" name="lucide:globe" size="13"
-                            class="opacity-40 flex-shrink-0" />
-                    </div>
-                    <div class="flex items-center mt-1 gap-2 min-w-0">
-                        <img v-if="gameCover" :src="gameCover" :alt="gameLabel"
-                            class="w-6 h-8 rounded object-cover border border-zinc-700/50 flex-shrink-0" />
-                        <div class="flex flex-col min-w-0">
-                            <div class="flex items-center gap-1.5">
-                                <span class="text-[13px] text-zinc-300 font-medium truncate">
-                                    {{ gameLabel || '—' }}
-                                </span>
-                                <span v-if="isLive && twitchViewerCount !== null"
-                                    class="flex items-center gap-1 text-zinc-500 flex-shrink-0 text-[11px]">
-                                    <Icon name="lucide:eye" size="12" />{{ twitchViewerCount }}
-                                </span>
-                            </div>
-                            <span class="text-[12px] text-zinc-500">{{ whenLabel }}</span>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <!-- 2 CTA -->
-            <div class="flex gap-2">
-                <NuxtLink :to="`/${streamer.username}`" target="_blank"
-                    class="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md border border-zinc-700/60 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white text-sm font-medium transition-all duration-150">
-                    <Icon name="lucide:user" size="16" />
-                    <span>Profil</span>
-                </NuxtLink>
-                <component :is="isLive ? 'button' : 'a'"
-                    v-bind="isLive ? {} : { href: `https://twitch.tv/${streamer.username}`, target: '_blank', rel: 'noopener noreferrer' }"
-                    @click="isLive ? showModal = true : undefined"
-                    class="flex-1 flex items-center justify-center gap-2 !px-3 !py-1.5 rounded-md border !text-sm font-medium transition-all duration-150 !bg-zinc-800 hover:!bg-zinc-700 !text-zinc-400 hover:!text-white !border-zinc-700/60 !no-underline">
-                    <Icon name="simple-icons:twitch" size="16" class="shrink-0" />
-                    <span>{{ isLive ? 'Regarder' : 'Twitch' }}</span>
-                </component>
+            <!-- ── Infos + CTA ── -->
+            <div class="p-3 flex flex-col gap-3">
+
+                <!-- Username + jeu -->
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <img :src="streamer.avatar_url || defaultAvatar"
+                        class="w-8 h-8 rounded-lg object-cover flex-shrink-0 ring-1 ring-zinc-700/80" />
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="font-semibold text-white text-sm truncate">{{ streamer.username }}</span>
+                            <img v-if="streamer?.language && streamer.language !== 'OTHER'"
+                                :src="`https://flagcdn.com/w80/${getFlag(streamer.language)}.png`"
+                                class="w-4 h-[11px] object-cover rounded-xs opacity-90 flex-shrink-0" />
+                            <Icon v-else-if="streamer?.language === 'OTHER'" name="lucide:globe" size="12"
+                                class="opacity-40 flex-shrink-0" />
+                        </div>
+                        <p class="text-xs text-zinc-500 truncate mt-0.5">
+                            {{ gameLabel || '—' }}
+                            <span v-if="whenLabel" class="text-zinc-600"> · {{ whenLabel }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2">
+
+                    <!-- CTA principal -->
+                    <button v-if="isLive" @click="showModal = true"
+                        class="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-white hover:bg-zinc-200 text-zinc-900 font-semibold text-sm transition-all duration-150">
+                        <Icon name="lucide:play" size="15" class="flex-shrink-0 fill-zinc-900" />
+                        Regarder
+                    </button>
+                    <NuxtLink v-else :to="`/${streamer.username}`" target="_blank"
+                        class="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-white hover:bg-zinc-200 text-zinc-900 font-semibold text-sm transition-all duration-150 no-underline">
+                        <Icon name="lucide:user" size="15" class="flex-shrink-0" />
+                        Voir le profil
+                    </NuxtLink>
+
+                    <!-- Profil (si live) -->
+                    <NuxtLink v-if="isLive" :to="`/${streamer.username}`" target="_blank"
+                        v-tooltip.top="{ value: 'Profil', pt: { text: '!text-xs' } }"
+                        class="w-9 h-9 flex items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150 no-underline">
+                        <Icon name="lucide:user" size="15" />
+                    </NuxtLink>
+
+                    <!-- Twitch (si offline) -->
+                    <a v-if="!isLive" :href="`https://twitch.tv/${streamer.username}`" target="_blank"
+                        rel="noopener noreferrer"
+                        v-tooltip.top="{ value: 'Voir sur Twitch', pt: { text: '!text-xs' } }"
+                        class="w-9 h-9 flex items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
+                        <Icon name="simple-icons:twitch" size="15" />
+                    </a>
+
+                    <!-- Raid (si live) -->
+                    <button v-if="isLive" @click="openRaidModal"
+                        :disabled="!canRaid || raidLoading"
+                        v-tooltip.top="{ value: raidTooltip, pt: { text: '!text-xs' } }"
+                        :class="['w-9 h-9 flex items-center justify-center rounded-lg border transition-all duration-150',
+                            canRaid && !raidLoading
+                                ? 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border-yellow-500/30 cursor-pointer'
+                                : 'bg-zinc-800 text-zinc-600 border-zinc-700/40 cursor-not-allowed']">
+                        <Icon name="lucide:swords" size="15" />
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -363,6 +410,8 @@ watch(showModal, (val) => {
 
 // Computed properties pour afficher les infos du prochain stream
 const isLive = computed(() => props.streamer.nextSlot?.isLive === true)
+
+const thumbnailUrl = computed(() => props.streamer.nextSlot?.twitchThumbnailUrl ?? null)
 
 const gameLabel = computed(() => {
     if (isLive.value && props.streamer.nextSlot?.twitchGameName) return props.streamer.nextSlot.twitchGameName
