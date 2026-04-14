@@ -173,16 +173,17 @@
                 </div>
  
                 <!-- Cartes horizontales avec flèches overlay -->
-                <div class="relative group/row">
+                <div class="relative group/row overflow-hidden">
  
                     <!-- Flèche gauche -->
                     <Transition name="fade-arrow">
                         <button v-if="rowScrollState[row.key]?.canLeft"
                             @click="scrollRow(row.key, 'left')"
-                            class="absolute left-0 top-0 h-full z-10 w-14 sm:w-20 flex items-center justify-center
-                                   opacity-0 group-hover/row:opacity-100 transition-opacity duration-200
-                                   bg-gradient-to-r from-zinc-950 to-transparent">
-                            <Icon name="lucide:chevron-left" size="52" class="text-white/80 hover:scale-125 transition-transform drop-shadow-lg" />
+                            class="absolute left-0 top-0 bottom-2 z-10 w-12 sm:w-16 flex items-center justify-center
+                                   opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
+                            <span class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45 transition-colors">
+                                <Icon name="lucide:chevron-left" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
+                            </span>
                         </button>
                     </Transition>
  
@@ -205,10 +206,11 @@
                     <Transition name="fade-arrow">
                         <button v-if="rowScrollState[row.key]?.canRight"
                             @click="scrollRow(row.key, 'right')"
-                            class="absolute right-0 top-0 h-full z-10 w-14 sm:w-20 flex items-center justify-center
-                                   opacity-0 group-hover/row:opacity-100 transition-opacity duration-200
-                                   bg-gradient-to-l from-zinc-950 to-transparent">
-                            <Icon name="lucide:chevron-right" size="52" class="text-white/80 hover:scale-125 transition-transform drop-shadow-lg" />
+                            class="absolute right-0 top-0 bottom-2 z-10 w-12 sm:w-16 flex items-center justify-center
+                                   opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
+                            <span class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65 transition-colors">
+                                <Icon name="lucide:chevron-right" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
+                            </span>
                         </button>
                     </Transition>
  
