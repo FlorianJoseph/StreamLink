@@ -139,12 +139,12 @@
                                     La roadmap évolue selon les retours de la communauté
                                 </p>
                                 <div class="flex items-center gap-2">
-                                    <Icon name="lucide:bell" class="text-yellow-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Notifications in-app</span>
+                                    <Icon name="lucide:chart-column" class="text-blue-400" size="16" />
+                                    <span class="text-gray-400 text-sm">Stats avancées</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <Icon name="lucide:users" class="text-purple-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Collabs & raids entre streamers</span>
+                                    <span class="text-gray-400 text-sm">Collabs entre streamers</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <Icon name="simple-icons:twitch" class="text-purple-400" size="16" />
@@ -153,10 +153,6 @@
                                 <div class="flex items-center gap-2">
                                     <Icon name="simple-icons:discord" class="text-indigo-400" size="16" />
                                     <span class="text-gray-400 text-sm">Export Discord</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <Icon name="lucide:chart-column" class="text-blue-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Stats avancées</span>
                                 </div>
                             </div>
                             <!-- CTA Newsletter -->

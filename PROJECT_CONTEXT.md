@@ -30,7 +30,8 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Page découverte : recherche, filtres, cartes streamer, pagination responsive, feedback live
 - Gestion planning : ajout/modification créneaux, export, personnalisation visuelle, responsive, footer branding
 - Admin : dashboard analytique, segments newsletter, historique envoi
-    
+- Raids Twitch : lancer un raid depuis la découverte, récompense en Coins selon le nombre de viewers, restrictions anti-farm (1/jour, 4/semaine, pas le même streamer 2x), annulation possible
+
 ## État du produit
 
 - 20/01/26 100 utilisateurs, 50 profils actifs, newsletter 30 inscrits
@@ -43,6 +44,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - 16/03/26 473 utilisateurs, 283 profils actifs, 1186 liens, 827 streams planifiés, 1838 vues de pages, newsletter 208 inscrits
 - 27/03/26 555 utilisateurs, 345 profils actifs, 1440 liens, 1062 streams planifiés, 4015 vues de pages, newsletter 248 inscrits + premium
 - 03/04/26 587 utilisateurs, 362 profils actifs, 1518 liens, 1136 streams planifiés, 5197 vues de pages, newsletter 263 inscrits
+- 13/04/26 627 utilisateurs, 390 profils actifs, 1630 liens, 1176 streams planifiés, 6907 vues de pages, newsletter 277 inscrits
 
 ## Historique Roadmap
 
@@ -72,12 +74,14 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Boutique + Stripe (packs Coins + abonnement 7,99€/mois) + connexion quotidienne 27/03/26
 - Intégration API Twitch pour la page découverte et page publique 30/03/26
 - Streamers similaires (scoring jeux/horaires/langue/live + widget page publique) 08/04/26
+- Raids Twitch avec Coins (API channel:manage:raids, token BDD, refresh auto, restrictions 1/jour 4/semaine) 12/04/26
 
 ## Roadmap court terme – Augmenter la visibilité et promouvoir le réseau interne
 
 ### Découverte V3
-    - Filtres par catégories
-    - Raids avec Coins
+    - Filtres par catégories/jeux/viewers/top raiders de la semaine
+    - Raiders compatibles (streamers qui jouent aux mêmes jeux)
+    - Raid assistant -> lance un raid -> suggestions
 
 ## Roadmap moyen terme – Améliorer le premium
 
