@@ -100,36 +100,40 @@
 
             <!-- Top Raiders -->
             <section v-if="topRaiders.length > 0" class="flex flex-col gap-3">
-                <div class="flex items-center gap-2.5 px-4 sm:px-6">
-                    <Icon name="lucide:trophy" size="16" class="text-yellow-400" />
-                    <h2 class="text-base font-bold text-white">Top Raiders</h2>
-                    <span class="text-xs text-zinc-500">Cette semaine</span>
+                <div class="flex items-center gap-3 px-8 sm:px-12">
+                    <Icon name="lucide:trophy" size="18" class="text-yellow-400" />
+                    <h2 class="text-xl font-bold text-white">Top Raiders cette semaine</h2>
                 </div>
-                <div class="flex gap-3 overflow-x-auto scrollbar-hide px-4 sm:px-6 pb-2">
-                    <div v-for="(raider, idx) in topRaiders" :key="raider.username"
-                        class="flex-shrink-0 w-36 flex flex-col items-center gap-2 p-3 rounded-xl border border-zinc-800 bg-zinc-900 text-center">
-                        <div class="relative">
-                            <span class="absolute -top-1 -left-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border"
-                                :class="idx === 0 ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' : idx === 1 ? 'bg-zinc-500/20 text-zinc-300 border-zinc-500/30' : idx === 2 ? 'bg-orange-700/20 text-orange-400 border-orange-700/30' : 'bg-zinc-800 text-zinc-500 border-zinc-700'">
-                                {{ idx + 1 }}
-                            </span>
+                <div class="flex gap-1 overflow-x-auto scrollbar-hide px-8 sm:px-12 py-2">
+                    <NuxtLink v-for="(raider, idx) in topRaiders" :key="raider.username"
+                        :to="`/${raider.username}`" target="_blank"
+                        class="flex items-end flex-shrink-0 group/raider">
+                        <!-- Grand numéro -->
+                        <span class="text-[82px] font-black leading-none select-none flex-shrink-0 w-12 text-right"
+                            :style="{
+                                WebkitTextStroke: idx === 0 ? '3px rgba(234,179,8,0.55)' : idx === 1 ? '3px rgba(161,161,170,0.45)' : idx === 2 ? '3px rgba(194,120,50,0.45)' : '3px rgba(82,82,91,0.4)',
+                                color: 'transparent'
+                            }">
+                            {{ idx + 1 }}
+                        </span>
+                        <!-- Carte qui chevauche le numéro -->
+                        <div class="-ml-2 w-[88px] flex-shrink-0 rounded-xl overflow-hidden relative ring-1 ring-zinc-800 group-hover/raider:ring-zinc-500 transition-all duration-150">
                             <img :src="raider.avatar_url || defaultAvatar"
-                                class="w-12 h-12 rounded-xl object-cover"
-                                :class="idx === 0 ? 'ring-2 ring-yellow-500/50' : 'ring-1 ring-zinc-700'" />
+                                class="w-full aspect-[2/3] object-cover object-top" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
+                            <div class="absolute bottom-0 left-0 right-0 p-2">
+                                <p class="text-[11px] font-bold text-white truncate">{{ raider.username }}</p>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="flex items-center gap-0.5 text-[10px] text-yellow-400">
+                                        <Icon name="lucide:swords" size="9" />{{ raider.raidCount }}
+                                    </span>
+                                    <span class="flex items-center gap-0.5 text-[10px] text-yellow-400">
+                                        <Icon name="lucide:coins" size="9" />{{ raider.coinsEarned }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <NuxtLink :to="`/${raider.username}`" target="_blank"
-                            class="text-sm font-semibold text-white hover:text-purple-300 truncate w-full transition-colors">
-                            {{ raider.username }}
-                        </NuxtLink>
-                        <div class="flex items-center gap-2.5 text-xs text-zinc-400">
-                            <span class="flex items-center gap-1">
-                                <Icon name="lucide:swords" size="11" class="text-yellow-400" />{{ raider.raidCount }}
-                            </span>
-                            <span class="flex items-center gap-1">
-                                <Icon name="lucide:coins" size="11" class="text-yellow-400" />{{ raider.coinsEarned }}
-                            </span>
-                        </div>
-                    </div>
+                    </NuxtLink>
                 </div>
             </section>
 
@@ -161,10 +165,10 @@
             <section v-for="row in rows" :key="row.key" :id="`discover-row-${row.key}`" class="flex flex-col gap-3">
 
                 <!-- En-tête de rangée -->
-             <div class="flex items-center gap-2.5 px-4 sm:px-6">
+                <div class="flex items-center gap-3 px-8 sm:px-12">
                     <span v-if="row.key === 'live'"
                         class="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
-                    <h2 class="text-base font-bold text-white">{{ row.label }}</h2>
+                    <h2 class="text-xl font-bold text-white">{{ row.label }}</h2>
                     <span class="text-sm text-zinc-600">{{ row.streamers.length }}</span>
                 </div>
  
@@ -178,13 +182,13 @@
                             class="absolute left-0 top-0 h-full z-10 w-14 sm:w-20 flex items-center justify-center
                                    opacity-0 group-hover/row:opacity-100 transition-opacity duration-200
                                    bg-gradient-to-r from-zinc-950 to-transparent">
-                            <Icon name="lucide:chevron-left" size="32" class="text-white/60 hover:text-white transition-colors drop-shadow-lg" />
+                            <Icon name="lucide:chevron-left" size="52" class="text-white/80 hover:scale-125 transition-transform drop-shadow-lg" />
                         </button>
                     </Transition>
  
                     <!-- Scroll container -->
                     <div :ref="(el: any) => setRowRef(row.key, el)"
-                        class="flex gap-3 overflow-x-auto scrollbar-hide px-4 sm:px-6 pb-2">
+                        class="flex gap-3 overflow-x-auto scrollbar-hide px-8 sm:px-12 pb-2">
                         <template v-if="row.key === 'live'">
                             <div v-for="s in row.streamers" :key="s.username" class="flex-shrink-0 w-72 sm:w-80">
                                 <StreamerCardFeatured :streamer="s" />
@@ -204,7 +208,7 @@
                             class="absolute right-0 top-0 h-full z-10 w-14 sm:w-20 flex items-center justify-center
                                    opacity-0 group-hover/row:opacity-100 transition-opacity duration-200
                                    bg-gradient-to-l from-zinc-950 to-transparent">
-                            <Icon name="lucide:chevron-right" size="32" class="text-white/60 hover:text-white transition-colors drop-shadow-lg" />
+                            <Icon name="lucide:chevron-right" size="52" class="text-white/80 hover:scale-125 transition-transform drop-shadow-lg" />
                         </button>
                     </Transition>
  
