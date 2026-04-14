@@ -1,83 +1,78 @@
 <template>
-    <div class="relative w-full">
-        <div class="flex flex-col gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900">
+    <div class="relative w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 flex flex-col">
 
-            <div class="flex items-center gap-4">
-
-                <!-- Badge "À découvrir" -->
-                <span v-if="categoryBadge"
-                    class="absolute top-3 right-3 flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-md font-medium border"
-                    :class="categoryBadgeClass">
-                    <Icon :name="categoryBadgeIcon" size="10" /> {{ categoryBadge }}
-                </span>
-
-                <!-- Avatar -->
-                <div class="relative flex-shrink-0">
-                    <img :src="streamer.avatar_url || defaultAvatar" class="w-14 h-14 object-cover rounded-xl"
-                        :class="isLive ? 'ring-2 ring-red-500/70' : 'ring-1 ring-zinc-700/80'"
-                        :alt="streamer.username" />
-                    <span v-if="isLive"
-                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded leading-none uppercase tracking-widest whitespace-nowrap">
-                        <span class="w-1 h-1 rounded-full bg-white animate-pulse flex-shrink-0" />
-                        live
-                    </span>
-                </div>
-
-                <!-- Infos -->
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 min-w-0">
-                        <span class="font-semibold text-white truncate text-sm sm:text-base">
-                            {{ streamer.username }}
-                        </span>
-                        <img v-if="streamer?.language && streamer.language !== 'OTHER'"
-                            :src="`https://flagcdn.com/w80/${getFlag(streamer.language)}.png`"
-                            class="w-4 h-[11px] object-cover rounded-xs opacity-90 flex-shrink-0" />
-                        <Icon v-else-if="streamer?.language === 'OTHER'" name="lucide:globe" size="13"
-                            class="opacity-40 flex-shrink-0" />
-                    </div>
-                    <div class="flex items-center mt-1 gap-2 min-w-0">
-                        <img v-if="gameCover" :src="gameCover" :alt="gameLabel"
-                            class="w-6 h-8 rounded object-cover border border-zinc-700/50 flex-shrink-0" />
-                        <div class="flex flex-col min-w-0">
-                            <div class="flex items-center gap-1.5">
-                                <span class="text-[13px] text-zinc-300 font-medium truncate">
-                                    {{ gameLabel || '—' }}
-                                </span>
-                                <span v-if="isLive && twitchViewerCount !== null"
-                                    class="flex items-center gap-1 text-zinc-500 flex-shrink-0 text-[11px]">
-                                    <Icon name="lucide:eye" size="12" />{{ twitchViewerCount }}
-                                </span>
-                            </div>
-                            <span class="text-[12px] text-zinc-500">{{ whenLabel }}</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Thumbnail hero -->
+        <div class="relative w-full" style="aspect-ratio: 16/9">
+            <img v-if="thumbnailUrl" :src="thumbnailUrl" class="w-full h-full object-cover" :alt="streamer.username" />
+            <div v-else class="w-full h-full bg-zinc-800 flex items-center justify-center">
+                <Icon name="simple-icons:twitch" size="32" class="text-zinc-600" />
             </div>
-
-            <!-- 2 CTA -->
-            <div class="flex gap-2">
-                <NuxtLink :to="`/${streamer.username}`" target="_blank"
-                    class="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md border border-zinc-700/60 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white text-sm font-medium transition-all duration-150">
-                    <Icon name="lucide:user" size="16" />
-                    <span>Profil</span>
-                </NuxtLink>
-                <component :is="isLive ? 'button' : 'a'"
-                    v-bind="isLive ? {} : { href: `https://twitch.tv/${streamer.username}`, target: '_blank', rel: 'noopener noreferrer' }"
-                    @click="isLive ? showModal = true : undefined"
-                    class="flex-1 flex items-center justify-center gap-2 !px-3 !py-1.5 rounded-md border !text-sm font-medium transition-all duration-150 !bg-zinc-800 hover:!bg-zinc-700 !text-zinc-400 hover:!text-white !border-zinc-700/60 !no-underline">
-                    <Icon name="simple-icons:twitch" size="16" class="shrink-0" />
-                    <span>{{ isLive ? 'Regarder' : 'Twitch' }}</span>
-                </component>
+            <!-- Gradient -->
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/90 via-zinc-900/10 to-transparent" />
+            <!-- Live badge -->
+            <span
+                class="absolute top-2.5 left-2.5 flex items-center gap-1.5 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">
+                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                live
+            </span>
+            <!-- Viewer count -->
+            <span v-if="twitchViewerCount !== null"
+                class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md">
+                <Icon name="lucide:eye" size="12" /> {{ twitchViewerCount }}
+            </span>
+            <!-- Stream info overlay bottom -->
+            <div class="absolute bottom-0 left-0 right-0 px-3 pb-3">
+                <p v-if="streamer.nextSlot?.twitchTitle"
+                    class="text-white text-sm font-medium truncate leading-tight drop-shadow">
+                    {{ streamer.nextSlot.twitchTitle }}
+                </p>
+                <p class="text-zinc-300 text-xs truncate mt-0.5 drop-shadow">{{ gameLabel }}</p>
             </div>
         </div>
 
-        <!-- Modale player Twitch -->
+        <!-- Info row -->
+        <div class="flex items-center gap-3 px-3 pt-3 pb-1">
+            <img :src="streamer.avatar_url || defaultAvatar"
+                class="w-9 h-9 rounded-xl object-cover ring-2 ring-red-500/60 flex-shrink-0" />
+            <div class="flex items-center gap-2 min-w-0 flex-1">
+                <span class="font-semibold text-white text-sm truncate">{{ streamer.username }}</span>
+                <img v-if="flagCode" :src="`https://flagcdn.com/w80/${flagCode}.png`"
+                    class="w-4 h-[11px] object-cover rounded-xs opacity-90 flex-shrink-0" />
+            </div>
+        </div>
+
+        <!-- CTAs -->
+        <div class="flex gap-2 px-3 pb-3 pt-2">
+            <NuxtLink :to="`/${streamer.username}`" target="_blank"
+                class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-700/60 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white text-xs font-medium transition-all duration-150">
+                <Icon name="lucide:user" size="14" />
+                <span>Profil</span>
+            </NuxtLink>
+            <button @click="showModal = true"
+                class="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-700/60 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white text-xs font-medium transition-all duration-150">
+                <Icon name="simple-icons:twitch" size="14" />
+                <span>Regarder</span>
+            </button>
+            <button @click="openRaidModal" :disabled="!canRaid || raidLoading"
+                v-tooltip.bottom="{ value: raidTooltip, pt: { text: '!text-sm' } }" :class="[
+                    'flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-medium transition-all duration-150',
+                    canRaid && !raidLoading
+                        ? 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border-yellow-500/30 hover:border-yellow-500/50 cursor-pointer'
+                        : 'bg-zinc-800 text-zinc-600 border-zinc-700/40 cursor-not-allowed'
+                ]">
+                <Icon name="lucide:swords" size="14" />
+                <span>Raid</span>
+                <span class="flex items-center gap-0.5 text-[10px]" :class="canRaid ? 'text-yellow-500/70' : 'text-zinc-600'">
+                    <Icon name="lucide:coins" size="9" /> +{{ raidCoins }}
+                </span>
+            </button>
+        </div>
+
+        <!-- Twitch embed modal -->
         <Dialog v-model:visible="showModal" modal
             :style="{ width: '80vw', maxWidth: '80vw', background: '#18181b', border: '1px solid #3f3f46', borderRadius: '16px', padding: 0, overflow: 'hidden' }"
             :pt="{ header: { style: 'display:none' }, content: { style: 'padding:0; background:#18181b; border-radius:16px; overflow:hidden' } }">
             <div class="flex flex-col">
-
-                <!-- Header modale -->
                 <div
                     class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 border-b border-zinc-800 flex-shrink-0 gap-3">
                     <div class="flex items-center gap-3">
@@ -85,13 +80,10 @@
                             class="w-9 h-9 rounded-xl object-cover ring-1 ring-zinc-700" />
                         <div class="flex min-w-0 justify-between w-full">
                             <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-sm font-semibold text-white">{{ streamer.username }}</span>
-                                </div>
+                                <span class="text-sm font-semibold text-white">{{ streamer.username }}</span>
                                 <div class="flex items-center gap-2 mt-0.5">
-                                    <span class="text-xs text-zinc-400">{{ gameLabel }}{{ !isLive ? ' | ' + whenLabel :
-                                        '' }}</span>
-                                    <span v-if="isLive && twitchViewerCount !== null"
+                                    <span class="text-xs text-zinc-400">{{ gameLabel }}</span>
+                                    <span v-if="twitchViewerCount !== null"
                                         class="text-xs text-zinc-500 flex items-center gap-1">
                                         <Icon name="lucide:eye" size="12" class="ml-0.5" /> {{ twitchViewerCount }}
                                     </span>
@@ -105,13 +97,11 @@
                     </div>
                     <div class="flex flex-col sm:flex-row sm:items-center items-center gap-2">
                         <a :href="`https://twitch.tv/${streamer.username}`" target="_blank" rel="noopener noreferrer"
-                            class="w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white border border-zinc-700/60 transition-all duration-150">
-                            <Icon name="simple-icons:twitch" size="16" />
-                            Voir sur Twitch
+                            class="w-full sm:w-auto flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white border border-zinc-700/60 transition-all duration-150">
+                            <Icon name="simple-icons:twitch" size="16" /> Voir sur Twitch
                         </a>
-                        <!-- Bouton raid -->
                         <button @click="openRaidModal" :disabled="!canRaid || raidLoading" :class="[
-                            'w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium border transition-all duration-150',
+                            'w-full sm:w-auto flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium border transition-all duration-150',
                             canRaid && !raidLoading
                                 ? 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border-yellow-500/30 hover:border-yellow-500/50 cursor-pointer'
                                 : 'bg-zinc-800 text-zinc-600 border-zinc-700/40 cursor-not-allowed'
@@ -129,14 +119,11 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Player + chat -->
                 <div class="flex min-h-0">
                     <div class="flex-1 bg-black min-w-0">
-                        <div v-if="showModal" id="twitch-embed" class="w-full" style="aspect-ratio: 16/9" />
+                        <div v-if="showModal" :id="twitchEmbedId" class="w-full" style="aspect-ratio: 16/9" />
                     </div>
-                    <div class="hidden lg:block flex-shrink-0 border-l border-zinc-800"
-                        style="aspect-ratio: unset; width: 340px">
+                    <div class="hidden lg:block flex-shrink-0 border-l border-zinc-800" style="width: 340px">
                         <iframe v-if="showModal"
                             :src="`https://www.twitch.tv/embed/${streamer.username}/chat?parent=stream-link.fr&parent=www.stream-link.fr&parent=localhost&darkpopout`"
                             class="w-full h-full" style="min-height: 300px"
@@ -146,10 +133,9 @@
             </div>
         </Dialog>
 
-        <!-- Modale de confirmation raid -->
+        <!-- Raid confirm modal -->
         <Dialog v-model:visible="showRaidModal" modal :draggable="false" :style="{ width: '24rem', margin: '1rem' }">
             <template #container>
-                <!-- État post-raid dans la modale -->
                 <div v-if="raidConfirmed" class="flex flex-col gap-4 p-6">
                     <div class="flex items-center gap-3">
                         <img :src="streamer.avatar_url || defaultAvatar"
@@ -163,15 +149,13 @@
                         <div class="h-full bg-yellow-500 rounded-full transition-all duration-500"
                             :style="{ width: `${(raidCountdown / 15) * 100}%` }" />
                     </div>
-                    <p class="text-xs text-zinc-500 text-center">Tes Coins seront crédités dans
-                        {{ raidCountdown }}s</p>
+                    <p class="text-xs text-zinc-500 text-center">Tes Coins seront crédités dans {{ raidCountdown }}s</p>
                     <button @click="cancelRaid"
                         class="w-full text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
                         Annuler le raid
                     </button>
                 </div>
                 <div v-else class="flex flex-col gap-5 p-6">
-                    <!-- Header -->
                     <div class="flex items-center gap-3">
                         <img :src="streamer.avatar_url || defaultAvatar"
                             class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
@@ -180,66 +164,74 @@
                             <p class="text-xs text-zinc-400">{{ gameLabel }}</p>
                         </div>
                     </div>
-
-                    <!-- Message -->
                     <div class="flex flex-col gap-1">
                         <p class="text-sm text-white font-medium">Lancer un raid vers {{ streamer.username }} ?</p>
-                        <p class="text-xs text-zinc-400">
-                            Tes viewers seront redirigés vers sa chaîne Twitch.
-                        </p>
+                        <p class="text-xs text-zinc-400">Tes viewers seront redirigés vers sa chaîne Twitch.</p>
                     </div>
-
-                    <!-- Récompense -->
-                    <div
-                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                    <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
                         <Icon name="lucide:coins" size="16" class="text-yellow-400 flex-shrink-0" />
                         <span class="text-xs sm:text-sm text-yellow-300 font-medium">+{{ raidCoins }} Coins</span>
                         <span class="text-xs text-zinc-500 ml-auto">{{ raidStatus.remaining }}/{{ raidStatus.total }}
-                            raids restants cette semaine</span>
+                            raids restants</span>
                     </div>
-
-                    <!-- Actions -->
                     <div class="flex gap-2">
                         <Button severity="secondary" outlined @click="showRaidModal = false" class="flex-1">
                             <Icon name="lucide:x" size="18" class="shrink-0" />
-                            <span class="text-sm sm:text-base shrink-0">Annuler</span>
+                            <span class="text-sm shrink-0">Annuler</span>
                         </Button>
                         <Button severity="contrast" @click="confirmRaid" :loading="raidLoading" class="flex-1">
                             <Icon name="lucide:swords" size="18" class="shrink-0" />
-                            <span class="text-sm sm:text-base shrink-0">Raid</span>
+                            <span class="text-sm shrink-0">Raid</span>
                         </Button>
                     </div>
                 </div>
             </template>
         </Dialog>
+
     </div>
 </template>
 
 <script setup lang="ts">
-
-const streamerStore = useStreamerStore()
-const { streamer: currentStreamer } = storeToRefs(streamerStore)
-
-const defaultAvatar =
-    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png"
+const defaultAvatar = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png"
 
 const props = defineProps({
     streamer: { type: Object, required: true }
 })
 
+const streamerStore = useStreamerStore()
+const { streamer: currentStreamer } = storeToRefs(streamerStore)
 const user = useSupabaseUser()
 const toast = useToast()
+const { raidStatus } = useRaidStatus()
+const { fetchBalance } = useWallet()
 
 const showModal = ref(false)
 const showRaidModal = ref(false)
 const raidLoading = ref(false)
+const raidConfirmed = ref(false)
+const raidCountdown = ref(15)
+const earnedCoins = ref(0)
+let countdownInterval: ReturnType<typeof setInterval> | null = null
 
-const { raidStatus } = useRaidStatus()
+const twitchEmbedId = computed(() => `twitch-embed-featured-${props.streamer.username}`)
+const twitchViewerCount = computed(() => props.streamer.nextSlot?.twitchViewerCount ?? null)
+const thumbnailUrl = computed(() => props.streamer.nextSlot?.twitchThumbnailUrl ?? null)
+const gameLabel = computed(() => props.streamer.nextSlot?.twitchGameName || props.streamer.nextSlot?.game?.label || '—')
+const flagCode = computed(() => getFlag(props.streamer.language ?? ''))
+
+// Calcul dynamique des coins gagnés en fonction du nombre de viewers
+const raidCoins = computed(() => {
+    const v = twitchViewerCount.value ?? 0
+    if (v < 5) return 7
+    if (v < 15) return 6
+    if (v < 50) return 5
+    if (v < 150) return 4
+    return 3
+})
 
 // Calcul si le raid est possible
 const canRaid = computed(() => {
     if (!user.value) return false
-    if (!isLive.value) return false
     if (!raidStatus.value.canRaidToday) return false
     if (currentStreamer.value?.username?.toLowerCase() === props.streamer.username?.toLowerCase()) return false
     if (raidStatus.value.raidedThisWeek?.includes(props.streamer.username?.toLowerCase())) return false
@@ -249,7 +241,6 @@ const canRaid = computed(() => {
 // Tooltip dynamique du bouton raid
 const raidTooltip = computed(() => {
     if (!user.value) return 'Connecte-toi pour raid'
-    if (!isLive.value) return 'Le streamer doit être en live'
     if (currentStreamer.value?.username?.toLowerCase() === props.streamer.username?.toLowerCase()) return 'Tu ne peux pas te raid toi-même'
     if (!raidStatus.value.canRaidToday) return 'Tu as déjà raid aujourd\'hui'
     if (raidStatus.value.remaining === 0) return 'Limite de raids atteinte cette semaine'
@@ -262,22 +253,13 @@ function openRaidModal() {
     showRaidModal.value = true
 }
 
-const raidConfirmed = ref(false)
-const raidCountdown = ref(15)
-const earnedCoins = ref(0)
-let countdownInterval: ReturnType<typeof setInterval> | null = null
-const { fetchBalance } = useWallet()
-
 // Appelle l'API pour confirmer le raid
 async function confirmRaid() {
     raidLoading.value = true
     try {
         const { coinsEarned } = await $fetch<{ success: boolean; coinsEarned: number; raidedViaApi: boolean }>('/api/raids/create', {
             method: 'POST',
-            body: {
-                targetUsername: props.streamer.username,
-                coinsEarned: raidCoins.value,
-            }
+            body: { targetUsername: props.streamer.username, coinsEarned: raidCoins.value }
         })
 
         raidStatus.value.remaining--
@@ -288,7 +270,7 @@ async function confirmRaid() {
         raidConfirmed.value = true
         raidCountdown.value = 15
         earnedCoins.value = coinsEarned
-        
+
         // Lance le countdown
         countdownInterval = setInterval(async () => {
             raidCountdown.value--
@@ -297,24 +279,11 @@ async function confirmRaid() {
                 showRaidModal.value = false
                 raidConfirmed.value = false
                 await fetchBalance()
-                toast.add({
-                    severity: 'secondary',
-                    summary: 'Raid lancé !',
-                    detail: `${earnedCoins.value}`,
-                    group: 'quest',
-                    life: 4000
-                })
+                toast.add({ severity: 'secondary', summary: 'Raid lancé !', detail: `${earnedCoins.value}`, group: 'quest', life: 4000 })
             }
         }, 1000)
-
     } catch (err: any) {
-        toast.add({
-            severity: 'warn',
-            summary: 'Raid impossible',
-            detail: err?.data?.message ?? 'Une erreur est survenue',
-            group: 'app',
-            life: 4000,
-        })
+        toast.add({ severity: 'warn', summary: 'Raid impossible', detail: err?.data?.message ?? 'Une erreur est survenue', group: 'app', life: 4000 })
     } finally {
         raidLoading.value = false
     }
@@ -324,13 +293,10 @@ async function confirmRaid() {
 async function cancelRaid() {
     clearInterval(countdownInterval!)
     await $fetch('/api/raids/cancel', { method: 'POST' }).catch(() => { })
-
-    // Remet les compteurs à jour
     raidStatus.value.remaining++
     raidStatus.value.used--
     raidStatus.value.canRaidToday = true
     raidStatus.value.raidedThisWeek = raidStatus.value.raidedThisWeek?.filter(u => u !== props.streamer.username.toLowerCase()) ?? []
-
     showRaidModal.value = false
     raidConfirmed.value = false
     raidCountdown.value = 15
@@ -340,15 +306,14 @@ async function cancelRaid() {
 watch(showModal, (val) => {
     if (val) {
         nextTick(() => {
-            const container = document.getElementById('twitch-embed')
+            const container = document.getElementById(twitchEmbedId.value)
             const width = container?.clientWidth || 854
             const height = Math.round(width * 9 / 16)
             const script = document.createElement('script')
             script.src = 'https://embed.twitch.tv/embed/v1.js'
             script.onload = () => {
-                new (window as any).Twitch.Embed('twitch-embed', {
-                    width,
-                    height,
+                new (window as any).Twitch.Embed(twitchEmbedId.value, {
+                    width, height,
                     channel: props.streamer.username,
                     parent: ['stream-link.fr', 'www.stream-link.fr', 'localhost'],
                     layout: 'video',
@@ -360,70 +325,4 @@ watch(showModal, (val) => {
         })
     }
 })
-
-// Computed properties pour afficher les infos du prochain stream
-const isLive = computed(() => props.streamer.nextSlot?.isLive === true)
-
-const gameLabel = computed(() => {
-    if (isLive.value && props.streamer.nextSlot?.twitchGameName) return props.streamer.nextSlot.twitchGameName
-    return props.streamer.nextSlot?.game?.label || ''
-})
-
-const gameCover = computed(() => {
-    if (isLive.value) return props.streamer.nextSlot?.twitchGameCover || null
-    return props.streamer.nextSlot?.game?.cover || null
-})
-
-const twitchViewerCount = computed(() => props.streamer.nextSlot?.twitchViewerCount ?? null)
-
-const whenLabel = computed(() => {
-    if (isLive.value) return 'En live'
-    const slot = props.streamer.nextSlot
-    if (!slot) return 'Aucun planning'
-    const time = formatTime(slot.start_at)
-    if (slot.isToday) return `Aujourd'hui · ${time}`
-    if (slot.isTomorrow) return `Demain · ${time}`
-    return `${slot.day} · ${time}`
-})
-
-// Computed properties pour le badge de catégorie basé sur le nombre de viewers
-const categoryBadge = computed(() => {
-    const v = twitchViewerCount.value
-    if (v === null) return null
-    if (v < 10) return 'À découvrir'
-    if (v < 50) return 'En montée'
-    return 'Populaire'
-})
-
-const categoryBadgeClass = computed(() => {
-    const v = twitchViewerCount.value
-    if (v === null) return ''
-    if (v < 10) return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/20'
-    if (v < 50) return 'bg-blue-500/20 text-blue-300 border-blue-500/20'
-    return 'bg-orange-500/20 text-orange-300 border-orange-500/20'
-})
-
-const categoryBadgeIcon = computed(() => {
-    const v = twitchViewerCount.value
-    if (v === null) return 'lucide:sprout'
-    if (v < 10) return 'lucide:sprout'
-    if (v < 50) return 'lucide:trending-up'
-    return 'lucide:flame'
-})
-
-// Calcul dynamique des coins gagnés en fonction du nombre de viewers
-const raidCoins = computed(() => {
-    const v = twitchViewerCount.value ?? 0
-    if (v < 5) return 7
-    if (v < 15) return 6
-    if (v < 50) return 5
-    if (v < 150) return 4
-    return 3
-})
-
-function formatTime(time: string) {
-    if (!time) return ''
-    const [h, m] = time.split(':')
-    return `${h}h${m}`
-}
 </script>
