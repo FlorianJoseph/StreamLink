@@ -99,6 +99,27 @@
                     {{ filteredStreamers.length }}
                 </span>
             </div>
+
+            <!-- Row 3 : Progression perso -->
+            <div v-if="user && raidStatus.total > 0"
+                class="flex items-center gap-3 text-xs border-t border-zinc-800/60 pt-2">
+                <!-- Barre de progression -->
+                <div class="w-20 h-1.5 bg-zinc-800 rounded-full overflow-hidden flex-shrink-0">
+                    <div class="h-full bg-yellow-500 rounded-full transition-all duration-500"
+                        :style="{ width: `${(raidStatus.used / raidStatus.total) * 100}%` }" />
+                </div>
+                <!-- Compteur -->
+                <span class="text-zinc-600 flex-shrink-0">{{ raidStatus.used }}/{{ raidStatus.total }}</span>
+                <!-- Message motivant -->
+                <span v-if="progressionMessage" :class="['flex-shrink-0', progressionMessage.color]">
+                    {{ progressionMessage.text }}
+                </span>
+                <!-- Coins -->
+                <span class="flex items-center gap-1 text-zinc-500 ml-auto flex-shrink-0">
+                    <Icon name="lucide:coins" size="11" class="text-yellow-500/60" />
+                    {{ balance }} coins
+                </span>
+            </div>
         </div>
 
         <!-- ─── Content ─── -->
@@ -129,7 +150,7 @@
             <template v-else>
 
                 <!-- ── Compatibles pour raid ── -->
-                <section v-if="raidableStreamers.length > 0" class="flex flex-col gap-3">
+                <section v-if="raidableStreamers.length > 0 && selectedFilter !== 'today' && selectedFilter !== 'future'" class="flex flex-col gap-3">
                     <div class="flex items-center justify-between px-8 sm:px-12">
                         <div class="flex items-center gap-2.5">
                             <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
@@ -202,7 +223,7 @@
                 </section>
 
                 <!-- Top Raiders -->
-                <section v-if="topRaiders.length > 0" class="flex flex-col gap-3">
+                <section v-if="topRaiders.length > 0 && selectedFilter !== 'today' && selectedFilter !== 'future'" class="flex flex-col gap-3">
                     <div class="flex flex-col px-8 sm:px-12">
                         <div class="flex items-center gap-3">
                             <Icon name="lucide:trophy" size="18" class="text-yellow-400" />
@@ -665,6 +686,17 @@ function scrollRow(key: string, dir: 'left' | 'right') {
     el.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' })
 }
 
+// ─── Progression perso ────────────────────────────────────────────────────────
+const progressionMessage = computed(() => {
+    const { used, remaining, total, canRaidToday } = raidStatus.value
+    if (!total) return null
+    if (used === 0)       return { text: 'Lance ton 1er raid et gagne des coins',       color: 'text-yellow-500/80' }
+    if (remaining === 1)  return { text: 'Plus qu\'1 raid pour compléter ta semaine !', color: 'text-yellow-400' }
+    if (remaining === 0)  return { text: 'Semaine complète, reviens lundi !',          color: 'text-emerald-400' }
+    if (!canRaidToday)    return { text: `${used}/${total} · Reviens demain pour continuer`, color: 'text-zinc-400' }
+    return { text: `Encore ${remaining} raid${remaining > 1 ? 's' : ''} disponible${remaining > 1 ? 's' : ''} cette semaine`, color: 'text-zinc-400' }
+})
+
 // ─── Raids today (social proof) ───────────────────────────────────────────────
 const raidsTodayCount = ref(0)
 
@@ -698,7 +730,7 @@ function raidCoinsFor(s: any) {
     if (v < 150) return 4
     return 3
 }
-const { fetchBalance } = useWallet()
+const { balance, fetchBalance } = useWallet()
 const toast = useToast()
 
 const raidAssistantOpen = ref(false)
@@ -840,6 +872,7 @@ onMounted(async () => {
         fetchTopRaiders(),
         fetchRaidsTodayCount(),
         user.value ? fetchStatus() : Promise.resolve(),
+        user.value ? fetchBalance() : Promise.resolve(),
     ])
 })
 </script>
