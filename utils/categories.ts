@@ -1,13 +1,11 @@
 export const CATEGORIES = [
-    // Non-gaming
-    'ASMR', 'Art', 'Créatif', 'Cuisine', 'Divertissement',
-    'Éducatif', 'Fitness', 'High-Tech', 'Humour', 'IRL',
-    'Instruments', 'Just Chatting', 'Lifestyle', 'Musique', 'Podcast',
-    'Science', 'Sports',
+    // Non-gaming (méta-catégories)
+    'IRL',          // Just Chatting, IRL, ASMR, Sports, Science, Bien-être, Humour, Podcast
+    'Créatif',      // Art, Développement, Cuisine, Musique, DJ/Instruments
     // Gaming genres
-    'FPS', 'Battle Royale', 'Survie', 'Horreur', 'RPG',
-    'MOBA', 'Stratégie', 'Simulation', 'MMO', 'Retro',
-    'Combat', 'Aventure', 'Party Games', 'Sport & Course', 'Gaming',
+    'Aventure', 'Battle Royale', 'FPS', 'Horreur', 'MMO',
+    'RPG', 'Simulation', 'Survie',
+    'Combat', 'Divertissement', 'Gaming', 'MOBA', 'Party Games', 'Retro', 'Sport & Course', 'Stratégie',
 ] as const
 
 export type Category = typeof CATEGORIES[number]
@@ -20,48 +18,39 @@ export type Category = typeof CATEGORIES[number]
  */
 const RULES: { match: string | RegExp; category: Category }[] = [
 
-    // ── IRL / Talk ──────────────────────────────────────────────────────────
-    { match: 'just chatting',               category: 'Just Chatting' },
+    // ── IRL (Just Chatting, IRL, ASMR, Sports, Science, Bien-être, Humour, Podcast) ──
+    { match: 'just chatting',               category: 'IRL' },
     { match: /\birl\b/,                     category: 'IRL' },
     { match: 'travel & outdoors',           category: 'IRL' },
-    { match: 'talk shows',                  category: 'Podcast' },
-    { match: 'podcast',                     category: 'Podcast' },
+    { match: 'talk shows',                  category: 'IRL' },
+    { match: 'podcast',                     category: 'IRL' },
+    { match: 'asmr',                        category: 'IRL' },
+    { match: 'fitness & health',            category: 'IRL' },
+    { match: 'yoga',                        category: 'IRL' },
+    { match: 'meditation',                  category: 'IRL' },
+    { match: 'science & technology',        category: 'IRL' },
+    { match: /\bsport(?! )/,               category: 'IRL' },
+    { match: 'chess',                       category: 'IRL' },
+    { match: /humour|comedy|humor/,         category: 'IRL' },
 
-    // ── Bien-être / ASMR ────────────────────────────────────────────────────
-    { match: 'asmr',                        category: 'ASMR' },
-    { match: 'fitness & health',            category: 'Fitness' },
-    { match: 'yoga',                        category: 'Fitness' },
-    { match: 'meditation',                  category: 'Lifestyle' },
-
-    // ── Musique ─────────────────────────────────────────────────────────────
-    { match: /music|performing arts/,       category: 'Musique' },
-    { match: /karaok|singing/,              category: 'Musique' },
-    { match: 'instruments',                 category: 'Instruments' },
-    { match: 'guitar',                      category: 'Instruments' },
-    { match: 'piano',                       category: 'Instruments' },
-
-    // ── Art / Créatif ────────────────────────────────────────────────────────
-    { match: /^art$/,                       category: 'Art' },
-    { match: 'drawing',                     category: 'Art' },
-    { match: 'painting',                    category: 'Art' },
-    { match: /\bcraft\b|créat/,             category: 'Créatif' },
-    { match: 'makers & crafting',           category: 'Créatif' },
-    { match: 'diy',                         category: 'Créatif' },
-
-    // ── Cuisine ─────────────────────────────────────────────────────────────
-    { match: /food|cook|cuisine/,           category: 'Cuisine' },
-
-    // ── Science / Tech ───────────────────────────────────────────────────────
-    { match: 'science & technology',        category: 'Science' },
-    { match: /programming|coding|dev/,      category: 'High-Tech' },
-    { match: 'software',                    category: 'High-Tech' },
-    { match: /crypto|blockchain/,           category: 'High-Tech' },
-    { match: /\bia\b|artificial intel/,     category: 'High-Tech' },
-
-    // ── Sport (non-jeu vidéo) ────────────────────────────────────────────────
-    { match: /\bsport(?! )/,                category: 'Sports' },
-    { match: 'chess',                       category: 'Sports' },
-    { match: /humour|comedy|humor/,         category: 'Humour' },
+    // ── Créatif (Art, Développement, Cuisine, Musique, DJ/Instruments) ──────
+    { match: /music|performing arts/,       category: 'Créatif' },
+    { match: /karaok|singing/,             category: 'Créatif' },
+    { match: /\bdj\b/,                     category: 'Créatif' },
+    { match: 'instruments',                category: 'Créatif' },
+    { match: 'guitar',                     category: 'Créatif' },
+    { match: 'piano',                      category: 'Créatif' },
+    { match: /^art$/,                      category: 'Créatif' },
+    { match: 'drawing',                    category: 'Créatif' },
+    { match: 'painting',                   category: 'Créatif' },
+    { match: /\bcraft\b|créat/,            category: 'Créatif' },
+    { match: 'makers & crafting',          category: 'Créatif' },
+    { match: 'diy',                        category: 'Créatif' },
+    { match: /food|cook|cuisine/,          category: 'Créatif' },
+    { match: /programming|coding|dev/,     category: 'Créatif' },
+    { match: 'software',                   category: 'Créatif' },
+    { match: /crypto|blockchain/,          category: 'Créatif' },
+    { match: /\bia\b|artificial intel/,    category: 'Créatif' },
 
     // ════════════════════════════════════════════════════════════════════════
     // GAMING — fallback pour les jeux dont les tags IGDB sont incomplets

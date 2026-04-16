@@ -17,7 +17,7 @@
                     <InputIcon>
                         <Icon name="lucide:search" size="16" class="text-gray-400" />
                     </InputIcon>
-                    <InputText v-model="search" placeholder="Rechercher par nom" fluid size="small"
+                    <InputText v-model="search" placeholder="Rechercher un streamer ou jeu..." fluid size="small"
                         style="--p-inputtext-focus-border-color: #ffffff" />
                 </IconField>
                 <Select v-model="selectedLanguage" :options="languageOptions" optionLabel="label" optionValue="value"
@@ -92,7 +92,9 @@
 
                 <!-- Compteur -->
                 <span class="hidden sm:block text-xs text-zinc-500 whitespace-nowrap flex-shrink-0">
-                    {{ filteredStreamers.length }}
+                    {{ selectedCategory ? categoryStreamers.length : filteredStreamers.length }}
+                    streamer{{ selectedCategory ? categoryStreamers.length > 1 ? 's' : '' :
+                        filteredStreamers.length > 1 ? 's' : '' }}
                 </span>
             </div>
 
@@ -121,8 +123,32 @@
         <!-- ─── Content ─── -->
         <div class="py-6 flex flex-col gap-10">
 
+            <!-- ─── Vue catégorie ─── -->
+            <div v-if="selectedCategory" class="flex flex-col gap-6">
+                <!-- Header -->
+                <div class="px-8 sm:px-12 flex items-center gap-3">
+                    <h2 class="text-2xl font-bold text-white">{{ selectedCategory }}</h2>
+                    <span v-if="search" class="flex items-center gap-1.5 text-xs text-zinc-400">
+                        + recherche "<span class="text-white">{{ search }}</span>"
+                        <button @click="search = ''"
+                            class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
+                            <Icon name="lucide:x" size="10" />Effacer la recherche
+                        </button>
+                    </span>
+                </div>
+                <!-- Grille -->
+                <div v-if="categoryStreamers.length > 0"
+                    class="px-8 sm:px-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                    <StreamerCard v-for="s in categoryStreamers" :key="s.username" :streamer="s" />
+                </div>
+                <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
+                    <Icon name="lucide:search-x" size="48" class="text-zinc-700" />
+                    <p class="text-sm text-zinc-500">Aucun résultat{{ search ? ` pour "${search}"` : '' }}</p>
+                </div>
+            </div>
+
             <!-- ─── Vue recherche ─── -->
-            <div v-if="search" class="px-8 sm:px-12 flex flex-col gap-4">
+            <div v-else-if="search" class="px-8 sm:px-12 flex flex-col gap-4">
                 <div class="flex items-center gap-2 flex-wrap">
                     <p class="text-xs text-zinc-500">{{ filteredStreamers.length }}
                         résultat{{ filteredStreamers.length > 1 ? 's' : '' }} pour "{{ search }}"</p>
@@ -148,7 +174,9 @@
             <!-- ─── Vue live (grille flat) ─── -->
             <div v-else-if="selectedFilter === 'live'" class="px-8 sm:px-12 flex flex-col gap-4">
                 <div class="flex items-center justify-between">
-                    <p class="text-xs text-zinc-500">{{ filteredStreamers.length }} live{{ filteredStreamers.length > 1 ? 's' : '' }}</p>
+                    <p class="text-xs text-zinc-500">{{ filteredStreamers.length }} live{{ filteredStreamers.length > 1
+                        ? 's' :
+                        '' }}</p>
                     <button @click="liveSort = liveSort === 'desc' ? 'asc' : 'desc'"
                         class="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
                         <Icon name="lucide:eye" size="11" />
@@ -166,29 +194,8 @@
                 </div>
             </div>
 
-            <!-- ─── Vue catégorie ─── -->
-            <div v-else-if="selectedCategory" class="flex flex-col gap-6">
-                <!-- Header -->
-                <div class="px-8 sm:px-12 flex items-center gap-4">
-                    <button @click="clearCategory"
-                        class="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150 flex-shrink-0">
-                        <Icon name="lucide:arrow-left" size="18" />
-                    </button>
-                    <h2 class="text-2xl font-bold text-white">{{ selectedCategory }}</h2>
-                </div>
-                <!-- Grille -->
-                <div v-if="categoryStreamers.length > 0"
-                    class="px-8 sm:px-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                    <StreamerCard v-for="s in categoryStreamers" :key="s.username" :streamer="s" />
-                </div>
-                <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
-                    <Icon name="lucide:search-x" size="48" class="text-zinc-700" />
-                    <p class="text-sm text-zinc-500">Aucun streamer dans cette catégorie</p>
-                </div>
-            </div>
-
             <!-- ─── Vue principale (rangées) ─── -->
-            <template v-else-if="!search">
+            <template v-else>
 
                 <!-- ── Compatibles pour raid ── -->
                 <section
@@ -380,7 +387,7 @@
                             </div>
 
                             <!-- Tile "Voir tout" -->
-                            <div v-if="rowHasMore(row)" @click="goToCategory(row.label)"
+                            <div v-if="rowHasMore(row)" @click="row.key === 'live' ? selectFilter('live') : goToCategory(row.label)"
                                 class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 group/expand"
                                 :style="{ minHeight: '220px' }">
                                 <div class="flex flex-row items-center gap-1">
@@ -569,6 +576,7 @@ const filters = [
 const activeFilter = computed(() => selectedCategory.value ?? selectedFilter.value)
 
 function selectFilter(key: string) {
+    search.value = ''
     clearCategory()
     selectedFilter.value = key
 }
@@ -583,6 +591,8 @@ function selectGenre(cat: string) {
 }
 
 const GENRE_ICONS: Record<string, string> = {
+    'IRL': 'lucide:mic',
+    'Créatif': 'lucide:palette',
     'Aventure': 'lucide:swords',
     'Battle Royale': 'lucide:target',
     'FPS': 'lucide:crosshair',
@@ -598,11 +608,13 @@ function genreIcon(cat: string) {
 
 // ─── Catégorie d'un streamer (IGDB en priorité, regex en fallback) ────────────
 function streamerCategory(s: any): string | null {
-    // 1. Catégorie IGDB enrichie côté serveur (live uniquement)
-    if (s.nextSlot?.twitchGameCategory) return s.nextSlot.twitchGameCategory
-    // 2. Catégorie dérivée du jeu planifié (non-live)
     const gameName = s.nextSlot?.twitchGameName ?? s.nextSlot?.game?.label ?? null
-    return getGameCategory(gameName)
+    // IRL et Créatif sont prioritaires sur IGDB (évite les faux matchs gaming)
+    const regexCat = getGameCategory(gameName)
+    if (regexCat === 'IRL' || regexCat === 'Créatif') return regexCat
+    // Pour le gaming, IGDB est prioritaire (plus précis que la regex)
+    if (s.nextSlot?.twitchGameCategory) return s.nextSlot.twitchGameCategory
+    return regexCat
 }
 
 // ─── Filtrage ─────────────────────────────────────────────────────────────────
@@ -613,7 +625,11 @@ const filteredStreamers = computed(() => {
         if (selectedFilter.value === 'today' && (!s.nextSlot || s.nextSlot.slotDate?.getDay() !== today || s.nextSlot.isLive)) return false
         if (selectedFilter.value === 'future' && (!s.nextSlot || s.nextSlot.isLive || s.nextSlot.slotDate?.getDay() === today)) return false
         if (selectedLanguage.value && s.language !== selectedLanguage.value) return false
-        if (search.value && !s.username.toLowerCase().includes(search.value.toLowerCase())) return false
+        if (search.value) {
+            const q = search.value.toLowerCase()
+            const gameName = (s.nextSlot?.twitchGameName ?? s.nextSlot?.game?.label ?? '').toLowerCase()
+            if (!s.username.toLowerCase().includes(q) && !gameName.includes(q)) return false
+        }
         return true
     })
 })
@@ -630,7 +646,7 @@ const sortedLiveStreamers = computed(() =>
 )
 
 // Catégories affichées sur la page d'accueil (dans cet ordre)
-const HOME_CATEGORIES = ['Aventure', 'Battle Royale', 'FPS', 'Horreur', 'MMO', 'RPG', 'Simulation', 'Survie'] as const
+const HOME_CATEGORIES = ['IRL', 'Créatif', 'Aventure', 'Battle Royale', 'FPS', 'Horreur', 'MMO', 'RPG', 'Simulation', 'Survie'] as const
 
 // ─── Rangées Netflix ──────────────────────────────────────────────────────────
 const rows = computed(() => {
