@@ -40,15 +40,15 @@
                         Voir sur Twitch
                     </a>
                     <button @click="triggerRaidFromPlayer" :disabled="!playerCanRaid" :class="[
-                        'w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium border transition-all duration-150',
+                        'w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-150',
                         playerCanRaid
-                            ? 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border-yellow-500/30 hover:border-yellow-500/50 cursor-pointer'
-                            : 'bg-zinc-800 text-zinc-600 border-zinc-700/40 cursor-not-allowed'
+                            ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
+                            : 'bg-zinc-800 text-zinc-600 border border-zinc-700/40 cursor-not-allowed'
                     ]">
                         <Icon name="lucide:swords" size="16" />
                         Lancer un raid
-                        <span class="flex items-center gap-0.5 text-[10px] ml-1"
-                            :class="playerCanRaid ? 'text-yellow-500/70' : 'text-zinc-600'">
+                        <span class="flex items-center gap-0.5 text-[10px]"
+                            :class="playerCanRaid ? 'text-zinc-500' : 'text-zinc-600'">
                             <Icon name="lucide:coins" size="10" /> +{{ playerRaidCoins }}
                         </span>
                     </button>
@@ -124,14 +124,17 @@
                         raids restants cette semaine</span>
                 </div>
                 <div class="flex gap-2">
-                    <Button severity="secondary" outlined @click="closeRaid()" class="flex-1">
-                        <Icon name="lucide:x" size="20" class="shrink-0" />
-                        <span class="text-sm sm:text-base shrink-0">Annuler</span>
-                    </Button>
-                    <Button severity="contrast" @click="confirmRaid" :loading="raidModal.loading" class="flex-1">
-                        <Icon name="lucide:swords" size="20" class="shrink-0" />
-                        <span class="text-sm sm:text-base shrink-0">Raid</span>
-                    </Button>
+                    <button @click="closeRaid()"
+                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150">
+                        <Icon name="lucide:x" size="16" class="flex-shrink-0" />
+                        Annuler
+                    </button>
+                    <button @click="confirmRaid" :disabled="raidModal.loading"
+                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-white hover:bg-zinc-200 text-zinc-900 font-bold text-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <Icon v-if="!raidModal.loading" name="lucide:swords" size="16" class="flex-shrink-0" />
+                        <Icon v-else name="lucide:loader-circle" size="16" class="flex-shrink-0 animate-spin" />
+                        Raid
+                    </button>
                 </div>
             </div>
 

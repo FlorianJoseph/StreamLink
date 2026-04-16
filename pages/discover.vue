@@ -128,7 +128,8 @@
             <!-- ─── Vue recherche ─── -->
             <div v-if="search" class="px-8 sm:px-12 flex flex-col gap-4">
                 <div class="flex items-center gap-2 flex-wrap">
-                    <p class="text-xs text-zinc-500">{{ filteredStreamers.length }} résultat{{ filteredStreamers.length > 1 ? 's' : '' }} pour "{{ search }}"</p>
+                    <p class="text-xs text-zinc-500">{{ filteredStreamers.length }}
+                        résultat{{ filteredStreamers.length > 1 ? 's' : '' }} pour "{{ search }}"</p>
                     <button @click="search = ''"
                         class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
                         <Icon name="lucide:x" size="10" />Effacer la recherche
@@ -173,19 +174,25 @@
             <template v-else-if="!search">
 
                 <!-- ── Compatibles pour raid ── -->
-                <section v-if="raidableStreamers.length > 0 && selectedFilter !== 'today' && selectedFilter !== 'future'" class="flex flex-col gap-3">
+                <section
+                    v-if="raidableStreamers.length > 0 && selectedFilter !== 'today' && selectedFilter !== 'future'"
+                    class="flex flex-col gap-3">
                     <div class="flex items-center justify-between px-8 sm:px-12">
                         <div class="flex items-center gap-2.5">
                             <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
                             <h2 class="text-xl font-bold text-white">Parfaits pour raid</h2>
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/15 text-yellow-400 border border-yellow-500/25 font-medium">
-                                {{ raidableStreamers.length }} streamers compatible{{ raidableStreamers.length > 1 ? 's' : '' }}
+                            <span
+                                class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/15 text-yellow-400 border border-yellow-500/25 font-medium">
+                                {{ raidableStreamers.length }} streamers compatible{{ raidableStreamers.length > 1 ? 's'
+                                    : '' }}
                             </span>
                             <span v-if="raidsTodayCount > 0" class="text-xs text-zinc-500">
                                 Déjà {{ raidsTodayCount }} raid{{ raidsTodayCount > 1 ? 's' : '' }} aujourd'hui
                             </span>
                         </div>
-                        <span class="text-xs text-zinc-500">{{ raidStatus.remaining }}/{{ raidStatus.total }} raids restants</span>
+                        <span class="text-xs text-zinc-500">
+                            {{ raidStatus.remaining }}/{{ raidStatus.total }} raids restants
+                        </span>
                     </div>
                     <div class="relative group/row">
 
@@ -193,8 +200,10 @@
                         <Transition name="fade-arrow">
                             <button v-if="rowScrollState['raidable']?.canLeft" @click="scrollRow('raidable', 'left')"
                                 class="absolute left-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
-                                <span class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45 transition-colors">
-                                    <Icon name="lucide:chevron-left" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
+                                <span
+                                    class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45 transition-colors">
+                                    <Icon name="lucide:chevron-left" size="52"
+                                        class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                                 </span>
                             </button>
                         </Transition>
@@ -212,11 +221,13 @@
                                             class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
                                         <div v-else class="absolute inset-0 bg-zinc-800" />
                                         <!-- Coins badge -->
-                                        <div class="absolute top-2 right-2 flex items-center gap-1 bg-yellow-500 text-zinc-900 text-[11px] font-bold px-1.5 py-0.5 rounded-md">
+                                        <div
+                                            class="absolute top-2 right-2 flex items-center gap-1 bg-yellow-500 text-zinc-900 text-[11px] font-bold px-1.5 py-0.5 rounded-md">
                                             <Icon name="lucide:coins" size="10" />+{{ raidCoinsFor(s) }}
                                         </div>
                                         <!-- Viewers -->
-                                        <div class="absolute bottom-2 left-2 flex items-center gap-1 bg-zinc-900/75 text-zinc-300 text-[11px] px-1.5 py-0.5 rounded">
+                                        <div
+                                            class="absolute bottom-2 left-2 flex items-center gap-1 bg-zinc-900/75 text-zinc-300 text-[11px] px-1.5 py-0.5 rounded">
                                             <Icon name="lucide:eye" size="10" />{{ s.nextSlot?.twitchViewerCount ?? 0 }}
                                         </div>
                                     </div>
@@ -226,7 +237,9 @@
                                             class="w-7 h-7 rounded-full object-cover flex-shrink-0 ring-1 ring-zinc-700" />
                                         <div class="min-w-0">
                                             <p class="text-xs font-semibold text-white truncate">{{ s.username }}</p>
-                                            <p class="text-[10px] text-zinc-500 truncate">{{ s.nextSlot?.twitchGameName || '—' }}</p>
+                                            <p class="text-[10px] text-zinc-500 truncate">
+                                                {{ s.nextSlot?.twitchGameName || '—' }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -237,8 +250,10 @@
                         <Transition name="fade-arrow">
                             <button v-if="rowScrollState['raidable']?.canRight" @click="scrollRow('raidable', 'right')"
                                 class="absolute right-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
-                                <span class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65 transition-colors">
-                                    <Icon name="lucide:chevron-right" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
+                                <span
+                                    class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65 transition-colors">
+                                    <Icon name="lucide:chevron-right" size="52"
+                                        class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                                 </span>
                             </button>
                         </Transition>
@@ -246,7 +261,8 @@
                 </section>
 
                 <!-- Top Raiders -->
-                <section v-if="topRaiders.length > 0 && selectedFilter !== 'today' && selectedFilter !== 'future'" class="flex flex-col gap-3">
+                <section v-if="topRaiders.length > 0 && selectedFilter !== 'today' && selectedFilter !== 'future'"
+                    class="flex flex-col gap-3">
                     <div class="flex flex-col px-8 sm:px-12">
                         <div class="flex items-center gap-3">
                             <Icon name="lucide:trophy" size="18" class="text-yellow-400" />
@@ -350,11 +366,6 @@
                             <div v-if="rowHasMore(row)" @click="goToCategory(row.label)"
                                 class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 group/expand"
                                 :style="{ minHeight: '220px' }">
-                                <div
-                                    class="w-12 h-12 rounded-full border border-zinc-700 bg-zinc-800 group-hover/expand:border-zinc-500 group-hover/expand:bg-zinc-700 flex items-center justify-center transition-all duration-200">
-                                    <Icon name="lucide:grid-2x2-plus" size="22"
-                                        class="text-zinc-400 group-hover/expand:text-white transition-colors" />
-                                </div>
                                 <div class="flex flex-row items-center gap-1">
                                     <p class="text-sm font-semibold text-white">Voir tout</p>
                                     <Icon name="lucide:chevron-right" size="16"
@@ -423,7 +434,9 @@
                         class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
                     <div>
                         <p class="font-semibold text-white text-sm">{{ selectedSuggestion?.username }}</p>
-                        <p class="text-xs text-zinc-400">{{ selectedSuggestion?.nextSlot?.twitchGameName || selectedSuggestion?.nextSlot?.game?.label || '—' }}</p>
+                        <p class="text-xs text-zinc-400">{{ selectedSuggestion?.nextSlot?.twitchGameName ||
+                            selectedSuggestion?.nextSlot?.game?.label || '—' }}
+                        </p>
                     </div>
                 </div>
                 <div class="flex flex-col gap-1">
@@ -503,7 +516,9 @@
                     </div>
                 </div>
                 <div class="px-5 py-3 border-t border-zinc-800">
-                    <p class="text-xs text-zinc-600 text-center">Même langue/contenu, moins de viewers = plus de coins</p>
+                    <p class="text-xs text-zinc-600 text-center">
+                        Même langue/contenu, moins de viewers = plus de coins
+                    </p>
                 </div>
             </div>
 
@@ -551,14 +566,14 @@ function selectGenre(cat: string) {
 }
 
 const GENRE_ICONS: Record<string, string> = {
-    'Aventure':     'lucide:swords',
-    'Battle Royale':'lucide:target',
-    'FPS':          'lucide:crosshair',
-    'Horreur':      'lucide:skull',
-    'MMO':          'lucide:globe',
-    'RPG':          'lucide:sparkles',
-    'Simulation':   'lucide:settings-2',
-    'Survie':       'lucide:tent',
+    'Aventure': 'lucide:swords',
+    'Battle Royale': 'lucide:target',
+    'FPS': 'lucide:crosshair',
+    'Horreur': 'lucide:skull',
+    'MMO': 'lucide:globe',
+    'RPG': 'lucide:sparkles',
+    'Simulation': 'lucide:settings-2',
+    'Survie': 'lucide:tent',
 }
 function genreIcon(cat: string) {
     return GENRE_ICONS[cat] ?? 'lucide:gamepad-2'
@@ -711,10 +726,10 @@ function scrollRow(key: string, dir: 'left' | 'right') {
 const progressionMessage = computed(() => {
     const { used, remaining, total, canRaidToday } = raidStatus.value
     if (!total) return null
-    if (used === 0)       return { text: 'Lance ton 1er raid et gagne des coins',       color: 'text-yellow-500/80' }
-    if (remaining === 1)  return { text: 'Plus qu\'1 raid pour compléter ta semaine !', color: 'text-yellow-400' }
-    if (remaining === 0)  return { text: 'Semaine complète, reviens lundi !',          color: 'text-emerald-400' }
-    if (!canRaidToday)    return { text: `${used}/${total} · Reviens demain pour continuer`, color: 'text-zinc-400' }
+    if (used === 0) return { text: 'Lance ton 1er raid et gagne des coins', color: 'text-yellow-500/80' }
+    if (remaining === 1) return { text: 'Plus qu\'1 raid pour compléter ta semaine !', color: 'text-yellow-400' }
+    if (remaining === 0) return { text: 'Semaine complète, reviens lundi !', color: 'text-emerald-400' }
+    if (!canRaidToday) return { text: `${used}/${total} · Reviens demain pour continuer`, color: 'text-zinc-400' }
     return { text: `Encore ${remaining} raid${remaining > 1 ? 's' : ''} disponible${remaining > 1 ? 's' : ''} cette semaine`, color: 'text-zinc-400' }
 })
 
