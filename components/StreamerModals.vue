@@ -9,7 +9,7 @@
             <div
                 class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 border-b border-zinc-800 flex-shrink-0 gap-3">
                 <div class="flex items-center gap-3">
-                    <img :src="playerModal.streamer?.avatar_url || defaultAvatar"
+                    <img :src="avatarUrl(playerModal.streamer?.avatar_url, 64)"
                         class="w-9 h-9 rounded-xl object-cover ring-1 ring-zinc-700" />
                     <div class="flex min-w-0 justify-between w-full">
                         <div>
@@ -82,7 +82,7 @@
             <!-- État countdown post-raid -->
             <div v-if="raidModal.confirmed" class="flex flex-col gap-4 p-6">
                 <div class="flex items-center gap-3">
-                    <img :src="raidModal.streamer?.avatar_url || defaultAvatar"
+                    <img :src="avatarUrl(raidModal.streamer?.avatar_url, 64)"
                         class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
                     <div>
                         <p class="font-semibold text-white text-sm">Raid en cours vers {{ raidModal.streamer?.username
@@ -105,7 +105,7 @@
             <!-- État confirmation -->
             <div v-else class="flex flex-col gap-5 p-6">
                 <div class="flex items-center gap-3">
-                    <img :src="raidModal.streamer?.avatar_url || defaultAvatar"
+                    <img :src="avatarUrl(raidModal.streamer?.avatar_url, 64)"
                         class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
                     <div>
                         <p class="font-semibold text-white text-sm">{{ raidModal.streamer?.username }}</p>
@@ -140,8 +140,7 @@
 </template>
 
 <script setup lang="ts">
-const defaultAvatar =
-    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png"
+import { avatarUrl } from '~/utils/avatar'
 
 const { playerModal, closePlayer } = usePlayerModal()
 const { raidModal, openRaidFor, closeRaid } = useRaidModal()

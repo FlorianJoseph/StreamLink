@@ -1,36 +1,37 @@
 <template>
     <div class="relative w-full">
-        <div class="rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 hover:border-zinc-700 transition-colors duration-200">
+        <div
+            class="rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 hover:border-zinc-700 transition-colors duration-200">
 
             <!-- ── Thumbnail 16/9 ── -->
             <div class="relative aspect-video overflow-hidden bg-zinc-800">
                 <template v-if="isLive && thumbnailUrl">
                     <!-- Vrai thumbnail Twitch en live (redimensionné) -->
-                    <img :src="thumbnailUrl"
-                        class="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy" decoding="async" />
+                    <img :src="thumbnailUrl" class="absolute inset-0 w-full h-full object-cover" loading="lazy"
+                        decoding="async" />
                     <!-- Titre du stream en overlay bas -->
-                    <div class="absolute inset-x-0 bottom-0 z-20 px-2.5 pb-2 pt-6 bg-gradient-to-t from-zinc-950 to-transparent">
-                        <p class="text-[11px] text-white font-medium leading-tight line-clamp-2">{{ streamer.nextSlot?.twitchTitle }}</p>
+                    <div
+                        class="absolute inset-x-0 bottom-0 z-20 px-2.5 pb-2 pt-6 bg-gradient-to-t from-zinc-950 to-transparent">
+                        <p class="text-[11px] text-white font-medium leading-tight line-clamp-2">{{
+                            streamer.nextSlot?.twitchTitle }}</p>
                     </div>
                 </template>
                 <template v-else>
-                    <!-- Game cover flouté en fond (offline) -->
-                    <img v-if="gameCover" :src="gameCoverSmall"
-                        class="absolute inset-0 w-full h-full object-cover scale-110 blur-sm opacity-50"
-                        loading="lazy" decoding="async" />
+                    <!-- Game cover flouté en fond (offline) : tiny = blur cache tout -->
+                    <img v-if="gameCover" :src="gameCoverTiny"
+                        class="absolute inset-0 w-full h-full object-cover scale-110 blur-sm opacity-50" loading="lazy"
+                        decoding="async" />
                     <div v-else class="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-950" />
 
-                    <!-- Avatar centré -->
+                    <!-- Jaquette centrée -->
                     <div class="relative z-10 flex items-center justify-center h-full">
-                        <img :src="streamer.avatar_url || defaultAvatar"
-                            class="w-[72px] h-[72px] rounded-2xl object-cover shadow-2xl"
-                            :class="isLive ? 'ring-2 ring-red-500' : 'ring-1 ring-zinc-600/80'"
-                            loading="lazy" decoding="async" />
-                        <!-- Mini pochette jeu -->
                         <img v-if="gameCover" :src="gameCoverSmall"
-                            class="absolute bottom-2 right-2 w-9 h-[52px] rounded object-cover border border-zinc-700/50 shadow-lg"
+                            class="h-[88px] w-[64px] rounded-lg object-fill shadow-2xl ring-1 ring-white/10"
                             loading="lazy" decoding="async" />
+                        <div v-else
+                            class="h-[88px] w-[64px] rounded-lg bg-zinc-800 flex items-center justify-center ring-1 ring-zinc-700/50">
+                            <Icon name="lucide:gamepad-2" size="28" class="text-zinc-600" />
+                        </div>
                     </div>
                     <!-- Dégradé bas -->
                     <div class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-zinc-900 to-transparent z-10" />
@@ -38,8 +39,7 @@
 
                 <!-- Badge live -->
                 <div v-if="isLive"
-                    class="absolute top-2 left-2 z-20 flex items-center gap-1.5 bg-red-600 text-white text-[11px] font-bold px-2.5 py-1 rounded uppercase tracking-widest">
-                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse flex-shrink-0" />
+                    class="absolute top-2 left-2 z-20 flex items-center bg-red-600 text-white text-[11px] font-bold px-1 py-0.5 rounded uppercase tracking-wide">
                     live
                 </div>
                 <!-- Viewers -->
@@ -60,17 +60,12 @@
 
                 <!-- Username + jeu -->
                 <div class="flex items-center gap-2.5 min-w-0">
-                    <img :src="streamer.avatar_url || defaultAvatar"
-                        class="w-8 h-8 rounded-lg object-cover flex-shrink-0 ring-1 ring-zinc-700/80"
-                        loading="lazy" decoding="async" />
+                    <img :src="avatarUrl(streamer.avatar_url, 32)"
+                        class="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-1 ring-zinc-700/80" loading="lazy"
+                        decoding="async" />
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-1.5 min-w-0">
                             <span class="font-semibold text-white text-sm truncate">{{ streamer.username }}</span>
-                            <img v-if="streamer?.language && streamer.language !== 'OTHER'"
-                                :src="`https://flagcdn.com/w80/${getFlag(streamer.language)}.png`"
-                                class="w-4 h-[11px] object-cover rounded-xs opacity-90 flex-shrink-0" />
-                            <Icon v-else-if="streamer?.language === 'OTHER'" name="lucide:globe" size="12"
-                                class="opacity-40 flex-shrink-0" />
                         </div>
                         <p class="text-xs text-zinc-500 truncate mt-0.5">
                             {{ gameLabel || '—' }}
@@ -103,17 +98,14 @@
 
                     <!-- Twitch (si offline) -->
                     <a v-if="!isLive" :href="`https://twitch.tv/${streamer.username}`" target="_blank"
-                        rel="noopener noreferrer"
-                        v-tooltip.top="{ value: 'Voir sur Twitch', pt: { text: '!text-xs' } }"
+                        rel="noopener noreferrer" v-tooltip.top="{ value: 'Voir sur Twitch', pt: { text: '!text-xs' } }"
                         class="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
                         <Icon name="simple-icons:twitch" size="20" />
                     </a>
 
                     <!-- Raid (si live) -->
-                    <button v-if="isLive" @click="openRaidFor(props.streamer)"
-                        :disabled="!canRaid"
-                        v-tooltip.top="{ value: raidTooltip, pt: { text: '!text-xs' } }"
-                        :class="['w-10 h-10 flex items-center justify-center rounded-full border transition-all duration-150',
+                    <button v-if="isLive" @click="openRaidFor(props.streamer)" :disabled="!canRaid"
+                        v-tooltip.top="{ value: raidTooltip, pt: { text: '!text-xs' } }" :class="['w-10 h-10 flex items-center justify-center rounded-full border transition-all duration-150',
                             canRaid
                                 ? 'bg-white hover:bg-zinc-200 text-zinc-900 border-white cursor-pointer'
                                 : 'bg-zinc-800 text-zinc-600 border-zinc-700/40 cursor-not-allowed']">
@@ -127,12 +119,10 @@
 
 <script setup lang="ts">
 import { getFlag } from '~/utils/language'
+import { avatarUrl } from '~/utils/avatar'
 
 const streamerStore = useStreamerStore()
 const { streamer: currentStreamer } = storeToRefs(streamerStore)
-
-const defaultAvatar =
-    "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png"
 
 const props = defineProps({
     streamer: { type: Object, required: true }
@@ -186,6 +176,14 @@ const gameCover = computed(() => {
     return props.streamer.nextSlot?.game?.cover || null
 })
 
+// Fond flouté : minuscule (blur cache tout artifact), chargement quasi-instantané
+const gameCoverTiny = computed(() => {
+    const url = gameCover.value
+    if (!url) return null
+    return url.replace(/\d+x\d+/, '40x55')
+})
+
+// Mini pochette bas-droite : un peu plus grande pour rester lisible
 const gameCoverSmall = computed(() => {
     const url = gameCover.value
     if (!url) return null

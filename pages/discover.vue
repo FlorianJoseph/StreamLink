@@ -98,6 +98,31 @@
         <!-- ─── Content ─── -->
         <div class="py-6 flex flex-col gap-10">
 
+            <!-- ─── Vue catégorie ─── -->
+            <div v-if="selectedCategory" class="flex flex-col gap-6">
+                <!-- Header -->
+                <div class="px-8 sm:px-12 flex items-center gap-4">
+                    <button @click="clearCategory"
+                        class="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150 flex-shrink-0">
+                        <Icon name="lucide:arrow-left" size="18" />
+                    </button>
+                    <h2 class="text-2xl font-bold text-white">{{ selectedCategory }}</h2>
+                    <span class="text-sm text-zinc-500">{{ categoryStreamers.length }} streamer{{ categoryStreamers.length > 1 ? 's' : '' }}</span>
+                </div>
+                <!-- Grille -->
+                <div v-if="categoryStreamers.length > 0"
+                    class="px-8 sm:px-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                    <StreamerCard v-for="s in categoryStreamers" :key="s.username" :streamer="s" />
+                </div>
+                <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
+                    <Icon name="lucide:search-x" size="48" class="text-zinc-700" />
+                    <p class="text-sm text-zinc-500">Aucun streamer dans cette catégorie</p>
+                </div>
+            </div>
+
+            <!-- ─── Vue principale (rangées) ─── -->
+            <template v-else>
+
             <!-- Top Raiders -->
             <section v-if="topRaiders.length > 0" class="flex flex-col gap-3">
                 <div class="flex items-center gap-3 px-8 sm:px-12">
@@ -118,7 +143,7 @@
                         </span>
                         <!-- Carte qui chevauche le numéro -->
                         <div class="-ml-2 w-[88px] flex-shrink-0 rounded-xl overflow-hidden relative ring-1 ring-zinc-800 group-hover/raider:ring-zinc-500 transition-all duration-150">
-                            <img :src="raider.avatar_url || defaultAvatar"
+                            <img :src="avatarUrl(raider.avatar_url, 128)"
                                 class="w-full aspect-[2/3] object-cover object-top" />
                             <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
                             <div class="absolute bottom-0 left-0 right-0 p-2">
@@ -162,61 +187,75 @@
             </div>
 
             <!-- ─── Rangées Netflix ─── -->
-            <section v-for="row in rows" :key="row.key" :id="`discover-row-${row.key}`" class="flex flex-col gap-3">
+            <section v-for="row in displayedRows" :key="row.key" :id="`discover-row-${row.key}`" class="flex flex-col gap-3">
 
                 <!-- En-tête de rangée -->
                 <div class="flex items-center gap-3 px-8 sm:px-12">
                     <span v-if="row.key === 'live'"
                         class="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
                     <h2 class="text-xl font-bold text-white">{{ row.label }}</h2>
-                    <span class="text-sm text-zinc-600">{{ row.streamers.length }}</span>
                 </div>
  
                 <!-- Cartes horizontales avec flèches overlay -->
-                <div class="relative group/row overflow-hidden">
- 
+                <div class="relative group/row">
+
                     <!-- Flèche gauche -->
                     <Transition name="fade-arrow">
                         <button v-if="rowScrollState[row.key]?.canLeft"
                             @click="scrollRow(row.key, 'left')"
-                            class="absolute left-0 top-0 bottom-2 z-10 w-12 sm:w-16 flex items-center justify-center
+                            class="absolute left-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
                                    opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
                             <span class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45 transition-colors">
                                 <Icon name="lucide:chevron-left" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                             </span>
                         </button>
                     </Transition>
- 
+
                     <!-- Scroll container -->
                     <div :ref="(el: any) => setRowRef(row.key, el)"
                         class="flex gap-3 overflow-x-auto scrollbar-hide px-8 sm:px-12 pb-2">
-                        <template v-if="row.key === 'live'">
-                            <div v-for="s in row.streamers" :key="s.username" class="flex-shrink-0 w-[312px] sm:w-[336px]">
-                                <StreamerCard :streamer="s" />
+                        <div v-for="s in rowStreamers(row)" :key="s.username"
+                            v-memo="[s.username, s.nextSlot?.isLive, s.nextSlot?.twitchViewerCount]"
+                            class="flex-shrink-0 w-[312px] sm:w-[336px]">
+                            <StreamerCard :streamer="s" />
+                        </div>
+
+                        <!-- Tile "Voir tout" -->
+                        <div v-if="rowHasMore(row)"
+                            @click="goToCategory(row.label)"
+                            class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 group/expand"
+                            :style="{ minHeight: '220px' }">
+                            <div class="w-12 h-12 rounded-full border border-zinc-700 bg-zinc-800 group-hover/expand:border-zinc-500 group-hover/expand:bg-zinc-700 flex items-center justify-center transition-all duration-200">
+                                <Icon name="lucide:grid-2x2-plus" size="22" class="text-zinc-400 group-hover/expand:text-white transition-colors" />
                             </div>
-                        </template>
-                        <template v-else>
-                            <div v-for="s in row.streamers" :key="s.username" class="flex-shrink-0 w-[312px] sm:w-[336px]">
-                                <StreamerCard :streamer="s" />
+                            <div class="text-center">
+                                <p class="text-sm font-semibold text-white">Voir tout</p>
+                                <p class="text-xs text-zinc-500 mt-0.5">{{ row.streamers.length - rowStreamers(row).length }} autres streamers</p>
                             </div>
-                        </template>
+                            <Icon name="lucide:chevron-right" size="16" class="text-zinc-600 group-hover/expand:text-zinc-400 transition-colors" />
+                        </div>
                     </div>
- 
+
                     <!-- Flèche droite -->
                     <Transition name="fade-arrow">
                         <button v-if="rowScrollState[row.key]?.canRight"
                             @click="scrollRow(row.key, 'right')"
-                            class="absolute right-0 top-0 bottom-2 z-10 w-12 sm:w-16 flex items-center justify-center
+                            class="absolute right-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
                                    opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
                             <span class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65 transition-colors">
                                 <Icon name="lucide:chevron-right" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                             </span>
                         </button>
                     </Transition>
- 
+
                 </div>
 
             </section>
+
+            <!-- Sentinel infinite scroll -->
+            <div ref="sentinelRef" class="h-4" />
+
+            </template> <!-- fin vue principale -->
         </div>
     </div>
 
@@ -227,7 +266,7 @@
 
             <div v-if="raidAssistantStep === 'countdown'" class="flex flex-col gap-4 p-6">
                 <div class="flex items-center gap-3">
-                    <img :src="selectedSuggestion?.avatar_url || defaultAvatar"
+                    <img :src="avatarUrl(selectedSuggestion?.avatar_url, 64)"
                         class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
                     <div>
                         <p class="font-semibold text-white text-sm">Raid en cours vers {{
@@ -253,7 +292,7 @@
                     <Icon name="lucide:arrow-left" size="14" /> Retour aux suggestions
                 </button>
                 <div class="flex items-center gap-3">
-                    <img :src="selectedSuggestion?.avatar_url || defaultAvatar"
+                    <img :src="avatarUrl(selectedSuggestion?.avatar_url, 64)"
                         class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
                     <div>
                         <p class="font-semibold text-white text-sm">{{ selectedSuggestion?.username }}</p>
@@ -316,7 +355,7 @@
                 <div v-else class="flex flex-col divide-y divide-zinc-800">
                     <div v-for="s in raidSuggestions" :key="s.username"
                         class="flex items-center gap-3 px-5 py-3 hover:bg-zinc-800/50 transition-colors">
-                        <img :src="s.avatar_url || defaultAvatar"
+                        <img :src="avatarUrl(s.avatar_url, 64)"
                             class="w-9 h-9 rounded-xl object-cover ring-1 ring-zinc-700 flex-shrink-0" />
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-1.5">
@@ -346,11 +385,13 @@
 
         </template>
     </Dialog>
+
 </template>
 
 <script setup lang="ts">
 import { getGameCategory } from '~/utils/categories'
 import { languageOptions, getFlag, getLabel } from '~/utils/language'
+import { avatarUrl } from '~/utils/avatar'
 
 definePageMeta({ layout: 'discover' })
 
@@ -439,6 +480,73 @@ const rows = computed(() => {
 
     return result
 })
+
+// ─── Chargement progressif des rangées ───────────────────────────────────────
+const ROWS_PER_PAGE = 3
+const ROW_PREVIEW = 6
+const visibleRowCount = ref(ROWS_PER_PAGE)
+const displayedRows = computed(() => rows.value.slice(0, visibleRowCount.value))
+const hasMoreRows = computed(() => visibleRowCount.value < rows.value.length)
+
+// Reset au changement de filtre
+watch([selectedFilter, selectedLanguage, selectedGame, search], () => {
+    visibleRowCount.value = ROWS_PER_PAGE
+})
+
+// Sentinel infinite scroll (root = <main> pour que ça marche avec overflow-y-auto)
+const sentinelRef = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+    const mainEl = document.querySelector('main')
+    const observer = new IntersectionObserver(
+        (entries) => {
+            if (entries[0].isIntersecting && hasMoreRows.value) {
+                visibleRowCount.value += ROWS_PER_PAGE
+            }
+        },
+        { root: mainEl, rootMargin: '300px' }
+    )
+    watch(sentinelRef, (el) => {
+        if (el) observer.observe(el)
+    }, { immediate: true })
+    onUnmounted(() => observer.disconnect())
+})
+
+// ─── Preview par rangée + navigation catégorie ────────────────────────────────
+const route = useRoute()
+const router = useRouter()
+
+const selectedCategory = computed(() => route.query.category as string || null)
+
+const categoryStreamers = computed(() => {
+    if (!selectedCategory.value) return []
+    return filteredStreamers.value.filter(s => {
+        const cat = streamerCategory(s)
+        if (selectedCategory.value === 'Autres') return !cat
+        return cat === selectedCategory.value
+    })
+})
+
+function goToCategory(label: string) {
+    document.querySelector('main')?.scrollTo({ top: 0, behavior: 'instant' })
+    router.push({ query: { ...route.query, category: label } })
+}
+
+function clearCategory() {
+    const q = { ...route.query }
+    delete q.category
+    router.push({ query: q })
+}
+
+function rowStreamers(row: any) {
+    const limit = row.key === 'live' ? ROW_PREVIEW + 2 : ROW_PREVIEW
+    return row.streamers.slice(0, limit)
+}
+
+function rowHasMore(row: any) {
+    const limit = row.key === 'live' ? ROW_PREVIEW + 2 : ROW_PREVIEW
+    return row.streamers.length > limit
+}
 
 // ─── Scroll horizontal par rangée ─────────────────────────────────────────────
 const rowScrollRefs: Record<string, HTMLElement> = {}

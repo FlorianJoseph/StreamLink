@@ -9,6 +9,8 @@
                 <slot />
             </main>
         </div>
+        <!-- Modales globales (player Twitch + confirmation raid) -->
+        <StreamerModals />
     </div>
 </template>
 
