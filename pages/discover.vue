@@ -128,11 +128,90 @@
             <!-- ─── Vue principale (rangées) ─── -->
             <template v-else>
 
+                <!-- ── Compatibles pour raid ── -->
+                <section v-if="raidableStreamers.length > 0" class="flex flex-col gap-3">
+                    <div class="flex items-center justify-between px-8 sm:px-12">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
+                            <h2 class="text-xl font-bold text-white">Parfaits pour raid</h2>
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/15 text-yellow-400 border border-yellow-500/25 font-medium">
+                                {{ raidableStreamers.length }} streamers compatible{{ raidableStreamers.length > 1 ? 's' : '' }}
+                            </span>
+                            <span v-if="raidsTodayCount > 0" class="text-xs text-zinc-500">
+                                Déjà {{ raidsTodayCount }} raid{{ raidsTodayCount > 1 ? 's' : '' }} aujourd'hui
+                            </span>
+                        </div>
+                        <span class="text-xs text-zinc-500">{{ raidStatus.remaining }}/{{ raidStatus.total }} raids restants</span>
+                    </div>
+                    <div class="relative group/row">
+
+                        <!-- Flèche gauche -->
+                        <Transition name="fade-arrow">
+                            <button v-if="rowScrollState['raidable']?.canLeft" @click="scrollRow('raidable', 'left')"
+                                class="absolute left-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
+                                <span class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45 transition-colors">
+                                    <Icon name="lucide:chevron-left" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
+                                </span>
+                            </button>
+                        </Transition>
+
+                        <!-- Scroll container -->
+                        <div :ref="(el: any) => setRowRef('raidable', el)"
+                            class="flex gap-3 overflow-x-auto scrollbar-hide px-8 sm:px-12 pb-2">
+                            <div v-for="s in raidableStreamers" :key="s.username" class="flex-shrink-0 w-[200px]">
+                                <div class="rounded-xl overflow-hidden border border-yellow-500/20 bg-zinc-900 hover:border-yellow-500/40 transition-colors duration-200 cursor-pointer"
+                                    @click="openRaidFor(s)">
+                                    <!-- Thumbnail -->
+                                    <div class="relative aspect-video overflow-hidden bg-zinc-800">
+                                        <img v-if="s.nextSlot?.twitchThumbnailUrl"
+                                            :src="s.nextSlot.twitchThumbnailUrl.replace(/\d+x\d+/, '320x180')"
+                                            class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                                        <div v-else class="absolute inset-0 bg-zinc-800" />
+                                        <!-- Coins badge -->
+                                        <div class="absolute top-2 right-2 flex items-center gap-1 bg-yellow-500 text-zinc-900 text-[11px] font-bold px-1.5 py-0.5 rounded-md">
+                                            <Icon name="lucide:coins" size="10" />+{{ raidCoinsFor(s) }}
+                                        </div>
+                                        <!-- Viewers -->
+                                        <div class="absolute bottom-2 left-2 flex items-center gap-1 bg-zinc-900/75 text-zinc-300 text-[11px] px-1.5 py-0.5 rounded">
+                                            <Icon name="lucide:eye" size="10" />{{ s.nextSlot?.twitchViewerCount ?? 0 }}
+                                        </div>
+                                    </div>
+                                    <!-- Infos -->
+                                    <div class="p-2.5 flex items-center gap-2">
+                                        <img :src="avatarUrl(s.avatar_url, 32)"
+                                            class="w-7 h-7 rounded-full object-cover flex-shrink-0 ring-1 ring-zinc-700" />
+                                        <div class="min-w-0">
+                                            <p class="text-xs font-semibold text-white truncate">{{ s.username }}</p>
+                                            <p class="text-[10px] text-zinc-500 truncate">{{ s.nextSlot?.twitchGameName || '—' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Flèche droite -->
+                        <Transition name="fade-arrow">
+                            <button v-if="rowScrollState['raidable']?.canRight" @click="scrollRow('raidable', 'right')"
+                                class="absolute right-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
+                                <span class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65 transition-colors">
+                                    <Icon name="lucide:chevron-right" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
+                                </span>
+                            </button>
+                        </Transition>
+                    </div>
+                </section>
+
                 <!-- Top Raiders -->
                 <section v-if="topRaiders.length > 0" class="flex flex-col gap-3">
-                    <div class="flex items-center gap-3 px-8 sm:px-12">
-                        <Icon name="lucide:trophy" size="18" class="text-yellow-400" />
-                        <h2 class="text-xl font-bold text-white">Top Raiders cette semaine</h2>
+                    <div class="flex flex-col px-8 sm:px-12">
+                        <div class="flex items-center gap-3">
+                            <Icon name="lucide:trophy" size="18" class="text-yellow-400" />
+                            <h2 class="text-xl font-bold text-white">Top Raiders cette semaine</h2>
+                        </div>
+                        <span class="text-xs text-zinc-500 flex items-center gap-1.5 mt-1 ml-0.5">
+                            <Icon name="lucide:coins" size="12" />
+                            Gagne des coins en raidant pour apparaître ici
+                        </span>
                     </div>
                     <div class="flex gap-1 overflow-x-auto scrollbar-hide px-8 sm:px-12 py-2">
                         <NuxtLink v-for="(raider, idx) in topRaiders" :key="raider.username" :to="`/${raider.username}`"
@@ -300,8 +379,7 @@
                         class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
                     <div>
                         <p class="font-semibold text-white text-sm">{{ selectedSuggestion?.username }}</p>
-                        <p class="text-xs text-zinc-400">{{ selectedSuggestion?.twitchGameName ||
-                            selectedSuggestion?.nextSlot?.game?.label || '—' }}</p>
+                        <p class="text-xs text-zinc-400">{{ selectedSuggestion?.nextSlot?.twitchGameName || selectedSuggestion?.nextSlot?.game?.label || '—' }}</p>
                     </div>
                 </div>
                 <div class="flex flex-col gap-1">
@@ -316,15 +394,17 @@
                         raids restants</span>
                 </div>
                 <div class="flex gap-2">
-                    <Button severity="secondary" outlined @click="raidAssistantOpen = false" class="flex-1">
-                        <Icon name="lucide:x" size="18" class="shrink-0" />
-                        <span class="text-sm shrink-0">Annuler</span>
-                    </Button>
-                    <Button severity="contrast" @click="confirmRaidAssistant" :loading="raidAssistantLoading"
-                        class="flex-1">
-                        <Icon name="lucide:swords" size="18" class="shrink-0" />
-                        <span class="text-sm shrink-0">Raid</span>
-                    </Button>
+                    <button @click="raidAssistantOpen = false"
+                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150">
+                        <Icon name="lucide:x" size="16" class="flex-shrink-0" />
+                        Annuler
+                    </button>
+                    <button @click="confirmRaidAssistant" :disabled="raidAssistantLoading"
+                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-white hover:bg-zinc-200 text-zinc-900 font-bold text-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <Icon v-if="!raidAssistantLoading" name="lucide:swords" size="16" class="flex-shrink-0" />
+                        <Icon v-else name="lucide:loader-circle" size="16" class="flex-shrink-0 animate-spin" />
+                        Raid
+                    </button>
                 </div>
             </div>
 
@@ -342,19 +422,15 @@
                 <div class="px-5 py-3 border-b border-zinc-800">
                     <p class="text-xs text-zinc-400">Streamers compatibles avec ton profil en live en ce moment</p>
                 </div>
-                <div v-if="raidSuggestionsLoading" class="flex justify-center py-10">
-                    <ProgressSpinner style="width:36px;height:36px;--p-progressspinner-color-one:#FFFFFF"
-                        strokeWidth="6" fill="transparent" animationDuration=".5s" />
-                </div>
-                <div v-else-if="raidSuggestions.length === 0"
+                <div v-if="raidSuggestions.length === 0"
                     class="flex flex-col items-center gap-3 py-10 px-5 text-center">
                     <Icon name="lucide:tv-minimal-play" size="40" class="text-zinc-600" />
                     <p class="text-sm text-zinc-400">Aucun streamer compatible en live en ce moment</p>
-                    <Button @click="selectedFilter = 'live'; raidAssistantOpen = false" severity="secondary" outlined
-                        size="small">
-                        <Icon name="lucide:radio" size="14" />
-                        <span class="text-xs">Voir les lives</span>
-                    </Button>
+                    <button @click="selectedFilter = 'live'; raidAssistantOpen = false"
+                        class="flex items-center gap-1.5 py-2 px-4 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150">
+                        <Icon name="lucide:radio" size="14" class="flex-shrink-0" />
+                        Voir les lives
+                    </button>
                 </div>
                 <div v-else class="flex flex-col divide-y divide-zinc-800">
                     <div v-for="s in raidSuggestions" :key="s.username"
@@ -365,25 +441,25 @@
                             <div class="flex items-center gap-1.5">
                                 <span class="text-sm font-semibold text-white truncate">{{ s.username }}</span>
                                 <span class="flex items-center gap-1 text-[10px] text-zinc-500">
-                                    <Icon name="lucide:eye" size="10" />{{ s.twitchViewerCount ?? '—' }}
+                                    <Icon name="lucide:eye" size="10" />{{ s.nextSlot?.twitchViewerCount ?? '—' }}
                                 </span>
                             </div>
-                            <p class="text-xs text-zinc-400 truncate">{{ s.twitchGameName || '—' }}</p>
+                            <p class="text-xs text-zinc-400 truncate">{{ s.nextSlot?.twitchGameName || '—' }}</p>
                         </div>
                         <button @click="selectSuggestion(s)" :disabled="!canRaidSuggestion(s)"
                             v-tooltip.left="{ value: raidSuggestionTooltip(s), pt: { text: '!text-sm' } }" :class="[
-                                'flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all duration-150',
+                                'flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-all duration-150',
                                 canRaidSuggestion(s)
-                                    ? 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border-yellow-500/30 cursor-pointer'
-                                    : 'bg-zinc-800 text-zinc-600 border-zinc-700/40 cursor-not-allowed'
+                                    ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
+                                    : 'bg-zinc-800 text-zinc-600 border border-zinc-700/40 cursor-not-allowed'
                             ]">
-                            <Icon name="lucide:swords" size="12" />
+                            <Icon name="lucide:swords" size="15" />
                             Raid
                         </button>
                     </div>
                 </div>
                 <div class="px-5 py-3 border-t border-zinc-800">
-                    <p class="text-xs text-zinc-600 text-center">Basé sur tes jeux et tes horaires de stream</p>
+                    <p class="text-xs text-zinc-600 text-center">Même langue, contenu similaire en tête, moins de viewers = plus de coins</p>
                 </div>
             </div>
 
@@ -496,7 +572,7 @@ const rows = computed(() => {
 
 // ─── Chargement progressif des rangées ───────────────────────────────────────
 const ROWS_PER_PAGE = 3
-const ROW_PREVIEW = 6
+const ROW_PREVIEW = 10
 const visibleRowCount = ref(ROWS_PER_PAGE)
 const displayedRows = computed(() => rows.value.slice(0, visibleRowCount.value))
 const hasMoreRows = computed(() => visibleRowCount.value < rows.value.length)
@@ -585,7 +661,16 @@ function setRowRef(key: string, el: any) {
 function scrollRow(key: string, dir: 'left' | 'right') {
     const el = rowScrollRefs[key]
     if (!el) return
-    el.scrollBy({ left: dir === 'right' ? 420 : -420, behavior: 'smooth' })
+    const amount = Math.max(el.clientWidth * 0.75, 600)
+    el.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' })
+}
+
+// ─── Raids today (social proof) ───────────────────────────────────────────────
+const raidsTodayCount = ref(0)
+
+async function fetchRaidsTodayCount() {
+    const { count } = await $fetch<{ count: number }>('/api/raids/today-count')
+    raidsTodayCount.value = count
 }
 
 // ─── Top Raiders ──────────────────────────────────────────────────────────────
@@ -603,12 +688,21 @@ const user = useSupabaseUser()
 const streamerStore = useStreamerStore()
 const { streamer: currentStreamer } = storeToRefs(streamerStore)
 const { raidStatus, fetchStatus } = useRaidStatus()
+const { openRaidFor } = useRaidModal()
+
+function raidCoinsFor(s: any) {
+    const v = s.nextSlot?.twitchViewerCount ?? 0
+    if (v < 5) return 7
+    if (v < 15) return 6
+    if (v < 50) return 5
+    if (v < 150) return 4
+    return 3
+}
 const { fetchBalance } = useWallet()
 const toast = useToast()
 
 const raidAssistantOpen = ref(false)
 const raidSuggestions = ref<any[]>([])
-const raidSuggestionsLoading = ref(false)
 const selectedSuggestion = ref<any | null>(null)
 const raidAssistantStep = ref<'list' | 'confirm' | 'countdown'>('list')
 const raidAssistantLoading = ref(false)
@@ -617,7 +711,7 @@ const raidAssistantEarnedCoins = ref(0)
 let raidAssistantInterval: ReturnType<typeof setInterval> | null = null
 
 const raidAssistantCoins = computed(() => {
-    const v = selectedSuggestion.value?.twitchViewerCount ?? 0
+    const v = selectedSuggestion.value?.nextSlot?.twitchViewerCount ?? 0
     if (v < 5) return 7
     if (v < 15) return 6
     if (v < 50) return 5
@@ -633,32 +727,44 @@ function canRaidSuggestion(s: any) {
     return raidStatus.value.remaining > 0
 }
 
+// Lives compatibles pour un raid immédiat
+const raidableStreamers = computed(() => {
+    if (!user.value || !raidStatus.value.canRaidToday || raidStatus.value.remaining === 0) return []
+
+    const myLang = currentStreamer.value?.language ?? null
+    const myCategory = currentStreamer.value ? streamerCategory(currentStreamer.value) : null
+
+    return streamers.value
+        .filter(s => {
+            if (!s.nextSlot?.isLive) return false
+            if (!canRaidSuggestion(s)) return false
+            if (myLang && s.language !== myLang) return false   // même langue obligatoire
+            return true
+        })
+        .sort((a, b) => {
+            // Même catégorie en tête
+            const aCat = myCategory && streamerCategory(a) === myCategory ? 0 : 1
+            const bCat = myCategory && streamerCategory(b) === myCategory ? 0 : 1
+            if (aCat !== bCat) return aCat - bCat
+            // Puis viewers croissants (= plus de coins)
+            return (a.nextSlot?.twitchViewerCount ?? 0) - (b.nextSlot?.twitchViewerCount ?? 0)
+        })
+})
+
 function raidSuggestionTooltip(s: any) {
     if (!user.value) return 'Connecte-toi pour raid'
     if (currentStreamer.value?.username?.toLowerCase() === s.username?.toLowerCase()) return 'Tu ne peux pas te raid toi-même'
     if (!raidStatus.value.canRaidToday) return 'Tu as déjà raid aujourd\'hui'
     if (raidStatus.value.remaining === 0) return 'Limite de raids atteinte cette semaine'
     if (raidStatus.value.raidedThisWeek?.includes(s.username?.toLowerCase())) return 'Tu as déjà raid ce streamer cette semaine'
-    return `Raider ${s.username}`
+    return `Raid ${s.username}`
 }
 
-async function openRaidAssistant() {
+function openRaidAssistant() {
     raidAssistantOpen.value = true
     raidAssistantStep.value = 'list'
     selectedSuggestion.value = null
-    raidSuggestions.value = []
-    raidSuggestionsLoading.value = true
-    try {
-        const username = currentStreamer.value?.username
-        if (!username) { raidSuggestionsLoading.value = false; return }
-        const results = await $fetch<any[]>(`/api/streamers/similar/${username}`, {
-            method: 'POST',
-            body: { exclude: [] }
-        })
-        raidSuggestions.value = results.filter((s: any) => s.isLive)
-    } finally {
-        raidSuggestionsLoading.value = false
-    }
+    raidSuggestions.value = raidableStreamers.value
 }
 
 function selectSuggestion(s: any) {
@@ -732,6 +838,7 @@ onMounted(async () => {
     }
     await Promise.all([
         fetchTopRaiders(),
+        fetchRaidsTodayCount(),
         user.value ? fetchStatus() : Promise.resolve(),
     ])
 })

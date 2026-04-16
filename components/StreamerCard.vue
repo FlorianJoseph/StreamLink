@@ -42,11 +42,15 @@
                     class="absolute top-2 left-2 z-20 flex items-center bg-red-600 text-white text-[11px] font-bold px-1.25 py-0.25 rounded uppercase tracking-wide">
                     live
                 </div>
-                <!-- Viewers -->
-                <div v-if="isLive && twitchViewerCount !== null"
-                    class="absolute top-2 right-2 z-20 flex items-center gap-1 text-sm px-1 py-0.5 rounded"
-                    :style="{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'white' }">
-                    {{ twitchViewerCount }} spectateurs
+                <!-- Viewers + Coins -->
+                <div v-if="isLive" class="absolute top-2 right-2 z-20 flex items-center gap-1">
+                    <div v-if="twitchViewerCount !== null"
+                        class="flex items-center gap-1 bg-zinc-900/75 backdrop-blur-sm text-zinc-300 text-xs px-1.5 py-0.5 rounded">
+                        <Icon name="lucide:eye" size="11" />{{ twitchViewerCount }}
+                    </div>
+                    <div class="flex items-center gap-1 bg-yellow-500 text-zinc-900 text-[11px] font-bold px-1.5 py-0.5 rounded">
+                        <Icon name="lucide:coins" size="10" />+{{ raidCoins }}
+                    </div>
                 </div>
                 <div v-if="whenLabel"
                     class="absolute top-2 right-2 z-20 flex items-center gap-1 text-sm px-1 py-0.5 rounded"
