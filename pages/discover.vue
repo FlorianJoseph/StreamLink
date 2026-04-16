@@ -125,8 +125,31 @@
         <!-- ─── Content ─── -->
         <div class="py-6 flex flex-col gap-10">
 
+            <!-- ─── Vue recherche ─── -->
+            <div v-if="search" class="px-8 sm:px-12 flex flex-col gap-4">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <p class="text-xs text-zinc-500">{{ filteredStreamers.length }} résultat{{ filteredStreamers.length > 1 ? 's' : '' }} pour "{{ search }}"</p>
+                    <button @click="search = ''"
+                        class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
+                        <Icon name="lucide:x" size="10" />Effacer la recherche
+                    </button>
+                    <button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'"
+                        class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
+                        <Icon name="lucide:x" size="10" />Retirer le filtre
+                    </button>
+                </div>
+                <div v-if="filteredStreamers.length > 0"
+                    class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                    <StreamerCard v-for="s in filteredStreamers" :key="s.username" :streamer="s" />
+                </div>
+                <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
+                    <Icon name="lucide:search-x" size="48" class="text-zinc-700" />
+                    <p class="text-sm text-zinc-500">Aucun résultat pour "{{ search }}"</p>
+                </div>
+            </div>
+
             <!-- ─── Vue catégorie ─── -->
-            <div v-if="selectedCategory" class="flex flex-col gap-6">
+            <div v-else-if="selectedCategory" class="flex flex-col gap-6">
                 <!-- Header -->
                 <div class="px-8 sm:px-12 flex items-center gap-4">
                     <button @click="clearCategory"
@@ -147,7 +170,7 @@
             </div>
 
             <!-- ─── Vue principale (rangées) ─── -->
-            <template v-else>
+            <template v-else-if="!search">
 
                 <!-- ── Compatibles pour raid ── -->
                 <section v-if="raidableStreamers.length > 0 && selectedFilter !== 'today' && selectedFilter !== 'future'" class="flex flex-col gap-3">
@@ -480,7 +503,7 @@
                     </div>
                 </div>
                 <div class="px-5 py-3 border-t border-zinc-800">
-                    <p class="text-xs text-zinc-600 text-center">Même langue, contenu similaire en tête, moins de viewers = plus de coins</p>
+                    <p class="text-xs text-zinc-600 text-center">Même langue/contenu, moins de viewers = plus de coins</p>
                 </div>
             </div>
 
@@ -495,8 +518,6 @@ import { languageOptions, getFlag, getLabel } from '~/utils/language'
 import { avatarUrl } from '~/utils/avatar'
 
 definePageMeta({ layout: 'discover' })
-
-const defaultAvatar = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png"
 
 // ─── Core state ───────────────────────────────────────────────────────────────
 const search = ref('')
@@ -764,7 +785,11 @@ const raidableStreamers = computed(() => {
     if (!user.value || !raidStatus.value.canRaidToday || raidStatus.value.remaining === 0) return []
 
     const myLang = currentStreamer.value?.language ?? null
-    const myCategory = currentStreamer.value ? streamerCategory(currentStreamer.value) : null
+    // Cherche le streamer connecté dans la liste enrichie (nextSlot + twitchGameCategory)
+    const myStreamerData = streamers.value.find(
+        s => s.username?.toLowerCase() === currentStreamer.value?.username?.toLowerCase()
+    )
+    const myCategory = myStreamerData ? streamerCategory(myStreamerData) : null
 
     return streamers.value
         .filter(s => {
