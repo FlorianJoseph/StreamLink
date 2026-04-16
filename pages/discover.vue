@@ -107,7 +107,6 @@
                         <Icon name="lucide:arrow-left" size="18" />
                     </button>
                     <h2 class="text-2xl font-bold text-white">{{ selectedCategory }}</h2>
-                    <span class="text-sm text-zinc-500">{{ categoryStreamers.length }} streamer{{ categoryStreamers.length > 1 ? 's' : '' }}</span>
                 </div>
                 <!-- Grille -->
                 <div v-if="categoryStreamers.length > 0"
@@ -123,137 +122,141 @@
             <!-- ─── Vue principale (rangées) ─── -->
             <template v-else>
 
-            <!-- Top Raiders -->
-            <section v-if="topRaiders.length > 0" class="flex flex-col gap-3">
-                <div class="flex items-center gap-3 px-8 sm:px-12">
-                    <Icon name="lucide:trophy" size="18" class="text-yellow-400" />
-                    <h2 class="text-xl font-bold text-white">Top Raiders cette semaine</h2>
+                <!-- Top Raiders -->
+                <section v-if="topRaiders.length > 0" class="flex flex-col gap-3">
+                    <div class="flex items-center gap-3 px-8 sm:px-12">
+                        <Icon name="lucide:trophy" size="18" class="text-yellow-400" />
+                        <h2 class="text-xl font-bold text-white">Top Raiders cette semaine</h2>
+                    </div>
+                    <div class="flex gap-1 overflow-x-auto scrollbar-hide px-8 sm:px-12 py-2">
+                        <NuxtLink v-for="(raider, idx) in topRaiders" :key="raider.username" :to="`/${raider.username}`"
+                            target="_blank" class="flex items-end flex-shrink-0 group/raider">
+                            <!-- Grand numéro -->
+                            <span class="text-[82px] font-black leading-none select-none flex-shrink-0 w-12 text-right"
+                                :style="{
+                                    WebkitTextStroke: idx === 0 ? '3px rgba(234,179,8,0.55)' : idx === 1 ? '3px rgba(161,161,170,0.45)' : idx === 2 ? '3px rgba(194,120,50,0.45)' : '3px rgba(82,82,91,0.4)',
+                                    color: 'transparent'
+                                }">
+                                {{ idx + 1 }}
+                            </span>
+                            <!-- Carte qui chevauche le numéro -->
+                            <div
+                                class="-ml-2 w-[88px] flex-shrink-0 rounded-xl overflow-hidden relative ring-1 ring-zinc-800 group-hover/raider:ring-zinc-500 transition-all duration-150">
+                                <img :src="avatarUrl(raider.avatar_url, 128)"
+                                    class="w-full aspect-[2/3] object-cover object-top" />
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
+                                <div class="absolute bottom-0 left-0 right-0 p-2">
+                                    <p class="text-[11px] font-bold text-white truncate">{{ raider.username }}</p>
+                                    <div class="flex items-center gap-1.5 mt-0.5">
+                                        <span class="flex items-center gap-0.5 text-[10px] text-yellow-400">
+                                            <Icon name="lucide:swords" size="9" />{{ raider.raidCount }}
+                                        </span>
+                                        <span class="flex items-center gap-0.5 text-[10px] text-yellow-400">
+                                            <Icon name="lucide:coins" size="9" />{{ raider.coinsEarned }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </NuxtLink>
+                    </div>
+                </section>
+
+                <!-- ─── État vide ─── -->
+                <div v-if="rows.length === 0" class="flex flex-col items-center justify-center py-24 gap-4 px-6">
+                    <Icon name="lucide:search-x" size="56" class="text-zinc-700" />
+                    <div class="text-center">
+                        <h3 class="text-xl font-semibold text-white mb-2">Aucun streamer trouvé</h3>
+                        <p class="text-sm text-zinc-500">{{ getEmptyStateMessage() }}</p>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-2 mt-2">
+                        <Button v-if="search" @click="search = ''" severity="contrast" outlined size="small">
+                            <Icon name="lucide:x" size="14" />
+                            <span class="text-xs">Réinitialiser la recherche</span>
+                        </Button>
+                        <Button v-if="selectedGame" @click="selectedGame = null" severity="contrast" outlined
+                            size="small">
+                            <Icon name="lucide:filter-x" size="14" />
+                            <span class="text-xs">Retirer le filtre jeu</span>
+                        </Button>
+                        <Button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'" severity="contrast"
+                            outlined size="small">
+                            <Icon name="lucide:filter-x" size="14" />
+                            <span class="text-xs">Retirer le filtre</span>
+                        </Button>
+                    </div>
                 </div>
-                <div class="flex gap-1 overflow-x-auto scrollbar-hide px-8 sm:px-12 py-2">
-                    <NuxtLink v-for="(raider, idx) in topRaiders" :key="raider.username"
-                        :to="`/${raider.username}`" target="_blank"
-                        class="flex items-end flex-shrink-0 group/raider">
-                        <!-- Grand numéro -->
-                        <span class="text-[82px] font-black leading-none select-none flex-shrink-0 w-12 text-right"
-                            :style="{
-                                WebkitTextStroke: idx === 0 ? '3px rgba(234,179,8,0.55)' : idx === 1 ? '3px rgba(161,161,170,0.45)' : idx === 2 ? '3px rgba(194,120,50,0.45)' : '3px rgba(82,82,91,0.4)',
-                                color: 'transparent'
-                            }">
-                            {{ idx + 1 }}
-                        </span>
-                        <!-- Carte qui chevauche le numéro -->
-                        <div class="-ml-2 w-[88px] flex-shrink-0 rounded-xl overflow-hidden relative ring-1 ring-zinc-800 group-hover/raider:ring-zinc-500 transition-all duration-150">
-                            <img :src="avatarUrl(raider.avatar_url, 128)"
-                                class="w-full aspect-[2/3] object-cover object-top" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
-                            <div class="absolute bottom-0 left-0 right-0 p-2">
-                                <p class="text-[11px] font-bold text-white truncate">{{ raider.username }}</p>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="flex items-center gap-0.5 text-[10px] text-yellow-400">
-                                        <Icon name="lucide:swords" size="9" />{{ raider.raidCount }}
-                                    </span>
-                                    <span class="flex items-center gap-0.5 text-[10px] text-yellow-400">
-                                        <Icon name="lucide:coins" size="9" />{{ raider.coinsEarned }}
-                                    </span>
+
+                <!-- ─── Rangées Netflix ─── -->
+                <section v-for="row in displayedRows" :key="row.key" :id="`discover-row-${row.key}`"
+                    class="flex flex-col gap-3">
+
+                    <!-- En-tête de rangée -->
+                    <div class="flex items-center gap-3 px-8 sm:px-12">
+                        <span v-if="row.key === 'live'"
+                            class="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+                        <h2 class="text-xl font-bold text-white">{{ row.label }}</h2>
+                    </div>
+
+                    <!-- Cartes horizontales avec flèches overlay -->
+                    <div class="relative group/row">
+
+                        <!-- Flèche gauche -->
+                        <Transition name="fade-arrow">
+                            <button v-if="rowScrollState[row.key]?.canLeft" @click="scrollRow(row.key, 'left')" class="absolute left-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
+                                   opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
+                                <span
+                                    class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45 transition-colors">
+                                    <Icon name="lucide:chevron-left" size="52"
+                                        class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
+                                </span>
+                            </button>
+                        </Transition>
+
+                        <!-- Scroll container -->
+                        <div :ref="(el: any) => setRowRef(row.key, el)"
+                            class="flex gap-3 overflow-x-auto scrollbar-hide px-8 sm:px-12 pb-2">
+                            <div v-for="s in rowStreamers(row)" :key="s.username"
+                                v-memo="[s.username, s.nextSlot?.isLive, s.nextSlot?.twitchViewerCount]"
+                                class="flex-shrink-0 w-[312px] sm:w-[336px]">
+                                <StreamerCard :streamer="s" />
+                            </div>
+
+                            <!-- Tile "Voir tout" -->
+                            <div v-if="rowHasMore(row)" @click="goToCategory(row.label)"
+                                class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 group/expand"
+                                :style="{ minHeight: '220px' }">
+                                <div
+                                    class="w-12 h-12 rounded-full border border-zinc-700 bg-zinc-800 group-hover/expand:border-zinc-500 group-hover/expand:bg-zinc-700 flex items-center justify-center transition-all duration-200">
+                                    <Icon name="lucide:grid-2x2-plus" size="22"
+                                        class="text-zinc-400 group-hover/expand:text-white transition-colors" />
+                                </div>
+                                <div class="flex flex-row items-center gap-1">
+                                    <p class="text-sm font-semibold text-white">Voir tout</p>
+                                    <Icon name="lucide:chevron-right" size="16"
+                                        class="text-zinc-600 group-hover/expand:text-zinc-400 transition-colors" />
                                 </div>
                             </div>
                         </div>
-                    </NuxtLink>
-                </div>
-            </section>
 
-            <!-- ─── État vide ─── -->
-            <div v-if="rows.length === 0" class="flex flex-col items-center justify-center py-24 gap-4 px-6">
-                <Icon name="lucide:search-x" size="56" class="text-zinc-700" />
-                <div class="text-center">
-                    <h3 class="text-xl font-semibold text-white mb-2">Aucun streamer trouvé</h3>
-                    <p class="text-sm text-zinc-500">{{ getEmptyStateMessage() }}</p>
-                </div>
-                <div class="flex flex-wrap justify-center gap-2 mt-2">
-                    <Button v-if="search" @click="search = ''" severity="contrast" outlined size="small">
-                        <Icon name="lucide:x" size="14" />
-                        <span class="text-xs">Réinitialiser la recherche</span>
-                    </Button>
-                    <Button v-if="selectedGame" @click="selectedGame = null" severity="contrast" outlined size="small">
-                        <Icon name="lucide:filter-x" size="14" />
-                        <span class="text-xs">Retirer le filtre jeu</span>
-                    </Button>
-                    <Button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'" severity="contrast" outlined
-                        size="small">
-                        <Icon name="lucide:filter-x" size="14" />
-                        <span class="text-xs">Retirer le filtre</span>
-                    </Button>
-                </div>
-            </div>
-
-            <!-- ─── Rangées Netflix ─── -->
-            <section v-for="row in displayedRows" :key="row.key" :id="`discover-row-${row.key}`" class="flex flex-col gap-3">
-
-                <!-- En-tête de rangée -->
-                <div class="flex items-center gap-3 px-8 sm:px-12">
-                    <span v-if="row.key === 'live'"
-                        class="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
-                    <h2 class="text-xl font-bold text-white">{{ row.label }}</h2>
-                </div>
- 
-                <!-- Cartes horizontales avec flèches overlay -->
-                <div class="relative group/row">
-
-                    <!-- Flèche gauche -->
-                    <Transition name="fade-arrow">
-                        <button v-if="rowScrollState[row.key]?.canLeft"
-                            @click="scrollRow(row.key, 'left')"
-                            class="absolute left-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
+                        <!-- Flèche droite -->
+                        <Transition name="fade-arrow">
+                            <button v-if="rowScrollState[row.key]?.canRight" @click="scrollRow(row.key, 'right')" class="absolute right-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
                                    opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
-                            <span class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45 transition-colors">
-                                <Icon name="lucide:chevron-left" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
-                            </span>
-                        </button>
-                    </Transition>
+                                <span
+                                    class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65 transition-colors">
+                                    <Icon name="lucide:chevron-right" size="52"
+                                        class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
+                                </span>
+                            </button>
+                        </Transition>
 
-                    <!-- Scroll container -->
-                    <div :ref="(el: any) => setRowRef(row.key, el)"
-                        class="flex gap-3 overflow-x-auto scrollbar-hide px-8 sm:px-12 pb-2">
-                        <div v-for="s in rowStreamers(row)" :key="s.username"
-                            v-memo="[s.username, s.nextSlot?.isLive, s.nextSlot?.twitchViewerCount]"
-                            class="flex-shrink-0 w-[312px] sm:w-[336px]">
-                            <StreamerCard :streamer="s" />
-                        </div>
-
-                        <!-- Tile "Voir tout" -->
-                        <div v-if="rowHasMore(row)"
-                            @click="goToCategory(row.label)"
-                            class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 group/expand"
-                            :style="{ minHeight: '220px' }">
-                            <div class="w-12 h-12 rounded-full border border-zinc-700 bg-zinc-800 group-hover/expand:border-zinc-500 group-hover/expand:bg-zinc-700 flex items-center justify-center transition-all duration-200">
-                                <Icon name="lucide:grid-2x2-plus" size="22" class="text-zinc-400 group-hover/expand:text-white transition-colors" />
-                            </div>
-                            <div class="text-center">
-                                <p class="text-sm font-semibold text-white">Voir tout</p>
-                                <p class="text-xs text-zinc-500 mt-0.5">{{ row.streamers.length - rowStreamers(row).length }} autres streamers</p>
-                            </div>
-                            <Icon name="lucide:chevron-right" size="16" class="text-zinc-600 group-hover/expand:text-zinc-400 transition-colors" />
-                        </div>
                     </div>
 
-                    <!-- Flèche droite -->
-                    <Transition name="fade-arrow">
-                        <button v-if="rowScrollState[row.key]?.canRight"
-                            @click="scrollRow(row.key, 'right')"
-                            class="absolute right-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
-                                   opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
-                            <span class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65 transition-colors">
-                                <Icon name="lucide:chevron-right" size="52" class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
-                            </span>
-                        </button>
-                    </Transition>
+                </section>
 
-                </div>
-
-            </section>
-
-            <!-- Sentinel infinite scroll -->
-            <div ref="sentinelRef" class="h-4" />
+                <!-- Sentinel infinite scroll -->
+                <div ref="sentinelRef" class="h-4" />
 
             </template> <!-- fin vue principale -->
         </div>
@@ -412,8 +415,11 @@ const filters = [
     { key: 'future', label: 'À venir', icon: 'lucide:clock' },
 ]
 
-// ─── Catégorie d'un streamer (dérivée de son jeu) ─────────────────────────────
+// ─── Catégorie d'un streamer (IGDB en priorité, regex en fallback) ────────────
 function streamerCategory(s: any): string | null {
+    // 1. Catégorie IGDB enrichie côté serveur (live uniquement)
+    if (s.nextSlot?.twitchGameCategory) return s.nextSlot.twitchGameCategory
+    // 2. Catégorie dérivée du jeu planifié (non-live)
     const gameName = s.nextSlot?.twitchGameName ?? s.nextSlot?.game?.label ?? null
     return getGameCategory(gameName)
 }
@@ -450,6 +456,9 @@ const filteredStreamers = computed(() => {
 
 const liveCount = computed(() => streamers.value.filter(s => s.nextSlot?.isLive).length)
 
+// Catégories affichées sur la page d'accueil (dans cet ordre)
+const HOME_CATEGORIES = ['Aventure', 'Battle Royale', 'FPS', 'Horreur', 'MMO', 'RPG', 'Simulation', 'Survie'] as const
+
 // ─── Rangées Netflix ──────────────────────────────────────────────────────────
 const rows = computed(() => {
     const result: { key: string; label: string; streamers: any[] }[] = []
@@ -459,22 +468,12 @@ const rows = computed(() => {
     const live = all.filter(s => s.nextSlot?.isLive)
     if (live.length > 0) result.push({ key: 'live', label: 'En live', streamers: live })
 
-    // Reste groupé par catégorie
+    // Rangées par catégories fixes (hors filtre live)
     if (selectedFilter.value !== 'live') {
         const nonLive = all.filter(s => !s.nextSlot?.isLive)
-        const byCategory = new Map<string, any[]>()
-        for (const s of nonLive) {
-            const cat = streamerCategory(s) ?? 'Autres'
-            if (!byCategory.has(cat)) byCategory.set(cat, [])
-            byCategory.get(cat)!.push(s)
-        }
-        const sorted = [...byCategory.entries()].sort(([a], [b]) => {
-            if (a === 'Autres') return 1
-            if (b === 'Autres') return -1
-            return a.localeCompare(b, 'fr')
-        })
-        for (const [label, rowStreamers] of sorted) {
-            result.push({ key: label, label, streamers: rowStreamers })
+        for (const cat of HOME_CATEGORIES) {
+            const catStreamers = nonLive.filter(s => streamerCategory(s) === cat)
+            if (catStreamers.length > 0) result.push({ key: cat, label: cat, streamers: catStreamers })
         }
     }
 
@@ -552,7 +551,7 @@ function rowHasMore(row: any) {
 const rowScrollRefs: Record<string, HTMLElement> = {}
 
 const rowScrollState = ref<Record<string, { canLeft: boolean; canRight: boolean }>>({})
- 
+
 function updateScrollState(key: string) {
     const el = rowScrollRefs[key]
     if (!el) return
@@ -561,14 +560,14 @@ function updateScrollState(key: string) {
         canRight: el.scrollLeft + el.clientWidth < el.scrollWidth - 1,
     }
 }
- 
+
 function setRowRef(key: string, el: any) {
     if (!el) return
     rowScrollRefs[key] = el
     el.addEventListener('scroll', () => updateScrollState(key), { passive: true })
     nextTick(() => updateScrollState(key))
 }
- 
+
 function scrollRow(key: string, dir: 'left' | 'right') {
     const el = rowScrollRefs[key]
     if (!el) return
@@ -749,6 +748,7 @@ onMounted(async () => {
 .fade-arrow-leave-active {
     transition: opacity 0.15s ease;
 }
+
 .fade-arrow-enter-from,
 .fade-arrow-leave-to {
     opacity: 0;

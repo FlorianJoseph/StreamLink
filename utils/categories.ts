@@ -6,15 +6,17 @@ export const CATEGORIES = [
     'Science', 'Sports',
     // Gaming genres
     'FPS', 'Battle Royale', 'Survie', 'Horreur', 'RPG',
-    'MOBA', 'Stratégie', 'Simulation', 'MMO', 'Sandbox',
+    'MOBA', 'Stratégie', 'Simulation', 'MMO', 'Retro',
     'Combat', 'Aventure', 'Party Games', 'Sport & Course', 'Gaming',
 ] as const
 
 export type Category = typeof CATEGORIES[number]
 
 /**
- * Mapping jeu (lowercase, sous-chaîne) → catégorie.
- * La première règle qui matche gagne.
+ * Règles de fallback :
+ * - Contenus non-gaming (pas dans IGDB)
+ * - Jeux populaires dont les tags IGDB sont incomplets ou absents
+ * IGDB (igdbCategory.ts) est toujours testé en premier.
  */
 const RULES: { match: string | RegExp; category: Category }[] = [
 
@@ -42,7 +44,7 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /^art$/,                       category: 'Art' },
     { match: 'drawing',                     category: 'Art' },
     { match: 'painting',                    category: 'Art' },
-    { match: /craft|créat/,                 category: 'Créatif' },
+    { match: /\bcraft\b|créat/,             category: 'Créatif' },
     { match: 'makers & crafting',           category: 'Créatif' },
     { match: 'diy',                         category: 'Créatif' },
 
@@ -62,7 +64,7 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /humour|comedy|humor/,         category: 'Humour' },
 
     // ════════════════════════════════════════════════════════════════════════
-    // GAMING GENRES
+    // GAMING — fallback pour les jeux dont les tags IGDB sont incomplets
     // ════════════════════════════════════════════════════════════════════════
 
     // ── MOBA ─────────────────────────────────────────────────────────────────
@@ -79,11 +81,15 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /call of duty|modern warfare/, category: 'FPS' },
     { match: /\bhalo\b/,                    category: 'FPS' },
     { match: /battlefield/,                 category: 'FPS' },
-    { match: /titanfall/,                   category: 'FPS' },
     { match: /\bdoom\b/,                    category: 'FPS' },
-    { match: /quake/,                       category: 'FPS' },
     { match: /\bthe finals\b/,              category: 'FPS' },
-    { match: /\bhuntdown|hunt: showdown/,   category: 'FPS' },
+    { match: /hunt: showdown/,              category: 'FPS' },
+    { match: /\bfragpunk\b/,               category: 'FPS' },
+    { match: /\bmarathon\b/,               category: 'FPS' },
+    { match: /arc raiders/,                category: 'FPS' },
+    { match: /the division/,               category: 'FPS' },
+    { match: /\bchorvs\b/,                 category: 'FPS' },
+    { match: /metro \d|metro 20/,          category: 'FPS' },
 
     // ── Battle Royale ─────────────────────────────────────────────────────────
     { match: /fortnite/,                    category: 'Battle Royale' },
@@ -91,7 +97,6 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /\bapex legends\b/,            category: 'Battle Royale' },
     { match: /warzone/,                     category: 'Battle Royale' },
     { match: /naraka/,                      category: 'Battle Royale' },
-    { match: /super people/,               category: 'Battle Royale' },
 
     // ── Survie ────────────────────────────────────────────────────────────────
     { match: /\brust\b/,                    category: 'Survie' },
@@ -101,10 +106,12 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /valheim/,                     category: 'Survie' },
     { match: /7 days to die/,               category: 'Survie' },
     { match: /\bark[: ]/,                   category: 'Survie' },
-    { match: /don.t starve/,                category: 'Survie' },
     { match: /green hell/,                  category: 'Survie' },
-    { match: /the long dark/,               category: 'Survie' },
-    { match: /\bscum\b/,                    category: 'Survie' },
+    { match: /once human/,                  category: 'Survie' },
+    { match: /vintage story/,              category: 'Survie' },
+    { match: /starsand/,                   category: 'Survie' },
+    { match: /\bscum\b/,                   category: 'Survie' },
+    { match: /minecraft/,                  category: 'Survie' },
 
     // ── Horreur ───────────────────────────────────────────────────────────────
     { match: /resident evil/,               category: 'Horreur' },
@@ -115,119 +122,109 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /amnesia/,                     category: 'Horreur' },
     { match: /fnaf|five nights/,            category: 'Horreur' },
     { match: /little nightmares/,           category: 'Horreur' },
-    { match: /\bvisage\b/,                  category: 'Horreur' },
     { match: /alan wake/,                   category: 'Horreur' },
-    { match: /\bcall of cthulhu/,           category: 'Horreur' },
+    { match: /tormented souls/,            category: 'Horreur' },
+    { match: /alice.*madness/,             category: 'Horreur' },
+    { match: /poppy.*playtime|poppy it/,   category: 'Horreur' },
 
     // ── RPG ───────────────────────────────────────────────────────────────────
     { match: /elden ring/,                  category: 'RPG' },
     { match: /dark souls/,                  category: 'RPG' },
-    { match: /sekiro/,                      category: 'RPG' },
-    { match: /\bbloodborne\b/,              category: 'RPG' },
     { match: /the witcher/,                 category: 'RPG' },
     { match: /\bskyrim\b|elder scrolls/,    category: 'RPG' },
-    { match: /\bfallout\b/,                 category: 'RPG' },
-    { match: /\bbaldur.s gate\b/,           category: 'RPG' },
     { match: /cyberpunk/,                   category: 'RPG' },
     { match: /\bdiablo\b/,                  category: 'RPG' },
     { match: /path of exile/,               category: 'RPG' },
-    { match: /dragon age/,                  category: 'RPG' },
-    { match: /mass effect/,                 category: 'RPG' },
-    { match: /pokemon/,                     category: 'RPG' },
+    { match: /pok[eé]mon/,                 category: 'RPG' },
     { match: /final fantasy/,               category: 'RPG' },
     { match: /monster hunter/,              category: 'RPG' },
-    { match: /\bhogwarts\b/,               category: 'RPG' },
-    { match: /\bstarfield\b/,              category: 'RPG' },
-    { match: /zelda/,                       category: 'RPG' },
-    { match: /\bpillars of eternity\b/,    category: 'RPG' },
-    { match: /divinity.*sin/,               category: 'RPG' },
+    { match: /genshin impact/,              category: 'RPG' },
+    { match: /baldur.s gate/,               category: 'RPG' },
+    { match: /clair obscur/,                category: 'RPG' },
+    { match: /dragon ball/,                category: 'RPG' },
+    { match: /legacy of kain/,             category: 'RPG' },
+    { match: /lost ark/,                   category: 'MMO' },
 
     // ── Stratégie ─────────────────────────────────────────────────────────────
     { match: /civilization|civ \d/,         category: 'Stratégie' },
     { match: /age of empires/,              category: 'Stratégie' },
     { match: /starcraft/,                   category: 'Stratégie' },
-    { match: /clash royale|clash of clans/, category: 'Stratégie' },
     { match: /total war/,                   category: 'Stratégie' },
-    { match: /\bxcom\b/,                    category: 'Stratégie' },
     { match: /crusader kings/,              category: 'Stratégie' },
     { match: /europa universalis/,          category: 'Stratégie' },
     { match: /hearts of iron/,              category: 'Stratégie' },
     { match: /\bhearthstone\b/,             category: 'Stratégie' },
-    { match: /\bmagic.*gathering|mtg\b/,    category: 'Stratégie' },
-    { match: /\bwarhammer/,                 category: 'Stratégie' },
+    { match: /cult of the lamb/,           category: 'Stratégie' },
 
     // ── Simulation ────────────────────────────────────────────────────────────
     { match: /the sims/,                    category: 'Simulation' },
-    { match: /cities.*skylines/,            category: 'Simulation' },
     { match: /euro truck|american truck/,   category: 'Simulation' },
     { match: /flight simulator|msfs/,       category: 'Simulation' },
     { match: /farming simulator/,           category: 'Simulation' },
-    { match: /planet coaster|planet zoo/,   category: 'Simulation' },
-    { match: /powerwash|power wash/,        category: 'Simulation' },
-    { match: /viscera cleanup/,             category: 'Simulation' },
+    { match: /satisfactory/,               category: 'Simulation' },
+    { match: /dreamlight valley/,          category: 'Simulation' },
+    { match: /my time at/,                 category: 'Simulation' },
+    { match: /schedule i/,                 category: 'Simulation' },
+    { match: /\bsimulator\b/,              category: 'Simulation' },  // règle générique (Bookshop, Recycling, Ranger's Path…)
 
     // ── MMO ───────────────────────────────────────────────────────────────────
     { match: /world of warcraft|\bwow\b/,   category: 'MMO' },
-    { match: /lost ark/,                    category: 'MMO' },
     { match: /final fantasy xiv|ffxiv/,     category: 'MMO' },
-    { match: /new world/,                   category: 'MMO' },
     { match: /guild wars/,                  category: 'MMO' },
     { match: /elder scrolls online|\beso\b/, category: 'MMO' },
-    { match: /black desert/,                category: 'MMO' },
-    { match: /\blineage\b/,                 category: 'MMO' },
+    { match: /black desert/,               category: 'MMO' },
 
-    // ── Sandbox ───────────────────────────────────────────────────────────────
-    { match: /minecraft/,                   category: 'Sandbox' },
-    { match: /terraria/,                    category: 'Sandbox' },
-    { match: /stardew/,                     category: 'Sandbox' },
-    { match: /\broblox\b/,                  category: 'Sandbox' },
-    { match: /\bcore\b game/,               category: 'Sandbox' },
-    { match: /\bgarrys mod|gmod\b/,         category: 'Sandbox' },
-
-    // ── Combat (Fighting Games) ───────────────────────────────────────────────
+    // ── Combat ────────────────────────────────────────────────────────────────
     { match: /street fighter/,              category: 'Combat' },
     { match: /tekken/,                      category: 'Combat' },
     { match: /mortal kombat/,               category: 'Combat' },
     { match: /guilty gear/,                 category: 'Combat' },
-    { match: /dragon ball.*fighter/,        category: 'Combat' },
-    { match: /king of fighters/,            category: 'Combat' },
     { match: /smash bros|smash ultimate/,   category: 'Combat' },
-    { match: /\bmkx\b|\bmk\d+\b/,          category: 'Combat' },
 
     // ── Sport & Course ───────────────────────────────────────────────────────
     { match: /rocket league/,               category: 'Sport & Course' },
     { match: /\bfifa\b|\bfc \d+\b|ea sports fc/, category: 'Sport & Course' },
     { match: /\bnba 2k/,                    category: 'Sport & Course' },
     { match: /\bf1 \d\d|\bformula 1/,       category: 'Sport & Course' },
-    { match: /\bnhl\b/,                     category: 'Sport & Course' },
-    { match: /madden/,                      category: 'Sport & Course' },
     { match: /\bforza\b/,                   category: 'Sport & Course' },
     { match: /gran turismo/,                category: 'Sport & Course' },
     { match: /need for speed/,              category: 'Sport & Course' },
-    { match: /\bdirt\b|\bwrc\b/,            category: 'Sport & Course' },
+    { match: /efootball|pes \d/,            category: 'Sport & Course' },
+    { match: /\bskate\b/,                  category: 'Sport & Course' },
 
-    // ── Aventure / Action ─────────────────────────────────────────────────────
+    // ── Aventure ─────────────────────────────────────────────────────────────
     { match: /grand theft|gta/,             category: 'Aventure' },
     { match: /red dead/,                    category: 'Aventure' },
     { match: /assassin.s creed/,            category: 'Aventure' },
     { match: /god of war/,                  category: 'Aventure' },
-    { match: /spider.man/,                  category: 'Aventure' },
-    { match: /horizon/,                     category: 'Aventure' },
     { match: /the last of us/,              category: 'Aventure' },
-    { match: /uncharted/,                   category: 'Aventure' },
+    { match: /detroit.*human/,              category: 'Aventure' },
     { match: /\bmario\b/,                   category: 'Aventure' },
-    { match: /\bkirby\b/,                   category: 'Aventure' },
-    { match: /\bsonic\b/,                   category: 'Aventure' },
-    { match: /\bmetroid\b/,                 category: 'Aventure' },
-    { match: /ghostrunner/,                 category: 'Aventure' },
+    { match: /\bzelda\b/,                   category: 'Aventure' },
+    { match: /spider.man/,                 category: 'Aventure' },
+    { match: /avatar.*pandora/,             category: 'Aventure' },
+    { match: /stellar blade/,              category: 'Aventure' },
+    { match: /crimson desert/,             category: 'Aventure' },
+    { match: /\btrine\b/,                  category: 'Aventure' },
+    { match: /chained together/,           category: 'Aventure' },
+    { match: /pragmata/,                   category: 'Aventure' },
+    { match: /mio.*orbit|memories in orbit/, category: 'Aventure' },
+    { match: /no man.s sky/,              category: 'Aventure' },
+
+    // ── Retro ─────────────────────────────────────────────────────────────────
+    { match: /retro game/,                 category: 'Retro' },
+    { match: /\bretro\b/,                  category: 'Retro' },
+
+    // ── Gaming (contenu générique sans catégorie précise) ─────────────────────
+    { match: /games interactive/,          category: 'Gaming' },
+    { match: /nova.life/,                  category: 'Gaming' },
+    { match: /hidden object/,              category: 'Divertissement' },
 
     // ── Party Games ───────────────────────────────────────────────────────────
     { match: /among us/,                    category: 'Party Games' },
     { match: /fall guys/,                   category: 'Party Games' },
     { match: /jackbox/,                     category: 'Party Games' },
     { match: /gartic/,                      category: 'Party Games' },
-    { match: /\bpropnight\b/,               category: 'Party Games' },
-    { match: /\bgoose goose duck\b/,        category: 'Party Games' },
 ]
 
 /**
