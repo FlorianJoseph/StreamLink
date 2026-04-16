@@ -73,10 +73,6 @@
                             :class="activeFilter === 'live' ? '' : 'animate-pulse'" />
                         <Icon v-else :name="f.icon" size="12" />
                         {{ f.label }}
-                        <span v-if="f.key === 'live' && liveCount > 0" class="px-1 rounded-full text-[10px] font-bold"
-                            :class="activeFilter === 'live' ? 'bg-red-500/30 text-red-700' : 'bg-red-500/20 text-red-300'">
-                            {{ liveCount }}
-                        </span>
                     </button>
 
                     <!-- Séparateur -->
@@ -146,6 +142,27 @@
                 <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
                     <Icon name="lucide:search-x" size="48" class="text-zinc-700" />
                     <p class="text-sm text-zinc-500">Aucun résultat pour "{{ search }}"</p>
+                </div>
+            </div>
+
+            <!-- ─── Vue live (grille flat) ─── -->
+            <div v-else-if="selectedFilter === 'live'" class="px-8 sm:px-12 flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                    <p class="text-xs text-zinc-500">{{ filteredStreamers.length }} live{{ filteredStreamers.length > 1 ? 's' : '' }}</p>
+                    <button @click="liveSort = liveSort === 'desc' ? 'asc' : 'desc'"
+                        class="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
+                        <Icon name="lucide:eye" size="11" />
+                        Viewers
+                        <Icon :name="liveSort === 'desc' ? 'lucide:arrow-down' : 'lucide:arrow-up'" size="11" />
+                    </button>
+                </div>
+                <div v-if="filteredStreamers.length > 0"
+                    class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                    <StreamerCard v-for="s in sortedLiveStreamers" :key="s.username" :streamer="s" />
+                </div>
+                <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
+                    <Icon name="lucide:radio" size="48" class="text-zinc-700" />
+                    <p class="text-sm text-zinc-500">Aucun stream en direct pour le moment</p>
                 </div>
             </div>
 
@@ -602,6 +619,15 @@ const filteredStreamers = computed(() => {
 })
 
 const liveCount = computed(() => streamers.value.filter(s => s.nextSlot?.isLive).length)
+
+const liveSort = ref<'desc' | 'asc'>('desc')
+
+const sortedLiveStreamers = computed(() =>
+    [...filteredStreamers.value].sort((a, b) => {
+        const diff = (b.nextSlot?.twitchViewerCount ?? 0) - (a.nextSlot?.twitchViewerCount ?? 0)
+        return liveSort.value === 'desc' ? diff : -diff
+    })
+)
 
 // Catégories affichées sur la page d'accueil (dans cet ordre)
 const HOME_CATEGORIES = ['Aventure', 'Battle Royale', 'FPS', 'Horreur', 'MMO', 'RPG', 'Simulation', 'Survie'] as const
