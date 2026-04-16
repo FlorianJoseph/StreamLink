@@ -39,13 +39,19 @@
 
                 <!-- Badge live -->
                 <div v-if="isLive"
-                    class="absolute top-2 left-2 z-20 flex items-center bg-red-600 text-white text-[11px] font-bold px-1 py-0.5 rounded uppercase tracking-wide">
+                    class="absolute top-2 left-2 z-20 flex items-center bg-red-600 text-white text-[11px] font-bold px-1.25 py-0.25 rounded uppercase tracking-wide">
                     live
                 </div>
                 <!-- Viewers -->
                 <div v-if="isLive && twitchViewerCount !== null"
-                    class="absolute top-2 right-2 z-20 flex items-center gap-1 bg-zinc-900/75 backdrop-blur-sm text-zinc-300 text-xs px-2 py-1 rounded">
-                    <Icon name="lucide:eye" size="12" />{{ twitchViewerCount }}
+                    class="absolute top-2 right-2 z-20 flex items-center gap-1 text-sm px-1 py-0.5 rounded"
+                    :style="{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'white' }">
+                    {{ twitchViewerCount }} spectateurs
+                </div>
+                <div v-if="whenLabel"
+                    class="absolute top-2 right-2 z-20 flex items-center gap-1 text-sm px-1 py-0.5 rounded"
+                    :style="{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'white' }">
+                    {{ whenLabel }}
                 </div>
                 <!-- Badge catégorie (offline) -->
                 <span v-if="categoryBadge && !isLive"
@@ -69,7 +75,6 @@
                         </div>
                         <p class="text-xs text-zinc-500 truncate mt-0.5">
                             {{ gameLabel || '—' }}
-                            <span v-if="whenLabel" class="text-zinc-600"> · {{ whenLabel }}</span>
                         </p>
                     </div>
                 </div>

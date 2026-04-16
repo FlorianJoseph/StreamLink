@@ -44,54 +44,60 @@
                 <button v-if="user" @click="openRaidAssistant"
                     v-tooltip.bottom="{ value: !raidStatus.canRaidToday ? 'Tu as déjà raid aujourd\'hui' : raidStatus.remaining === 0 ? 'Plus de raids disponibles cette semaine' : 'Trouve un streamer compatible à raider', pt: { text: '!text-sm' } }"
                     :disabled="!raidStatus.canRaidToday || raidStatus.remaining === 0" :class="[
-                        'flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-medium transition-all duration-150 whitespace-nowrap',
+                        'flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-bold text-sm transition-all duration-150 whitespace-nowrap flex-shrink-0',
                         raidStatus.canRaidToday && raidStatus.remaining > 0
-                            ? 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border-yellow-500/30 hover:border-yellow-500/50 cursor-pointer'
-                            : 'bg-zinc-800 text-zinc-600 border-zinc-700/40 cursor-not-allowed'
+                            ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
+                            : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                     ]">
-                    <Icon name="lucide:swords" size="14" />
+                    <Icon name="lucide:swords" size="16" class="flex-shrink-0" />
                     <span class="hidden sm:inline">Raid assistant</span>
                     <span class="flex items-center gap-0.5 text-[10px]"
-                        :class="raidStatus.canRaidToday && raidStatus.remaining > 0 ? 'text-yellow-500/70' : 'text-zinc-600'">
+                        :class="raidStatus.canRaidToday && raidStatus.remaining > 0 ? 'text-zinc-500' : 'text-zinc-600'">
                         <Icon name="lucide:coins" size="9" /> {{ raidStatus.remaining }}/{{ raidStatus.total }}
                     </span>
                 </button>
             </div>
 
-            <!-- Row 2 : Onglets + Compteur -->
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex gap-0.5 overflow-x-auto scrollbar-hide">
-                    <button v-for="f in filters" :key="f.key" @click="selectedFilter = f.key" :class="[
-                        'flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-all duration-200 whitespace-nowrap',
-                        selectedFilter === f.key
-                            ? 'bg-purple-500 text-white'
-                            : 'text-gray-400 hover:text-white hover:bg-purple-500/20'
+            <!-- Row 2 : Filtres temps + genres -->
+            <div class="flex items-center gap-2">
+                <div class="flex-1 flex gap-1 overflow-x-auto scrollbar-hide">
+
+                    <!-- Filtres temps -->
+                    <button v-for="f in filters" :key="f.key" @click="selectFilter(f.key)" :class="[
+                        'flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150',
+                        activeFilter === f.key
+                            ? 'bg-white text-zinc-900 border-white'
+                            : 'text-zinc-400 border-zinc-700/60 hover:border-zinc-500 hover:text-zinc-200'
                     ]">
-                        <Icon :name="f.icon" size="14" />
+                        <span v-if="f.key === 'live'" class="w-1.5 h-1.5 rounded-full bg-red-500"
+                            :class="activeFilter === 'live' ? '' : 'animate-pulse'" />
+                        <Icon v-else :name="f.icon" size="12" />
                         {{ f.label }}
-                        <span v-if="f.key === 'live' && liveCount > 0"
-                            class="flex items-center justify-center w-4 h-4 rounded-full bg-red-500/30 text-red-300 text-[10px] font-bold">
+                        <span v-if="f.key === 'live' && liveCount > 0" class="px-1 rounded-full text-[10px] font-bold"
+                            :class="activeFilter === 'live' ? 'bg-red-500/30 text-red-700' : 'bg-red-500/20 text-red-300'">
                             {{ liveCount }}
                         </span>
                     </button>
-                </div>
-                <span class="hidden sm:block text-sm text-purple-300/80 whitespace-nowrap flex-shrink-0">
-                    {{ filteredStreamers.length }} streamer{{ filteredStreamers.length > 1 ? 's' : '' }}
-                </span>
-            </div>
 
-            <!-- Row 3 : Chips jeux -->
-            <div v-if="availableGames.length > 0" class="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-hide">
-                <button v-for="game in availableGames" :key="game"
-                    @click="selectedGame = selectedGame === game ? null : game" :class="[
-                        'flex-shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border transition-all duration-150',
-                        selectedGame === game
-                            ? 'bg-purple-500/20 text-purple-200 border-purple-500/40'
+                    <!-- Séparateur -->
+                    <div class="flex-shrink-0 w-px bg-zinc-700/60 mx-1 self-stretch" />
+
+                    <!-- Genres -->
+                    <button v-for="cat in HOME_CATEGORIES" :key="cat" @click="selectGenre(cat)" :class="[
+                        'flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150',
+                        activeFilter === cat
+                            ? 'bg-white text-zinc-900 border-white'
                             : 'text-zinc-400 border-zinc-700/60 hover:border-zinc-500 hover:text-zinc-200'
                     ]">
-                    {{ game }}
-                    <Icon v-if="selectedGame === game" name="lucide:x" size="10" />
-                </button>
+                        <Icon :name="genreIcon(cat)" size="11" />
+                        {{ cat }}
+                    </button>
+                </div>
+
+                <!-- Compteur -->
+                <span class="hidden sm:block text-xs text-zinc-500 whitespace-nowrap flex-shrink-0">
+                    {{ filteredStreamers.length }}
+                </span>
             </div>
         </div>
 
@@ -173,11 +179,6 @@
                         <Button v-if="search" @click="search = ''" severity="contrast" outlined size="small">
                             <Icon name="lucide:x" size="14" />
                             <span class="text-xs">Réinitialiser la recherche</span>
-                        </Button>
-                        <Button v-if="selectedGame" @click="selectedGame = null" severity="contrast" outlined
-                            size="small">
-                            <Icon name="lucide:filter-x" size="14" />
-                            <span class="text-xs">Retirer le filtre jeu</span>
                         </Button>
                         <Button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'" severity="contrast"
                             outlined size="small">
@@ -406,7 +407,6 @@ const loading = ref(true)
 const { streamers, fetchStreamersWithNextSlot } = useDiscoverStreamers()
 const selectedFilter = ref('all')
 const selectedLanguage = ref(null)
-const selectedGame = ref<string | null>(null)
 
 const filters = [
     { key: 'all', label: 'Tous', icon: 'lucide:layout-grid' },
@@ -414,6 +414,37 @@ const filters = [
     { key: 'today', label: 'Aujourd\'hui', icon: 'lucide:calendar' },
     { key: 'future', label: 'À venir', icon: 'lucide:clock' },
 ]
+
+// Filtre actif unifié (temps ou genre)
+const activeFilter = computed(() => selectedCategory.value ?? selectedFilter.value)
+
+function selectFilter(key: string) {
+    clearCategory()
+    selectedFilter.value = key
+}
+
+function selectGenre(cat: string) {
+    if (selectedCategory.value === cat) {
+        clearCategory()
+    } else {
+        selectedFilter.value = 'all'
+        goToCategory(cat)
+    }
+}
+
+const GENRE_ICONS: Record<string, string> = {
+    'Aventure':     'lucide:swords',
+    'Battle Royale':'lucide:target',
+    'FPS':          'lucide:crosshair',
+    'Horreur':      'lucide:skull',
+    'MMO':          'lucide:globe',
+    'RPG':          'lucide:sparkles',
+    'Simulation':   'lucide:settings-2',
+    'Survie':       'lucide:tent',
+}
+function genreIcon(cat: string) {
+    return GENRE_ICONS[cat] ?? 'lucide:gamepad-2'
+}
 
 // ─── Catégorie d'un streamer (IGDB en priorité, regex en fallback) ────────────
 function streamerCategory(s: any): string | null {
@@ -424,23 +455,7 @@ function streamerCategory(s: any): string | null {
     return getGameCategory(gameName)
 }
 
-// ─── Jeux disponibles ─────────────────────────────────────────────────────────
-const availableGames = computed(() => {
-    const games = new Set<string>()
-    for (const s of streamers.value) {
-        if (s.nextSlot?.isLive && s.nextSlot?.twitchGameName) games.add(s.nextSlot.twitchGameName)
-        else if (s.nextSlot?.game?.label) games.add(s.nextSlot.game.label)
-    }
-    return [...games].sort()
-})
-
 // ─── Filtrage ─────────────────────────────────────────────────────────────────
-function matchesGame(s: any, game: string) {
-    const liveGame = s.nextSlot?.twitchGameName?.toLowerCase()
-    const schedGame = s.nextSlot?.game?.label?.toLowerCase()
-    return liveGame === game.toLowerCase() || schedGame === game.toLowerCase()
-}
-
 const filteredStreamers = computed(() => {
     const today = new Date().getDay()
     return streamers.value.filter(s => {
@@ -448,7 +463,6 @@ const filteredStreamers = computed(() => {
         if (selectedFilter.value === 'today' && (!s.nextSlot || s.nextSlot.slotDate?.getDay() !== today || s.nextSlot.isLive)) return false
         if (selectedFilter.value === 'future' && (!s.nextSlot || s.nextSlot.isLive || s.nextSlot.slotDate?.getDay() === today)) return false
         if (selectedLanguage.value && s.language !== selectedLanguage.value) return false
-        if (selectedGame.value && !matchesGame(s, selectedGame.value)) return false
         if (search.value && !s.username.toLowerCase().includes(search.value.toLowerCase())) return false
         return true
     })
@@ -488,7 +502,7 @@ const displayedRows = computed(() => rows.value.slice(0, visibleRowCount.value))
 const hasMoreRows = computed(() => visibleRowCount.value < rows.value.length)
 
 // Reset au changement de filtre
-watch([selectedFilter, selectedLanguage, selectedGame, search], () => {
+watch([selectedFilter, selectedLanguage, search], () => {
     visibleRowCount.value = ROWS_PER_PAGE
 })
 
@@ -701,7 +715,7 @@ async function cancelRaidAssistant() {
 // ─── Empty state ──────────────────────────────────────────────────────────────
 function getEmptyStateMessage() {
     if (search.value) return `Aucun résultat pour "${search.value}"`
-    if (selectedGame.value) return `Aucun streamer ne joue à ${selectedGame.value} en ce moment`
+    if (selectedCategory.value) return `Aucun streamer dans la catégorie ${selectedCategory.value}`
     if (selectedFilter.value === 'live') return 'Aucun stream en direct pour le moment'
     if (selectedFilter.value === 'today') return 'Aucun stream prévu aujourd\'hui'
     if (selectedFilter.value === 'future') return 'Aucun stream à venir pour le moment'
