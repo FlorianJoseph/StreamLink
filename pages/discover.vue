@@ -999,7 +999,7 @@ onMounted(async () => {
                 type: 'discover_visit',
                 utm_source: route.query.utm_source,
                 utm_campaign: route.query.utm_campaign ?? null,
-                userId: user.value ?? null
+                userId: user.value?.sub ?? null
             }
         })
         sessionStorage.setItem('tracked_discover_visit', 'true')
