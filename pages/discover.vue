@@ -1,9 +1,10 @@
 <template>
     <!-- Loader -->
-    <div v-if="loading" class="flex justify-center items-center h-64">
+    <div v-if="loading" class="flex justify-center items-center w-full pt-100">
         <ProgressSpinner
-            style="width:50px;height:50px;--p-progressspinner-color-one:#FFFFFF;--p-progressspinner-color-two:#F8F9FA;--p-progressspinner-color-three:#E9ECEF;--p-progressspinner-color-four:#DEE2E6"
-            strokeWidth="6" fill="transparent" animationDuration=".5s" />
+            style="width: 50px; height: 50px;--p-progressspinner-color-one
+:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
+            strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
 
     <div v-else class="flex flex-col fade-in">
@@ -410,7 +411,8 @@
                                         <Icon name="lucide:chevron-right" size="16"
                                             class="text-zinc-600 group-hover/expand:text-zinc-400 transition-colors" />
                                     </div>
-                                    <span class="text-xs text-zinc-500">+{{ row.streamers.length - (row.key === 'live' ? ROW_PREVIEW + 2 : ROW_PREVIEW) }} streamers</span>
+                                    <span class="text-xs text-zinc-500">+{{ row.streamers.length - (row.key === 'live' ?
+                                        ROW_PREVIEW + 2 : ROW_PREVIEW) }} streamers</span>
                                 </div>
                             </div>
                         </div>
