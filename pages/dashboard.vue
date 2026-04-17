@@ -142,10 +142,10 @@
                                     <Icon name="lucide:chart-column" class="text-blue-400" size="16" />
                                     <span class="text-gray-400 text-sm">Stats avancées</span>
                                 </div>
-                                <div class="flex items-center gap-2">
+                                <!-- <div class="flex items-center gap-2">
                                     <Icon name="lucide:users" class="text-purple-400" size="16" />
                                     <span class="text-gray-400 text-sm">Collabs entre streamers</span>
-                                </div>
+                                </div> -->
                                 <div class="flex items-center gap-2">
                                     <Icon name="simple-icons:twitch" class="text-purple-400" size="16" />
                                     <span class="text-gray-400 text-sm">Synchronisation Twitch</span>
