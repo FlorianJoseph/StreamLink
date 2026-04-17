@@ -991,6 +991,8 @@ onMounted(async () => {
         user.value ? fetchBalance() : Promise.resolve(),
     ])
 
+    const { data: { session } } = await useSupabaseClient().auth.getSession()
+    
     const alreadyTracked = sessionStorage.getItem('tracked_discover_visit') === 'true'
     if (route.query.utm_source && !alreadyTracked) {
         $fetch('/api/marketing/event', {
@@ -999,7 +1001,7 @@ onMounted(async () => {
                 type: 'discover_visit',
                 utm_source: route.query.utm_source,
                 utm_campaign: route.query.utm_campaign ?? null,
-                userId: user.value?.sub ?? null
+                userId: session?.user?.id ?? null
             }
         })
         sessionStorage.setItem('tracked_discover_visit', 'true')
