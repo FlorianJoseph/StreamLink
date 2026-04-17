@@ -10,7 +10,7 @@ import { getUpdateUsers } from '../api/admin/mail/segments/update'
 const resend = new Resend(process.env.NUXT_RESEND_API_KEY)
 
 const subjects: Record<string, string> = {
-    update: 'Quoi de neuf sur StreamLink ?',
+    update: 'Transforme tes raids en récompenses',
     notVisible: 'Ton profil StreamLink est encore invisible',
     notSchedule: 'Ton planning est vide',
 }

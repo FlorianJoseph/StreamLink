@@ -32,30 +32,23 @@ interface UpdateEmailProps {
 
 const defaultFeatures: Feature[] = [
     {
-        title: "Monnaie virtuelle : Coins",
+        title: "Raids avec récompenses",
         icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/coins.png",
         details: [
-            "Commence avec 200 Coins offerts à la complétion des quêtes du tableau de bord (automatique si déjà faites)",
-            "+3 Coins chaque jour depuis le tableau de bord",
-            "Gagne des Coins en raidant d'autres streamers (bientôt)",
+            "Gagne des Coins à chaque raid",
+            "Raid un streamer compatible en 2 clics",
+            "Les petits streamers te rapportent plus de Coins",
+            "Utilise tes Coins pour débloquer des fonctionnalités",
+            "Apparais dans le Top Raiders en raidant régulièrement",
         ],
     },
     {
-        title: "Personnalise vraiment ta page",
-        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/sparkles.png",
+        title: "Trouve des streamers faits pour toi",
+        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/users.png",
         details: [
-            "Crée une page unique avec 13 thèmes et 23 polices premium",
-            "Transforme ton planning en story Instagram / X en 1 clic",
-            "Supprime le branding StreamLink pour une image 100% pro",
-        ],
-    },
-    {
-        title: "Débloque tout, comme tu veux",
-        icon: "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/zap.png",
-        details: [
-            "Active une fonctionnalité quand tu en as besoin (7 ou 30 jours)",
-            "Ou abonne-toi à 7,99€/mois pour tout débloquer sans engagement",
-            "Garde le contrôle avec un historique clair de tes dépenses dans la page Facturation",
+            "Streamers classés par genre : FPS, RPG, IRL, Survie, Battle Royale...",
+            "Vois directement les lives sans quitter le site",
+            "Trouve des streamers compatibles en quelques secondes",
         ],
     },
 ];
@@ -64,8 +57,8 @@ const DEFAULT_ICON = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object
 
 export const UpdateEmail = ({
     username,
-    updateTitle = "Tu peux maintenant débloquer tout ton potentiel",
-    previewText = "Coins, thèmes premium, format story… tout est prêt",
+    updateTitle = "Transforme tes raids en récompenses",
+    previewText = "Raid des streamers, gagne des Coins, et boost ta visibilité.",
     features = defaultFeatures,
 }: UpdateEmailProps & { username: string }) => (
     <Html>
@@ -103,7 +96,7 @@ export const UpdateEmail = ({
                             {updateTitle}
                         </Heading>
                         <Text className="text-zinc-400 text-sm mt-2 mb-0">
-                            Personnalise ta page, débloque des fonctionnalités à la demande ou active tout en illimité.
+                            Les raids sont maintenant récompensés et boostent ta visibilité.
                         </Text>
                     </Section>
 
@@ -141,19 +134,19 @@ export const UpdateEmail = ({
                                 <td align="center">
                                     <Button
                                         className="box-border w-full rounded-[8px] bg-buttonBg px-[16px] py-[8px]"
-                                        href={`${baseUrl}/shop?utm_source=email&utm_campaign=premium_launch`}>
+                                        href={`${baseUrl}/discover?utm_source=email&utm_campaign=raids_launch`}>
                                         <table>
                                             <tr>
                                                 <td className="pr-[4px] pt-[2px]">
                                                     <Img
-                                                        src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/sparkles.png"
+                                                        src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/coins.png"
                                                         width="20"
                                                         alt=""
                                                     />
                                                 </td>
                                                 <td>
                                                     <span className="text-white text-sm font-semibold">
-                                                        Activer mes fonctionnalités
+                                                        Lancer mon premier raid
                                                     </span>
                                                 </td>
                                             </tr>
