@@ -351,15 +351,16 @@
                         <p class="text-sm text-zinc-500">{{ getEmptyStateMessage() }}</p>
                     </div>
                     <div class="flex flex-wrap justify-center gap-2 mt-2">
-                        <Button v-if="search" @click="search = ''" severity="contrast" outlined size="small">
+                        <button v-if="search" @click="search = ''"
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium transition-all duration-150">
                             <Icon name="lucide:x" size="14" />
-                            <span class="text-xs">Réinitialiser la recherche</span>
-                        </Button>
-                        <Button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'" severity="contrast"
-                            outlined size="small">
+                            Réinitialiser la recherche
+                        </button>
+                        <button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'"
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium transition-all duration-150">
                             <Icon name="lucide:filter-x" size="14" />
-                            <span class="text-xs">Retirer le filtre</span>
-                        </Button>
+                            Retirer le filtre
+                        </button>
                     </div>
                 </div>
 
@@ -403,10 +404,13 @@
                                 @click="row.key === 'live' ? selectFilter('live') : goToCategory(row.label)"
                                 class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 group/expand"
                                 :style="{ minHeight: '220px' }">
-                                <div class="flex flex-row items-center gap-1">
-                                    <p class="text-sm font-semibold text-white">Voir tout</p>
-                                    <Icon name="lucide:chevron-right" size="16"
-                                        class="text-zinc-600 group-hover/expand:text-zinc-400 transition-colors" />
+                                <div class="flex flex-col items-center gap-1.5">
+                                    <div class="flex items-center gap-1">
+                                        <p class="text-sm font-semibold text-white">Voir tout</p>
+                                        <Icon name="lucide:chevron-right" size="16"
+                                            class="text-zinc-600 group-hover/expand:text-zinc-400 transition-colors" />
+                                    </div>
+                                    <span class="text-xs text-zinc-500">+{{ row.streamers.length - (row.key === 'live' ? ROW_PREVIEW + 2 : ROW_PREVIEW) }} streamers</span>
                                 </div>
                             </div>
                         </div>
@@ -628,7 +632,7 @@ function streamerCategory(s: any): string | null {
     const regexCat = getGameCategory(gameName)
     if (regexCat === 'IRL' || regexCat === 'Créatif') return regexCat
     // Simulateurs connus mal taggés Racing dans IGDB
-    if (regexCat === 'Simulation' && /euro truck|american truck|flight sim|farming sim/i.test(gameName ?? '')) return regexCat
+    if (regexCat === 'Simulation' && /euro truck|american truck|flight sim|farming sim|the sims|satisfactory|schedule i|dreamlight valley/i.test(gameName ?? '')) return regexCat
     // FPS/Battle Royale connus mal taggés MMO dans IGDB (online shooters)
     if (regexCat === 'FPS' && /fragpunk|arc raiders|the finals|marathon/i.test(gameName ?? '')) return regexCat
     if (regexCat === 'Battle Royale' && /apex legends|warzone/i.test(gameName ?? '')) return regexCat
