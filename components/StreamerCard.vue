@@ -17,24 +17,28 @@
                     </div>
                 </template>
                 <template v-else>
-                    <!-- Game cover flouté en fond (offline) : tiny = blur cache tout -->
+                    <!-- Fond : jaquette flouée ou dégradé -->
                     <img v-if="gameCover" :src="gameCoverTiny"
-                        class="absolute inset-0 w-full h-full object-cover scale-110 blur-sm opacity-50" loading="lazy"
+                        class="absolute inset-0 w-full h-full object-cover scale-110 blur-sm opacity-30" loading="lazy"
                         decoding="async" />
                     <div v-else class="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-950" />
 
-                    <!-- Jaquette centrée -->
+                    <!-- Avatar centré -->
                     <div class="relative z-10 flex items-center justify-center h-full">
-                        <img v-if="gameCover" :src="gameCoverSmall"
-                            class="h-[88px] w-[64px] rounded-lg object-fill shadow-2xl ring-1 ring-white/10"
-                            loading="lazy" decoding="async" />
-                        <div v-else
-                            class="h-[88px] w-[64px] rounded-lg bg-zinc-800 flex items-center justify-center ring-1 ring-zinc-700/50">
-                            <Icon name="lucide:gamepad-2" size="28" class="text-zinc-600" />
-                        </div>
+                        <img :src="avatarUrl(streamer.avatar_url, 128)"
+                            class="w-16 h-16 rounded-full object-cover shadow-2xl ring-2 ring-white/15" loading="lazy"
+                            decoding="async" />
                     </div>
+
+                    <!-- Jaquette bas droite -->
+                    <div v-if="gameCover" class="absolute bottom-2 right-2 z-20">
+                        <img :src="gameCoverSmall"
+                            class="h-14 w-10 rounded-md object-fill shadow-lg ring-1 ring-white/10" loading="lazy"
+                            decoding="async" />
+                    </div>
+
                     <!-- Dégradé bas -->
-                    <div class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-zinc-900 to-transparent z-10" />
+                    <div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-zinc-900 to-transparent z-10" />
                 </template>
 
                 <!-- Badge live -->
@@ -48,7 +52,8 @@
                         class="flex items-center gap-1 bg-zinc-900/75 backdrop-blur-sm text-zinc-300 text-xs px-1.5 py-0.5 rounded">
                         <Icon name="lucide:eye" size="11" />{{ twitchViewerCount }}
                     </div>
-                    <div class="flex items-center gap-1 bg-yellow-500 text-zinc-900 text-[11px] font-bold px-1.5 py-0.5 rounded">
+                    <div
+                        class="flex items-center gap-1 bg-yellow-500 text-zinc-900 text-[11px] font-bold px-1.5 py-0.5 rounded">
                         <Icon name="lucide:coins" size="10" />+{{ raidCoins }}
                     </div>
                 </div>
@@ -127,7 +132,6 @@
 </template>
 
 <script setup lang="ts">
-import { getFlag } from '~/utils/language'
 import { avatarUrl } from '~/utils/avatar'
 
 const streamerStore = useStreamerStore()

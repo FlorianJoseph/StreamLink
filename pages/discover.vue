@@ -99,7 +99,7 @@
             </div>
 
             <!-- Row 3 : Progression perso -->
-            <div v-if="user && raidStatus.total > 0"
+            <div v-if="user && raidStatus.used > 0"
                 class="flex items-center gap-3 text-xs border-t border-zinc-800/60 pt-2">
                 <!-- Barre de progression -->
                 <div class="w-20 h-1.5 bg-zinc-800 rounded-full overflow-hidden flex-shrink-0">
@@ -182,14 +182,21 @@
             <!-- ─── Vue live (grille flat) ─── -->
             <div v-else-if="selectedFilter === 'live'" class="px-8 sm:px-12 flex flex-col gap-4">
                 <div class="flex items-center justify-between">
-                    <p class="text-xs text-zinc-500">{{ filteredStreamers.length }} live{{ filteredStreamers.length > 1
-                        ? 's' :
-                        '' }}</p>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+                            <h2 class="text-2xl font-bold text-white">En live</h2>
+                        </div>
+                        <span
+                            class="px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700/60 text-zinc-400 text-sm font-medium">
+                            {{ liveCount }}
+                        </span>
+                    </div>
                     <button @click="liveSort = liveSort === 'desc' ? 'asc' : 'desc'"
-                        class="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
-                        <Icon name="lucide:eye" size="11" />
+                        class="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150">
+                        <Icon name="lucide:eye" size="16" />
                         Viewers
-                        <Icon :name="liveSort === 'desc' ? 'lucide:arrow-down' : 'lucide:arrow-up'" size="11" />
+                        <Icon :name="liveSort === 'desc' ? 'lucide:arrow-down' : 'lucide:arrow-up'" size="16" />
                     </button>
                 </div>
                 <div v-if="filteredStreamers.length > 0"
@@ -222,9 +229,6 @@
                                 Déjà {{ raidsTodayCount }} raid{{ raidsTodayCount > 1 ? 's' : '' }} aujourd'hui
                             </span>
                         </div>
-                        <span class="text-xs text-zinc-500">
-                            {{ raidStatus.remaining }}/{{ raidStatus.total }} raids restants
-                        </span>
                     </div>
                     <div class="relative group/row">
 
@@ -395,7 +399,8 @@
                             </div>
 
                             <!-- Tile "Voir tout" -->
-                            <div v-if="rowHasMore(row)" @click="row.key === 'live' ? selectFilter('live') : goToCategory(row.label)"
+                            <div v-if="rowHasMore(row)"
+                                @click="row.key === 'live' ? selectFilter('live') : goToCategory(row.label)"
                                 class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 group/expand"
                                 :style="{ minHeight: '220px' }">
                                 <div class="flex flex-row items-center gap-1">
@@ -599,18 +604,18 @@ function selectGenre(cat: string) {
 }
 
 const GENRE_ICONS: Record<string, string> = {
-    'IRL':            'lucide:mic',
-    'Créatif':        'lucide:palette',
-    'Aventure':       'lucide:swords',
-    'Battle Royale':  'lucide:target',
-    'Combat':         'lucide:shield',
-    'FPS':            'lucide:crosshair',
-    'Horreur':        'lucide:skull',
-    'MMO':            'lucide:globe',
-    'RPG':            'lucide:sparkles',
-    'Simulation':     'lucide:settings-2',
+    'IRL': 'lucide:mic',
+    'Créatif': 'lucide:palette',
+    'Aventure': 'lucide:swords',
+    'Battle Royale': 'lucide:target',
+    'Combat': 'lucide:shield',
+    'FPS': 'lucide:crosshair',
+    'Horreur': 'lucide:skull',
+    'MMO': 'lucide:globe',
+    'RPG': 'lucide:sparkles',
+    'Simulation': 'lucide:settings-2',
     'Sport & Course': 'lucide:trophy',
-    'Survie':         'lucide:tent',
+    'Survie': 'lucide:tent',
 }
 function genreIcon(cat: string) {
     return GENRE_ICONS[cat] ?? 'lucide:gamepad-2'
@@ -624,6 +629,9 @@ function streamerCategory(s: any): string | null {
     if (regexCat === 'IRL' || regexCat === 'Créatif') return regexCat
     // Simulateurs connus mal taggés Racing dans IGDB
     if (regexCat === 'Simulation' && /euro truck|american truck|flight sim|farming sim/i.test(gameName ?? '')) return regexCat
+    // FPS/Battle Royale connus mal taggés MMO dans IGDB (online shooters)
+    if (regexCat === 'FPS' && /fragpunk|arc raiders|the finals|marathon/i.test(gameName ?? '')) return regexCat
+    if (regexCat === 'Battle Royale' && /apex legends|warzone/i.test(gameName ?? '')) return regexCat
     // Pour le gaming, IGDB est prioritaire (plus précis que la regex)
     if (s.nextSlot?.twitchGameCategory) return s.nextSlot.twitchGameCategory
     return regexCat
