@@ -75,6 +75,7 @@ function format(pool: any[], liveStatuses: Record<string, any>) {
         avatar_url: s.avatar_url,
         isLive: s.isLive,
         twitchGameName: s.isLive ? (liveStatuses[s.username?.toLowerCase()]?.gameName ?? null) : null,
+        twitchViewerCount: s.isLive ? (liveStatuses[s.username?.toLowerCase()]?.viewerCount ?? null) : null,
         nextSlot: s.nextSlot ? {
             day: s.nextSlot.day,
             start_at: s.nextSlot.start_at,
