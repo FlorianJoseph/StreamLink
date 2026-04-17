@@ -1,4 +1,4 @@
-const raidStatus = ref({ remaining: 0, used: 0, total: 4, canRaidToday: true, raidedThisWeek: [] as string[] })
+const raidStatus = ref({ remaining: 0, used: 0, total: 0, canRaidToday: true, raidedThisWeek: [] as string[] })
 
 export function useRaidStatus() {
     const user = useSupabaseUser()

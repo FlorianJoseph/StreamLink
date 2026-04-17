@@ -1,5 +1,6 @@
 import { getCachedTwitchToken } from '~/server/utils/twitchToken'
 import { resolveCategoryCover } from '~/utils/covers'
+import { categoryFromIgdb } from '~/utils/igdbCategory'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
@@ -22,7 +23,7 @@ export default defineEventHandler(async (event) => {
             'Accept': 'application/json',
         },
         body: `
-      fields name, cover.url, external_games.uid, external_games.external_game_source;
+      fields name, cover.url, genres.id, themes.id, game_modes.id, external_games.uid, external_games.external_game_source;
       where external_games.external_game_source = 14
       & external_games.uid = (${quotedIds});
       limit 100;
@@ -36,15 +37,20 @@ export default defineEventHandler(async (event) => {
 
     const igdbGames = await igdbRes.json()
 
-    // Construit un dictionnaire twitchGameId → coverUrl
-    const covers: Record<string, string> = {}
+    // Construit un dictionnaire twitchGameId → { cover, category }
+    const covers: Record<string, { cover: string | null; category: string | null }> = {}
 
     for (const game of igdbGames) {
+        const genreIds: number[] = (game.genres ?? []).map((g: any) => g.id)
+        const themeIds: number[] = (game.themes ?? []).map((t: any) => t.id)
+        const modeIds: number[] = (game.game_modes ?? []).map((m: any) => m.id)
+        const category = categoryFromIgdb(genreIds, themeIds, modeIds)
+
         for (const ext of game.external_games ?? []) {
             if (ext.external_game_source === 14 && uniqueIds.includes(ext.uid)) {
                 const igdbCover = game.cover?.url?.replace('t_thumb', 't_cover_big') ?? null
-                const resolved = resolveCategoryCover({ igdbCover, categoryName: game.name })
-                if (resolved) covers[ext.uid] = resolved
+                const cover = resolveCategoryCover({ igdbCover, categoryName: game.name })
+                covers[ext.uid] = { cover: cover ?? null, category }
             }
         }
     }

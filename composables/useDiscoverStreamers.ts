@@ -123,14 +123,14 @@ export function useDiscoverStreamers() {
             }
           })
 
-          // 5. Enrichissement covers IGDB pour les streamers en live
+          // 5. Enrichissement covers + catégories IGDB pour les streamers en live
           const liveGameIds = merged
             .filter(s => s.nextSlot?.isLive && s.nextSlot?.twitchGameId)
             .map(s => s.nextSlot.twitchGameId)
-            .filter((id, i, arr) => arr.indexOf(id) === i) // dédupliquer
+            .filter((id, i, arr) => arr.indexOf(id) === i)
 
           if (liveGameIds.length > 0) {
-            let covers: Record<string, string> = {}
+            let covers: Record<string, { cover: string | null; category: string | null }> = {}
             try {
               covers = await $fetch('/api/twitch/game-covers',
                 { method: 'POST', body: { gameIds: liveGameIds } }
@@ -142,12 +142,40 @@ export function useDiscoverStreamers() {
             for (const streamer of merged) {
               const gameId = streamer.nextSlot?.twitchGameId
               if (gameId && covers[gameId]) {
-                streamer.nextSlot.twitchGameCover = covers[gameId]
+                const { cover, category } = covers[gameId]
+                if (cover) streamer.nextSlot.twitchGameCover = cover
+                if (category) streamer.nextSlot.twitchGameCategory = category
               }
             }
           }
 
-          // 6. Tri final : lives en premier (par viewers asc), puis prochain slot asc, puis sans planning
+          // 6. Catégories IGDB pour les streamers offline (par nom de jeu)
+          const offlineGameNames = merged
+            .filter(s => !s.nextSlot?.isLive && s.nextSlot?.game?.label && !s.nextSlot?.twitchGameCategory)
+            .map(s => s.nextSlot.game.label as string)
+            .filter((name, i, arr) => arr.indexOf(name) === i)
+
+          if (offlineGameNames.length > 0) {
+            let nameCategories: Record<string, string | null> = {}
+            try {
+              nameCategories = await $fetch('/api/igdb/categories-by-name',
+                { method: 'POST', body: { gameNames: offlineGameNames } }
+              )
+            } catch (err) {
+              console.warn('[useDiscoverStreamers] IGDB categories-by-name échoué', err)
+            }
+
+            for (const streamer of merged) {
+              if (!streamer.nextSlot?.isLive && !streamer.nextSlot?.twitchGameCategory) {
+                const gameName = streamer.nextSlot?.game?.label
+                if (gameName && nameCategories[gameName]) {
+                  streamer.nextSlot.twitchGameCategory = nameCategories[gameName]
+                }
+              }
+            }
+          }
+
+          // 7. Tri final : lives en premier (par viewers asc), puis prochain slot asc, puis sans planning
           streamers.value = merged.sort((a, b) => {
             const aLive = a.nextSlot?.isLive === true
             const bLive = b.nextSlot?.isLive === true

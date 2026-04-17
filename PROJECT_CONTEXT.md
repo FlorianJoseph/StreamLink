@@ -75,22 +75,18 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Intégration API Twitch pour la page découverte et page publique 30/03/26
 - Streamers similaires (scoring jeux/horaires/langue/live + widget page publique) 08/04/26
 - Raids Twitch avec Coins (API channel:manage:raids, token BDD, refresh auto, restrictions 1/jour 4/semaine) 12/04/26
+- Découverte V3 (layout Netflix par genres, vue live avec tri viewers, section "Parfaits pour raid", Top Raiders, Raid Assistant, recherche par nom et jeu, progression raids dans le header) 17/04/26
 
 ## Roadmap court terme – Augmenter la visibilité et promouvoir le réseau interne
 
-### Découverte V3
-    - Filtres par catégories/jeux/viewers/top raiders de la semaine
-    - Raiders compatibles (streamers qui jouent aux mêmes jeux)
-    - Raid assistant -> lance un raid -> suggestions
-
 ## Roadmap moyen terme – Améliorer le premium
+    - Stats avancées
 
 ### Abonnement — enrichissement progressif
     - Background gradient/image/animé
     - Personnalisation avancée
     - Sync Twitch automatique
     - Export Discord (bot Discord)
-    - Stats avancées
     - Mise en avant sur la Découverte
     - Créer des catégories de lien (premium)
 

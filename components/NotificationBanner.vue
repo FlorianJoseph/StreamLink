@@ -14,13 +14,15 @@
                         <!-- Mobile -->
                         <span class="lg:hidden flex flex-col gap-1">
                             <NuxtLink :to="destination" class="font-bold underline hover:text-indigo-200">
-                                Raid des streamers en live depuis la page découverte et gagne des Coins !
+                                La page Découverte est repensée : trouve des streamers compatibles et gagne des Coins en
+                                les raidant
                             </NuxtLink>
                         </span>
 
                         <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            Raid des streamers en live depuis la page découverte et gagne des Coins !
+                            La page Découverte est repensée : trouve des streamers compatibles et gagne des Coins en les
+                            raidant
                         </span>
                     </p>
                 </div>
@@ -30,8 +32,8 @@
                     <NuxtLink :to="destination"
                         class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <Icon name="lucide:swords" size="18" />
-                            Voir les raids
+                            <Icon name="lucide:coins" size="18" />
+                            Gagner des Coins
                         </div>
                     </NuxtLink>
                     <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
@@ -56,7 +58,7 @@ const destination = ref('/discover')
 
 const user = useSupabaseUser()
 
-const STORAGE_KEY = 'raids'
+const STORAGE_KEY = 'discoverv3'
 const visible = ref(false)
 
 const closeBanner = () => {
