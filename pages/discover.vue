@@ -42,7 +42,7 @@
                     </template>
                 </Select>
                 <button v-if="user" @click="openRaidAssistant"
-                    v-tooltip.bottom="{ value: !raidStatus.canRaidToday ? 'Tu as déjà raid aujourd\'hui' : raidStatus.remaining === 0 ? 'Plus de raids disponibles cette semaine' : 'Trouve un streamer compatible à raider', pt: { text: '!text-sm' } }"
+                    v-tooltip.bottom="{ value: !raidStatus.canRaidToday ? 'Tu as déjà raid aujourd\'hui' : raidStatus.remaining === 0 ? 'Plus de raids disponibles cette semaine' : 'Trouve un streamer compatible à raid', pt: { text: '!text-sm' } }"
                     :disabled="!raidStatus.canRaidToday || raidStatus.remaining === 0" :class="[
                         'flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-bold text-sm transition-all duration-150 whitespace-nowrap flex-shrink-0',
                         raidStatus.canRaidToday && raidStatus.remaining > 0
@@ -137,9 +137,17 @@
                     </span>
                 </div>
                 <!-- Grille -->
-                <div v-if="categoryStreamers.length > 0"
-                    class="px-8 sm:px-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                    <StreamerCard v-for="s in categoryStreamers" :key="s.username" :streamer="s" />
+                <div v-if="categoryStreamers.length > 0" class="flex flex-col gap-4">
+                    <div class="px-8 sm:px-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                        <StreamerCard v-for="s in categoryDisplayed" :key="s.username" :streamer="s" />
+                    </div>
+                    <div v-if="categoryHasMore" class="flex justify-center pb-4">
+                        <button @click="categoryVisibleCount += CATEGORY_PAGE"
+                            class="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150">
+                            <Icon name="lucide:chevron-down" size="16" />
+                            Voir plus
+                        </button>
+                    </div>
                 </div>
                 <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
                     <Icon name="lucide:search-x" size="48" class="text-zinc-700" />
@@ -591,16 +599,18 @@ function selectGenre(cat: string) {
 }
 
 const GENRE_ICONS: Record<string, string> = {
-    'IRL': 'lucide:mic',
-    'Créatif': 'lucide:palette',
-    'Aventure': 'lucide:swords',
-    'Battle Royale': 'lucide:target',
-    'FPS': 'lucide:crosshair',
-    'Horreur': 'lucide:skull',
-    'MMO': 'lucide:globe',
-    'RPG': 'lucide:sparkles',
-    'Simulation': 'lucide:settings-2',
-    'Survie': 'lucide:tent',
+    'IRL':            'lucide:mic',
+    'Créatif':        'lucide:palette',
+    'Aventure':       'lucide:swords',
+    'Battle Royale':  'lucide:target',
+    'Combat':         'lucide:shield',
+    'FPS':            'lucide:crosshair',
+    'Horreur':        'lucide:skull',
+    'MMO':            'lucide:globe',
+    'RPG':            'lucide:sparkles',
+    'Simulation':     'lucide:settings-2',
+    'Sport & Course': 'lucide:trophy',
+    'Survie':         'lucide:tent',
 }
 function genreIcon(cat: string) {
     return GENRE_ICONS[cat] ?? 'lucide:gamepad-2'
@@ -609,9 +619,11 @@ function genreIcon(cat: string) {
 // ─── Catégorie d'un streamer (IGDB en priorité, regex en fallback) ────────────
 function streamerCategory(s: any): string | null {
     const gameName = s.nextSlot?.twitchGameName ?? s.nextSlot?.game?.label ?? null
-    // IRL et Créatif sont prioritaires sur IGDB (évite les faux matchs gaming)
+    // Certaines catégories sont prioritaires sur IGDB (évite les faux matchs)
     const regexCat = getGameCategory(gameName)
     if (regexCat === 'IRL' || regexCat === 'Créatif') return regexCat
+    // Simulateurs connus mal taggés Racing dans IGDB
+    if (regexCat === 'Simulation' && /euro truck|american truck|flight sim|farming sim/i.test(gameName ?? '')) return regexCat
     // Pour le gaming, IGDB est prioritaire (plus précis que la regex)
     if (s.nextSlot?.twitchGameCategory) return s.nextSlot.twitchGameCategory
     return regexCat
@@ -636,7 +648,7 @@ const filteredStreamers = computed(() => {
 
 const liveCount = computed(() => streamers.value.filter(s => s.nextSlot?.isLive).length)
 
-const liveSort = ref<'desc' | 'asc'>('desc')
+const liveSort = ref<'desc' | 'asc'>('asc')
 
 const sortedLiveStreamers = computed(() =>
     [...filteredStreamers.value].sort((a, b) => {
@@ -646,7 +658,7 @@ const sortedLiveStreamers = computed(() =>
 )
 
 // Catégories affichées sur la page d'accueil (dans cet ordre)
-const HOME_CATEGORIES = ['IRL', 'Créatif', 'Aventure', 'Battle Royale', 'FPS', 'Horreur', 'MMO', 'RPG', 'Simulation', 'Survie'] as const
+const HOME_CATEGORIES = ['IRL', 'Créatif', 'Aventure', 'Battle Royale', 'Combat', 'FPS', 'Horreur', 'MMO', 'RPG', 'Simulation', 'Sport & Course', 'Survie'] as const
 
 // ─── Rangées Netflix ──────────────────────────────────────────────────────────
 const rows = computed(() => {
@@ -714,6 +726,14 @@ const categoryStreamers = computed(() => {
         return cat === selectedCategory.value
     })
 })
+
+const CATEGORY_PAGE = 20
+const categoryVisibleCount = ref(CATEGORY_PAGE)
+const categoryDisplayed = computed(() => categoryStreamers.value.slice(0, categoryVisibleCount.value))
+const categoryHasMore = computed(() => categoryVisibleCount.value < categoryStreamers.value.length)
+
+// Reset au changement de catégorie
+watch(selectedCategory, () => { categoryVisibleCount.value = CATEGORY_PAGE })
 
 function goToCategory(label: string) {
     document.querySelector('main')?.scrollTo({ top: 0, behavior: 'instant' })
@@ -871,7 +891,7 @@ function raidSuggestionTooltip(s: any) {
     if (!raidStatus.value.canRaidToday) return 'Tu as déjà raid aujourd\'hui'
     if (raidStatus.value.remaining === 0) return 'Limite de raids atteinte cette semaine'
     if (raidStatus.value.raidedThisWeek?.includes(s.username?.toLowerCase())) return 'Tu as déjà raid ce streamer cette semaine'
-    return `Raid ${s.username}`
+    return `Raid ${s.username} et gagner ${raidCoinsFor(s)} coins`
 }
 
 function openRaidAssistant() {

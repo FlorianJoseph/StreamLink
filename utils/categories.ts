@@ -18,6 +18,17 @@ export type Category = typeof CATEGORIES[number]
  */
 const RULES: { match: string | RegExp; category: Category }[] = [
 
+    // ── Sport & Course (gaming) — avant la règle IRL sport ─────────────────────
+    { match: /\bfifa\b|\bfc \d+\b|ea sports fc/,  category: 'Sport & Course' },
+    { match: /rocket league/,                      category: 'Sport & Course' },
+    { match: /\bnba 2k/,                           category: 'Sport & Course' },
+    { match: /\bf1 \d\d|\bformula 1/,              category: 'Sport & Course' },
+    { match: /\bforza\b/,                          category: 'Sport & Course' },
+    { match: /gran turismo/,                       category: 'Sport & Course' },
+    { match: /need for speed/,                     category: 'Sport & Course' },
+    { match: /efootball|pes \d/,                   category: 'Sport & Course' },
+    { match: /\bskate\b/,                          category: 'Sport & Course' },
+
     // ── IRL (Just Chatting, IRL, ASMR, Sports, Science, Bien-être, Humour, Podcast) ──
     { match: 'just chatting',               category: 'IRL' },
     { match: /\birl\b/,                     category: 'IRL' },
@@ -32,6 +43,7 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /\bsport(?! )/,               category: 'IRL' },
     { match: 'chess',                       category: 'IRL' },
     { match: /humour|comedy|humor/,         category: 'IRL' },
+    { match: "i'm only sleeping",           category: 'IRL' },
 
     // ── Créatif (Art, Développement, Cuisine, Musique, DJ/Instruments) ──────
     { match: /music|performing arts/,       category: 'Créatif' },
@@ -47,7 +59,7 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: 'makers & crafting',          category: 'Créatif' },
     { match: 'diy',                        category: 'Créatif' },
     { match: /food|cook|cuisine/,          category: 'Créatif' },
-    { match: /programming|coding|dev/,     category: 'Créatif' },
+    { match: /programming|coding|\bdev\b/,  category: 'Créatif' },
     { match: 'software',                   category: 'Créatif' },
     { match: /crypto|blockchain/,          category: 'Créatif' },
     { match: /\bia\b|artificial intel/,    category: 'Créatif' },
@@ -130,7 +142,6 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /genshin impact/,              category: 'RPG' },
     { match: /baldur.s gate/,               category: 'RPG' },
     { match: /clair obscur/,                category: 'RPG' },
-    { match: /dragon ball/,                category: 'RPG' },
     { match: /legacy of kain/,             category: 'RPG' },
     { match: /lost ark/,                   category: 'MMO' },
 
@@ -147,7 +158,7 @@ const RULES: { match: string | RegExp; category: Category }[] = [
 
     // ── Simulation ────────────────────────────────────────────────────────────
     { match: /the sims/,                    category: 'Simulation' },
-    { match: /euro truck|american truck/,   category: 'Simulation' },
+    { match: /euro truck|american truck/,    category: 'Simulation' },
     { match: /flight simulator|msfs/,       category: 'Simulation' },
     { match: /farming simulator/,           category: 'Simulation' },
     { match: /satisfactory/,               category: 'Simulation' },
@@ -169,17 +180,10 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /mortal kombat/,               category: 'Combat' },
     { match: /guilty gear/,                 category: 'Combat' },
     { match: /smash bros|smash ultimate/,   category: 'Combat' },
+    { match: /dragon ball/,                 category: 'Combat' },
 
     // ── Sport & Course ───────────────────────────────────────────────────────
-    { match: /rocket league/,               category: 'Sport & Course' },
-    { match: /\bfifa\b|\bfc \d+\b|ea sports fc/, category: 'Sport & Course' },
-    { match: /\bnba 2k/,                    category: 'Sport & Course' },
-    { match: /\bf1 \d\d|\bformula 1/,       category: 'Sport & Course' },
-    { match: /\bforza\b/,                   category: 'Sport & Course' },
-    { match: /gran turismo/,                category: 'Sport & Course' },
-    { match: /need for speed/,              category: 'Sport & Course' },
-    { match: /efootball|pes \d/,            category: 'Sport & Course' },
-    { match: /\bskate\b/,                  category: 'Sport & Course' },
+    // (règles déjà listées en tête de fichier avant IRL)
 
     // ── Aventure ─────────────────────────────────────────────────────────────
     { match: /grand theft|gta/,             category: 'Aventure' },
@@ -191,6 +195,7 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /\bmario\b/,                   category: 'Aventure' },
     { match: /\bzelda\b/,                   category: 'Aventure' },
     { match: /spider.man/,                 category: 'Aventure' },
+    { match: /devil may cry/,             category: 'Aventure' },
     { match: /avatar.*pandora/,             category: 'Aventure' },
     { match: /stellar blade/,              category: 'Aventure' },
     { match: /crimson desert/,             category: 'Aventure' },

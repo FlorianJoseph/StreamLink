@@ -46,6 +46,9 @@ const MODE_MAP: Record<number, Category> = {
  * Ordre de priorité : game_modes > themes > genres
  * Retourne null si aucun mapping trouvé (le regex client-side prend le relais).
  */
+// Genres qui prennent la priorité sur les thèmes (plus précis que l'ambiance)
+const GENRE_PRIORITY = new Set([25]) // 25 = Hack & slash → Aventure avant Horror
+
 export function categoryFromIgdb(
     genres: number[] = [],
     themes: number[] = [],
@@ -53,6 +56,10 @@ export function categoryFromIgdb(
 ): Category | null {
     for (const m of gameModes) {
         if (MODE_MAP[m]) return MODE_MAP[m]
+    }
+    // Genres prioritaires (ex: Hack & slash avant Horror)
+    for (const g of genres) {
+        if (GENRE_PRIORITY.has(g) && GENRE_MAP[g]) return GENRE_MAP[g]
     }
     for (const t of themes) {
         if (THEME_MAP[t]) return THEME_MAP[t]

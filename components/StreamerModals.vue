@@ -39,7 +39,8 @@
                         <Icon name="simple-icons:twitch" size="16" />
                         Voir sur Twitch
                     </a>
-                    <button @click="triggerRaidFromPlayer" :disabled="!playerCanRaid" :class="[
+                    <button @click="triggerRaidFromPlayer" :disabled="!playerCanRaid"
+                        v-tooltip.bottom="{ value: playerRaidTooltip, pt: { text: '!text-sm' } }" :class="[
                         'w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-150',
                         playerCanRaid
                             ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
@@ -191,6 +192,17 @@ const playerCanRaid = computed(() => {
     if (currentStreamer.value?.username?.toLowerCase() === s.username?.toLowerCase()) return false
     if (raidStatus.value.raidedThisWeek?.includes(s.username?.toLowerCase())) return false
     return raidStatus.value.remaining > 0
+})
+
+const playerRaidTooltip = computed(() => {
+    if (!user.value) return 'Connecte-toi pour raid'
+    const s = playerModal.value.streamer
+    if (!s) return ''
+    if (currentStreamer.value?.username?.toLowerCase() === s.username?.toLowerCase()) return 'Tu ne peux pas te raid toi-même'
+    if (!raidStatus.value.canRaidToday) return 'Tu as déjà raid aujourd\'hui'
+    if (raidStatus.value.remaining === 0) return 'Plus de raids disponibles cette semaine'
+    if (raidStatus.value.raidedThisWeek?.includes(s.username?.toLowerCase())) return 'Tu as déjà raid ce streamer cette semaine'
+    return `Raid ${s.username} et gagner ${playerRaidCoins.value} Coins`
 })
 
 function triggerRaidFromPlayer() {
