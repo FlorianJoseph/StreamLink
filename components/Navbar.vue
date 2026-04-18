@@ -44,17 +44,17 @@
                 <template v-else>
                     <template v-if="user">
                         <div
-                            class="flex items-center gap-1 px-2 py-1 rounded-md bg-zinc-300/10 text-xs sm:text-sm font-semibold">
-                            <Icon name="lucide:coins" size="14" class="shrink-0 text-amber-400" />
-                            <span class="text-amber-400">{{ balance }} <span class="hidden sm:inline-block">Coins</span></span>
+                            class="flex items-center gap-1 px-2 py-1 rounded bg-zinc-300/10 text-xs sm:text-sm font-semibold">
+                            <Icon name="lucide:coins" size="14" class="shrink-0 text-zinc-400" />
+                            <span class="text-zinc-300">{{ balance }} Coins</span>
                         </div>
                     </template>
                     <button
                         class="flex items-center gap-2 py-1 px-2 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
                         @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
                         <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
-                        <span class="text-sm sm:text-base font-medium">{{ user.user_metadata.nickname }}</span>
-                        <Icon name="lucide:chevron-down" size="20" />
+                        <span class="hidden sm:block text-sm sm:text-base font-medium">{{ user.user_metadata.nickname }}</span>
+                        <span class="hidden sm:flex items-center"><Icon name="lucide:chevron-down" size="20" /></span>
                     </button>
                 </template>
             </div>
