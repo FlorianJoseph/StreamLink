@@ -209,6 +209,22 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /retro game/,                 category: 'Retro' },
     { match: /\bretro\b/,                  category: 'Retro' },
 
+    // ── RPG / Aventure / divers ───────────────────────────────────────────────
+    { match: /seven deadly sins/,          category: 'RPG' },
+    { match: /maliki.*poison|poison.*past/, category: 'Aventure' },
+    { match: /star ocean/,                 category: 'RPG' },
+    { match: /banishers/,                  category: 'RPG' },
+    { match: /tainted grail/,              category: 'RPG' },
+    { match: /senua|hellblade/,            category: 'Aventure' },
+    { match: /middle.earth|shadow of war/, category: 'Aventure' },
+    { match: /sea of thieves/,             category: 'Aventure' },
+    { match: /beyblade/,                   category: 'Combat' },
+    { match: /deep rock galactic/,         category: 'FPS' },
+    { match: /\bpalia\b/,                  category: 'Simulation' },
+    { match: /heartopia/,                  category: 'Simulation' },
+    { match: /two point/,                  category: 'Simulation' },
+    { match: /ithya/,                      category: 'Simulation' },
+
     // ── Gaming (contenu générique sans catégorie précise) ─────────────────────
     { match: /games interactive/,          category: 'Gaming' },
     { match: /nova.life/,                  category: 'Gaming' },
