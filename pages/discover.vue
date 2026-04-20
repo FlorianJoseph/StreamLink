@@ -533,7 +533,7 @@
                         Voir les lives
                     </button>
                 </div>
-                <div v-else class="flex flex-col divide-y divide-zinc-800">
+                <div v-else class="flex flex-col divide-y divide-zinc-800 overflow-y-auto" style="max-height: 60vh">
                     <div v-for="s in raidSuggestions" :key="s.username"
                         class="flex items-center gap-3 px-5 py-3 hover:bg-zinc-800/50 transition-colors">
                         <img :src="avatarUrl(s.avatar_url, 64)"
