@@ -76,6 +76,7 @@
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-1.5 min-w-0">
                             <span class="font-semibold text-white text-sm truncate">{{ streamer.username }}</span>
+                            <Icon v-if="streamer.is_sub" name="lucide:badge-check" size="15" class="text-purple-400 shrink-0" v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-sm' } }" />
                         </div>
                         <p class="text-xs text-zinc-500 truncate mt-0.5">
                             {{ gameLabel || '—' }}

@@ -51,44 +51,42 @@ export default defineEventHandler(async (event) => {
         }
 
         if (mode === 'subscription') {
-            // Activer toutes les features pour l'abonné
+            const sub = await stripe.subscriptions.retrieve(session.subscription as string) as any
             await supabase.from('Subscriptions').upsert({
                 user_id: userId,
                 status: 'active',
                 stripe_customer_id: session.customer as string,
-                current_period_end: null
+                current_period_end: sub.items?.data?.[0]?.current_period_end ? new Date(sub.items.data[0].current_period_end * 1000).toISOString() : null
             }, { onConflict: 'user_id' })
         }
     }
 
     if (stripeEvent.type === 'customer.subscription.updated') {
-        const subscription = stripeEvent.data.object as Stripe.Subscription
+        const subscription = stripeEvent.data.object as any
         const customer = await stripe.customers.retrieve(subscription.customer as string)
         const userId = (customer as Stripe.Customer).metadata?.user_id
 
         if (!userId) return { received: true }
 
-        if (subscription.cancel_at) {
+        await supabase.from('Subscriptions').upsert({
+            user_id: userId,
+            status: subscription.status,
+            stripe_customer_id: subscription.customer as string,
+            current_period_end: subscription.items?.data?.[0]?.current_period_end ? new Date(subscription.items.data[0].current_period_end * 1000).toISOString() : null
+        }, { onConflict: 'user_id' })
+    }
+
+    if (stripeEvent.type === 'invoice.payment_failed') {
+        const invoice = stripeEvent.data.object as Stripe.Invoice
+        const customer = await stripe.customers.retrieve(invoice.customer as string)
+        const userId = (customer as Stripe.Customer).metadata?.user_id
+
+        if (userId) {
             await supabase.from('Subscriptions').upsert({
                 user_id: userId,
-                status: 'canceled',
-                stripe_customer_id: subscription.customer as string,
-                current_period_end: new Date(subscription.cancel_at * 1000).toISOString()
+                status: 'past_due',
+                stripe_customer_id: invoice.customer as string,
             }, { onConflict: 'user_id' })
-        }
-
-        if (subscription.status === 'canceled') {
-            await supabase.from('Subscriptions').upsert({
-                user_id: userId,
-                status: 'deleted',
-                stripe_customer_id: subscription.customer as string,
-                current_period_end: null
-            }, { onConflict: 'user_id' })
-
-            await supabase
-                .from('Streamer')
-                .update({ is_sub: false })
-                .eq('id', userId)
         }
     }
 

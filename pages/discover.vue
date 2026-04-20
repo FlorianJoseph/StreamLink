@@ -274,7 +274,10 @@
                                         <img :src="avatarUrl(s.avatar_url, 32)"
                                             class="w-7 h-7 rounded-full object-cover flex-shrink-0 ring-1 ring-zinc-700" />
                                         <div class="min-w-0">
-                                            <p class="text-xs font-semibold text-white truncate">{{ s.username }}</p>
+                                            <div class="flex items-center gap-1">
+                                                <p class="text-xs font-semibold text-white truncate">{{ s.username }}</p>
+                                                <Icon v-if="s.is_sub" name="lucide:badge-check" size="12" class="text-purple-400 shrink-0" v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-xs' } }" />
+                                            </div>
                                             <p class="text-[10px] text-zinc-500 truncate">
                                                 {{ s.nextSlot?.twitchGameName || '—' }}
                                             </p>

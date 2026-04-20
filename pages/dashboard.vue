@@ -86,21 +86,34 @@
                                         <div>
                                             <h2 class="text-lg font-semibold">Coins quotidiens</h2>
                                             <p class="text-xs sm:text-sm text-gray-400">
-                                                {{ dailyClaimed ? 'Déjà récupéré aujourd\'hui, reviens demain !' :
-                                                    'Connecte-toi chaque jour pour gagner des Coins' }}
+                                                <template v-if="isSub">
+                                                    Tes coins sont crédités automatiquement chaque jour
+                                                </template>
+                                                <template v-else>
+                                                    {{ dailyClaimed ? 'Déjà récupéré aujourd\'hui, reviens demain !' :
+                                                        'Connecte-toi chaque jour pour gagner des Coins' }}
+                                                </template>
                                             </p>
                                         </div>
                                     </div>
-                                    <Button :disabled="dailyClaimed || dailyLoading" severity="contrast"
-                                        class="flex items-center gap-2 w-full sm:w-auto justify-center"
-                                        @click="claimDaily">
-                                        <Icon v-if="dailyLoading" name="lucide:loader-circle" size="16"
-                                            class="animate-spin shrink-0" />
-                                        <Icon v-else-if="dailyClaimed" name="lucide:check" size="16" class="shrink-0" />
-                                        <Icon v-else name="lucide:coins" size="16" class="shrink-0" />
-                                        <span class="text-sm sm:text-base">
-                                            {{ dailyClaimed ? 'Récupéré' : '+3 Coins' }}</span>
-                                    </Button>
+                                    <div v-if="!isSub"
+                                        class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+                                        <NuxtLink to="/shop"
+                                            class="text-xs text-amber-400 hover:underline whitespace-nowrap">
+                                            Abonne-toi pour les recevoir automatiquement chaque jour
+                                        </NuxtLink>
+                                        <Button :disabled="dailyClaimed || dailyLoading" severity="contrast"
+                                            class="flex items-center gap-2 w-full sm:w-auto justify-center"
+                                            @click="claimDaily">
+                                            <Icon v-if="dailyLoading" name="lucide:loader-circle" size="16"
+                                                class="animate-spin shrink-0" />
+                                            <Icon v-else-if="dailyClaimed" name="lucide:check" size="16"
+                                                class="shrink-0" />
+                                            <Icon v-else name="lucide:coins" size="16" class="shrink-0" />
+                                            <span class="text-sm sm:text-base">
+                                                {{ dailyClaimed ? 'Récupéré' : '+3 Coins' }}</span>
+                                        </Button>
+                                    </div>
                                 </div>
                             </template>
                         </Card>
@@ -205,6 +218,7 @@ const newsletterStore = useNewsletterStore()
 const loading = ref(true)
 const { uid } = useSupabase()
 const { fetchBalance } = useWallet()
+const { isSub, fetchSubscription } = useFeatures()
 const toast = useToast()
 const dailyClaimed = ref(false)
 const dailyLoading = ref(false)
@@ -257,6 +271,7 @@ const toolsSections = [
 
 onMounted(async () => {
     loading.value = true
+    await fetchSubscription()
     await newsletterStore.fetchStatus()
     const { data: schedule } = await scheduleStore.fetchSchedule()
     if (schedule?.id) {
