@@ -691,6 +691,9 @@ const rows = computed(() => {
             const catStreamers = nonLive.filter(s => streamerCategory(s) === cat)
             if (catStreamers.length > 0) result.push({ key: cat, label: cat, streamers: catStreamers })
         }
+        // Fallback : streamers sans catégorie reconnue
+        const uncategorized = nonLive.filter(s => !streamerCategory(s))
+        if (uncategorized.length > 0) result.push({ key: 'gaming', label: 'Gaming', streamers: uncategorized })
     }
 
     return result
