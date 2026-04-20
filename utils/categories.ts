@@ -222,6 +222,7 @@ const RULES: { match: string | RegExp; category: Category }[] = [
     { match: /deep rock galactic/,         category: 'FPS' },
     { match: /\bpalia\b/,                  category: 'Simulation' },
     { match: /heartopia/,                  category: 'Simulation' },
+    { match: /two point/,                  category: 'Simulation' },
     { match: /ithya/,                      category: 'Simulation' },
 
     // ── Gaming (contenu générique sans catégorie précise) ─────────────────────

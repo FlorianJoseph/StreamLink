@@ -63,12 +63,6 @@
                     :style="{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'white' }">
                     {{ whenLabel }}
                 </div>
-                <!-- Badge catégorie (offline) -->
-                <span v-if="categoryBadge && !isLive"
-                    class="absolute top-2 left-2 z-20 flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-md font-medium border"
-                    :class="categoryBadgeClass">
-                    <Icon :name="categoryBadgeIcon" size="10" /> {{ categoryBadge }}
-                </span>
             </div>
 
             <!-- ── Infos + CTA ── -->
@@ -214,36 +208,11 @@ const twitchViewerCount = computed(() => props.streamer.nextSlot?.twitchViewerCo
 const whenLabel = computed(() => {
     if (isLive.value) return ''
     const slot = props.streamer.nextSlot
-    if (!slot) return 'Aucun planning'
+    if (!slot) return ''
     const time = formatTime(slot.start_at)
     if (slot.isToday) return `Aujourd'hui · ${time}`
     if (slot.isTomorrow) return `Demain · ${time}`
     return `${slot.day} · ${time}`
-})
-
-// ── Badges ────────────────────────────────────────────────────────────────────
-const categoryBadge = computed(() => {
-    const v = twitchViewerCount.value
-    if (v === null) return null
-    if (v < 10) return 'À découvrir'
-    if (v < 50) return 'En montée'
-    return 'Populaire'
-})
-
-const categoryBadgeClass = computed(() => {
-    const v = twitchViewerCount.value
-    if (v === null) return ''
-    if (v < 10) return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/20'
-    if (v < 50) return 'bg-blue-500/20 text-blue-300 border-blue-500/20'
-    return 'bg-orange-500/20 text-orange-300 border-orange-500/20'
-})
-
-const categoryBadgeIcon = computed(() => {
-    const v = twitchViewerCount.value
-    if (v === null) return 'lucide:sprout'
-    if (v < 10) return 'lucide:sprout'
-    if (v < 50) return 'lucide:trending-up'
-    return 'lucide:flame'
 })
 
 function formatTime(time: string) {

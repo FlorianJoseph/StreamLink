@@ -132,7 +132,7 @@
             <div v-if="selectedCategory" class="flex flex-col gap-6">
                 <!-- Header -->
                 <div class="px-4 sm:px-12 flex items-center gap-3">
-                    <h2 class="text-2xl font-bold text-white">{{ selectedCategory }}</h2>
+                    <h2 class="text-2xl font-bold text-white">{{ categoryLabel }}</h2>
                     <span v-if="search" class="flex items-center gap-1.5 text-xs text-zinc-400">
                         + recherche "<span class="text-white">{{ search }}</span>"
                         <button @click="search = ''"
@@ -403,7 +403,7 @@
 
                             <!-- Tile "Voir tout" -->
                             <div v-if="rowHasMore(row)"
-                                @click="row.key === 'live' ? selectFilter('live') : goToCategory(row.label)"
+                                @click="row.key === 'live' ? selectFilter('live') : goToCategory(CATEGORY_KEY[row.label] ?? row.key)"
                                 class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 group/expand"
                                 :style="{ minHeight: '220px' }">
                                 <div class="flex flex-col items-center gap-1.5">
@@ -593,7 +593,11 @@ const filters = [
 ]
 
 // Filtre actif unifié (temps ou genre)
-const activeFilter = computed(() => selectedCategory.value ?? selectedFilter.value)
+// activeFilter compare avec le label pour les chips de genre
+const activeFilter = computed(() => {
+    if (selectedCategory.value) return CATEGORY_LABEL[selectedCategory.value] ?? selectedCategory.value
+    return selectedFilter.value
+})
 
 function selectFilter(key: string) {
     search.value = ''
@@ -602,13 +606,35 @@ function selectFilter(key: string) {
 }
 
 function selectGenre(cat: string) {
-    if (selectedCategory.value === cat) {
+    const key = CATEGORY_KEY[cat] ?? cat
+    if (selectedCategory.value === key) {
         clearCategory()
     } else {
         selectedFilter.value = 'all'
-        goToCategory(cat)
+        goToCategory(key)
     }
 }
+
+// Mapping label → clé URL (lowercase anglais)
+const CATEGORY_KEY: Record<string, string> = {
+    'IRL': 'irl',
+    'Créatif': 'creative',
+    'Aventure': 'adventure',
+    'Battle Royale': 'battle-royale',
+    'Combat': 'combat',
+    'FPS': 'fps',
+    'Horreur': 'horror',
+    'MMO': 'mmo',
+    'RPG': 'rpg',
+    'Simulation': 'simulation',
+    'Sport & Course': 'sport',
+    'Survie': 'survival',
+    'Autres': 'others',
+    'À découvrir': 'unscheduled',
+}
+const CATEGORY_LABEL: Record<string, string> = Object.fromEntries(
+    Object.entries(CATEGORY_KEY).map(([label, key]) => [key, label])
+)
 
 const GENRE_ICONS: Record<string, string> = {
     'IRL': 'lucide:mic',
@@ -691,9 +717,12 @@ const rows = computed(() => {
             const catStreamers = nonLive.filter(s => streamerCategory(s) === cat)
             if (catStreamers.length > 0) result.push({ key: cat, label: cat, streamers: catStreamers })
         }
-        // Fallback : streamers sans catégorie reconnue
-        const uncategorized = nonLive.filter(s => !streamerCategory(s))
-        if (uncategorized.length > 0) result.push({ key: 'gaming', label: 'Gaming', streamers: uncategorized })
+        // Fallback : streamers sans catégorie reconnue (jeu inconnu)
+        const uncategorized = nonLive.filter(s => s.nextSlot && !streamerCategory(s))
+        if (uncategorized.length > 0) result.push({ key: 'others', label: 'Autres', streamers: uncategorized })
+        // Streamers sans planning
+        const noPlanning = nonLive.filter(s => !s.nextSlot)
+        if (noPlanning.length > 0) result.push({ key: 'unscheduled', label: 'À découvrir', streamers: noPlanning })
     }
 
     return result
@@ -736,12 +765,17 @@ const router = useRouter()
 
 const selectedCategory = computed(() => route.query.category as string || null)
 
+// Résout le label affiché depuis la key URL
+const categoryLabel = computed(() => CATEGORY_LABEL[selectedCategory.value ?? ''] ?? selectedCategory.value ?? '')
+
 const categoryStreamers = computed(() => {
-    if (!selectedCategory.value) return []
+    const key = selectedCategory.value
+    if (!key) return []
+    const label = CATEGORY_LABEL[key] ?? key
     return filteredStreamers.value.filter(s => {
-        const cat = streamerCategory(s)
-        if (selectedCategory.value === 'Autres') return !cat
-        return cat === selectedCategory.value
+        if (key === 'unscheduled') return !s.nextSlot
+        if (key === 'others') return s.nextSlot && !streamerCategory(s)
+        return streamerCategory(s) === label
     })
 })
 
