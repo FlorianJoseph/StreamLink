@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
             username,
             avatar_url,
             language,
+            is_sub,
             Schedule (
                 ScheduleSlot (
                     game,

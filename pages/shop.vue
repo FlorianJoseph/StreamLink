@@ -82,8 +82,8 @@
                                     </div>
                                     <span>·</span>
                                     <div class="flex items-center gap-1">
-                                        <Icon name="lucide:calendar-x" size="12" class="shrink-0" />
-                                        <span>Sans engagement</span>
+                                        <Icon name="lucide:x-circle" size="12" class="shrink-0" />
+                                        <span>Annulation à tout moment</span>
                                     </div>
                                 </div>
                             </div>
@@ -367,13 +367,14 @@ const subPacks = [
         price: 7.99,
         duration: '/ mois',
         priceId: 'sub',
-        access: 'Tu te démarques instantanément',
+        access: 'Toutes les fonctionnalités incluses',
         popular: true,
         features: [
             '13 thèmes exclusifs et 23 polices premium',
             'Génère ton planning au format story Instagram / X en 1 clic',
             'Masque le footer sur ta page et ton planning',
-            '+3 Coins/jour crédités automatiquement (~90 Coins/mois)',
+            'Coins quotidiens automatiques',
+            'Badge vérifié',
         ]
     },
 ]
