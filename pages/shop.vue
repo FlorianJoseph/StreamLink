@@ -373,7 +373,7 @@ const subPacks = [
             '13 thèmes exclusifs et 23 polices premium',
             'Génère ton planning au format story Instagram / X en 1 clic',
             'Masque le footer sur ta page et ton planning',
-            'Coins quotidiens automatiques',
+            'Coins quotidiens x2 automatiques',
             'Badge vérifié',
         ]
     },

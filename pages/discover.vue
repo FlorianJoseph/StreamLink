@@ -538,20 +538,20 @@
                 </div>
                 <div v-else class="flex flex-col divide-y divide-zinc-800 overflow-y-auto" style="max-height: 60vh">
                     <div v-for="s in raidSuggestions" :key="s.username"
-                        class="flex items-center gap-3 px-5 py-3 hover:bg-zinc-800/50 transition-colors">
+                        class="flex items-center gap-3 px-5 py-3 transition-colors">
                         <img :src="avatarUrl(s.avatar_url, 64)"
                             class="w-9 h-9 rounded-xl object-cover ring-1 ring-zinc-700 flex-shrink-0" />
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-1.5">
                                 <span class="text-sm font-semibold text-white truncate">{{ s.username }}</span>
+                                <Icon v-if="s.is_sub" name="lucide:badge-check" size="12" class="text-purple-400 shrink-0" v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-xs' } }" />
                                 <span class="flex items-center gap-1 text-[10px] text-zinc-500">
                                     <Icon name="lucide:eye" size="10" />{{ s.nextSlot?.twitchViewerCount ?? '—' }}
                                 </span>
                             </div>
                             <p class="text-xs text-zinc-400 truncate">{{ s.nextSlot?.twitchGameName || '—' }}</p>
                         </div>
-                        <button @click="selectSuggestion(s)" :disabled="!canRaidSuggestion(s)"
-                            v-tooltip.left="{ value: raidSuggestionTooltip(s), pt: { text: '!text-sm' } }" :class="[
+                        <button @click="selectSuggestion(s)" :disabled="!canRaidSuggestion(s)" :class="[
                                 'flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-all duration-150',
                                 canRaidSuggestion(s)
                                     ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
@@ -559,6 +559,10 @@
                             ]">
                             <Icon name="lucide:swords" size="15" />
                             Raid
+                            <span class="flex items-center gap-0.5 text-[10px]"
+                                :class="canRaidSuggestion(s) ? 'text-zinc-500' : 'text-zinc-600'">
+                                <Icon name="lucide:coins" size="9" />+{{ raidCoinsFor(s) }}
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -953,7 +957,7 @@ function openRaidAssistant() {
     raidAssistantOpen.value = true
     raidAssistantStep.value = 'list'
     selectedSuggestion.value = null
-    raidSuggestions.value = raidableStreamers.value
+    raidSuggestions.value = raidableStreamers.value.slice(0, 9)
 }
 
 function selectSuggestion(s: any) {

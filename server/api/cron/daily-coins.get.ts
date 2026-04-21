@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     await supabase.from('WalletTransactions').insert(
         toCredit.map(s => ({
             user_id: s.user_id,
-            amount: 3,
+            amount: 6,
             operation: 'credit',
             type: 'daily',
         }))

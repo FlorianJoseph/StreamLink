@@ -45,6 +45,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - 27/03/26 555 utilisateurs, 345 profils actifs, 1440 liens, 1062 streams planifiés, 4015 vues de pages, newsletter 248 inscrits + premium
 - 03/04/26 587 utilisateurs, 362 profils actifs, 1518 liens, 1136 streams planifiés, 5197 vues de pages, newsletter 263 inscrits
 - 13/04/26 627 utilisateurs, 390 profils actifs, 1630 liens, 1176 streams planifiés, 6907 vues de pages, newsletter 277 inscrits
+- 21/04/26 658 utilisateurs, 413 profils actifs, 1725 liens, 1280 streams planifiés, 7911 vues de pages, newsletter 295 inscrits
 
 ## Historique Roadmap
 
@@ -76,6 +77,7 @@ Objectif : aider les streamers à mieux se présenter, gagner en visibilité et 
 - Streamers similaires (scoring jeux/horaires/langue/live + widget page publique) 08/04/26
 - Raids Twitch avec Coins (API channel:manage:raids, token BDD, refresh auto, restrictions 1/jour 4/semaine) 12/04/26
 - Découverte V3 (layout Netflix par genres, vue live avec tri viewers, section "Parfaits pour raid", Top Raiders, Raid Assistant, recherche par nom et jeu, progression raids dans le header) 17/04/26
+- Cron quotidien Coins abonnés (6 Coins/jour tant qu'actif) + badge vérifié sub (Découverte + profil public) 21/04/26
 
 ## Roadmap court terme – Augmenter la visibilité et promouvoir le réseau interne
 

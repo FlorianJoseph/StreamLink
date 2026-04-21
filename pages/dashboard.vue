@@ -87,7 +87,7 @@
                                             <h2 class="text-lg font-semibold">Coins quotidiens</h2>
                                             <p class="text-xs sm:text-sm text-gray-400">
                                                 <template v-if="isSub">
-                                                    Tes coins sont crédités automatiquement chaque jour
+                                                    Coins quotidiens x2 crédités automatiquement
                                                 </template>
                                                 <template v-else>
                                                     {{ dailyClaimed ? 'Déjà récupéré aujourd\'hui, reviens demain !' :
@@ -100,7 +100,7 @@
                                         class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
                                         <NuxtLink to="/shop"
                                             class="text-xs text-amber-400 hover:underline whitespace-nowrap">
-                                            Abonne-toi pour les recevoir automatiquement chaque jour
+                                            Abonne-toi pour tes Coins x2 automatiques
                                         </NuxtLink>
                                         <Button :disabled="dailyClaimed || dailyLoading" severity="contrast"
                                             class="flex items-center gap-2 w-full sm:w-auto justify-center"
