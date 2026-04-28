@@ -24,3 +24,9 @@ logs
 !.env.example
 
 /generated/prisma
+
+# Claude
+.claude
+.impeccable.md
+claude.md
+ROADMAP.md
