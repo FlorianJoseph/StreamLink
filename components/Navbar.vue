@@ -3,7 +3,7 @@
         style="--p-menubar-border-radius:0; --p-menubar-border-color: transparent">
         <template #start>
             <NuxtLink v-ripple :to="'/'">
-                <Home :size="20" />
+                <AppLogo variant="full" color="blanc" :height="32" />
             </NuxtLink>
         </template>
         <template #item="{ item, props, hasSubmenu, root }">
@@ -35,7 +35,7 @@
                 <template v-if="!user">
                     <NuxtLink to="/auth/login">
                         <button
-                            class="flex flex-row items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
+                            class="flex flex-row items-center gap-2 px-3 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors">
                             <Icon name="simple-icons:twitch" size="20" />
                             <span class="text-sm sm:text-base font-semibold">Connexion Twitch</span>
                         </button>
@@ -45,16 +45,20 @@
                     <template v-if="user">
                         <div
                             class="flex items-center gap-1 px-2 py-1 rounded bg-zinc-300/10 text-xs sm:text-sm font-semibold">
-                            <Icon name="lucide:coins" size="14" class="shrink-0 text-zinc-400" />
-                            <span class="text-zinc-300">{{ balance }} Coins</span>
+                            <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-3.5 h-3.5 shrink-0"
+                                alt="Charm" />
+                            <span class="text-zinc-300">{{ balance }} Charm</span>
                         </div>
                     </template>
                     <button
                         class="flex items-center gap-2 py-1 px-2 hover:cursor-pointer hover:bg-zinc-300/10 rounded-md"
                         @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
                         <Avatar :image="user.user_metadata.avatar_url" shape="circle" />
-                        <span class="hidden sm:block text-sm sm:text-base font-medium">{{ user.user_metadata.nickname }}</span>
-                        <span class="hidden sm:flex items-center"><Icon name="lucide:chevron-down" size="20" /></span>
+                        <span class="hidden sm:block text-sm sm:text-base font-medium">{{ user.user_metadata.nickname
+                            }}</span>
+                        <span class="hidden sm:flex items-center">
+                            <Icon name="lucide:chevron-down" size="20" />
+                        </span>
                     </button>
                 </template>
             </div>
@@ -79,8 +83,6 @@
 </template>
 
 <script setup>
-import { Home } from 'lucide-vue-next';
-
 const { balance } = useWallet()
 
 const menuItems = ref([

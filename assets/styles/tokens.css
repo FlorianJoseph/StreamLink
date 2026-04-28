@@ -1,0 +1,91 @@
+/* ============================================
+   CHARMI — Design Tokens
+   Source de vérité. Ne pas modifier sans
+   mettre à jour .impeccable.md en parallèle.
+   ============================================ */
+
+/* Fonts */
+@font-face {
+    font-family: 'PilcrowRounded';
+    src: url('/fonts/PilcrowRounded-Variable.woff2') format('woff2');
+    font-weight: 400 900;
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PlusJakartaSans';
+    src: url('/fonts/PlusJakartaSans-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PlusJakartaSans';
+    src: url('/fonts/PlusJakartaSans-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+    font-style: normal;
+}
+
+:root {
+    /* Typographie */
+    --font-heading: 'PilcrowRounded', system-ui, sans-serif;
+    --font-body: 'PlusJakartaSans', system-ui, sans-serif;
+
+    /* Couleurs */
+    --color-primary: #6A5AE0;
+    --color-accent: #FFC82C;
+    --color-dark: #1E1F22;
+    --color-surface: #F2F3F7;
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+
+    /* Texte */
+    --color-text-dark: #F2F3F7;
+    --color-text-light: #1E1F22;
+    --color-text-muted: #9A9BA0;
+
+    /* Surfaces dark */
+    --color-surface-dark: #2A2B2F;
+    --color-surface-darker: #18191C;
+
+    /* Border radius */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+}
+
+/* Hiérarchie typographique */
+h1 {
+    font-family: var(--font-heading);
+    font-variation-settings: 'wght' 900;
+}
+
+h2 {
+    font-family: var(--font-heading);
+    font-variation-settings: 'wght' 700;
+}
+
+h3,
+h4 {
+    font-family: var(--font-body);
+    font-weight: 700;
+}
+
+p,
+li,
+span,
+label {
+    font-family: var(--font-body);
+    font-weight: 500;
+}
+
+.text-legend {
+    font-family: var(--font-body);
+    font-weight: 500;
+    opacity: 0.6;
+}
