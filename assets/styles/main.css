@@ -45,3 +45,15 @@ a {
 .p-toast-message {
     border-color: transparent !important;
 }
+
+@keyframes charmi-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}

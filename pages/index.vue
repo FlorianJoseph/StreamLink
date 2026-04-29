@@ -33,8 +33,8 @@
 
       <!-- Mascotte -->
       <div class="hidden lg:flex items-center justify-center relative">
-        <div class="absolute w-64 h-64 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
-        <img src="/images/mascotte/charmi-happy-violet.svg" alt="Charmi" class="relative w-56 h-56 drop-shadow-2xl" />
+        <img src="/images/mascotte/charmi-happy-violet.svg" alt="Charmi" class="relative w-64 h-64 drop-shadow-2xl"
+          style="animation: charmi-float 3s ease-in-out infinite;" loading="eager" decoding="async" />
       </div>
     </div>
   </section>
@@ -66,40 +66,95 @@
   </section>
 
   <!-- FEATURES -->
-  <section class="bg-dark px-6 md:px-12 lg:px-16 py-20">
-    <div class="max-w-7xl mx-auto flex flex-col gap-12">
-      <h2 class="text-white text-[clamp(1.75rem,3vw,2.5rem)] leading-tight max-w-lg">
-        Ce que Charmi t'apporte
-      </h2>
+  <section class="bg-dark px-6 md:px-12 lg:px-16 py-24">
+    <div class="max-w-7xl mx-auto flex flex-col gap-24">
 
-      <div class="grid lg:grid-cols-2 gap-4">
-        <!-- Feature principale -->
-        <div class="bg-surface-dark rounded-2xl p-8 flex flex-col gap-5 lg:row-span-2">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
-              <Icon name="lucide:link" size="18" class="text-primary" />
+      <!-- Feature 1 : Page de liens -->
+      <div class="grid lg:grid-cols-[1fr_320px] gap-16 items-center">
+        <div class="flex flex-col gap-5">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+              <Icon name="lucide:link" size="15" class="text-primary" />
             </div>
-            <span class="text-xs font-medium text-muted uppercase tracking-wider">Page de liens</span>
+            <span class="text-xs font-semibold uppercase tracking-widest text-primary">Page de liens</span>
           </div>
-          <h3 class="text-white text-2xl font-bold leading-tight">Ta page perso,<br>prête en 2 minutes</h3>
+          <h2 class="text-white text-[clamp(1.75rem,3vw,2.25rem)] leading-tight font-bold">
+            Ta page perso,<br>prête en 2 minutes
+          </h2>
           <p class="text-muted leading-relaxed">
-            Centralise tes liens, affiche ton planning, personnalise l'apparence, une seule URL à partager partout. Ton
+            Centralise tes liens, affiche ton planning, personnalise l'apparence. Une seule URL à partager partout. Ton
             statut live s'affiche automatiquement.
           </p>
+          <NuxtLink to="/admin/links"
+            class="inline-flex items-center gap-1.5 text-primary hover:text-primary/80 font-semibold text-sm w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark">
+            {{ user ? 'Voir ma page' : 'Créer ma page' }}
+            <Icon name="lucide:arrow-right" size="14" aria-hidden="true" />
+          </NuxtLink>
         </div>
-
-        <!-- Features secondaires -->
-        <div v-for="feature in secondaryFeatures" :key="feature.title"
-          class="bg-surface-dark rounded-2xl p-6 flex flex-col gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
-              <Icon :name="feature.icon" size="18" class="text-primary" />
-            </div>
-            <h3 class="text-white font-bold">{{ feature.title }}</h3>
-          </div>
-          <p class="text-muted text-sm leading-relaxed">{{ feature.description }}</p>
+        <div class="rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
+          <img src="/screenshots/page.png" alt="Page de liens Charmi" class="w-full object-cover" loading="eager"
+            decoding="async" />
         </div>
       </div>
+
+      <!-- Feature 2 : Planning (inversé) -->
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="lg:order-2 flex flex-col gap-5">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
+              <Icon name="lucide:calendar-days" size="15" class="text-accent" />
+            </div>
+            <span class="text-xs font-semibold uppercase tracking-widest text-accent">Planning</span>
+          </div>
+          <h2 class="text-white text-[clamp(1.75rem,3vw,2.25rem)] leading-tight font-bold">
+            Partage tes créneaux,<br>ta communauté sait tout
+          </h2>
+          <p class="text-muted leading-relaxed">
+            Personnalisable, exportable, toujours à jour. Tes viewers savent quand tu stream avant même que tu te
+            connectes.
+          </p>
+          <NuxtLink to="/schedule"
+            class="inline-flex items-center gap-1.5 text-accent hover:text-accent/80 font-semibold text-sm w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-dark">
+            {{ user ? 'Voir mon planning' : 'Créer mon planning' }}
+            <Icon name="lucide:arrow-right" size="14" aria-hidden="true" />
+          </NuxtLink>
+        </div>
+        <div
+          class="lg:order-1 rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
+          <img src="/screenshots/planning.png" alt="Planning de streams Charmi" class="w-full object-cover"
+            loading="eager" decoding="async" />
+        </div>
+      </div>
+
+      <!-- Feature 3 : Découverte -->
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="flex flex-col gap-5">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+              <Icon name="lucide:users" size="15" class="text-primary" />
+            </div>
+            <span class="text-xs font-semibold uppercase tracking-widest text-primary">Découverte</span>
+          </div>
+          <h2 class="text-white text-[clamp(1.75rem,3vw,2.25rem)] leading-tight font-bold">
+            Trouve le bon streamer<br>à raid. Gagne des Charm.
+          </h2>
+          <p class="text-muted leading-relaxed">
+            Filtres, live, suggestions intelligentes. Charmi connecte les créateurs qui partagent les mêmes univers et
+            te
+            récompense à chaque raid.
+          </p>
+          <NuxtLink to="/discover"
+            class="inline-flex items-center gap-1.5 text-primary hover:text-primary/80 font-semibold text-sm w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark">
+            {{ user ? 'Lancer un raid' : 'Explorer la Découverte' }}
+            <Icon name="lucide:arrow-right" size="14" aria-hidden="true" />
+          </NuxtLink>
+        </div>
+        <div class="rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
+          <img src="/screenshots/decouverte.png" alt="Page Découverte Charmi" class="w-full object-cover" loading="eager"
+            decoding="async" />
+        </div>
+      </div>
+
     </div>
   </section>
 
