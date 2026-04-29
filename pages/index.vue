@@ -195,24 +195,6 @@ interface StatItem {
   error: boolean
 }
 
-const secondaryFeatures = [
-  {
-    icon: 'lucide:calendar-days',
-    title: 'Planning de streams',
-    description: "Partage tes créneaux avec ta communauté. Personnalisable, exportable, toujours à jour."
-  },
-  {
-    icon: 'lucide:layout-dashboard',
-    title: 'Dashboard intuitif',
-    description: "Tes outils en un coup d'œil. Gagne des Charm chaque jour et complète des quêtes pour débloquer des fonctionnalités"
-  },
-  {
-    icon: 'lucide:users',
-    title: 'Découverte de streamers',
-    description: "Filtres, live, suggestions intelligentes et gagne des Charm à chaque raid."
-  }
-]
-
 const statsStore = useStatsStore()
 const stats = ref<StatItem[]>([
   { label: 'Streamers actifs', value: 0, loaded: false, error: false },
