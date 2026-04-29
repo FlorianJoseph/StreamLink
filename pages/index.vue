@@ -1,179 +1,211 @@
 <template>
-  <div class="relative h-135 lg:min-h-0 flex lg:flex-row flex-col">
-    <!-- Hero -->
-    <div class="flex lg:flex lg:flex-row flex-col justify-center md:justify-normal h-full flex-1">
+  <!-- HERO -->
+  <section class="relative overflow-hidden bg-dark min-h-[480px] md:min-h-[580px] flex items-center">
+
+    <div
+      class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-20 grid lg:grid-cols-[1fr_380px] gap-12 items-center">
       <!-- Texte -->
-      <div class="relative flex-1 z-20 flex items-center justify-center">
-        <div class="flex items-center justify-center h-full">
-          <div
-            class="flex w-full flex-col items-center sm:items-start max-w-2xl px-6 py-12 lg:p-12 xl:p-16 text-center lg:text-left">
-            <h1 class="text-4xl xl:text-5xl font-bold mb-6 leading-tight!">
-              Développe ta chaîne <br>
-              <span class="text-purple-500">avec StreamLink</span>
-            </h1>
-            <p class="text-base md:text-lg text-gray-300 leading-normal mb-2 max-w-xl lg:max-w-none drop-shadow">
-              La plateforme tout-en-un pensée pour les streamers
-            </p>
-            <p class="text-sm md:text-base text-gray-400 leading-normal mb-8 max-w-xl lg:max-w-none drop-shadow">
-              Crée ta page de liens, planifie tes streams et découvre de nouveaux créateurs.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start items-center">
-              <NuxtLink to="/admin/links"
-                class="flex items-center justify-center gap-2 px-5 py-2.5 bg-purple-600 font-medium text-white rounded-md hover:bg-purple-700 transition-all">
-                <span>{{ user ? "Voir ma page" : "Créer ma page" }}</span>
-              </NuxtLink>
-              <NuxtLink to="/discover"
-                class="px-5 py-2.5 border border-white/20 font-medium text-white rounded-md hover:bg-white/10 transition-all">
-                <span>Découvrir</span>
-              </NuxtLink>
-            </div>
-          </div>
+      <div class="flex flex-col items-start gap-6">
+
+        <h1 class="text-[clamp(2.5rem,5vw,4rem)] text-white leading-[1.1] max-w-xl">
+          Ton compagnon pour<br>
+          <span class="text-accent">grandir</span> sur Twitch.
+        </h1>
+
+        <p class="text-muted text-lg leading-relaxed max-w-md">
+          Crée ta page de liens et ton planning à partager.<br>
+          Raid et fais-toi découvrir, même hors live.
+        </p>
+
+        <div class="flex flex-wrap gap-3 pt-1">
+          <NuxtLink to="/admin/links"
+            class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-colors duration-150 
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark">
+            {{ user ? 'Voir ma page' : 'Créer ma page gratuitement' }}
+          </NuxtLink>
+          <NuxtLink to="/discover"
+            class="px-5 py-2.5 border border-white/15 text-white font-medium rounded-xl hover:bg-white/5 transition-colors duration-150
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-dark">
+            Découvrir
+          </NuxtLink>
         </div>
       </div>
 
-      <!-- Image -->
-      <div class="absolute lg:relative inset-0 lg:inset-auto flex-1">
-        <div class="absolute lg:hidden inset-0 z-10" />
-        <img :src="backgroundImg"
-          class="h-full w-full object-cover xl:[clip-path:polygon(12%_0,100%_0%,100%_100%,0_100%)]" />
+      <!-- Mascotte -->
+      <div class="hidden lg:flex items-center justify-center relative">
+        <div class="absolute w-64 h-64 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
+        <img src="/images/mascotte/charmi-happy-violet.svg" alt="Charmi" class="relative w-56 h-56 drop-shadow-2xl" />
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Features Section -->
-  <div class="px-6 md:px-12 lg:px-20 py-16 text-center">
-    <div class="flex flex-col gap-6">
-      <div class="flex flex-col items-center gap-2">
-        <div class="font-bold text-3xl leading-tight">
-          <span>Tout ce dont tu as besoin, </span>
-          <span class="text-purple-500">en un seul endroit</span>
-        </div>
-        <div class="text-gray-400 leading-tight">
-          Conçu pour les streamers qui veulent grandir sans se prendre la tête.
-        </div>
-      </div>
-
-      <!-- Grid Features -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div v-for="(feature, index) in features" :key="index"
-          class="relative w-full rounded-lg p-6 border border-zinc-800 hover:border-zinc-700 bg-zinc-900/30">
-
-          <!-- Badge si présent -->
-          <span v-if="feature.badge" class="absolute top-3 right-3 text-[10px] px-2 py-1 rounded-full font-medium"
-            :class="feature.badge === 'Nouveau'
-              ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
-              : 'bg-zinc-700 text-gray-400'">
-            {{ feature.badge }}
-          </span>
-
-          <span
-            class="mb-4 flex h-16 w-16 items-center justify-center rounded-lg mx-auto bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-lg">
-            <Icon :name="feature.icon" size="30" />
-          </span>
-
-          <div class="flex flex-col gap-2">
-            <h3 class="text-xl font-semibold leading-tight">
-              {{ feature.title }}
-            </h3>
-            <p class="text-gray-400 leading-relaxed text-sm">
-              {{ feature.description }}
-            </p>
-          </div>
-        </div>
-      </div>
+  <!-- SOCIAL PROOF -->
+  <section class="bg-surface-darker border-y border-white/5 py-5">
+    <div class="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-center gap-6 text-sm text-muted">
+      <span>
+        <strong class="text-accent tabular-nums">
+          <template v-if="!stats[0].loaded || stats[0].error">—</template>
+          <template v-else>{{ animatedStats[0] }}+</template>
+        </strong> streamers actifs
+      </span>
+      <span class="text-white/10">|</span>
+      <span>
+        <strong class="text-accent tabular-nums">
+          <template v-if="!stats[1].loaded || stats[1].error">—</template>
+          <template v-else>{{ animatedStats[1] }}+</template>
+        </strong> liens partagés
+      </span>
+      <span class="text-white/10">|</span>
+      <span>
+        <strong class="text-accent tabular-nums">
+          <template v-if="!stats[2].loaded || stats[2].error">—</template>
+          <template v-else>{{ animatedStats[2] }}+</template>
+        </strong> streams planifiés
+      </span>
     </div>
-  </div>
+  </section>
 
-  <!-- CTA Final Section -->
-  <div class="px-6 md:px-12 lg:px-20 py-20">
-    <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">
-        Prêt à développer ta chaîne ?
+  <!-- FEATURES -->
+  <section class="bg-dark px-6 md:px-12 lg:px-16 py-20">
+    <div class="max-w-7xl mx-auto flex flex-col gap-12">
+      <h2 class="text-white text-[clamp(1.75rem,3vw,2.5rem)] leading-tight max-w-lg">
+        Ce que Charmi t'apporte
       </h2>
-      <p class="text-lg text-gray-400 mb-8">
-        Crée ta page gratuitement et commence à grandir dès aujourd'hui
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <NuxtLink to="/admin/links">
-          <button
-            class="bg-purple-600 hover:bg-purple-700 transition-all px-6 py-3 rounded-md">
-            <span class="text-base md:text-lg font-semibold">
-              {{ user ? "Accéder à ma page" : "Créer ma page de liens gratuitement" }}
-            </span>
-          </button>
-        </NuxtLink>
-      </div>
-    </div>
-  </div>
 
-  <!-- Social Proof Section -->
-  <div class="px-6 md:px-12 lg:px-20 py-20 bg-zinc-900/50 border-t border-zinc-800">
-    <div class="max-w-4xl mx-auto text-center">
-      <p class="text-sm text-gray-500 uppercase tracking-wider mb-8">
-        Ils nous font déjà confiance
-      </p>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <div class="text-4xl font-bold text-purple-500 mb-2">{{ totalStreamers }}+</div>
-          <div class="text-gray-400">Streamers actifs</div>
+      <div class="grid lg:grid-cols-2 gap-4">
+        <!-- Feature principale -->
+        <div class="bg-surface-dark rounded-2xl p-8 flex flex-col gap-5 lg:row-span-2">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
+              <Icon name="lucide:link" size="18" class="text-primary" />
+            </div>
+            <span class="text-xs font-medium text-muted uppercase tracking-wider">Page de liens</span>
+          </div>
+          <h3 class="text-white text-2xl font-bold leading-tight">Ta page perso,<br>prête en 2 minutes</h3>
+          <p class="text-muted leading-relaxed">
+            Centralise tes liens, affiche ton planning, personnalise l'apparence, une seule URL à partager partout. Ton
+            statut live s'affiche automatiquement.
+          </p>
         </div>
-        <div>
-          <div class="text-4xl font-bold text-purple-500 mb-2">{{ totalLinks }}+</div>
-          <div class="text-gray-400">Liens partagés</div>
-        </div>
-        <div>
-          <div class="text-4xl font-bold text-purple-500 mb-2">{{ totalSlots }}+</div>
-          <div class="text-gray-400">Streams planifiés</div>
+
+        <!-- Features secondaires -->
+        <div v-for="feature in secondaryFeatures" :key="feature.title"
+          class="bg-surface-dark rounded-2xl p-6 flex flex-col gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
+              <Icon :name="feature.icon" size="18" class="text-primary" />
+            </div>
+            <h3 class="text-white font-bold">{{ feature.title }}</h3>
+          </div>
+          <p class="text-muted text-sm leading-relaxed">{{ feature.description }}</p>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="relative overflow-hidden bg-primary px-6 md:px-12 lg:px-16 py-24">
+    <img src="/images/assets/charmi-pattern-blanc.svg"
+      class="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none select-none" aria-hidden="true"
+      loading="lazy" />
+    <div
+      class="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+      <div class="flex flex-col gap-3">
+        <h2 class="text-white text-[clamp(1.75rem,3vw,2.5rem)] leading-tight">
+          Lance-toi.<br>
+          <span class="text-white/50 text-xl italic font-normal">Keep on streaming.</span>
+        </h2>
+      </div>
+      <NuxtLink to="/admin/links"
+        class="shrink-0 flex items-center gap-2 px-6 py-3 bg-white text-primary hover:bg-white/90 font-semibold rounded-xl transition-colors duration-150 whitespace-nowrap
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">
+        {{ user ? "Voir ma page" : "Commencer gratuitement" }}
+      </NuxtLink>
+    </div>
+  </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { usePreferredReducedMotion } from '@vueuse/core'
 definePageMeta({
   layout: 'landing'
 })
 
 const user = useSupabaseUser()
-const backgroundImg = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/sign/images/arriere-plan-lignes-violettes-dynamiques-gradient_23-2148995757.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80NDMzZjlmNi01NGMzLTQxNzQtYmY0ZC01YzVjZDliNmI2MjIiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvYXJyaWVyZS1wbGFuLWxpZ25lcy12aW9sZXR0ZXMtZHluYW1pcXVlcy1ncmFkaWVudF8yMy0yMTQ4OTk1NzU3LmpwZyIsImlhdCI6MTc2MDg3NDE5NSwiZXhwIjoxNzkyNDEwMTk1fQ.AgXqRJ--nS8npOmJ5mzmaeHEQL1U7FgBs3ZtFpOuC-s"
 
-const features = [
-  {
-    icon: 'lucide:link',
-    title: "Page de liens personnalisée",
-    description: "Crée ta page personnalisée pour centraliser tous tes liens importants."
-  },
+interface StatItem {
+  label: string
+  value: number
+  loaded: boolean
+  error: boolean
+}
+
+const secondaryFeatures = [
   {
     icon: 'lucide:calendar-days',
-    title: "Planning de streams",
-    description: "Organise tes streams pour que ta communauté soit toujours au courant.",
-    // badge: "Nouveau"
+    title: 'Planning de streams',
+    description: "Partage tes créneaux avec ta communauté. Personnalisable, exportable, toujours à jour."
   },
   {
     icon: 'lucide:layout-dashboard',
-    title: "Tableau de bord intuitif",
-    description: "Gère tout depuis un seul tableau de bord."
+    title: 'Dashboard intuitif',
+    description: "Tes outils en un coup d'œil. Gagne des Charm chaque jour et complète des quêtes pour débloquer des fonctionnalités"
   },
   {
     icon: 'lucide:users',
-    title: "Communauté",
-    description: "Connecte-toi avec d'autres créateurs et augmente ta visibilité.",
+    title: 'Découverte de streamers',
+    description: "Filtres, live, suggestions intelligentes et gagne des Charm à chaque raid."
   }
 ]
 
 const statsStore = useStatsStore()
-const totalStreamers = ref(0)
-const totalLinks = ref(0)
-const totalSlots = ref(0)
+const stats = ref<StatItem[]>([
+  { label: 'Streamers actifs', value: 0, loaded: false, error: false },
+  { label: 'Liens partagés', value: 0, loaded: false, error: false },
+  { label: 'Streams planifiés', value: 0, loaded: false, error: false },
+])
+
+
+const reducedMotion = usePreferredReducedMotion()
+const animatedStats = ref([0, 0, 0])
+
+function animateCountUp(targets: number[]) {
+  if (reducedMotion.value === 'reduce') {
+    animatedStats.value = [...targets]
+    return
+  }
+  const duration = 1200
+  const start = performance.now()
+  const startValues = [...animatedStats.value]
+
+  function tick(now: number) {
+    const progress = Math.min((now - start) / duration, 1)
+    const eased = 1 - Math.pow(1 - progress, 3)
+    animatedStats.value = targets.map((target, i) =>
+      Math.round(startValues[i]! + (target - startValues[i]!) * eased)
+    )
+    if (progress < 1) requestAnimationFrame(tick)
+  }
+  requestAnimationFrame(tick)
+}
 
 onMounted(async () => {
-  const streamersRes = await statsStore.fetchTotalStreamers()
-  const linksRes = await statsStore.fetchTotalLinks()
-  const slotsRes = await statsStore.fetchTotalSlots()
+  const results = await Promise.allSettled([
+    statsStore.fetchTotalStreamers(),
+    statsStore.fetchTotalLinks(),
+    statsStore.fetchTotalSlots(),
+  ])
 
-  totalStreamers.value = streamersRes.data ?? 0
-  totalLinks.value = linksRes.data ?? 0
-  totalSlots.value = slotsRes.data ?? 0
+  results.forEach((result, i) => {
+    if (result.status === 'fulfilled' && result.value.data != null) {
+      stats.value[i]!.value = result.value.data
+    } else {
+      stats.value[i]!.error = true
+    }
+    stats.value[i]!.loaded = true
+  })
+
+  // Déclenche count-up sur les valeurs non-error
+  animateCountUp(stats.value.map(s => s.error ? 0 : s.value))
 })
 </script>

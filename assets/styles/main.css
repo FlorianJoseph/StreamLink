@@ -9,7 +9,7 @@
     --color-accent: #FFC82C;
     --color-dark: #1E1F22;
     --color-surface: #F2F3F7;
-    --color-text-muted: #9A9BA0;
+    --color-muted: #9A9BA0;
     --color-surface-dark: #2A2B2F;
     --color-surface-darker: #18191C;
 
@@ -25,6 +25,8 @@
 
 body {
     font-family: var(--font-body);
+    background-color: var(--color-dark);
+    color: var(--color-text-dark);
 }
 
 button,
@@ -33,7 +35,7 @@ a {
 }
 
 * {
-    scrollbar-color: #9F9F9F transparent;
+    scrollbar-color: var(--color-text-muted) transparent;
 }
 
 .p-toast-close-button {
