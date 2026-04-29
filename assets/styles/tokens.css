@@ -50,13 +50,6 @@
     /* Surfaces dark */
     --color-surface-dark: #2A2B2F;
     --color-surface-darker: #18191C;
-
-    /* Border radius */
-    --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
-    --radius-full: 9999px;
 }
 
 /* Hiérarchie typographique */

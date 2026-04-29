@@ -19,12 +19,12 @@
 
         <div class="flex flex-wrap gap-3 pt-1">
           <NuxtLink to="/admin/links"
-            class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-colors duration-150 
+            class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-semibold rounded-full hover:bg-primary/90 transition-colors duration-150 
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark">
             {{ user ? 'Voir ma page' : 'Créer ma page gratuitement' }}
           </NuxtLink>
           <NuxtLink to="/discover"
-            class="px-5 py-2.5 border border-white/15 text-white font-medium rounded-xl hover:bg-white/5 transition-colors duration-150
+            class="px-5 py-2.5 border border-white/15 text-white font-medium rounded-full hover:bg-white/5 transition-colors duration-150
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-dark">
             Découvrir
           </NuxtLink>
@@ -172,7 +172,7 @@
         </h2>
       </div>
       <NuxtLink to="/admin/links"
-        class="shrink-0 flex items-center gap-2 px-6 py-3 bg-white text-primary hover:bg-white/90 font-semibold rounded-xl transition-colors duration-150 whitespace-nowrap
+        class="shrink-0 flex items-center gap-2 px-6 py-3 bg-white text-primary hover:bg-white/90 font-semibold rounded-full transition-colors duration-150 whitespace-nowrap
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">
         {{ user ? "Voir ma page" : "Commencer gratuitement" }}
       </NuxtLink>

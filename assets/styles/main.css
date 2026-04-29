@@ -12,11 +12,6 @@
     --color-muted: #9A9BA0;
     --color-surface-dark: #2A2B2F;
     --color-surface-darker: #18191C;
-
-    --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
 }
 
 * {
