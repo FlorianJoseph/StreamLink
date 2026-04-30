@@ -18,7 +18,7 @@
         <!-- QR Code -->
         <div class="bg-white rounded-lg p-3 flex flex-col items-center gap-2">
             <div ref="qrcodeContainer"></div>
-            <p class="text-xs text-muted">Scanne pour accéder à ta page</p>
+            <p class="text-xs text-gray-500">Scanne pour accéder à ta page</p>
         </div>
 
     </div>
@@ -30,7 +30,10 @@ import QRCode from 'qrcode'
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
 
-const shareUrl = computed(() => `${window.location.origin}/${streamer.value?.username || ''}`)
+const shareUrl = computed(() => {
+    if (typeof window === 'undefined') return ''
+    return `${window.location.origin}/${streamer.value?.username || ''}`
+})
 
 const copied = ref(false)
 

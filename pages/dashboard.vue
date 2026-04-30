@@ -6,13 +6,20 @@
     </div>
     <div v-else>
         <div class="flex flex-col gap-4 fade-in">
-            <div class="py-4">
-                <header class="flex flex-col lg:items-start items-center">
-                    <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
+            <header class="flex items-center justify-center lg:justify-start gap-3 py-4">
+                <img src="/images/mascotte/charmi-happy-violet.svg" class="w-10 h-10 shrink-0" alt="" />
+                <div>
+                    <h1 class="text-2xl sm:text-3xl">
                         {{ greeting }}, <span class="text-primary">{{ streamer?.username || 'Streamer' }}</span>
                     </h1>
-                </header>
-            </div>
+                    <p class="text-muted text-sm mt-0.5">
+                        {{ streamMessage }}
+                        <NuxtLink to="/discover" class="text-primary hover:underline">
+                            Découverte →
+                        </NuxtLink>
+                    </p>
+                </div>
+            </header>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Carte Visibilité -->
@@ -51,11 +58,13 @@
 
                                 <div class="flex items-center justify-between gap-2">
                                     <p class="text-white text-sm font-bold">Connexion quotidienne</p>
-                                    <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-5 h-5 shrink-0"
+                                    <img v-if="!isSub" src="/images/assets/charmi-monnaie-jaune.svg"
+                                        class="w-5 h-5 shrink-0" alt="" />
+                                    <img v-else src="/images/assets/charmi-monnaie-violet.svg" class="w-5 h-5 shrink-0"
                                         alt="" />
                                 </div>
 
-                                <div class="flex items-baseline justify-between gap-2">
+                                <div class="flex flex-col gap-1 sm:justify-between sm:flex-row sm:items-center">
                                     <div class="flex items-baseline gap-1.5">
                                         <span class="text-2xl font-bold"
                                             :class="dailyClaimed && !isSub ? 'text-white/30' : isSub ? 'text-white' : 'text-accent'">
@@ -64,12 +73,9 @@
                                         <span class="text-muted text-xs">Charm / jour</span>
                                     </div>
                                     <NuxtLink v-if="!isSub" to="/shop"
-                                        class="text-xs text-muted hover:text-white shrink-0">
+                                        class="text-xs text-muted hover:text-white w-fit">
                                         Abonne-toi → 6/jour auto
                                     </NuxtLink>
-                                    <div v-else class="text-xs text-muted shrink-0">
-                                        Abonnement actif
-                                    </div>
                                 </div>
                                 <template v-if="isSub">
                                     <div class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md
@@ -102,7 +108,7 @@
                     </div>
 
                     <!-- Prochainement -->
-                    <div class="lg:col-span-2 p-4 bg-white/[0.03] border border-white/8 rounded-xl
+                    <div class="p-4 bg-white/[0.03] border border-white/8 rounded-xl
                         flex flex-col sm:flex-row sm:items-start gap-5">
 
                         <!-- Items roadmap -->
@@ -155,6 +161,7 @@ const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
 const linkStore = useLinkStore()
 const { streamer } = storeToRefs(streamerStore)
+const { slots } = storeToRefs(scheduleSlotStore)
 const newsletterStore = useNewsletterStore()
 const loading = ref(true)
 const { uid } = useSupabase()
@@ -169,6 +176,35 @@ const greeting = computed(() => {
     if (h < 12) return 'Bonjour'
     if (h < 18) return 'Bon après-midi'
     return 'Bonsoir'
+})
+
+const streamMessage = computed(() => {
+    if (!slots.value.length) return "Pas de stream prévu. Ajoute ton planning et trouve des streamers à raider. 👀"
+
+    const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
+    const now = new Date()
+    const todayIndex = now.getDay()
+    const currentTime = now.toTimeString().slice(0, 5)
+
+    const next = slots.value
+        .map(s => {
+            let dayIndex = days.indexOf(s.day)
+            let diff = dayIndex - todayIndex
+            if (diff < 0) diff += 7
+            if (diff === 0 && s.start_at <= currentTime) diff = 7
+            return { ...s, diff }
+        })
+        .sort((a, b) => a.diff - b.diff || a.start_at.localeCompare(b.start_at))[0]
+
+    if (!next) return "Pas de stream prévu. Ajoute ton planning et trouve des streamers à raid sur la"
+
+    const game = next.game?.label
+    const time = next.start_at.slice(0, 5)
+
+    if (next.diff === 0) return `${game} ce soir à ${time}... t'as pensé à ton raid`
+    if (next.diff === 1) return `${game} demain à ${time}... cherche un raid dans ta catégorie sur la`
+
+    return `${game} ${next.day.toLowerCase()} à ${time}... trouve le raid parfait sur la`
 })
 
 const claimDaily = async () => {

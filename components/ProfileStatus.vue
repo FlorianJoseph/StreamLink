@@ -155,7 +155,7 @@ const getNextStepMessage = () => {
     const optRemaining = getOptionalCount() - getOptionalCompletedCount()
     if (optRemaining > 0) {
         return optRemaining === 1
-            ? 'Plus qu\'une quête pour un profil parfait'
+            ? "Plus qu'une quête pour un profil parfait"
             : `Plus que ${optRemaining} quêtes pour un profil parfait`
     }
     return "Ton profil est au top !"
