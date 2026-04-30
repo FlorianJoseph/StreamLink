@@ -7,8 +7,7 @@
             <input type="text" :value="shareUrl" readonly class="flex-1 min-w-0 px-3 py-1.5 rounded-md bg-white/5 border border-white/8
                        text-white text-sm truncate outline-none" />
             <button @click="copyLink"
-                class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold shrink-0 transition-colors"
-                :class="copied
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold shrink-0" :class="copied
                     ? 'bg-white/10 text-white'
                     : 'bg-white/5 border border-white/8 text-muted hover:text-white'">
                 <Icon :name="copied ? 'lucide:check' : 'lucide:copy'" size="16" class="shrink-0" />
