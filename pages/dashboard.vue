@@ -97,7 +97,8 @@
                                         @click="claimDaily">
                                         <Icon v-if="dailyLoading" name="lucide:loader-circle" size="16"
                                             class="animate-spin shrink-0" />
-                                        <span v-if="!dailyLoading" class="text-sm font-bold">Réclamer</span>
+                                        <span class="text-sm font-bold">
+                                            {{ dailyLoading ? 'Chargement...' : 'Réclamer' }}</span>
                                     </button>
                                 </template>
                             </div>
