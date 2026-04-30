@@ -1,44 +1,37 @@
 <template>
     <div class="relative w-full">
-        <div
-            class="rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 hover:border-zinc-700 transition-colors duration-200">
+        <div class="rounded-xl overflow-hidden border border-white/8 bg-surface-dark">
 
             <!-- ── Thumbnail 16/9 ── -->
-            <div class="relative aspect-video overflow-hidden bg-zinc-800">
+            <div class="relative aspect-video overflow-hidden bg-surface-darker">
                 <template v-if="isLive && thumbnailUrl">
-                    <!-- Vrai thumbnail Twitch en live (redimensionné) -->
                     <img :src="thumbnailUrl" class="absolute inset-0 w-full h-full object-cover" loading="lazy"
                         decoding="async" />
-                    <!-- Titre du stream en overlay bas -->
                     <div
-                        class="absolute inset-x-0 bottom-0 z-20 px-2.5 pb-2 pt-6 bg-gradient-to-t from-zinc-950 to-transparent">
+                        class="absolute inset-x-0 bottom-0 z-20 px-2.5 pb-2 pt-6 bg-gradient-to-t from-[#18191c] to-transparent">
                         <p class="text-[11px] text-white font-medium leading-tight line-clamp-2">{{
                             streamer.nextSlot?.twitchTitle }}</p>
                     </div>
                 </template>
                 <template v-else>
-                    <!-- Fond : jaquette flouée ou dégradé -->
                     <img v-if="gameCover" :src="gameCoverTiny"
                         class="absolute inset-0 w-full h-full object-cover scale-110 blur-sm opacity-30" loading="lazy"
                         decoding="async" />
-                    <div v-else class="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-950" />
+                    <div v-else class="absolute inset-0 bg-surface-darker" />
 
-                    <!-- Avatar centré -->
                     <div class="relative z-10 flex items-center justify-center h-full">
                         <img :src="avatarUrl(streamer.avatar_url, 128)"
-                            class="w-16 h-16 rounded-full object-cover shadow-2xl ring-2 ring-white/15" loading="lazy"
+                            class="w-16 h-16 rounded-full object-cover shadow-2xl ring-2 ring-white/8" loading="lazy"
                             decoding="async" />
                     </div>
 
-                    <!-- Jaquette bas droite -->
                     <div v-if="gameCover" class="absolute bottom-2 right-2 z-20">
                         <img :src="gameCoverSmall"
                             class="h-14 w-10 rounded-md object-fill shadow-lg ring-1 ring-white/10" loading="lazy"
                             decoding="async" />
                     </div>
 
-                    <!-- Dégradé bas -->
-                    <div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-zinc-900 to-transparent z-10" />
+                    <div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[#18191c] to-transparent z-10" />
                 </template>
 
                 <!-- Badge live -->
@@ -46,18 +39,21 @@
                     class="absolute top-2 left-2 z-20 flex items-center bg-red-600 text-white text-xs font-bold px-1.25 py-0.25 rounded uppercase tracking-wide">
                     live
                 </div>
-                <!-- Viewers + Coins -->
+
+                <!-- Viewers + Charm -->
                 <div v-if="isLive" class="absolute top-2 right-2 z-20 flex items-center gap-1">
                     <div v-if="twitchViewerCount !== null"
                         class="flex items-center gap-1 text-sm px-1.25 py-0.25 rounded"
-                        :style="{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'white' }">
+                        :style="{ backgroundColor: 'rgba(0,0,0,0.8)', color: 'white' }">
                         <Icon name="lucide:eye" size="12" />{{ twitchViewerCount }}
                     </div>
-                    <div
-                        class="flex items-center gap-1 bg-yellow-500 text-zinc-900 text-sm font-bold px-1.25 py-0.25 rounded">
-                        <Icon name="lucide:coins" size="12" />+{{ raidCoins }}
+                    <div class="flex items-center gap-1 text-sm font-bold px-1.25 py-0.25 rounded"
+                        :style="{ backgroundColor: 'rgba(0,0,0,0.8)', color: 'white' }">
+                        <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-3 h-3" alt="" />
+                        +{{ raidCharm }}
                     </div>
                 </div>
+
                 <div v-if="whenLabel"
                     class="absolute top-2 right-2 z-20 flex items-center gap-1 text-sm px-1.25 py-0.25 rounded"
                     :style="{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'white' }">
@@ -71,16 +67,16 @@
                 <!-- Username + jeu -->
                 <div class="flex items-center gap-2.5 min-w-0">
                     <img :src="avatarUrl(streamer.avatar_url, 32)"
-                        class="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-1 ring-zinc-700/80" loading="lazy"
+                        class="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-1 ring-white/8" loading="lazy"
                         decoding="async" />
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-1.5 min-w-0">
                             <span class="font-semibold text-white text-sm truncate">{{ streamer.username }}</span>
-                            <Icon v-if="streamer.is_sub" name="lucide:badge-check" size="15" class="text-purple-400 shrink-0" v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-sm' } }" />
+                            <Icon v-if="streamer.is_sub" name="lucide:badge-check" size="15"
+                                class="text-primary shrink-0"
+                                v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-sm' } }" />
                         </div>
-                        <p class="text-xs text-zinc-500 truncate mt-0.5">
-                            {{ gameLabel || '—' }}
-                        </p>
+                        <p class="text-xs text-muted truncate mt-0.5">{{ gameLabel || '—' }}</p>
                     </div>
                 </div>
 
@@ -89,12 +85,12 @@
 
                     <!-- CTA principal -->
                     <button v-if="isLive" @click="openPlayer(props.streamer)"
-                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-white hover:bg-zinc-200 text-zinc-900 font-bold text-sm transition-all duration-150">
-                        <Icon name="lucide:play" size="20" class="flex-shrink-0 fill-zinc-900" />
+                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-md bg-white hover:bg-white/90 text-[#1e1f22] font-bold text-sm">
+                        <Icon name="lucide:play" size="20" class="flex-shrink-0 fill-[#1e1f22]" />
                         Regarder
                     </button>
                     <NuxtLink v-else :to="`/${streamer.username}`" target="_blank"
-                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-white hover:bg-zinc-200 text-zinc-900 font-bold text-sm transition-all duration-150 no-underline">
+                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-white hover:bg-white/90 text-[#1e1f22] font-bold text-sm no-underline">
                         <Icon name="lucide:user" size="20" class="flex-shrink-0" />
                         Voir le profil
                     </NuxtLink>
@@ -102,23 +98,23 @@
                     <!-- Profil (si live) -->
                     <NuxtLink v-if="isLive" :to="`/${streamer.username}`" target="_blank"
                         v-tooltip.top="{ value: 'Profil', pt: { text: '!text-xs' } }"
-                        class="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150 no-underline">
+                        class="w-10 h-10 flex items-center justify-center rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted hover:text-white no-underline">
                         <Icon name="lucide:user" size="20" />
                     </NuxtLink>
 
                     <!-- Twitch (si offline) -->
                     <a v-if="!isLive" :href="`https://twitch.tv/${streamer.username}`" target="_blank"
                         rel="noopener noreferrer" v-tooltip.top="{ value: 'Voir sur Twitch', pt: { text: '!text-xs' } }"
-                        class="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
+                        class="w-10 h-10 flex items-center justify-center rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted hover:text-white">
                         <Icon name="simple-icons:twitch" size="20" />
                     </a>
 
                     <!-- Raid (si live) -->
                     <button v-if="isLive" @click="openRaidFor(props.streamer)" :disabled="!canRaid"
-                        v-tooltip.top="{ value: raidTooltip, pt: { text: '!text-xs' } }" :class="['w-10 h-10 flex items-center justify-center rounded-full border transition-all duration-150',
+                        v-tooltip.top="{ value: raidTooltip, pt: { text: '!text-xs' } }" :class="['w-10 h-10 flex items-center justify-center rounded-full border',
                             canRaid
-                                ? 'bg-white hover:bg-zinc-200 text-zinc-900 border-white cursor-pointer'
-                                : 'bg-zinc-800 text-zinc-600 border-zinc-700/40 cursor-not-allowed']">
+                                ? 'bg-primary hover:bg-primary/90 text-white border-primary cursor-pointer'
+                                : 'bg-white/5 text-muted border-white/8 cursor-not-allowed']">
                         <Icon name="lucide:swords" size="20" />
                     </button>
                 </div>
@@ -152,7 +148,7 @@ const canRaid = computed(() => {
     return raidStatus.value.remaining > 0
 })
 
-const raidCoins = computed(() => {
+const raidCharm = computed(() => {
     const v = twitchViewerCount.value ?? 0
     if (v < 5) return 7
     if (v < 15) return 6
@@ -168,7 +164,7 @@ const raidTooltip = computed(() => {
     if (!raidStatus.value.canRaidToday) return 'Tu as déjà raid aujourd\'hui'
     if (raidStatus.value.remaining === 0) return 'Limite de raids atteinte cette semaine'
     if (raidStatus.value.raidedThisWeek?.includes(props.streamer.username?.toLowerCase())) return 'Tu as déjà raid ce streamer cette semaine'
-    return `Raid ${props.streamer.username} et gagner ${raidCoins.value} Coins`
+    return `Raid ${props.streamer.username} et gagner ${raidCharm.value} Charm`
 })
 
 // ── Stream infos ──────────────────────────────────────────────────────────────
