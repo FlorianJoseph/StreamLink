@@ -30,26 +30,23 @@
 
                             <!-- Outils -->
                             <div class="flex flex-col gap-2 p-4 bg-white/[0.03] border border-white/8 rounded-xl">
-                                <h2 class="text-white text-sm">Accès rapide</h2>
+                                <p class="text-white text-sm font-bold">Accès rapide</p>
                                 <div class="flex flex-col gap-1">
                                     <NuxtLink v-for="tool in toolsSections" :key="tool.title" :to="tool.to" class="group flex items-center gap-3 p-3 rounded-lg border border-transparent
-                                   hover:border-primary/25 hover:bg-primary/5 transition-all duration-200">
-                                        <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0
-                                        group-hover:bg-primary/20 transition-colors duration-200">
-                                            <Icon :name="tool.icon" size="15" class="text-primary" />
-                                        </div>
+                                   hover:border-primary/25 hover:bg-primary/5">
+                                        <Icon :name="tool.icon" size="18" class="text-primary shrink-0" />
                                         <div class="flex-1 min-w-0">
-                                            <p class="text-white text-sm font-bold leading-tight">{{ tool.title }}</p>
+                                            <p class="text-white text-sm leading-tight">{{ tool.title }}</p>
                                             <p class="text-muted text-xs mt-0.5 truncate">{{ tool.description }}</p>
                                         </div>
                                         <Icon name="lucide:arrow-right" size="14"
-                                            class="text-muted group-hover:text-primary transition-colors duration-200 shrink-0" />
+                                            class="text-muted group-hover:text-primary shrink-0" />
                                     </NuxtLink>
                                 </div>
                             </div>
 
                             <!-- Charm quotidien -->
-                            <div class="rounded-xl p-5 border flex flex-col gap-4 transition-colors duration-200"
+                            <div class="rounded-xl p-5 border flex flex-col gap-4"
                                 :class="{
                                     'bg-primary/8 border-primary/20': isSub,
                                     'bg-white/[0.03] border-white/8': !isSub && dailyClaimed,
@@ -57,7 +54,7 @@
                                 }">
 
                                 <div class="flex items-center justify-between gap-2">
-                                    <h3 class="text-white text-sm">Connexion quotidienne</h3>
+                                    <p class="text-white text-sm font-bold">Connexion quotidienne</p>
                                     <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-5 h-5 shrink-0"
                                         alt="" />
                                 </div>
@@ -202,18 +199,15 @@ watch(uid, async (val) => {
 const toolsSections = [
     {
         icon: 'lucide:link',
-        title: 'Ma page de liens',
-        description: 'Gère tes liens et personnalise ta page publique',
+        title: 'Page de liens',
+        description: 'Partage tout en un lien',
         to: '/admin/links',
-        color: 'green'
     },
     {
         icon: 'lucide:calendar-days',
-        title: "Mon planning",
-        description: "Personnalise et partage ton planning de streams facilement",
-        // badge: "Nouveau",
+        title: "Planning",
+        description: "Dis à ta commu quand tu stream",
         to: "/schedule",
-        color: "blue",
     },
 ]
 
