@@ -1,46 +1,37 @@
 <template>
-    <Card class="border border-zinc-700">
-        <template #header>
-            <div class="p-3">
-                <h2 class="text-lg font-semibold">Partager ta page</h2>
-                <p class="text-xs sm:text-sm text-gray-400">
-                    Diffuse ton lien partout en un clic !
-                </p>
-            </div>
-        </template>
-        <template #content>
-            <!-- Lien à copier -->
-            <div class="mb-4">
-                <div class="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2">
-                    <InputText type="text" class="flex-1" v-model="shareUrl" readonly
-                        style="--p-inputtext-focus-border-color:none" />
-                    <Button @click="copyLink" :severity="copied ? 'success' : 'secondary'" outlined>
-                        <Icon :name="copied ? 'lucide:check' : 'lucide:copy'" size="18" class="flex-shrink-0" />
-                        <span class="text-sm sm:text-base transition-all duration-200">{{ copied ? "Copié !" : "Copier"
-                            }}</span>
-                    </Button>
-                </div>
-            </div>
+    <div class="flex flex-col gap-3 p-4 bg-white/[0.03] border border-white/8 rounded-xl">
+        <p class="text-white text-sm font-bold">Partager ta page</p>
 
-            <!-- QR Code -->
-            <div class="bg-white p-4 rounded-lg">
-                <div ref="qrcodeContainer" class="flex justify-center"></div>
-                <p class="text-center text-xs text-gray-600 mt-2">
-                    Scanne pour accéder à ta page
-                </p>
-            </div>
+        <!-- Lien + Copier -->
+        <div class="flex gap-2">
+            <input type="text" :value="shareUrl" readonly class="flex-1 min-w-0 px-3 py-1.5 rounded-md bg-white/5 border border-white/8
+                       text-white text-sm truncate outline-none" />
+            <button @click="copyLink"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold shrink-0 transition-colors"
+                :class="copied
+                    ? 'bg-white/10 text-white'
+                    : 'bg-white/5 border border-white/8 text-muted hover:text-white'">
+                <Icon :name="copied ? 'lucide:check' : 'lucide:copy'" size="16" class="shrink-0" />
+                {{ copied ? 'Copié !' : 'Copier' }}
+            </button>
+        </div>
 
-        </template>
-    </Card>
+        <!-- QR Code -->
+        <div class="bg-white rounded-lg p-3 flex flex-col items-center gap-2">
+            <div ref="qrcodeContainer"></div>
+            <p class="text-xs text-muted">Scanne pour accéder à ta page</p>
+        </div>
+
+    </div>
 </template>
 
 <script setup>
 import QRCode from 'qrcode'
+
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)
 
-// Partage
-const shareUrl = computed(() => `https://stream-link.fr/${streamer.value?.username || ''}`)
+const shareUrl = computed(() => `${window.location.origin}/${streamer.value?.username || ''}`)
 
 const copied = ref(false)
 
@@ -55,17 +46,39 @@ const copyLink = async () => {
 }
 
 const qrcodeContainer = ref(null)
+
 watch([streamer, qrcodeContainer], async ([streamerVal, container]) => {
     if (streamerVal?.username && container) {
         try {
+            const size = 215
             const canvas = await QRCode.toCanvas(shareUrl.value, {
-                width: 180,
-                margin: 2,
+                width: size,
+                margin: 1,
+                errorCorrectionLevel: 'H',
                 color: {
-                    dark: '#000000',
-                    light: '#FFFFFF'
+                    dark: '#1E1F22',
+                    light: '#FFFFFF',
+                },
+            })
+
+            const ctx = canvas.getContext('2d')
+            const logoSize = 38
+            const center = size / 2
+
+            const logo = new Image()
+            logo.src = '/images/logo/charmi-favicon-noir.svg'
+            await new Promise((resolve) => {
+                logo.onload = () => {
+                    ctx.beginPath()
+                    ctx.arc(center, center, logoSize / 2 + 5, 0, 2 * Math.PI)
+                    ctx.fillStyle = '#FFFFFF'
+                    ctx.fill()
+
+                    ctx.drawImage(logo, center - logoSize / 2, center - logoSize / 2, logoSize, logoSize)
+                    resolve()
                 }
             })
+
             container.innerHTML = ''
             container.appendChild(canvas)
         } catch (err) {

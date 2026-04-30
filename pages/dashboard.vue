@@ -9,11 +9,8 @@
             <div class="py-4">
                 <header class="flex flex-col lg:items-start items-center">
                     <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
-                        Bon retour, <span class="text-primary">{{ streamer?.username || 'Streamer' }}</span>
+                        {{ greeting }}, <span class="text-primary">{{ streamer?.username || 'Streamer' }}</span>
                     </h1>
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-muted">
-                        Keep on streaming.
-                    </p>
                 </header>
             </div>
 
@@ -46,12 +43,11 @@
                             </div>
 
                             <!-- Charm quotidien -->
-                            <div class="rounded-xl p-5 border flex flex-col gap-4"
-                                :class="{
-                                    'bg-primary/8 border-primary/20': isSub,
-                                    'bg-white/[0.03] border-white/8': !isSub && dailyClaimed,
-                                    'bg-accent/8 border-accent/20': !isSub && !dailyClaimed,
-                                }">
+                            <div class="rounded-xl p-5 border flex flex-col gap-4" :class="{
+                                'bg-primary/8 border-primary/20': isSub,
+                                'bg-white/[0.03] border-white/8': !isSub && dailyClaimed,
+                                'bg-accent/8 border-accent/20': !isSub && !dailyClaimed,
+                            }">
 
                                 <div class="flex items-center justify-between gap-2">
                                     <p class="text-white text-sm font-bold">Connexion quotidienne</p>
@@ -167,6 +163,13 @@ const { isSub, fetchSubscription } = useFeatures()
 const toast = useToast()
 const dailyClaimed = ref(false)
 const dailyLoading = ref(false)
+
+const greeting = computed(() => {
+    const h = new Date().getHours()
+    if (h < 12) return 'Bonjour'
+    if (h < 18) return 'Bon après-midi'
+    return 'Bonsoir'
+})
 
 const claimDaily = async () => {
     dailyLoading.value = true
