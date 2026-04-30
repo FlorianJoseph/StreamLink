@@ -1,21 +1,20 @@
 <template>
     <div v-if="loading" class="flex justify-center items-center pt-100 w-full">
         <ProgressSpinner
-            style="width: 50px; height: 50px;--p-progressspinner-color-one
-:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
-            strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+            style="width:40px;height:40px;--p-progressspinner-color-one:#6A5AE0;--p-progressspinner-color-two:#8B7FF0;--p-progressspinner-color-three:#6A5AE0;--p-progressspinner-color-four:#4A3AC0"
+            strokeWidth="6" fill="transparent" animationDuration=".5s" />
     </div>
     <div v-else>
         <div class="flex flex-col gap-4 fade-in">
             <div class="py-4">
-                <div class="flex flex-col lg:items-start items-center">
+                <header class="flex flex-col lg:items-start items-center">
                     <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
-                        Tableau de bord
+                        Bon retour, <span class="text-primary">{{ streamer?.username || 'Streamer' }}</span>
                     </h1>
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
-                        Bienvenue, {{ streamer?.username || 'Streamer' }}
+                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-muted">
+                        Keep on streaming.
                     </p>
-                </div>
+                </header>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -24,184 +23,153 @@
                     <ProfileStatus />
                 </div>
                 <div class="lg:col-span-2 flex flex-col gap-6">
-                    <!-- Carte Outils -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
-                        <Card class="border border-zinc-700">
-                            <template #header>
-                                <div class="p-3">
-                                    <h2 class="text-lg font-semibold">Outils</h2>
-                                    <p class="text-xs sm:text-sm text-gray-400">
-                                        Accède rapidement à tous tes outils
-                                    </p>
-                                </div>
-                            </template>
-                            <template #content>
-                                <div class="grid grid-cols-1 gap-4">
-                                    <NuxtLink v-for="tool in toolsSections" :key="tool.title" :to="tool.to" class="group flex flex-col gap-2 p-4 rounded-lg border-2 transition-all 
-                        border-zinc-700 bg-zinc-800/30 hover:border-zinc-600 hover:bg-zinc-800/50">
-                                        <div class="flex items-center gap-2">
-                                            <Icon :name="tool.icon" size="20"
-                                                :class="`text-${tool.color}-400 shrink-0`" />
-                                            <span class="font-semibold text-sm sm:text-base">{{ tool.title }}</span>
-                                            <span v-if="tool.badge" :class="[
-                                                'ml-auto text-xs px-2 py-1 rounded-full font-medium',
-                                                `bg-${tool.color}-500 text-white`
-                                            ]">
-                                                {{ tool.badge }}
-                                            </span>
-                                        </div>
-                                        <span class="text-xs sm:text-sm text-gray-300">
-                                            {{ tool.description }}
-                                        </span>
-                                    </NuxtLink>
 
-                                    <!-- Placeholder pour futur outil -->
-                                    <div class="flex flex-col gap-2 p-4 rounded-lg border border-zinc-700 opacity-50">
-                                        <div class="flex items-center gap-2">
-                                            <Icon name="lucide:settings" size="20" class="text-gray-500 shrink-0" />
-                                            <span class="font-semibold text-sm sm:text-base text-gray-500">Autres
-                                                outils</span>
-                                            <span
-                                                class="ml-auto text-xs px-2 py-1 rounded-full bg-zinc-700 text-gray-400">
-                                                Bientôt
-                                            </span>
+                        <!-- Col 2 — Outils + Charm empilés en flex-col -->
+                        <div class="flex flex-col gap-6">
+
+                            <!-- Outils -->
+                            <div class="flex flex-col gap-2 p-4 bg-white/[0.03] border border-white/8 rounded-xl">
+                                <h2 class="text-white text-sm">Accès rapide</h2>
+                                <div class="flex flex-col gap-1">
+                                    <NuxtLink v-for="tool in toolsSections" :key="tool.title" :to="tool.to" class="group flex items-center gap-3 p-3 rounded-lg border border-transparent
+                                   hover:border-primary/25 hover:bg-primary/5 transition-all duration-200">
+                                        <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0
+                                        group-hover:bg-primary/20 transition-colors duration-200">
+                                            <Icon :name="tool.icon" size="15" class="text-primary" />
                                         </div>
-                                        <span class="text-xs sm:text-sm text-gray-500">
-                                            D'autres outils arrivent prochainement
-                                        </span>
-                                    </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-white text-sm font-bold leading-tight">{{ tool.title }}</p>
+                                            <p class="text-muted text-xs mt-0.5 truncate">{{ tool.description }}</p>
+                                        </div>
+                                        <Icon name="lucide:arrow-right" size="14"
+                                            class="text-muted group-hover:text-primary transition-colors duration-200 shrink-0" />
+                                    </NuxtLink>
                                 </div>
-                            </template>
-                        </Card>
+                            </div>
+
+                            <!-- Charm quotidien -->
+                            <div class="rounded-xl p-5 border flex flex-col gap-4 transition-colors duration-200"
+                                :class="{
+                                    'bg-primary/8 border-primary/20': isSub,
+                                    'bg-white/[0.03] border-white/8': !isSub && dailyClaimed,
+                                    'bg-accent/8 border-accent/20': !isSub && !dailyClaimed,
+                                }">
+
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="text-white text-sm">Connexion quotidienne</h3>
+                                    <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-5 h-5 shrink-0"
+                                        alt="" />
+                                </div>
+
+                                <!-- Abonné -->
+                                <template v-if="isSub">
+                                    <div class="flex flex-col gap-1">
+                                        <div class="flex items-baseline gap-1.5">
+                                            <span class="text-2xl font-bold text-white">+6</span>
+                                            <span class="text-muted text-xs">Charm / jour</span>
+                                        </div>
+                                        <p class="text-muted text-xs">Crédités automatiquement chaque matin. ✦</p>
+                                    </div>
+                                    <span class="inline-flex items-center gap-1.5 text-xs text-primary font-bold w-fit">
+                                        <Icon name="lucide:check-circle" size="13" />
+                                        Abonné actif
+                                    </span>
+                                </template>
+
+                                <!-- Free — déjà récupéré -->
+                                <template v-else-if="dailyClaimed">
+                                    <div class="flex flex-col gap-1">
+                                        <div class="flex items-baseline gap-1.5">
+                                            <span class="text-2xl font-bold text-white/30">+3</span>
+                                            <span class="text-muted text-xs">Charm</span>
+                                        </div>
+                                        <p class="text-muted text-xs">Reviens demain pour ta prochaine récompense.</p>
+                                    </div>
+                                    <span class="inline-flex items-center gap-1.5 text-xs text-muted w-fit">
+                                        <Icon name="lucide:check" size="13" />
+                                        Récupéré aujourd'hui
+                                    </span>
+                                    <NuxtLink to="/shop"
+                                        class="text-xs text-primary hover:underline transition-opacity">
+                                        Abonne-toi → 6 Charm/jour auto
+                                    </NuxtLink>
+                                </template>
+
+                                <!-- Free — à réclamer -->
+                                <template v-else>
+                                    <div class="flex flex-col gap-1">
+                                        <div class="flex items-baseline gap-1.5">
+                                            <span class="text-2xl font-bold text-accent">+3</span>
+                                            <span class="text-muted text-xs">Charm aujourd'hui</span>
+                                        </div>
+                                        <p class="text-muted text-xs">Connecte-toi chaque jour pour accumuler des Charm.
+                                        </p>
+                                    </div>
+                                    <Button :disabled="dailyLoading"
+                                        class="w-full flex items-center justify-center gap-2"
+                                        style="background:#FFC82C;border-color:#FFC82C;color:#1E1F22"
+                                        @click="claimDaily">
+                                        <Icon v-if="dailyLoading" name="lucide:loader-circle" size="15"
+                                            class="animate-spin shrink-0" />
+                                        <img v-else src="/images/assets/charmi-monnaie-jaune.svg"
+                                            class="w-4 h-4 shrink-0" alt="" />
+                                        <span class="text-sm font-bold">Réclamer</span>
+                                    </Button>
+                                    <NuxtLink to="/shop"
+                                        class="text-xs text-center text-muted hover:text-white transition-colors">
+                                        Abonne-toi → 6 Charm/jour auto
+                                    </NuxtLink>
+                                </template>
+                            </div>
+                        </div>
 
                         <!-- Carte Partage rapide -->
                         <QRCode />
-
-                        <!-- Card Coins quotidiens -->
-                        <Card class="border border-zinc-700 sm:col-span-2" style="--p-card-body-padding: 7px">
-                            <template #content>
-                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-1">
-                                    <div class="flex items-center gap-3">
-                                        <Icon name="lucide:coins" size="20" class="text-amber-400 shrink-0" />
-                                        <div>
-                                            <h2 class="text-lg font-semibold">Coins quotidiens</h2>
-                                            <p class="text-xs sm:text-sm text-gray-400">
-                                                <template v-if="isSub">
-                                                    Coins quotidiens x2 crédités automatiquement
-                                                </template>
-                                                <template v-else>
-                                                    {{ dailyClaimed ? 'Déjà récupéré aujourd\'hui, reviens demain !' :
-                                                        'Connecte-toi chaque jour pour gagner des Coins' }}
-                                                </template>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div v-if="!isSub"
-                                        class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
-                                        <NuxtLink to="/shop"
-                                            class="text-xs text-amber-400 hover:underline whitespace-nowrap">
-                                            Abonne-toi pour tes Coins x2 automatiques
-                                        </NuxtLink>
-                                        <Button :disabled="dailyClaimed || dailyLoading" severity="contrast"
-                                            class="flex items-center gap-2 w-full sm:w-auto justify-center"
-                                            @click="claimDaily">
-                                            <Icon v-if="dailyLoading" name="lucide:loader-circle" size="16"
-                                                class="animate-spin shrink-0" />
-                                            <Icon v-else-if="dailyClaimed" name="lucide:check" size="16"
-                                                class="shrink-0" />
-                                            <Icon v-else name="lucide:coins" size="16" class="shrink-0" />
-                                            <span class="text-sm sm:text-base">
-                                                {{ dailyClaimed ? 'Récupéré' : '+3 Coins' }}</span>
-                                        </Button>
-                                    </div>
-                                </div>
-                            </template>
-                        </Card>
                     </div>
 
-                    <!-- Carte Nouvelles fonctionnalités / Coming soon -->
-                    <Card class="border border-zinc-700 sm:col-span-2" style="--p-card-body-padding: 7px">
-                        <template #content>
-                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-1">
-                                <div class="flex items-center gap-3">
-                                    <Icon name="lucide:star" size="20" class="text-pink-400 shrink-0" />
-                                    <div>
-                                        <h2 class="text-lg font-semibold">Prochainement</h2>
-                                        <p class="text-xs sm:text-sm text-gray-400">
-                                            De nouvelles fonctionnalités arrivent pour rendre ton développement encore
-                                            plus puissant !
-                                        </p>
-                                    </div>
-                                </div>
-                                <button @click="roadmapModal = true"
-                                    class="flex items-center justify-center gap-2 px-4 py-2 border border-white/20 font-medium text-white rounded-md hover:bg-white/10 transition-all">
-                                    <span class="text-sm sm:text-base">Découvrir</span>
-                                    <Icon name="lucide:arrow-right" size="16" class="shrink-0" />
-                                </button>
-                            </div>
-                        </template>
-                    </Card>
-                    <Dialog v-model:visible="roadmapModal" modal dismissableMask header="Prochainement"
-                        :style="{ width: '50rem', margin: '1rem' }" :draggable="false">
-                        <div class="space-y-4">
-                            <!-- Bientôt -->
-                            <div class="space-y-2">
-                                <span
-                                    class="text-xs font-semibold text-green-400 uppercase tracking-wide">Bientôt</span>
-                                <p class="text-xs text-gray-500 italic">
+                    <!-- Prochainement -->
+                    <div class="lg:col-span-2 p-4 bg-white/[0.03] border border-white/8 rounded-xl
+                        flex flex-col sm:flex-row sm:items-start gap-5">
+
+                        <!-- Items roadmap -->
+                        <div class="flex-1 flex flex-col gap-3 min-w-0">
+                            <div>
+                                <p class="text-white text-sm font-bold">Prochainement</p>
+                                <p class="text-xs text-muted italic">
                                     La roadmap évolue selon les retours de la communauté
                                 </p>
-                                <div class="flex items-center gap-2">
-                                    <Icon name="lucide:chart-column" class="text-blue-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Stats avancées</span>
-                                </div>
-                                <!-- <div class="flex items-center gap-2">
-                                    <Icon name="lucide:users" class="text-purple-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Collabs entre streamers</span>
-                                </div> -->
-                                <div class="flex items-center gap-2">
-                                    <Icon name="simple-icons:twitch" class="text-purple-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Synchronisation Twitch</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <Icon name="simple-icons:discord" class="text-indigo-400" size="16" />
-                                    <span class="text-gray-400 text-sm">Export Discord</span>
-                                </div>
                             </div>
-                            <!-- CTA Newsletter -->
-                            <div class="pt-3 border-t border-zinc-700">
-                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                    <p class="text-xs sm:text-sm text-gray-400 text-center">
-                                        Sois informé en avant-première des nouveautés et fonctionnalités
-                                    </p>
-                                    <Button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
-                                        severity="info"
-                                        class="flex items-center gap-2 w-full sm:w-[240px] justify-center">
-                                        <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'"
-                                            size="16" class="shrink-0" />
-                                        <span class="text-sm sm:text-base">
-                                            {{ newsletterStore.subscribed ? 'Inscrit aux nouveautés' :
-                                                'Recevoir les nouveautés'
-                                            }}</span>
-                                    </Button>
+                            <div class="flex flex-col gap-1.5">
+                                <div v-for="item in roadmapItems" :key="item.label" class="flex items-center gap-1.5">
+                                    <Icon :name="item.icon" size="18" :class="`${item.color} shrink-0`" />
+                                    <span class="text-sm text-muted">{{ item.label }}</span>
                                 </div>
-                            </div>
-                            <!-- CTA Discord -->
-                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                <p class="text-xs sm:text-sm text-gray-400 text-center">
-                                    Rejoins notre communauté et influence les prochaines fonctionnalités
-                                </p>
-                                <a href="https://discord.gg/fVFguWc76b" target="_blank">
-                                    <button severity="contrast"
-                                        class="flex items-center gap-2 w-full sm:w-[240px] justify-center px-4 py-2 rounded-md hover:opacity-95"
-                                        :style="{ backgroundColor: '#5865f2', color: '#e0e3ff' }">
-                                        <Icon name="simple-icons:discord" size="16" />
-                                        <span class="text-sm sm:text-base">Rejoindre le Discord</span>
-                                    </button>
-                                </a>
                             </div>
                         </div>
-                    </Dialog>
+
+                        <!-- CTAs -->
+                        <div class="flex flex-col gap-2 shrink-0 self-center w-full sm:w-45">
+                            <p class="text-xs text-muted hidden sm:block">Être informé en avant-première</p>
+                            <button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
+                                class="flex items-center gap-2 w-full justify-center px-3 py-1.5 rounded-md text-sm font-bold transition-colors"
+                                :class="newsletterStore.subscribed
+                                    ? 'bg-primary/30 text-white/50'
+                                    : 'bg-primary text-white hover:bg-primary/90'"
+                                :style="newsletterStore.subscribed ? { cursor: 'default', pointerEvents: 'auto' } : {}">
+                                <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'" size="16"
+                                    class="shrink-0" />
+                                <span>{{ newsletterStore.subscribed ? 'Inscrit' : 'Me notifier' }}</span>
+                            </button>
+                            <a href="https://discord.gg/fVFguWc76b" target="_blank">
+                                <button
+                                    class="flex items-center gap-2 w-full justify-center px-3 py-1.5 rounded-md bg-[#5865f2] text-[#e0e3ff] hover:bg-[#5865f2]/90 transition-colors">
+                                    <Icon name="simple-icons:discord" size="16" />
+                                    <span class="text-sm">Discord</span>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -269,34 +237,31 @@ const toolsSections = [
     },
 ]
 
+const roadmapItems = [
+    { icon: 'lucide:chart-column', label: 'Stats avancées', color: 'text-blue-400' },
+    { icon: 'simple-icons:twitch', label: 'Synchronisation Twitch', color: 'text-purple-400' },
+    { icon: 'simple-icons:discord', label: 'Export Discord', color: 'text-indigo-400' },
+]
+
 onMounted(async () => {
     loading.value = true
     await fetchSubscription()
     await newsletterStore.fetchStatus()
     const { data: schedule } = await scheduleStore.fetchSchedule()
-    if (schedule?.id) {
-        await scheduleSlotStore.fetchSlots(schedule.id)
-    }
+    if (schedule?.id) await scheduleSlotStore.fetchSlots(schedule.id)
     await linkStore.fetchLinks()
-
-    // Vérifier si daily déjà récupéré
     const { claimed } = await $fetch('/api/quests/daily')
     dailyClaimed.value = claimed
-
     loading.value = false
 })
 
 const subscribeIfNotYet = async () => {
-    if (!newsletterStore.subscribed) {
-        await newsletterStore.toggle()
-    }
+    if (!newsletterStore.subscribed) await newsletterStore.toggle()
 }
 
 definePageMeta({
     layout: 'fullscreen'
 })
-
-const roadmapModal = ref(false)
 </script>
 
 <style scoped>
