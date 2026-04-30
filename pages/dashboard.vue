@@ -202,10 +202,8 @@ const streamMessage = computed(() => {
     const game = next.game?.label
     const time = next.start_at.slice(0, 5)
 
-    if (next.diff === 0) return `${game} ce soir à ${time}... t'as pensé à ton raid`
-    if (next.diff === 1) return `${game} demain à ${time}... cherche un raid dans ta catégorie sur la`
-
-    return `${game} ${next.day.toLowerCase()} à ${time}... trouve le raid parfait sur la`
+    if (next.diff === 0) return `${game} ce soir à ${time}... pense au raid rapide sur la`
+    return `${game} ${next.day.toLowerCase()} à ${time}... cherche un raid dans ta catégorie sur la`
 })
 
 const claimDaily = async () => {
