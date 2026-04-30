@@ -9,24 +9,25 @@
 
     <div v-else class="flex flex-col fade-in">
         <!-- ─── Header sticky ─── -->
+        <!-- ─── Header sticky ─── -->
         <div
-            class="sticky top-0 z-40 bg-zinc-950/95 backdrop-blur border-b border-zinc-800 py-2 px-4 sm:px-6 flex flex-col gap-2">
+            class="sticky top-0 z-40 bg-[#18191c]/95 backdrop-blur border-b border-white/5 py-2 px-4 sm:px-6 flex flex-col gap-2">
 
             <!-- Row 1 : Recherche + Langue + Raid Assistant -->
             <div class="flex flex-wrap gap-2 w-full">
                 <IconField class="w-full sm:flex-1">
                     <InputIcon>
-                        <Icon name="lucide:search" size="16" class="text-gray-400" />
+                        <Icon name="lucide:search" size="16" class="text-muted" />
                     </InputIcon>
                     <InputText v-model="search" placeholder="Rechercher un streamer ou jeu..." fluid size="small"
-                        style="--p-inputtext-focus-border-color: #ffffff" />
+                        style="--p-inputtext-focus-border-color: #6A5AE0" />
                 </IconField>
-                <!-- Langue + Raid groupés pour rester sur la même ligne sur mobile -->
+
                 <div class="flex gap-2 w-full sm:w-auto sm:contents">
                     <Select v-model="selectedLanguage" :options="languageOptions" optionLabel="label"
                         optionValue="value" placeholder="Langue" showClear size="small" :highlightOnSelect="false"
                         class="min-w-0 flex-1 sm:flex-none"
-                        style="--p-select-focus-border-color: #ffffff; min-width: 110px">
+                        style="--p-select-focus-border-color: #6A5AE0; min-width: 110px">
                         <template #option="{ option }">
                             <div class="flex items-center gap-2">
                                 <img v-if="option.flag" :src="`https://flagcdn.com/w40/${option.flag}.png`"
@@ -45,19 +46,20 @@
                             <span v-else class="text-sm">Langue</span>
                         </template>
                     </Select>
+
                     <button v-if="user" @click="openRaidAssistant"
                         v-tooltip.bottom="{ value: !raidStatus.canRaidToday ? 'Tu as déjà raid aujourd\'hui' : raidStatus.remaining === 0 ? 'Plus de raids disponibles cette semaine' : 'Trouve un streamer compatible à raid', pt: { text: '!text-sm' } }"
                         :disabled="!raidStatus.canRaidToday || raidStatus.remaining === 0" :class="[
-                            'flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-bold text-xs sm:text-sm transition-all duration-150 whitespace-nowrap flex-shrink-0',
+                            'flex items-center justify-center gap-2 py-2 px-4 rounded-md font-bold text-xs sm:text-sm whitespace-nowrap flex-shrink-0',
                             raidStatus.canRaidToday && raidStatus.remaining > 0
-                                ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
-                                : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                                ? 'bg-primary text-white hover:bg-primary/90 cursor-pointer'
+                                : 'bg-white/5 text-muted cursor-not-allowed'
                         ]">
                         <Icon name="lucide:swords" size="16" class="flex-shrink-0" />
                         <span class="hidden sm:inline">Raid assistant</span>
                         <span class="flex items-center gap-0.5 text-[10px]"
-                            :class="raidStatus.canRaidToday && raidStatus.remaining > 0 ? 'text-zinc-500' : 'text-zinc-600'">
-                            <Icon name="lucide:coins" size="9" /> {{ raidStatus.remaining }}/{{ raidStatus.total }}
+                            :class="raidStatus.canRaidToday && raidStatus.remaining > 0 ? 'text-white/50' : 'text-muted'">
+                            {{ raidStatus.remaining }}/{{ raidStatus.total }}
                         </span>
                     </button>
                 </div>
@@ -69,10 +71,10 @@
 
                     <!-- Filtres temps -->
                     <button v-for="f in filters" :key="f.key" @click="selectFilter(f.key)" :class="[
-                        'flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150',
+                        'flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border',
                         activeFilter === f.key
-                            ? 'bg-white text-zinc-900 border-white'
-                            : 'text-zinc-400 border-zinc-700/60 hover:border-zinc-500 hover:text-zinc-200'
+                            ? 'bg-primary text-white border-primary'
+                            : 'text-muted border-white/8 hover:border-white/20 hover:text-white'
                     ]">
                         <span v-if="f.key === 'live'" class="w-1.5 h-1.5 rounded-full bg-red-500"
                             :class="activeFilter === 'live' ? '' : 'animate-pulse'" />
@@ -81,14 +83,14 @@
                     </button>
 
                     <!-- Séparateur -->
-                    <div class="flex-shrink-0 w-px bg-zinc-700/60 mx-1 self-stretch" />
+                    <div class="flex-shrink-0 w-px bg-white/8 mx-1 self-stretch" />
 
                     <!-- Genres -->
                     <button v-for="cat in HOME_CATEGORIES" :key="cat" @click="selectGenre(cat)" :class="[
-                        'flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150',
+                        'flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border',
                         activeFilter === cat
-                            ? 'bg-white text-zinc-900 border-white'
-                            : 'text-zinc-400 border-zinc-700/60 hover:border-zinc-500 hover:text-zinc-200'
+                            ? 'bg-primary text-white border-primary'
+                            : 'text-muted border-white/8 hover:border-white/20 hover:text-white'
                     ]">
                         <Icon :name="genreIcon(cat)" size="11" />
                         {{ cat }}
@@ -96,31 +98,29 @@
                 </div>
 
                 <!-- Compteur -->
-                <span class="hidden sm:block text-xs text-zinc-500 whitespace-nowrap flex-shrink-0">
+                <span class="hidden sm:block text-xs text-muted whitespace-nowrap flex-shrink-0">
                     {{ selectedCategory ? categoryStreamers.length : filteredStreamers.length }}
-                    streamer{{ selectedCategory ? categoryStreamers.length > 1 ? 's' : '' :
-                        filteredStreamers.length > 1 ? 's' : '' }}
+                    streamer{{ selectedCategory ? categoryStreamers.length > 1 ? 's' : '' : filteredStreamers.length > 1
+                    ? 's' : ''
+                    }}
                 </span>
             </div>
 
-            <!-- Row 3 : Progression perso -->
+            <!-- Row 3 : Progression raids -->
             <div v-if="user && raidStatus.used > 0"
-                class="flex items-center gap-3 text-xs border-t border-zinc-800/60 pt-2">
-                <!-- Barre de progression -->
-                <div class="flex-1 sm:flex-none sm:w-20 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                    <div class="h-full bg-yellow-500 rounded-full transition-all duration-500"
+                class="flex items-center gap-3 text-xs border-t border-white/5 pt-2">
+                <div class="flex-1 sm:flex-none sm:w-20 h-1.5 bg-white/8 rounded-full overflow-hidden">
+                    <div class="h-full bg-accent rounded-full transition-all duration-500"
                         :style="{ width: `${(raidStatus.used / raidStatus.total) * 100}%` }" />
                 </div>
-                <!-- Compteur -->
-                <span class="text-zinc-500 flex-shrink-0">{{ raidStatus.used }}/{{ raidStatus.total }} raids</span>
-                <!-- Message motivant (desktop seulement) -->
-                <span v-if="progressionMessage" :class="[progressionMessage.color]" class="hidden sm:block flex-shrink-0">
+                <span class="text-muted flex-shrink-0">{{ raidStatus.used }}/{{ raidStatus.total }} raids</span>
+                <span v-if="progressionMessage" :class="[progressionMessage.color]"
+                    class="hidden sm:block flex-shrink-0">
                     {{ progressionMessage.text }}
                 </span>
-                <!-- Coins (desktop seulement) -->
-                <span class="hidden sm:flex items-center gap-1 text-zinc-500 ml-auto flex-shrink-0">
-                    <Icon name="lucide:coins" size="11" class="text-yellow-500/60" />
-                    {{ balance }} coins
+                <span class="hidden sm:flex items-center gap-1 text-muted ml-auto flex-shrink-0">
+                    <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-3 h-3" alt="" />
+                    {{ balance }}
                 </span>
             </div>
         </div>
@@ -275,8 +275,11 @@
                                             class="w-7 h-7 rounded-full object-cover flex-shrink-0 ring-1 ring-zinc-700" />
                                         <div class="min-w-0">
                                             <div class="flex items-center gap-1">
-                                                <p class="text-xs font-semibold text-white truncate">{{ s.username }}</p>
-                                                <Icon v-if="s.is_sub" name="lucide:badge-check" size="12" class="text-purple-400 shrink-0" v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-xs' } }" />
+                                                <p class="text-xs font-semibold text-white truncate">{{ s.username }}
+                                                </p>
+                                                <Icon v-if="s.is_sub" name="lucide:badge-check" size="12"
+                                                    class="text-purple-400 shrink-0"
+                                                    v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-xs' } }" />
                                             </div>
                                             <p class="text-[10px] text-zinc-500 truncate">
                                                 {{ s.nextSlot?.twitchGameName || '—' }}
@@ -307,7 +310,8 @@
                     <div class="flex flex-col px-4 sm:px-12">
                         <div class="flex items-center gap-3">
                             <Icon name="lucide:trophy" size="18" class="text-yellow-400 flex-shrink-0" />
-                            <h2 class="text-xl font-bold text-white truncate">Top Raiders <span class="hidden sm:inline">cette semaine</span></h2>
+                            <h2 class="text-xl font-bold text-white truncate">Top Raiders <span
+                                    class="hidden sm:inline">cette semaine</span></h2>
                         </div>
                         <span class="hidden sm:flex text-xs text-zinc-500 items-center gap-1.5 mt-1 ml-0.5">
                             <Icon name="lucide:coins" size="12" />
@@ -544,7 +548,9 @@
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-1.5">
                                 <span class="text-sm font-semibold text-white truncate">{{ s.username }}</span>
-                                <Icon v-if="s.is_sub" name="lucide:badge-check" size="12" class="text-purple-400 shrink-0" v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-xs' } }" />
+                                <Icon v-if="s.is_sub" name="lucide:badge-check" size="12"
+                                    class="text-purple-400 shrink-0"
+                                    v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-xs' } }" />
                                 <span class="flex items-center gap-1 text-[10px] text-zinc-500">
                                     <Icon name="lucide:eye" size="10" />{{ s.nextSlot?.twitchViewerCount ?? '—' }}
                                 </span>
@@ -552,11 +558,11 @@
                             <p class="text-xs text-zinc-400 truncate">{{ s.nextSlot?.twitchGameName || '—' }}</p>
                         </div>
                         <button @click="selectSuggestion(s)" :disabled="!canRaidSuggestion(s)" :class="[
-                                'flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-all duration-150',
-                                canRaidSuggestion(s)
-                                    ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
-                                    : 'bg-zinc-800 text-zinc-600 border border-zinc-700/40 cursor-not-allowed'
-                            ]">
+                            'flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-all duration-150',
+                            canRaidSuggestion(s)
+                                ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
+                                : 'bg-zinc-800 text-zinc-600 border border-zinc-700/40 cursor-not-allowed'
+                        ]">
                             <Icon name="lucide:swords" size="15" />
                             Raid
                             <span class="flex items-center gap-0.5 text-[10px]"
