@@ -62,64 +62,44 @@
                                         alt="" />
                                 </div>
 
-                                <!-- Abonné -->
+                                <div class="flex items-baseline justify-between gap-2">
+                                    <div class="flex items-baseline gap-1.5">
+                                        <span class="text-2xl font-bold"
+                                            :class="dailyClaimed && !isSub ? 'text-white/30' : isSub ? 'text-white' : 'text-accent'">
+                                            {{ isSub ? '+6' : '+3' }}
+                                        </span>
+                                        <span class="text-muted text-xs">Charm / jour</span>
+                                    </div>
+                                    <NuxtLink v-if="!isSub" to="/shop"
+                                        class="text-xs text-muted hover:text-white transition-colors shrink-0">
+                                        Abonne-toi → 6/jour auto
+                                    </NuxtLink>
+                                    <div v-else class="text-xs text-muted shrink-0">
+                                        Abonnement actif
+                                    </div>
+                                </div>
                                 <template v-if="isSub">
-                                    <div class="flex flex-col gap-1">
-                                        <div class="flex items-baseline gap-1.5">
-                                            <span class="text-2xl font-bold text-white">+6</span>
-                                            <span class="text-muted text-xs">Charm / jour</span>
-                                        </div>
-                                        <p class="text-muted text-xs">Crédités automatiquement chaque matin. ✦</p>
+                                    <div class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md
+                        bg-primary/10 text-primary text-sm font-bold">
+                                        Récompense automatique
                                     </div>
-                                    <span class="inline-flex items-center gap-1.5 text-xs text-primary font-bold w-fit">
-                                        <Icon name="lucide:check-circle" size="13" />
-                                        Abonné actif
-                                    </span>
                                 </template>
 
-                                <!-- Free — déjà récupéré -->
                                 <template v-else-if="dailyClaimed">
-                                    <div class="flex flex-col gap-1">
-                                        <div class="flex items-baseline gap-1.5">
-                                            <span class="text-2xl font-bold text-white/30">+3</span>
-                                            <span class="text-muted text-xs">Charm</span>
-                                        </div>
-                                        <p class="text-muted text-xs">Reviens demain pour ta prochaine récompense.</p>
+                                    <div disabled class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md
+                            bg-white/5 text-muted text-sm font-bold">
+                                        Déjà récupéré
                                     </div>
-                                    <span class="inline-flex items-center gap-1.5 text-xs text-muted w-fit">
-                                        <Icon name="lucide:check" size="13" />
-                                        Récupéré aujourd'hui
-                                    </span>
-                                    <NuxtLink to="/shop"
-                                        class="text-xs text-primary hover:underline transition-opacity">
-                                        Abonne-toi → 6 Charm/jour auto
-                                    </NuxtLink>
                                 </template>
 
-                                <!-- Free — à réclamer -->
                                 <template v-else>
-                                    <div class="flex flex-col gap-1">
-                                        <div class="flex items-baseline gap-1.5">
-                                            <span class="text-2xl font-bold text-accent">+3</span>
-                                            <span class="text-muted text-xs">Charm aujourd'hui</span>
-                                        </div>
-                                        <p class="text-muted text-xs">Connecte-toi chaque jour pour accumuler des Charm.
-                                        </p>
-                                    </div>
-                                    <Button :disabled="dailyLoading"
-                                        class="w-full flex items-center justify-center gap-2"
-                                        style="background:#FFC82C;border-color:#FFC82C;color:#1E1F22"
+                                    <button :disabled="dailyLoading"
+                                        class="w-full flex items-center justify-center gap-2 bg-accent text-dark hover:bg-accent/90 transition-colors font-bold px-3 py-2 rounded-md"
                                         @click="claimDaily">
-                                        <Icon v-if="dailyLoading" name="lucide:loader-circle" size="15"
+                                        <Icon v-if="dailyLoading" name="lucide:loader-circle" size="16"
                                             class="animate-spin shrink-0" />
-                                        <img v-else src="/images/assets/charmi-monnaie-jaune.svg"
-                                            class="w-4 h-4 shrink-0" alt="" />
-                                        <span class="text-sm font-bold">Réclamer</span>
-                                    </Button>
-                                    <NuxtLink to="/shop"
-                                        class="text-xs text-center text-muted hover:text-white transition-colors">
-                                        Abonne-toi → 6 Charm/jour auto
-                                    </NuxtLink>
+                                        <span v-if="!dailyLoading" class="text-sm font-bold">Réclamer</span>
+                                    </button>
                                 </template>
                             </div>
                         </div>
