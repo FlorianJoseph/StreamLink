@@ -1,21 +1,21 @@
 <template>
     <header class="relative z-50">
-        <nav class="h-14 bg-surface-darker border-b border-white/5">
-            <div class="flex items-center h-full px-4 sm:px-6 gap-3">
+        <nav class="h-13 bg-surface-darker shadow-sm">
+            <div class="flex items-center h-full px-2 sm:px-3">
 
                 <!-- Logo -->
-                <NuxtLink to="/" class="shrink-0 mr-2">
+                <NuxtLink to="/" class="shrink-0">
                     <AppLogo variant="full" color="blanc" :height="28" />
                 </NuxtLink>
 
                 <!-- Hamburger mobile -->
-                <button @click="mobileOpen = !mobileOpen" class="lg:hidden flex items-center justify-center w-8 h-8 rounded-md text-muted
-                               hover:text-white hover:bg-white/5 transition-colors">
+                <button @click="mobileOpen = !mobileOpen" class="lg:hidden flex items-center justify-center rounded-md text-muted
+                               hover:text-white hover:bg-white/5 transition-colors ml-3">
                     <Icon :name="mobileOpen ? 'lucide:x' : 'lucide:menu'" size="18" />
                 </button>
 
                 <!-- Navigation desktop -->
-                <div class="hidden lg:flex items-center gap-0.5 flex-1">
+                <div class="hidden lg:flex items-center gap-0.5 flex-1 ml-3">
                     <NuxtLink v-for="item in menuItemsBefore" :key="item.route" :to="item.route" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-muted
                                 hover:text-white" exact-active-class="!text-white">
                         {{ item.label }}
@@ -86,7 +86,7 @@
                                 class="flex items-center gap-2 px-2 py-1.5 rounded-md"
                                 :class="avatarOpen ? 'sm:bg-white/8' : 'sm:hover:bg-white/5'">
                                 <Avatar :image="user.user_metadata.avatar_url" shape="circle" size="small" />
-                                <span class="hidden sm:block text-white font-bold">
+                                <span class="hidden sm:block text-white">
                                     {{ user.user_metadata.nickname }}
                                 </span>
                                 <div class="hidden lg:flex items-center">
@@ -102,14 +102,14 @@
                                     <template v-for="group in filteredPopoverItems" :key="group.label">
                                         <div v-for="item in group.items" :key="item.label">
                                             <NuxtLink v-if="item.route" :to="item.route" @click="avatarOpen = false"
-                                                class="flex items-center gap-2.5 px-3 py-2 text-muted text-sm sm:text-base
+                                                class="flex items-center gap-1.5 px-3 py-2 text-muted text-sm
                                                        hover:text-white hover:bg-white/5 rounded-sm">
-                                                <Icon :name="item.icon" size="16" class="shrink-0" />
+                                                <Icon :name="item.icon" size="18" class="shrink-0" />
                                                 {{ item.label }}
                                             </NuxtLink>
-                                            <button v-else @click="item.command?.(); avatarOpen = false" class="flex items-center gap-2.5 w-full px-3 py-2 text-muted text-sm sm:text-base
+                                            <button v-else @click="item.command?.(); avatarOpen = false" class="flex items-center gap-1.5 w-full px-3 py-2 text-muted text-sm
                                                        hover:text-white hover:bg-white/5 text-left rounded-sm">
-                                                <Icon :name="item.icon" size="16" class="shrink-0" />
+                                                <Icon :name="item.icon" size="18" class="shrink-0" />
                                                 {{ item.label }}
                                             </button>
                                         </div>
