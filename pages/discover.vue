@@ -1,10 +1,9 @@
 <template>
     <!-- Loader -->
-    <div v-if="loading" class="flex justify-center items-center w-full pt-100">
+    <div v-if="loading" class="flex justify-center items-center pt-100 w-full">
         <ProgressSpinner
-            style="width: 50px; height: 50px;--p-progressspinner-color-one
-:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
-            strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+            style="width:40px;height:40px;--p-progressspinner-color-one:#6A5AE0;--p-progressspinner-color-two:#8B7FF0;--p-progressspinner-color-three:#6A5AE0;--p-progressspinner-color-four:#4A3AC0"
+            strokeWidth="6" fill="transparent" animationDuration=".5s" />
     </div>
 
     <div v-else class="flex flex-col fade-in">
@@ -130,47 +129,45 @@
 
             <!-- ─── Vue catégorie ─── -->
             <div v-if="selectedCategory" class="flex flex-col gap-6">
-                <!-- Header -->
                 <div class="px-4 sm:px-12 flex items-center gap-3">
                     <h2 class="text-2xl font-bold text-white">{{ categoryLabel }}</h2>
-                    <span v-if="search" class="flex items-center gap-1.5 text-xs text-zinc-400">
+                    <span v-if="search" class="flex items-center gap-1.5 text-xs text-muted">
                         + recherche "<span class="text-white">{{ search }}</span>"
                         <button @click="search = ''"
-                            class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
-                            <Icon name="lucide:x" size="10" />Effacer la recherche
+                            class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted hover:text-white">
+                            <Icon name="lucide:x" size="10" />Effacer
                         </button>
                     </span>
                 </div>
-                <!-- Grille -->
                 <div v-if="categoryStreamers.length > 0" class="flex flex-col gap-4">
                     <div class="px-4 sm:px-12 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                         <StreamerCard v-for="s in categoryDisplayed" :key="s.username" :streamer="s" />
                     </div>
                     <div v-if="categoryHasMore" class="flex justify-center pb-4">
                         <button @click="categoryVisibleCount += CATEGORY_PAGE"
-                            class="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150">
+                            class="flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/8 bg-primary text-white hover:bg-primary/90 text-white font-semibold text-sm">
                             <Icon name="lucide:chevron-down" size="16" />
                             Voir plus
                         </button>
                     </div>
                 </div>
                 <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
-                    <Icon name="lucide:search-x" size="48" class="text-zinc-700" />
-                    <p class="text-sm text-zinc-500">Aucun résultat{{ search ? ` pour "${search}"` : '' }}</p>
+                    <Icon name="lucide:search-x" size="48" class="text-muted" />
+                    <p class="text-sm text-muted">Aucun résultat{{ search ? ` pour "${search}"` : '' }}</p>
                 </div>
             </div>
 
             <!-- ─── Vue recherche ─── -->
             <div v-else-if="search" class="px-4 sm:px-12 flex flex-col gap-4">
                 <div class="flex items-center gap-2 flex-wrap">
-                    <p class="text-xs text-zinc-500">{{ filteredStreamers.length }}
+                    <p class="text-xs text-muted">{{ filteredStreamers.length }}
                         résultat{{ filteredStreamers.length > 1 ? 's' : '' }} pour "{{ search }}"</p>
                     <button @click="search = ''"
-                        class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
+                        class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted hover:text-white">
                         <Icon name="lucide:x" size="10" />Effacer la recherche
                     </button>
                     <button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'"
-                        class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-150">
+                        class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted hover:text-white">
                         <Icon name="lucide:x" size="10" />Retirer le filtre
                     </button>
                 </div>
@@ -179,12 +176,12 @@
                     <StreamerCard v-for="s in filteredStreamers" :key="s.username" :streamer="s" />
                 </div>
                 <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
-                    <Icon name="lucide:search-x" size="48" class="text-zinc-700" />
-                    <p class="text-sm text-zinc-500">Aucun résultat pour "{{ search }}"</p>
+                    <Icon name="lucide:search-x" size="48" class="text-muted" />
+                    <p class="text-sm text-muted">Aucun résultat pour "{{ search }}"</p>
                 </div>
             </div>
 
-            <!-- ─── Vue live (grille flat) ─── -->
+            <!-- ─── Vue live ─── -->
             <div v-else-if="selectedFilter === 'live'" class="px-4 sm:px-12 flex flex-col gap-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
@@ -193,12 +190,12 @@
                             <h2 class="text-2xl font-bold text-white">En live</h2>
                         </div>
                         <span
-                            class="px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700/60 text-zinc-400 text-sm font-medium">
+                            class="px-2 py-0.5 rounded-full bg-white/5 border border-white/8 text-muted text-sm font-medium">
                             {{ liveCount }}
                         </span>
                     </div>
                     <button @click="liveSort = liveSort === 'desc' ? 'asc' : 'desc'"
-                        class="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150 flex-shrink-0">
+                        class="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg border border-white/8 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm flex-shrink-0">
                         <Icon name="lucide:eye" size="16" />
                         <span class="hidden sm:inline">Viewers</span>
                         <Icon :name="liveSort === 'desc' ? 'lucide:arrow-down' : 'lucide:arrow-up'" size="16" />
@@ -209,8 +206,8 @@
                     <StreamerCard v-for="s in sortedLiveStreamers" :key="s.username" :streamer="s" />
                 </div>
                 <div v-else class="flex flex-col items-center justify-center py-24 gap-3">
-                    <Icon name="lucide:radio" size="48" class="text-zinc-700" />
-                    <p class="text-sm text-zinc-500">Aucun stream en direct pour le moment</p>
+                    <Icon name="lucide:radio" size="48" class="text-muted" />
+                    <p class="text-sm text-muted">Aucun stream en direct pour le moment</p>
                 </div>
             </div>
 
@@ -356,19 +353,19 @@
 
                 <!-- ─── État vide ─── -->
                 <div v-if="rows.length === 0" class="flex flex-col items-center justify-center py-24 gap-4 px-6">
-                    <Icon name="lucide:search-x" size="56" class="text-zinc-700" />
+                    <Icon name="lucide:search-x" size="56" class="text-muted" />
                     <div class="text-center">
                         <h3 class="text-xl font-semibold text-white mb-2">Aucun streamer trouvé</h3>
-                        <p class="text-sm text-zinc-500">{{ getEmptyStateMessage() }}</p>
+                        <p class="text-sm text-muted">{{ getEmptyStateMessage() }}</p>
                     </div>
                     <div class="flex flex-wrap justify-center gap-2 mt-2">
                         <button v-if="search" @click="search = ''"
-                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium transition-all duration-150">
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/8 bg-white/5 hover:bg-white/10 text-white text-xs font-medium">
                             <Icon name="lucide:x" size="14" />
                             Réinitialiser la recherche
                         </button>
                         <button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'"
-                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium transition-all duration-150">
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/8 bg-white/5 hover:bg-white/10 text-white text-xs font-medium">
                             <Icon name="lucide:filter-x" size="14" />
                             Retirer le filtre
                         </button>
@@ -451,61 +448,63 @@
         :pt="{ header: { style: 'display:none' } }">
         <template #container>
 
+            <!-- Étape countdown -->
             <div v-if="raidAssistantStep === 'countdown'" class="flex flex-col gap-4 p-6">
                 <div class="flex items-center gap-3">
                     <img :src="avatarUrl(selectedSuggestion?.avatar_url, 64)"
-                        class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
+                        class="w-10 h-10 rounded-xl object-cover ring-1 ring-white/8" />
                     <div>
-                        <p class="font-semibold text-white text-sm">Raid en cours vers {{
-                            selectedSuggestion?.username }}</p>
-                        <p class="text-xs text-zinc-400">{{ raidAssistantCountdown }}s restantes</p>
+                        <p class="font-semibold text-white text-sm">Raid en cours vers
+                            {{ selectedSuggestion?.username }}
+                        </p>
+                        <p class="text-xs text-muted">{{ raidAssistantCountdown }}s restantes</p>
                     </div>
                 </div>
-                <div class="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                    <div class="h-full bg-yellow-500 rounded-full transition-all duration-500"
+                <div class="w-full h-1.5 bg-white/8 rounded-full overflow-hidden">
+                    <div class="h-full bg-accent rounded-full transition-all duration-500"
                         :style="{ width: `${(raidAssistantCountdown / 15) * 100}%` }" />
                 </div>
-                <p class="text-xs text-zinc-500 text-center">Tes Coins seront crédités dans {{
-                    raidAssistantCountdown }}s</p>
-                <button @click="cancelRaidAssistant" class="w-full text-xs text-zinc-500 hover:text-zinc-300">
+                <p class="text-xs text-muted text-center">Tes Charm sera crédité dans {{ raidAssistantCountdown }}s</p>
+                <button @click="cancelRaidAssistant"
+                    class="w-full text-xs text-muted hover:text-white">
                     Annuler le raid
                 </button>
             </div>
 
+            <!-- Étape confirm -->
             <div v-else-if="raidAssistantStep === 'confirm'" class="flex flex-col gap-5 p-6">
                 <button @click="raidAssistantStep = 'list'"
-                    class="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white w-fit">
+                    class="flex items-center gap-1.5 text-xs text-muted hover:text-white w-fit">
                     <Icon name="lucide:arrow-left" size="14" /> Retour aux suggestions
                 </button>
                 <div class="flex items-center gap-3">
                     <img :src="avatarUrl(selectedSuggestion?.avatar_url, 64)"
-                        class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
+                        class="w-10 h-10 rounded-xl object-cover ring-1 ring-white/8" />
                     <div>
                         <p class="font-semibold text-white text-sm">{{ selectedSuggestion?.username }}</p>
-                        <p class="text-xs text-zinc-400">{{ selectedSuggestion?.nextSlot?.twitchGameName ||
-                            selectedSuggestion?.nextSlot?.game?.label || '—' }}
-                        </p>
+                        <p class="text-xs text-muted">{{ selectedSuggestion?.nextSlot?.twitchGameName ||
+                            selectedSuggestion?.nextSlot?.game?.label || '—' }}</p>
                     </div>
                 </div>
                 <div class="flex flex-col gap-1">
-                    <p class="text-sm text-white font-medium">Lancer un raid vers {{ selectedSuggestion?.username }}
-                        ?</p>
-                    <p class="text-xs text-zinc-400">Tes viewers seront redirigés vers sa chaîne Twitch.</p>
+                    <p class="text-sm text-white font-medium">Lancer un raid vers {{ selectedSuggestion?.username }} ?
+                    </p>
+                    <p class="text-xs text-muted">Tes viewers seront redirigés vers sa chaîne Twitch.</p>
                 </div>
-                <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                    <Icon name="lucide:coins" size="16" class="text-yellow-400 flex-shrink-0" />
-                    <span class="text-sm text-yellow-300 font-medium">+{{ raidAssistantCoins }} Coins</span>
-                    <span class="text-xs text-zinc-500 ml-auto">{{ raidStatus.remaining }}/{{ raidStatus.total }}
-                        raids restants</span>
+                <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20">
+                    <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-4 h-4 flex-shrink-0" alt="" />
+                    <span class="text-sm text-accent font-medium">+{{ raidAssistantCoins }} Charm</span>
+                    <span class="text-xs text-muted ml-auto">{{ raidStatus.remaining }}/{{ raidStatus.total }} raids
+                        restants</span>
                 </div>
                 <div class="flex gap-2">
                     <button @click="raidAssistantOpen = false"
-                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150">
+                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-md border border-white/8 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm">
                         <Icon name="lucide:x" size="16" class="flex-shrink-0" />
                         Annuler
                     </button>
                     <button @click="confirmRaidAssistant" :disabled="raidAssistantLoading"
-                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-white hover:bg-zinc-200 text-zinc-900 font-bold text-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-md bg-primary hover:bg-primary/90 text-white font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                         <Icon v-if="!raidAssistantLoading" name="lucide:swords" size="16" class="flex-shrink-0" />
                         <Icon v-else name="lucide:loader-circle" size="16" class="flex-shrink-0 animate-spin" />
                         Raid
@@ -513,65 +512,64 @@
                 </div>
             </div>
 
+            <!-- Étape list -->
             <div v-else class="flex flex-col gap-0">
-                <div class="flex items-center justify-between px-5 py-4 border-b border-zinc-800">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
                     <div class="flex items-center gap-2">
-                        <Icon name="lucide:swords" size="18" class="text-yellow-400" />
+                        <Icon name="lucide:swords" size="18" class="text-accent" />
                         <span class="font-semibold text-white text-sm">Raid Assistant</span>
                     </div>
                     <button @click="raidAssistantOpen = false"
-                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-zinc-800 text-zinc-400">
+                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-white/5 text-muted">
                         <Icon name="lucide:x" size="16" />
                     </button>
                 </div>
-                <div class="px-5 py-3 border-b border-zinc-800">
-                    <p class="text-xs text-zinc-400">Streamers compatibles avec ton profil en live en ce moment</p>
+                <div class="px-5 py-3 border-b border-white/5">
+                    <p class="text-xs text-muted">Streamers compatibles avec ton profil en live en ce moment</p>
                 </div>
                 <div v-if="raidSuggestions.length === 0"
                     class="flex flex-col items-center gap-3 py-10 px-5 text-center">
-                    <Icon name="lucide:tv-minimal-play" size="40" class="text-zinc-600" />
-                    <p class="text-sm text-zinc-400">Aucun streamer compatible en live en ce moment</p>
+                    <Icon name="lucide:tv-minimal-play" size="40" class="text-muted" />
+                    <p class="text-sm text-muted">Aucun streamer compatible en live en ce moment</p>
                     <button @click="selectedFilter = 'live'; raidAssistantOpen = false"
-                        class="flex items-center gap-1.5 py-2 px-4 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150">
+                        class="flex items-center gap-1.5 py-2 px-4 rounded-lg border border-white/8 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm">
                         <Icon name="lucide:radio" size="14" class="flex-shrink-0" />
                         Voir les lives
                     </button>
                 </div>
-                <div v-else class="flex flex-col divide-y divide-zinc-800 overflow-y-auto" style="max-height: 60vh">
+                <div v-else class="flex flex-col divide-y divide-white/5 overflow-y-auto" style="max-height: 60vh">
                     <div v-for="s in raidSuggestions" :key="s.username" class="flex items-center gap-3 px-5 py-3">
                         <img :src="avatarUrl(s.avatar_url, 64)"
-                            class="w-9 h-9 rounded-xl object-cover ring-1 ring-zinc-700 flex-shrink-0" />
+                            class="w-9 h-9 rounded-xl object-cover ring-1 ring-white/8 flex-shrink-0" />
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-1.5">
                                 <span class="text-sm font-semibold text-white truncate">{{ s.username }}</span>
-                                <Icon v-if="s.is_sub" name="lucide:badge-check" size="12"
-                                    class="text-purple-400 shrink-0"
+                                <Icon v-if="s.is_sub" name="lucide:badge-check" size="12" class="text-primary shrink-0"
                                     v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-xs' } }" />
-                                <span class="flex items-center gap-1 text-[10px] text-zinc-500">
+                                <span class="flex items-center gap-1 text-[10px] text-muted">
                                     <Icon name="lucide:eye" size="10" />{{ s.nextSlot?.twitchViewerCount ?? '—' }}
                                 </span>
                             </div>
-                            <p class="text-xs text-zinc-400 truncate">{{ s.nextSlot?.twitchGameName || '—' }}</p>
+                            <p class="text-xs text-muted truncate">{{ s.nextSlot?.twitchGameName || '—' }}</p>
                         </div>
                         <button @click="selectSuggestion(s)" :disabled="!canRaidSuggestion(s)" :class="[
-                            'flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-all duration-150',
+                            'flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-md text-sm font-bold',
                             canRaidSuggestion(s)
-                                ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
-                                : 'bg-zinc-800 text-zinc-600 border border-zinc-700/40 cursor-not-allowed'
+                                ? 'bg-primary hover:bg-primary/90 text-white cursor-pointer'
+                                : 'bg-white/5 text-muted border border-white/8 cursor-not-allowed'
                         ]">
-                            <Icon name="lucide:swords" size="15" />
-                            Raid
+                            <!-- <Icon name="lucide:swords" size="15" /> -->
+                            Choisir
                             <span class="flex items-center gap-0.5 text-[10px]"
-                                :class="canRaidSuggestion(s) ? 'text-zinc-500' : 'text-zinc-600'">
-                                <Icon name="lucide:coins" size="9" />+{{ raidCoinsFor(s) }}
+                                :class="canRaidSuggestion(s) ? 'text-white/50' : 'text-muted'">
+                                <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-2.5 h-2.5" alt="" />
+                                +{{ raidCoinsFor(s) }}
                             </span>
                         </button>
                     </div>
                 </div>
-                <div class="px-5 py-3 border-t border-zinc-800">
-                    <p class="text-xs text-zinc-600 text-center">
-                        Même langue/contenu, moins de viewers = plus de coins
-                    </p>
+                <div class="px-5 py-3 border-t border-white/5">
+                    <p class="text-xs text-muted text-center">Même langue/contenu, moins de viewers = plus de Charm</p>
                 </div>
             </div>
 
@@ -849,11 +847,11 @@ function scrollRow(key: string, dir: 'left' | 'right') {
 const progressionMessage = computed(() => {
     const { used, remaining, total, canRaidToday } = raidStatus.value
     if (!total) return null
-    if (used === 0) return { text: 'Lance ton 1er raid et gagne des coins', color: 'text-yellow-500/80' }
-    if (remaining === 1) return { text: 'Plus qu\'1 raid pour compléter ta semaine !', color: 'text-yellow-400' }
-    if (remaining === 0) return { text: 'Semaine complète, reviens lundi !', color: 'text-emerald-400' }
-    if (!canRaidToday) return { text: `${used}/${total} · Reviens demain pour continuer`, color: 'text-zinc-400' }
-    return { text: `Encore ${remaining} raid${remaining > 1 ? 's' : ''} disponible${remaining > 1 ? 's' : ''} cette semaine`, color: 'text-zinc-400' }
+    if (used === 0) return { text: 'Lance ton 1er raid et gagne des Charm', color: 'text-accent' }
+    if (remaining === 1) return { text: 'Plus qu\'1 raid pour compléter ta semaine !', color: 'text-accent' }
+    if (remaining === 0) return { text: 'Semaine complète, reviens lundi !', color: 'text-primary' }
+    if (!canRaidToday) return { text: `${used}/${total} · Reviens demain pour continuer`, color: 'text-accent' }
+    return { text: `Encore ${remaining} raid${remaining > 1 ? 's' : ''} disponible${remaining > 1 ? 's' : ''} cette semaine`, color: 'text-muted' }
 })
 
 // ─── Raids today (social proof) ───────────────────────────────────────────────
@@ -945,15 +943,6 @@ const raidableStreamers = computed(() => {
             return (a.nextSlot?.twitchViewerCount ?? 0) - (b.nextSlot?.twitchViewerCount ?? 0)
         })
 })
-
-function raidSuggestionTooltip(s: any) {
-    if (!user.value) return 'Connecte-toi pour raid'
-    if (currentStreamer.value?.username?.toLowerCase() === s.username?.toLowerCase()) return 'Tu ne peux pas te raid toi-même'
-    if (!raidStatus.value.canRaidToday) return 'Tu as déjà raid aujourd\'hui'
-    if (raidStatus.value.remaining === 0) return 'Limite de raids atteinte cette semaine'
-    if (raidStatus.value.raidedThisWeek?.includes(s.username?.toLowerCase())) return 'Tu as déjà raid ce streamer cette semaine'
-    return `Raid ${s.username} et gagner ${raidCoinsFor(s)} coins`
-}
 
 function openRaidAssistant() {
     raidAssistantOpen.value = true
