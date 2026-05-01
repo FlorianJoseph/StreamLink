@@ -90,7 +90,7 @@
                         Regarder
                     </button>
                     <NuxtLink v-else :to="`/${streamer.username}`" target="_blank"
-                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-white hover:bg-white/90 text-[#1e1f22] font-bold text-sm no-underline">
+                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-md bg-white hover:bg-white/90 text-[#1e1f22] font-bold text-sm no-underline">
                         <Icon name="lucide:user" size="20" class="flex-shrink-0" />
                         Voir le profil
                     </NuxtLink>

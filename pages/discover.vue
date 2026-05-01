@@ -130,7 +130,7 @@
             <!-- ─── Vue catégorie ─── -->
             <div v-if="selectedCategory" class="flex flex-col gap-6">
                 <div class="px-4 sm:px-12 flex items-center gap-3">
-                    <h2 class="text-2xl font-bold text-white">{{ categoryLabel }}</h2>
+                    <h2 class="text-xl font-bold text-white">{{ categoryLabel }}</h2>
                     <span v-if="search" class="flex items-center gap-1.5 text-xs text-muted">
                         + recherche "<span class="text-white">{{ search }}</span>"
                         <button @click="search = ''"
@@ -145,7 +145,7 @@
                     </div>
                     <div v-if="categoryHasMore" class="flex justify-center pb-4">
                         <button @click="categoryVisibleCount += CATEGORY_PAGE"
-                            class="flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/8 bg-primary text-white hover:bg-primary/90 text-white font-semibold text-sm">
+                            class="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/8 bg-primary text-white hover:bg-primary/90 text-white font-semibold text-sm">
                             <Icon name="lucide:chevron-down" size="16" />
                             Voir plus
                         </button>
@@ -187,7 +187,7 @@
                     <div class="flex items-center gap-3">
                         <div class="flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
-                            <h2 class="text-2xl font-bold text-white">En live</h2>
+                            <h2 class="text-xl font-bold text-white">En live</h2>
                         </div>
                         <span
                             class="px-2 py-0.5 rounded-full bg-white/5 border border-white/8 text-muted text-sm font-medium">
@@ -195,7 +195,7 @@
                         </span>
                     </div>
                     <button @click="liveSort = liveSort === 'desc' ? 'asc' : 'desc'"
-                        class="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg border border-white/8 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm flex-shrink-0">
+                        class="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm flex-shrink-0">
                         <Icon name="lucide:eye" size="16" />
                         <span class="hidden sm:inline">Viewers</span>
                         <Icon :name="liveSort === 'desc' ? 'lucide:arrow-down' : 'lucide:arrow-up'" size="16" />
@@ -255,7 +255,7 @@
                                             :src="s.nextSlot.twitchThumbnailUrl.replace(/\d+x\d+/, '320x180')"
                                             class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
                                         <div v-else class="absolute inset-0 bg-surface-darker" />
-                                        <!-- Charm badge -->
+                                        <!-- charm badge -->
                                         <div class="absolute top-2 right-2 flex items-center gap-1 text-xs font-bold px-1.25 py-0.25 rounded"
                                             :style="{ backgroundColor: 'rgba(0,0,0,0.8)', color: 'white' }">
                                             <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-3 h-3" alt="" />
@@ -310,12 +310,13 @@
                     <div class="flex flex-col px-4 sm:px-12">
                         <div class="flex items-center gap-3">
                             <Icon name="lucide:trophy" size="18" class="text-accent flex-shrink-0" />
-                            <h2 class="text-xl font-bold text-white truncate">Top Raiders <span
-                                    class="hidden sm:inline">cette semaine</span></h2>
+                            <h2 class="text-xl font-bold text-white truncate">Top Raiders
+                                <h2 class="hidden sm:inline">cette semaine</h2>
+                            </h2>
                         </div>
                         <span class="hidden sm:flex text-xs text-muted items-center gap-1.5 mt-1 ml-0.5">
                             <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-3 h-3" alt="" />
-                            Gagne des Charm en raidant pour apparaître ici
+                            Gagne des charm en raidant pour apparaître ici
                         </span>
                     </div>
                     <div class="flex gap-1 overflow-x-auto scrollbar-hide px-4 sm:px-12 py-2">
@@ -360,12 +361,12 @@
                     </div>
                     <div class="flex flex-wrap justify-center gap-2 mt-2">
                         <button v-if="search" @click="search = ''"
-                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/8 bg-white/5 hover:bg-white/10 text-white text-xs font-medium">
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-white text-xs font-medium">
                             <Icon name="lucide:x" size="14" />
                             Réinitialiser la recherche
                         </button>
                         <button v-if="selectedFilter !== 'all'" @click="selectedFilter = 'all'"
-                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/8 bg-white/5 hover:bg-white/10 text-white text-xs font-medium">
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-white text-xs font-medium">
                             <Icon name="lucide:filter-x" size="14" />
                             Retirer le filtre
                         </button>
@@ -464,9 +465,8 @@
                     <div class="h-full bg-accent rounded-full transition-all duration-500"
                         :style="{ width: `${(raidAssistantCountdown / 15) * 100}%` }" />
                 </div>
-                <p class="text-xs text-muted text-center">Tes Charm sera crédité dans {{ raidAssistantCountdown }}s</p>
-                <button @click="cancelRaidAssistant"
-                    class="w-full text-xs text-muted hover:text-white">
+                <p class="text-xs text-muted text-center">Tes charm arrivent dans {{ raidAssistantCountdown }}s</p>
+                <button @click="cancelRaidAssistant" class="w-full text-xs text-muted hover:text-white">
                     Annuler le raid
                 </button>
             </div>
@@ -491,9 +491,9 @@
                     </p>
                     <p class="text-xs text-muted">Tes viewers seront redirigés vers sa chaîne Twitch.</p>
                 </div>
-                <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20">
+                <div class="flex items-center gap-2 px-3 py-2 rounded-md bg-accent/10 border border-accent/20">
                     <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-4 h-4 flex-shrink-0" alt="" />
-                    <span class="text-sm text-accent font-medium">+{{ raidAssistantCoins }} Charm</span>
+                    <span class="text-sm text-accent font-medium">+{{ raidAssistantCoins }} charm</span>
                     <span class="text-xs text-muted ml-auto">{{ raidStatus.remaining }}/{{ raidStatus.total }} raids
                         restants</span>
                 </div>
@@ -532,7 +532,7 @@
                     <Icon name="lucide:tv-minimal-play" size="40" class="text-muted" />
                     <p class="text-sm text-muted">Aucun streamer compatible en live en ce moment</p>
                     <button @click="selectedFilter = 'live'; raidAssistantOpen = false"
-                        class="flex items-center gap-1.5 py-2 px-4 rounded-lg border border-white/8 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm">
+                        class="flex items-center gap-1.5 py-2 px-4 rounded-md border border-white/8 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm">
                         <Icon name="lucide:radio" size="14" class="flex-shrink-0" />
                         Voir les lives
                     </button>
@@ -555,21 +555,21 @@
                         <button @click="selectSuggestion(s)" :disabled="!canRaidSuggestion(s)" :class="[
                             'flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-md text-sm font-bold',
                             canRaidSuggestion(s)
-                                ? 'bg-primary hover:bg-primary/90 text-white cursor-pointer'
+                                ? 'bg-white hover:bg-white/90 text-primary cursor-pointer'
                                 : 'bg-white/5 text-muted border border-white/8 cursor-not-allowed'
                         ]">
-                            <!-- <Icon name="lucide:swords" size="15" /> -->
                             Choisir
                             <span class="flex items-center gap-0.5 text-[10px]"
-                                :class="canRaidSuggestion(s) ? 'text-white/50' : 'text-muted'">
-                                <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-2.5 h-2.5" alt="" />
+                                :class="canRaidSuggestion(s) ? 'text-primary' : 'text-muted'">
+                                <img v-if="canRaidSuggestion(s)" src="/images/assets/charmi-monnaie-violet.svg"
+                                    class="w-2.5 h-2.5" alt="" />
                                 +{{ raidCoinsFor(s) }}
                             </span>
                         </button>
                     </div>
                 </div>
                 <div class="px-5 py-3 border-t border-white/5">
-                    <p class="text-xs text-muted text-center">Même langue/contenu, moins de viewers = plus de Charm</p>
+                    <p class="text-xs text-muted text-center">Même langue/contenu, moins de viewers = plus de charm</p>
                 </div>
             </div>
 
