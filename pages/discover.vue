@@ -312,19 +312,18 @@
                     class="flex flex-col gap-3">
                     <div class="flex flex-col px-4 sm:px-12">
                         <div class="flex items-center gap-3">
-                            <Icon name="lucide:trophy" size="18" class="text-yellow-400 flex-shrink-0" />
+                            <Icon name="lucide:trophy" size="18" class="text-accent flex-shrink-0" />
                             <h2 class="text-xl font-bold text-white truncate">Top Raiders <span
                                     class="hidden sm:inline">cette semaine</span></h2>
                         </div>
-                        <span class="hidden sm:flex text-xs text-zinc-500 items-center gap-1.5 mt-1 ml-0.5">
-                            <Icon name="lucide:coins" size="12" />
-                            Gagne des coins en raidant pour apparaître ici
+                        <span class="hidden sm:flex text-xs text-muted items-center gap-1.5 mt-1 ml-0.5">
+                            <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-3 h-3" alt="" />
+                            Gagne des Charm en raidant pour apparaître ici
                         </span>
                     </div>
                     <div class="flex gap-1 overflow-x-auto scrollbar-hide px-4 sm:px-12 py-2">
                         <NuxtLink v-for="(raider, idx) in topRaiders" :key="raider.username" :to="`/${raider.username}`"
                             target="_blank" class="flex items-end flex-shrink-0 group/raider">
-                            <!-- Grand numéro -->
                             <span class="text-[82px] font-black leading-none select-none flex-shrink-0 w-12 text-right"
                                 :style="{
                                     WebkitTextStroke: idx === 0 ? '3px rgba(234,179,8,0.55)' : idx === 1 ? '3px rgba(161,161,170,0.45)' : idx === 2 ? '3px rgba(194,120,50,0.45)' : '3px rgba(82,82,91,0.4)',
@@ -332,21 +331,21 @@
                                 }">
                                 {{ idx + 1 }}
                             </span>
-                            <!-- Carte qui chevauche le numéro -->
                             <div
-                                class="-ml-2 w-[88px] flex-shrink-0 rounded-xl overflow-hidden relative ring-1 ring-zinc-800 group-hover/raider:ring-zinc-500 transition-all duration-150">
+                                class="-ml-2 w-[88px] flex-shrink-0 rounded-xl overflow-hidden relative ring-1 ring-white/8 group-hover/raider:ring-white/20">
                                 <img :src="avatarUrl(raider.avatar_url, 128)"
                                     class="w-full aspect-[2/3] object-cover object-top" />
                                 <div
-                                    class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
+                                    class="absolute inset-0 bg-gradient-to-t from-[#18191c] via-[#18191c]/20 to-transparent" />
                                 <div class="absolute bottom-0 left-0 right-0 p-2">
                                     <p class="text-[11px] font-bold text-white truncate">{{ raider.username }}</p>
                                     <div class="flex items-center gap-1.5 mt-0.5">
-                                        <span class="flex items-center gap-0.5 text-[10px] text-yellow-400">
+                                        <span class="flex items-center gap-0.5 text-[10px] text-accent">
                                             <Icon name="lucide:swords" size="9" />{{ raider.raidCount }}
                                         </span>
-                                        <span class="flex items-center gap-0.5 text-[10px] text-yellow-400">
-                                            <Icon name="lucide:coins" size="9" />{{ raider.coinsEarned }}
+                                        <span class="flex items-center gap-0.5 text-[10px] text-accent">
+                                            <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-2.5 h-2.5"
+                                                alt="" />{{ raider.coinsEarned }}
                                         </span>
                                     </div>
                                 </div>
