@@ -19,14 +19,14 @@
                         <Icon name="lucide:search" size="16" class="text-muted" />
                     </InputIcon>
                     <InputText v-model="search" placeholder="Rechercher un streamer ou jeu..." fluid size="small"
-                        style="--p-inputtext-focus-border-color: #6A5AE0" />
+                        style="--p-inputtext-focus-border-color: #6A5AE0; --p-inputtext-background: #18191c; --p-inputtext-border-color: rgba(255,255,255,0.4)" />
                 </IconField>
 
                 <div class="flex gap-2 w-full sm:w-auto sm:contents">
                     <Select v-model="selectedLanguage" :options="languageOptions" optionLabel="label"
                         optionValue="value" placeholder="Langue" showClear size="small" :highlightOnSelect="false"
                         class="min-w-0 flex-1 sm:flex-none"
-                        style="--p-select-focus-border-color: #6A5AE0; min-width: 110px">
+                        style="--p-select-focus-border-color: #6A5AE0; --p-select-background: #18191c; --p-select-border-color: rgba(255,255,255,0.08); min-width: 110px">
                         <template #option="{ option }">
                             <div class="flex items-center gap-2">
                                 <img v-if="option.flag" :src="`https://flagcdn.com/w40/${option.flag}.png`"

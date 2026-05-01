@@ -1,219 +1,197 @@
 <template>
     <div v-if="loading" class="flex justify-center items-center pt-100 w-full">
         <ProgressSpinner
-            style="width: 50px; height: 50px;--p-progressspinner-color-one
-:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
-            strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+            style="width:40px;height:40px;--p-progressspinner-color-one:#6A5AE0;--p-progressspinner-color-two:#8B7FF0;--p-progressspinner-color-three:#6A5AE0;--p-progressspinner-color-four:#4A3AC0"
+            strokeWidth="6" fill="transparent" animationDuration=".5s" />
     </div>
-    <div v-else>
-        <div class="flex flex-col fade-in">
 
-            <!-- En-tête -->
-            <div class="py-4">
-                <div class="flex flex-col lg:items-start items-center justify-end">
-                    <!-- Titre -->
-                    <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
-                        Boutique
-                    </h1>
-                    <!-- Sous-titre -->
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400" id="header">
-                        Dépense tes Coins ou abonne-toi pour débloquer toutes les fonctionnalités
-                    </p>
-                </div>
+    <div v-else class="flex flex-col gap-10 fade-in py-8 max-w-6xl mx-auto w-full">
+
+        <!-- Section Abonnement -->
+        <section>
+            <div class="flex items-center gap-2 mb-5">
+                <img src="/images/assets/charmi-monnaie-violet.svg" class="w-5 h-5" alt="" />
+                <h2 class="text-xl font-bold text-white">Charmi+</h2>
             </div>
 
-            <div class="flex flex-col gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div v-for="pack in subPacks" :key="pack.label"
+                    class="relative flex flex-col gap-5 p-5 rounded-xl border" :class="isSub
+                        ? 'border-primary/20 bg-primary/5'
+                        : 'border-primary/20 bg-primary/5 hover:border-primary/40'">
 
-                <!-- Section Abonnement -->
-                <div id="sub-section">
-                    <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                        <Icon name="lucide:crown" size="20" class="text-amber-400" />
-                        Abonnement
-                    </h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div v-for="pack in subPacks" :key="pack.label"
-                            class="relative flex flex-col gap-3 p-5 rounded-xl border-2 transition-all cursor-pointer"
+                    <img src="/images/mascotte/charmi-happy-violet.svg"
+                        class="absolute top-4 right-4 w-16 h-16 opacity-10 pointer-events-none" alt="" />
+
+                    <!-- Badge statut -->
+                    <div v-if="isSub"
+                        class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs font-bold bg-primary text-white">
+                        Actif
+                    </div>
+                    <div v-else-if="pack.popular"
+                        class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs font-bold bg-accent text-dark hidden sm:block">
+                        Le choix des streamers
+                    </div>
+
+                    <!-- Prix -->
+                    <div>
+                        <p class="text-xs text-muted mb-1">{{ pack.label }}</p>
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-3xl font-bold text-white">{{ pack.price }}€</span>
+                            <span class="text-sm text-muted">{{ pack.duration }}</span>
+                        </div>
+                        <p class="text-sm text-primary font-bold mt-2">✦ {{ pack.access }}</p>
+                    </div>
+
+                    <!-- Features -->
+                    <div class="flex flex-col gap-2">
+                        <div v-for="feature in pack.features" :key="feature" class="flex items-center gap-2">
+                            <Icon name="lucide:check" size="13" class="text-primary shrink-0" />
+                            <span class="text-xs text-white/80">{{ feature }}</span>
+                        </div>
+                    </div>
+
+                    <!-- CTA -->
+                    <div class="flex flex-col gap-2 mt-auto">
+                        <button @click="isSub ? openPortal() : openCheckout(pack.priceId, 'subscription')"
+                            class="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-md font-bold text-sm"
                             :class="isSub
-                                ? 'border-emerald-500/30 bg-emerald-500/5'
-                                : pack.popular
-                                    ? 'border-amber-500/60 bg-amber-500/5 hover:border-amber-500 cursor-pointer'
-                                    : 'border-zinc-700 bg-zinc-800/30 hover:border-zinc-500 cursor-pointer'">
-
-                            <!-- Badge -->
-                            <div v-if="!isSub && pack.popular"
-                                class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs font-semibold bg-amber-500 text-amber-950">
-                                Meilleur choix
+                                ? 'bg-white/5 text-white border border-white/8 hover:bg-white/10'
+                                : 'bg-primary text-white hover:bg-primary/90'">
+                            {{ isSub ? 'Gérer mon abonnement' : 'Je m\'abonne à Charmi+' }}
+                        </button>
+                        <div class="flex flex-wrap justify-center gap-3 text-xs text-muted">
+                            <div class="flex items-center gap-1">
+                                <Icon name="lucide:lock" size="11" class="shrink-0" />
+                                <span>Paiement sécurisé Stripe</span>
                             </div>
-                            <div v-if="isSub"
-                                class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs font-semibold bg-emerald-500 text-white">
-                                Actif
-                            </div>
-
-                            <div class="flex flex-col gap-1">
-                                <span class="font-bold text-base">{{ pack.label }}</span>
-                                <div class="flex items-baseline gap-1.5">
-                                    <span class="text-2xl font-bold">{{ pack.price }}€</span>
-                                    <span class="text-xs text-gray-500">{{ pack.duration }}</span>
-                                </div>
-                            </div>
-
-                            <span class="text-sm font-semibold text-amber-400">✦ {{ pack.access }}</span>
-
-                            <div v-if="pack.features" class="flex flex-col gap-1 mt-2">
-                                <div v-for="feature in pack.features" :key="feature"
-                                    class="flex items-center gap-2 text-xs text-gray-400">
-                                    <Icon name="lucide:check" size="14" class="text-emerald-400 shrink-0" />
-                                    {{ feature }}
-                                </div>
-                            </div>
-
-                            <!-- Footer : date si sub, bouton sinon -->
-                            <div class="mt-auto flex flex-col gap-2">
-                                <Button :severity="isSub ? 'secondary' : pack.popular ? 'contrast' : 'secondary'"
-                                    class="w-full"
-                                    @click="isSub ? openPortal() : openCheckout(pack.priceId, 'subscription')">
-                                    <Icon :name="isSub ? 'lucide:settings' : 'lucide:zap'" size="16" />
-                                    <span class="text-sm">{{ isSub ? 'Gérer mon abonnement' : 'S\'abonner' }}</span>
-                                </Button>
-                                <div class="flex items-center justify-center gap-3 text-xs text-gray-500">
-                                    <div class="flex items-center gap-1">
-                                        <Icon name="lucide:lock" size="12" class="shrink-0" />
-                                        <span>Paiement sécurisé par Stripe</span>
-                                    </div>
-                                    <span>·</span>
-                                    <div class="flex items-center gap-1">
-                                        <Icon name="lucide:x-circle" size="12" class="shrink-0" />
-                                        <span>Annulation à tout moment</span>
-                                    </div>
-                                </div>
+                            <span class="hidden sm:block">·</span>
+                            <div class="flex items-center gap-1">
+                                <Icon name="lucide:x-circle" size="11" class="shrink-0" />
+                                <span>Annulation à tout moment</span>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <Divider />
-
-                <!-- Bandeau avant les features -->
-                <template v-if="!isSub">
-                    <div
-                        class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-400 font-medium">
-                        <Icon name="lucide:flame" size="14" class="shrink-0" />
-                        Astuce : l'abonnement devient rentable dès 2 fonctionnalités utilisées
-                    </div>
-                </template>
-                <!-- Section Features à débloquer -->
-                <div>
-                    <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                        <Icon name="lucide:sparkles" size="20" class="text-purple-400" />
-                        Fonctionnalités à la carte
-                    </h2>
-                    <div v-if="featuresLoading" class="flex justify-center py-8">
-                        <ProgressSpinner style="width: 40px; height: 40px" strokeWidth="6" />
-                    </div>
-                    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="feature in features" :key="feature.key"
-                            class="flex flex-col gap-4 p-5 rounded-xl border border-zinc-700 bg-zinc-800/30">
-                            <div class="flex items-start gap-3">
-                                <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-zinc-700 shrink-0">
-                                    <Icon :name="feature.icon" size="18" class="text-purple-400" />
-                                </div>
-                                <div class="flex flex-col gap-0.5">
-                                    <div class="flex items-center gap-2">
-                                        <span class="font-semibold text-sm">{{ feature.label }}</span>
-                                        <span v-if="hasFeature(feature.key) && !isSub"
-                                            class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-semibold">
-                                            {{ getExpiryLabel(feature.key) }}
-                                        </span>
-                                    </div>
-                                    <p class="text-xs text-gray-400">{{ feature.description }}</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-col gap-2">
-                                <!-- Si abonné — une seule ligne -->
-                                <div v-if="isSub"
-                                    class="flex items-center justify-between px-3 py-2 rounded-lg border opacity-50 border-zinc-700">
-                                    <span class="text-xs text-gray-300">Inclus dans ton abonnement</span>
-                                    <Icon name="lucide:check" size="12" class="text-emerald-400" />
-                                </div>
-                                <!-- Sinon — liste des prix -->
-                                <template v-else>
-                                    <div v-for="price in feature.FeaturePrices?.slice().sort((a, b) => a.duration_days - b.duration_days)"
-                                        :key="price.id"
-                                        class="flex items-center justify-between px-3 py-2 rounded-lg border transition-all cursor-pointer border-zinc-700 hover:border-zinc-500"
-                                        @click="handleSpend(feature, price)">
-                                        <span class="text-xs text-gray-300">
-                                            {{ hasFeature(feature.key) ? 'Prolonger de ' : 'Débloquer pendant ' }}{{
-                                                price.label }}
-                                        </span>
-                                        <div class="flex items-center gap-1">
-                                            <Icon name="lucide:coins" size="12" class="text-amber-400" />
-                                            <span class="text-xs font-bold text-amber-400">{{ price.cost }}</span>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <Divider />
-
-                <!-- Section Packs de Coins -->
-                <div id="coins-section">
-                    <h2 class="text-lg font-semibold mb-1 flex items-center gap-2">
-                        <Icon name="lucide:coins" size="20" class="text-amber-400" />
-                        Acheter des Coins
-                        <div class="flex items-center gap-1.5 ml-auto text-xs text-gray-400 font-normal">
-                            <Icon name="lucide:coins" size="14" class="text-amber-400" />
-                            <span>{{ balance }} disponibles</span>
-                        </div>
-                    </h2>
-                    <p class="text-xs text-gray-500 mb-4">Utilise tes Coins pour débloquer des fonctionnalités à la
-                        carte
-                    </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div v-for="pack in coinPacks" :key="pack.label"
-                            class="relative flex flex-col gap-3 p-5 rounded-xl border transition-all cursor-pointer"
-                            :class="pack.best ? 'border-amber-500/60 bg-amber-500/5 hover:border-amber-500' : 'border-zinc-700 bg-zinc-800/30 hover:border-zinc-500'">
-                            <div v-if="pack.best"
-                                class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs font-semibold bg-amber-500 text-amber-950">
-                                Meilleur choix
-                            </div>
-                            <!-- Header : coins + prix -->
-                            <div class="flex items-start justify-between">
-                                <div class="flex flex-col">
-                                    <div class="flex items-baseline gap-2">
-                                        <Icon name="lucide:coins" size="18" class="text-amber-400 shrink-0" />
-                                        <span class="text-xl font-bold text-amber-400">{{ pack.coins }}</span>
-                                        <span v-if="pack.bonus" class="text-[11px] text-amber-500/70">
-                                            {{ pack.bonus }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <span class="text-lg font-bold text-white">{{ pack.price }}€</span>
-                            </div>
-
-                            <!-- Label + description -->
-                            <div class="flex flex-col gap-0.5">
-                                <span class="font-semibold text-sm">{{ pack.label }}</span>
-                                <span class="text-xs text-gray-400">{{ pack.description }}</span>
-                            </div>
-
-                            <Button severity="secondary" class="w-full" @click="openCheckout(pack.priceId)">
-                                <Icon name="lucide:coins" size="16" />
-                                <span class="text-sm font-bold">Acheter {{ pack.coins }} Coins</span>
-                            </Button>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-center gap-2 text-xs text-gray-500 mt-2">
-                        <Icon name="lucide:lock" size="12" class="shrink-0" />
-                        <span>Paiement sécurisé par Stripe</span>
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!-- Bandeau économie -->
+        <div v-if="!isSub"
+            class="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-accent/10 border border-accent/20 text-xs sm:text-sm text-accent font-bold">
+            <Icon name="lucide:flame" size="16" class="shrink-0" />
+            L'abonnement Charmi+ te revient moins cher à partir de 2 fonctionnalités.
         </div>
+
+        <!-- Section Features à la carte -->
+        <section>
+            <div class="flex items-center gap-2 mb-5">
+                <Icon name="lucide:sparkles" size="18" class="text-primary" />
+                <h2 class="text-xl font-bold text-white">Débloque ce dont tu as besoin</h2>
+            </div>
+
+            <div v-if="featuresLoading" class="flex justify-center py-12">
+                <div class="w-7 h-7 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+            </div>
+
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div v-for="feature in features" :key="feature.key"
+                    class="flex flex-col gap-4 p-5 rounded-xl border border-white/8 bg-white/[0.03]">
+
+                    <div class="flex items-start gap-3">
+                        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 shrink-0">
+                            <Icon :name="feature.icon" size="16" class="text-primary" />
+                        </div>
+                        <div class="flex flex-col gap-0.5 flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="font-bold text-sm text-white">{{ feature.label }}</span>
+                                <span v-if="hasFeature(feature.key) && !isSub"
+                                    class="text-xs px-1.5 py-0.5 rounded-full bg-primary/15 text-primary font-bold">
+                                    {{ getExpiryLabel(feature.key) }}
+                                </span>
+                            </div>
+                            <p class="text-xs text-muted">{{ feature.description }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5 mt-auto">
+                        <!-- Abonné -->
+                        <div v-if="isSub"
+                            class="flex items-center justify-between px-3 py-2 rounded-md border border-white/5 opacity-50">
+                            <span class="text-xs text-muted">Inclus dans Charmi+</span>
+                            <Icon name="lucide:check" size="12" class="text-primary" />
+                        </div>
+                        <!-- Prix à la carte -->
+                        <template v-else>
+                            <div v-for="price in feature.FeaturePrices?.slice().sort((a, b) => a.duration_days - b.duration_days)"
+                                :key="price.id"
+                                class="flex items-center justify-between px-3 py-2 rounded-md border border-white/8 hover:border-primary/30 hover:bg-primary/5 cursor-pointer"
+                                @click="handleSpend(feature, price)">
+                                <span class="text-sm text-white/70">
+                                    {{ hasFeature(feature.key) ? 'Prolonger de ' : 'Débloquer pendant ' }}{{ price.label
+                                    }}
+                                </span>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    <img src="/images/assets/charmi-monnaie-violet.svg" alt="" class="w-4 h-4" />
+                                    <span class="text-sm font-bold text-primary">{{ price.cost }}</span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="h-px bg-white/5" />
+
+        <!-- Section Packs de Charm -->
+        <section id="coins-section">
+            <div class="flex items-center gap-2 mb-5">
+                <img src="/images/assets/charmi-monnaie-jaune.svg" alt="Charm" class="w-5 h-5" />
+                <div class="flex flex-col gap-0.5">
+                    <h2 class="text-xl font-bold text-white">Acheter des Charm</h2>
+                    <p class="text-muted text-xs">Pas encore prêt à t'abonner ? Commence par ici.</p>
+                </div>
+                <div class="flex items-center gap-1.5 ml-auto text-xs sm:text-sm text-muted">
+                    <img src="/images/assets/charmi-monnaie-violet.svg" alt="" class="w-4 h-4" />
+                    <span>{{ balance }} disponibles</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div v-for="pack in coinPacks" :key="pack.priceId"
+                    class="relative flex items-center justify-between p-5 rounded-xl border cursor-pointer"
+                    :class="pack.best
+                        ? 'border-accent/40 bg-accent/5 hover:border-accent/70 sm:scale-105'
+                        : 'border-white/8 bg-white/[0.03] hover:border-white/15'" @click="openCheckout(pack.priceId)">
+
+                    <div class="flex items-center gap-3">
+                        <img src="/images/assets/charmi-monnaie-jaune.svg" alt=""
+                            :class="pack.best ? 'w-9 h-9' : 'w-7 h-7'" />
+                        <div>
+                            <span :class="pack.best ? 'text-3xl' : 'text-2xl'" class="font-bold text-accent">
+                                {{ pack.coins }}
+                            </span>
+                            <span v-if="pack.bonus" class="block text-[10px] text-accent/60 leading-tight">
+                                {{ pack.bonus }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <span :class="pack.best ? 'text-2xl' : 'text-xl'" class="font-bold text-white">
+                        {{ pack.price }}€
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center gap-2 text-xs text-muted mt-4">
+                <Icon name="lucide:lock" size="11" class="shrink-0" />
+                <span>Paiement sécurisé Stripe</span>
+            </div>
+        </section>
     </div>
-    <!-- Modales -->
+
+    <!-- Modales features -->
     <FeatureUnlockModal v-for="feature in features" :key="feature.key" v-model="featureModals[feature.key]"
         :featureKey="feature.key" />
 
@@ -221,53 +199,54 @@
     <Dialog v-model:visible="confirmModal" modal dismissableMask header="Confirmer l'achat"
         :style="{ width: '25rem', margin: '1rem' }" :draggable="false">
         <div class="flex flex-col gap-4">
-            <p class="text-sm text-gray-400">
-                Tu vas dépenser <span class="font-bold text-amber-400">{{ pendingPrice?.cost }} Coins</span>
-                pour <span>
-                    {{ hasFeature(pendingFeature.key) ? 'prolonger ' : 'débloquer ' }}
-                </span> <span class="font-semibold text-white">{{ pendingFeature?.label }}</span>
-                pendant <span class="font-semibold text-white">{{ pendingPrice?.label }}</span>.
+            <p class="text-sm text-white/70">
+                Tu vas dépenser
+                <span class="font-bold text-accent">{{ pendingPrice?.cost }} Charm</span>
+                pour <span>{{ hasFeature(pendingFeature?.key) ? 'prolonger ' : 'débloquer ' }}</span>
+                <span class="font-bold text-white">{{ pendingFeature?.label }}</span>
+                pendant <span class="font-bold text-white">{{ pendingPrice?.label }}</span>.
             </p>
 
-            <!-- Tension Sub -->
-            <div class="flex items-center justify-between p-3 rounded-lg border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 cursor-pointer transition-all"
+            <!-- Upsell abonnement -->
+            <div class="flex items-center justify-between p-3 rounded-md border border-accent/20 bg-accent/5 hover:bg-accent/10 cursor-pointer"
                 @click="confirmModal = false; openCheckout('sub', 'subscription')">
                 <div class="flex flex-col gap-0.5">
                     <div class="flex items-center gap-2">
-                        <Icon name="lucide:crown" size="14" class="text-amber-400 shrink-0" />
-                        <span class="text-xs font-semibold text-amber-400">
-                            {{ upsellDiff ? `Abonne-toi pour seulement ${upsellDiff}€ de plus`
-                                : 'S\'abonner pour 7,99€/mois' }}
+                        <img src="/images/assets/charmi-monnaie-jaune.svg" alt="" class="w-4 h-4" />
+                        <span class="text-xs font-bold text-accent">
+                            {{ upsellDiff
+                                ? `Pour ${upsellDiff}€ de plus, tu débloques tout avec Charmi+`
+                                : 'L\'abonnement Charmi+, c\'est que 7,99€/mois' }}
                         </span>
                     </div>
-                    <p class="text-[11px] text-gray-400">
-                        Accès illimité + économise jusqu'à <span class="text-amber-400 font-semibold">
-                            ~{{ savedWithSubAllFeatures }}€/mois</span> vs acheter les fonctionnalités à la carte
+                    <p class="text-[11px] text-muted">
+                        Accès illimité + économise jusqu'à
+                        <span class="text-accent font-bold">~{{ savedWithSubAllFeatures }}€/mois</span>
                     </p>
                 </div>
             </div>
 
             <!-- Soldes -->
-            <div class="flex items-center justify-between text-xs text-gray-500 px-1">
-                <span>Solde actuel</span>
-                <div class="flex items-center gap-1">
-                    <Icon name="lucide:coins" size="12" class="text-amber-400" />
-                    <span class="text-amber-400 font-semibold">{{ balance }}</span>
+            <div class="flex flex-col gap-2 px-1">
+                <div class="flex items-center justify-between text-xs text-muted">
+                    <span>Solde actuel</span>
+                    <div class="flex items-center gap-1">
+                        <img src="/images/assets/charmi-monnaie-jaune.svg" alt="" class="w-3.5 h-3.5" />
+                        <span class="text-accent font-bold">{{ balance }}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="flex items-center justify-between text-xs text-gray-500 px-1">
-                <span>Solde après achat</span>
-                <div class="flex items-center gap-1">
-                    <Icon name="lucide:coins" size="12" class="text-amber-400" />
-                    <span class="font-semibold"
-                        :class="balance - (pendingPrice?.cost ?? 0) < 0 ? 'text-red-400' : 'text-amber-400'">
-                        {{ balance - (pendingPrice?.cost ?? 0) }}
-                    </span>
+                <div class="flex items-center justify-between text-xs text-muted">
+                    <span>Solde après achat</span>
+                    <div class="flex items-center gap-1">
+                        <img src="/images/assets/charmi-monnaie-jaune.svg" alt="" class="w-3.5 h-3.5" />
+                        <span class="font-bold"
+                            :class="balance - (pendingPrice?.cost ?? 0) < 0 ? 'text-red-400' : 'text-accent'">
+                            {{ balance - (pendingPrice?.cost ?? 0) }}
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div v-if="balance < (pendingPrice?.cost ?? 0)" class="flex flex-col gap-2">
-                <p class="text-xs text-red-400">
-                    Il te manque {{ (pendingPrice?.cost ?? 0) - balance }} Coins
+                <p v-if="balance < (pendingPrice?.cost ?? 0)" class="text-xs text-red-400">
+                    Il te manque {{ (pendingPrice?.cost ?? 0) - balance }} Charm
                 </p>
             </div>
         </div>
@@ -276,17 +255,16 @@
             <div class="flex gap-2 w-full">
                 <Button v-if="balance < (pendingPrice?.cost ?? 0)" severity="contrast" class="w-full"
                     @click="confirmModal = false; openCheckout(recommendedPack?.priceId)">
-                    <Icon name="lucide:coins" size="18" />
-                    <span class="text-xs sm:text-base">Acheter {{ recommendedPack?.coins }} Coins</span>
+                    <img src="/images/assets/charmi-monnaie-violet.svg" alt="" class="w-4 h-4" />
+                    <span class="text-sm">Acheter {{ recommendedPack?.coins }} Charm</span>
                 </Button>
                 <Button v-else severity="contrast" class="w-full" :disabled="spending" @click="confirmSpend">
-                    <Icon name="lucide:coins" size="18" />
-                    <span class="text-xs sm:text-base">Confirmer</span>
+                    <Icon name="lucide:check" size="16" />
+                    <span class="text-sm">Confirmer</span>
                 </Button>
             </div>
         </template>
     </Dialog>
-
 </template>
 
 <script setup lang="ts">
@@ -363,18 +341,18 @@ const confirmSpend = async () => {
 // Packs Sub
 const subPacks = [
     {
-        label: 'Mensuel',
+        label: 'Charmi+ Mensuel',
         price: 7.99,
         duration: '/ mois',
         priceId: 'sub',
-        access: 'Toutes les fonctionnalités incluses',
+        access: 'Tout Charmi, sans limites',
         popular: true,
         features: [
-            '13 thèmes exclusifs et 23 polices premium',
-            'Génère ton planning au format story Instagram / X en 1 clic',
-            'Masque le footer sur ta page et ton planning',
-            'Coins quotidiens x2 automatiques',
-            'Badge vérifié',
+            'Personnalisation avancée',
+            'Planning au format story',
+            'Masque le branding Charmi',
+            '6 Charm/jour automatiques',
+            'Badge vérifié sur la Découverte',
         ]
     },
 ]
@@ -382,24 +360,18 @@ const subPacks = [
 // Packs Coins
 const coinPacks = [
     {
-        label: 'Essai rapide',
         coins: 300, price: 2.99, best: false,
         priceId: 'coins_little',
-        description: 'Parfait pour tester une fonctionnalité'
     },
     {
-        label: 'Le plus rentable',
         coins: 800, price: 6.99, best: true,
         priceId: 'coins_middle',
-        bonus: '750 + 50 offerts',
-        description: 'Le choix des créateurs actifs'
+        bonus: '700 + 100 offerts',
     },
     {
-        label: 'Boost créateur',
         coins: 2000, price: 14.99, best: false,
         priceId: 'coins_big',
-        bonus: '1800 + 200 offerts',
-        description: 'Maximise ta visibilité sur plusieurs semaines'
+        bonus: '1500 + 500 offerts',
     },
 ]
 
@@ -479,8 +451,8 @@ const onMessage = async (e: MessageEvent) => {
         toast.add({
             severity: 'secondary',
             group: 'payment',
-            summary: mode === 'subscription' ? 'Abonnement activé !' : 'Coins ajoutés à ton solde',
-            detail: mode === 'subscription' ? 'Toutes les features sont débloquées' : String(coins),
+            summary: mode === 'subscription' ? 'Charmi+ activé !' : 'Charm ajoutés à ton solde',
+            detail: mode === 'subscription' ? 'Toutes les fonctionnalités sont débloquées' : String(coins),
             life: 4000,
         })
     }
