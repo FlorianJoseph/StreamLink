@@ -379,22 +379,20 @@
                 <section v-for="row in displayedRows" :key="row.key" :id="`discover-row-${row.key}`"
                     class="flex flex-col gap-3">
 
-                    <!-- En-tête de rangée -->
                     <div class="flex items-center gap-3 px-4 sm:px-12">
                         <span v-if="row.key === 'live'"
                             class="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
                         <h2 class="text-xl font-bold text-white">{{ row.label }}</h2>
                     </div>
 
-                    <!-- Cartes horizontales avec flèches overlay -->
                     <div class="relative group/row">
 
                         <!-- Flèche gauche -->
                         <Transition name="fade-arrow">
-                            <button v-if="rowScrollState[row.key]?.canLeft" @click="scrollRow(row.key, 'left')" class="absolute left-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
-                                   opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
+                            <button v-if="rowScrollState[row.key]?.canLeft" @click="scrollRow(row.key, 'left')"
+                                class="absolute left-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
                                 <span
-                                    class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45">
+                                    class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-[#18191c]/45 transition-colors">
                                     <Icon name="lucide:chevron-left" size="52"
                                         class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                                 </span>
@@ -413,15 +411,15 @@
                             <!-- Tile "Voir tout" -->
                             <div v-if="rowHasMore(row)"
                                 @click="row.key === 'live' ? selectFilter('live') : goToCategory(CATEGORY_KEY[row.label] ?? row.key)"
-                                class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 group/expand"
+                                class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-white/8 bg-surface-dark hover:border-white/15 hover:bg-white/[0.03] cursor-pointer flex flex-col items-center justify-center gap-3 group/expand"
                                 :style="{ minHeight: '220px' }">
                                 <div class="flex flex-col items-center gap-1.5">
                                     <div class="flex items-center gap-1">
                                         <p class="text-sm font-semibold text-white">Voir tout</p>
                                         <Icon name="lucide:chevron-right" size="16"
-                                            class="text-zinc-600 group-hover/expand:text-zinc-400" />
+                                            class="text-muted group-hover/expand:text-white" />
                                     </div>
-                                    <span class="text-xs text-zinc-500">+{{ row.streamers.length - (row.key === 'live' ?
+                                    <span class="text-xs text-muted">+{{ row.streamers.length - (row.key === 'live' ?
                                         ROW_PREVIEW + 2 : ROW_PREVIEW) }} streamers</span>
                                 </div>
                             </div>
@@ -429,18 +427,16 @@
 
                         <!-- Flèche droite -->
                         <Transition name="fade-arrow">
-                            <button v-if="rowScrollState[row.key]?.canRight" @click="scrollRow(row.key, 'right')" class="absolute right-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
-                                   opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
+                            <button v-if="rowScrollState[row.key]?.canRight" @click="scrollRow(row.key, 'right')"
+                                class="absolute right-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
                                 <span
-                                    class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65">
+                                    class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-[#18191c]/65 transition-colors">
                                     <Icon name="lucide:chevron-right" size="52"
                                         class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                                 </span>
                             </button>
                         </Transition>
-
                     </div>
-
                 </section>
 
                 <!-- Sentinel infinite scroll -->
