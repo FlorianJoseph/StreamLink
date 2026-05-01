@@ -119,17 +119,9 @@
         </div>
 
         <!-- Footer branding -->
-        <div v-if="showBranding !== false" class="absolute z-20" style="bottom: 60px; right: 60px">
-            <div style="text-align: right; line-height: 1.1; font-family: Inter, sans-serif">
-                <div
-                    style="font-size: 18px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.7); text-shadow: 0 1px 3px #000">
-                    Made with
-                </div>
-                <div
-                    style="font-size: 22px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(255,255,255,0.9); text-shadow: 0 1px 3px #000">
-                    StreamLink
-                </div>
-            </div>
+        <div v-if="showBranding !== false" class="absolute z-20 ignore-export" style="bottom: 60px; right: 60px">
+            <AppLogo variant="full" color="blanc" alt="Charmi"
+                style="height: 96px; width: auto; opacity: 0.75; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8))" />
         </div>
     </div>
 </template>

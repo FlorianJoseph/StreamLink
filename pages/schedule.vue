@@ -299,7 +299,7 @@
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:badge-check" size="18"
                                                         class="text-muted shrink-0" />
-                                                    <span class="text-xs sm:text-sm">Masquer le footer</span>
+                                                    <span class="text-xs sm:text-sm">Masquer le logo</span>
                                                 </div>
                                                 <ToggleSwitch v-model="brandingToggle"
                                                     style="--p-toggleswitch-checked-background: white; --p-toggleswitch-checked-hover-background: white"
@@ -539,16 +539,8 @@
                                     <!-- Footer -->
                                     <div v-if="schedule?.style?.showBranding !== false"
                                         class="absolute bottom-4 right-6 z-20 pointer-events-none ignore-export">
-                                        <div class="text-right leading-none select-none">
-                                            <div class="text-[10px] font-light uppercase tracking-widest text-white/70"
-                                                style="text-shadow: 0 1px 3px rgba(0,0,0,0.8)">
-                                                Made with
-                                            </div>
-                                            <div class="text-xs font-semibold uppercase tracking-wide text-white/90"
-                                                style="text-shadow: 0 1px 3px rgba(0,0,0,0.8)">
-                                                StreamLink
-                                            </div>
-                                        </div>
+                                        <AppLogo variant="full" color="blanc" :height="38" alt="Charmi"
+                                            style="filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8)); opacity: 0.75" />
                                     </div>
                                 </div>
                             </div>
