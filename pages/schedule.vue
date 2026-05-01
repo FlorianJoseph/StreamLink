@@ -1,30 +1,17 @@
 <template>
     <div v-if="loading" class="flex justify-center items-center pt-100 w-full">
         <ProgressSpinner
-            style="width: 50px; height: 50px;--p-progressspinner-color-one
-:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
-            strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+            style="width:40px;height:40px;--p-progressspinner-color-one:#6A5AE0;--p-progressspinner-color-two:#8B7FF0;--p-progressspinner-color-three:#6A5AE0;--p-progressspinner-color-four:#4A3AC0"
+            strokeWidth="6" fill="transparent" animationDuration=".5s" />
     </div>
     <template v-else>
-        <div class="flex flex-col gap-4 fade-in">
-            <div class="py-4">
-                <div class="flex flex-col lg:items-start items-center">
-                    <!-- Titre -->
-                    <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
-                        Mon planning
-                    </h1>
-                    <!-- Sous-titre -->
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
-                        Crée, personnalise et partage ton planning de stream
-                    </p>
-                </div>
-            </div>
+        <div class="flex flex-col gap-4 fade-in py-8">
 
             <div class="flex flex-col lg:flex-row gap-6">
                 <div class="w-full lg:w-md shrink-0 lg:h-[46.1rem]">
                     <Tabs value="0"
                         style="--p-tabs-active-bar-background : white;--p-tabs-tab-active-color:white;--p-tabs-tab-active-border-color: white"
-                        class="border border-zinc-700 rounded-lg h-full">
+                        class="border border-white/8 rounded-lg h-full">
                         <TabList class="shrink-0">
                             <Tab value="0" as="div" class="flex items-center gap-2">
                                 <Icon name="lucide:calendar-days" size="24" />
@@ -82,9 +69,9 @@
                                                         <div class="flex-shrink-0">
                                                             <img v-if="slot.game.cover" :src="slot.game.cover"
                                                                 :alt="slot.game.label"
-                                                                class="w-6 h-8 sm:w-10 sm:h-14 rounded object-contain border border-zinc-700" />
+                                                                class="w-6 h-8 sm:w-10 sm:h-14 rounded-md object-contain border border-white/8" />
                                                             <div v-else
-                                                                class=" w-6 h-8 sm:w-10 sm:h-14 rounded bg-white/5 border border-zinc-700 flex items-center justify-center">
+                                                                class=" w-6 h-8 sm:w-10 sm:h-14 rounded-md bg-white/5 border border-white/8 flex items-center justify-center">
                                                                 <Icon name="lucide:gamepad-2" size="20"
                                                                     class="text-white/30" />
                                                             </div>
@@ -218,7 +205,7 @@
                                         <div class="flex flex-col gap-2">
                                             <p class="font-semibold text-sm">Police</p>
                                             <button
-                                                class="flex items-center justify-between px-3 py-2.5 rounded-lg border border-zinc-700 hover:border-zinc-500 transition-all w-full"
+                                                class="flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/8 hover:border-white/20 transition-all w-full"
                                                 @click="fontModal = true">
                                                 <span class="text-sm" :style="{ fontFamily: currentFont }">{{
                                                     currentFont ??
@@ -243,7 +230,7 @@
                                                 class="relative flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all"
                                                 :class="currentFont === font.name
                                                     ? 'border-white bg-white/10'
-                                                    : 'border-zinc-700 hover:border-zinc-500'"
+                                                    : 'border-white/8 hover:border-white/20'"
                                                 @click="onFontClick(font)">
                                                 <span class="text-sm" :style="{ fontFamily: font.name }">
                                                     {{ font.label }}</span>
@@ -260,8 +247,8 @@
                                     <!-- Section Options -->
                                     <div class="space-y-3">
                                         <div class="flex items-center gap-2">
-                                            <Icon name="lucide:settings-2" size="16" class="text-gray-400 shrink-0" />
-                                            <p class="font-semibold text-xs uppercase tracking-wider text-gray-400">
+                                            <Icon name="lucide:settings-2" size="16" class="text-muted shrink-0" />
+                                            <p class="font-semibold text-xs uppercase tracking-wider text-muted">
                                                 Options d'affichage
                                             </p>
                                         </div>
@@ -270,7 +257,7 @@
                                             <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:calendar" size="18"
-                                                        class="text-gray-400 shrink-0" />
+                                                        class="text-muted shrink-0" />
                                                     <span class="text-xs sm:text-sm">Date automatique</span>
                                                 </div>
                                                 <ToggleSwitch v-model="autoSubtitle"
@@ -279,7 +266,7 @@
                                             </div>
                                             <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
-                                                    <Icon name="lucide:type" size="18" class="text-gray-400 shrink-0" />
+                                                    <Icon name="lucide:type" size="18" class="text-muted shrink-0" />
                                                     <span class="text-xs sm:text-sm">Afficher les titres</span>
                                                 </div>
                                                 <ToggleSwitch v-model="titleVisible"
@@ -289,8 +276,7 @@
 
                                             <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
-                                                    <Icon name="lucide:clock" size="18"
-                                                        class="text-gray-400 shrink-0" />
+                                                    <Icon name="lucide:clock" size="18" class="text-muted shrink-0" />
                                                     <span class="text-xs sm:text-sm">Afficher l'heure de fin</span>
                                                 </div>
                                                 <ToggleSwitch v-model="endTimeVisible"
@@ -301,7 +287,7 @@
                                             <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:calendar-off" size="18"
-                                                        class="text-gray-400 shrink-0" />
+                                                        class="text-muted shrink-0" />
                                                     <span class="text-xs sm:text-sm">Afficher les jours sans
                                                         stream</span>
                                                 </div>
@@ -312,7 +298,7 @@
                                             <div class="flex justify-between items-center px-3 py-2.5">
                                                 <div class="flex items-center gap-2">
                                                     <Icon name="lucide:badge-check" size="18"
-                                                        class="text-gray-400 shrink-0" />
+                                                        class="text-muted shrink-0" />
                                                     <span class="text-xs sm:text-sm">Masquer le footer</span>
                                                 </div>
                                                 <ToggleSwitch v-model="brandingToggle"
@@ -332,44 +318,40 @@
                 <div class="flex-1 min-w-0 flex flex-col gap-4">
 
                     <!-- Barre d'outils -->
-                    <Menubar class="w-full">
-                        <template #start>
-                            <!-- Toggle format -->
-                            <SelectButton v-model="formatValue" :options="formatOptions" :allowEmpty="false"
-                                @update:modelValue="onFormatChange">
-                                <template #option="{ option }">
-                                    <Icon :name="option === 'landscape' ? 'lucide:monitor' : 'lucide:smartphone'"
-                                        size="16" />
-                                </template>
-                            </SelectButton>
-                        </template>
-                        <template #end>
-                            <div class="flex items-center gap-1 sm:gap-2">
-                                <!-- <Button severity="secondary">
-                                    <Icon name="lucide:share" size="18" />
-                                    <span
-                                    class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Partager</span>
-                                </Button> -->
-                                <Button severity="secondary" :disabled="isPreviewing" :loading="isPreviewing"
-                                    @click="mobileFormat ? previewScheduleMobile(currentFont, showBranding) : previewSchedule(currentFont, showBranding)">
-                                    <Icon v-if="isPreviewing" name="lucide:loader-circle" size="18"
-                                        class="animate-spin" />
-                                    <Icon v-else name="lucide:eye" size="18" />
-                                    <span
-                                        class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base whitespace-nowrap">Aperçu
-                                        du planning</span>
-                                </Button>
-                                <!-- Bouton export adaptatif -->
-                                <Button severity="contrast" :disabled="isExporting" :loading="isExporting"
-                                    @click="mobileFormat ? exportScheduleMobile(currentFont, showBranding) : exportSchedule(currentFont, showBranding)">
-                                    <Icon v-if="isExporting" name="lucide:loader-circle" size="18"
-                                        class="animate-spin" />
-                                    <Icon v-else name="lucide:download" size="18" />
-                                    <span class="text-xs md:text-base lg:text-xs xl:text-base">Télécharger</span>
-                                </Button>
-                            </div>
-                        </template>
-                    </Menubar>
+                    <div
+                        class="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-white/8 bg-white/[0.03]">
+                        <!-- Toggle format landscape / mobile -->
+                        <div class="flex items-center gap-1 p-1 rounded-md bg-surface-darker border border-white/8">
+                            <button v-for="option in formatOptions" :key="option" @click="onFormatChange(option)"
+                                class="flex items-center justify-center w-8 h-8 rounded-md transition-all" :class="formatValue === option
+                                    ? 'bg-[#6A5AE0] text-white shadow-sm'
+                                    : 'text-white/40 hover:text-white/70'">
+                                <Icon :name="option === 'landscape' ? 'lucide:monitor' : 'lucide:smartphone'"
+                                    size="16" />
+                            </button>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex items-center gap-2">
+                            <!-- Aperçu -->
+                            <button :disabled="isPreviewing"
+                                @click="mobileFormat ? previewScheduleMobile(currentFont, showBranding) : previewSchedule(currentFont, showBranding)"
+                                class="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/8 text-white/60 hover:text-white hover:border-white/20 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed font-medium">
+                                <Icon :name="isPreviewing ? 'lucide:loader-circle' : 'lucide:eye'" size="18"
+                                    :class="isPreviewing ? 'animate-spin' : ''" />
+                                <span class="hidden sm:inline whitespace-nowrap">Aperçu</span>
+                            </button>
+
+                            <!-- Télécharger -->
+                            <button :disabled="isExporting"
+                                @click="mobileFormat ? exportScheduleMobile(currentFont, showBranding) : exportSchedule(currentFont, showBranding)"
+                                class="flex items-center gap-2 px-4 py-2 rounded-md bg-[#6A5AE0] hover:bg-[#5849c4] text-white disabled:opacity-40 disabled:cursor-not-allowed font-medium ">
+                                <Icon :name="isExporting ? 'lucide:loader-circle' : 'lucide:download'" size="18"
+                                    :class="isExporting ? 'animate-spin' : ''" />
+                                <span>Télécharger</span>
+                            </button>
+                        </div>
+                    </div>
                     <FeatureUnlockModal v-model="mobileExportModal" featureKey="mobile_export" />
 
                     <!-- Planning hebdomadaire -->
@@ -602,9 +584,9 @@
                             <div class="flex items-center gap-2">
                                 <img v-if="slotProps.option.cover" :src="slotProps.option.cover"
                                     :alt="slotProps.option.label"
-                                    class="w-8 h-10 rounded border border-zinc-700 flex-shrink-0" />
+                                    class="w-8 h-10 rounded border border-white/8 flex-shrink-0" />
                                 <div v-else
-                                    class="w-8 h-10 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center flex-shrink-0">
+                                    class="w-8 h-10 rounded bg-zinc-800 border border-white/8 flex items-center justify-center flex-shrink-0">
                                     <Icon name="lucide:image-off" size="18" class="text-zinc-600 shrink-0" />
                                 </div>
                                 <span>{{ slotProps.option.label }}</span>
@@ -734,7 +716,7 @@
                         class="flex flex-col items-center gap-1 p-2 rounded-lg border-2 cursor-pointer transition-all"
                         :class="selectedSize === option.value
                             ? 'border-white bg-white/10'
-                            : 'border-zinc-700 hover:border-zinc-500 '" @click="selectedSize = option.value">
+                            : 'border-white/8 hover:border-white/20 '" @click="selectedSize = option.value">
                         <Icon :name="option.value === 'fixed' ? 'lucide:square-split-vertical' : 'lucide:expand'"
                             size="16" :class="selectedSize === option.value ? 'text-white' : 'text-zinc-400'" />
                         <span class="text-sm font-semibold"
@@ -1311,7 +1293,6 @@ watch(
 </script>
 
 <style scoped>
-/* Petite animation d’apparition douce du contenu */
 .fade-in {
     animation: fadeIn 0.4s ease forwards;
     opacity: 0;
