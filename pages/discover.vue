@@ -101,7 +101,7 @@
                 <span class="hidden sm:block text-xs text-muted whitespace-nowrap flex-shrink-0">
                     {{ selectedCategory ? categoryStreamers.length : filteredStreamers.length }}
                     streamer{{ selectedCategory ? categoryStreamers.length > 1 ? 's' : '' : filteredStreamers.length > 1
-                    ? 's' : ''
+                        ? 's' : ''
                     }}
                 </span>
             </div>
@@ -222,13 +222,13 @@
                     v-if="raidableStreamers.length > 0 && selectedFilter !== 'today' && selectedFilter !== 'future'"
                     class="flex flex-col gap-3">
                     <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 px-4 sm:px-12">
-                        <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
+                        <div class="w-2 h-2 rounded-full bg-accent animate-pulse flex-shrink-0" />
                         <h2 class="text-xl font-bold text-white">Parfaits pour raid</h2>
                         <span
-                            class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/15 text-yellow-400 border border-yellow-500/25 font-medium flex-shrink-0">
+                            class="text-xs px-2 py-0.5 rounded-full bg-accent/15 text-accent border border-accent/25 font-medium flex-shrink-0">
                             {{ raidableStreamers.length }} compatible{{ raidableStreamers.length > 1 ? 's' : '' }}
                         </span>
-                        <span v-if="raidsTodayCount > 0" class="hidden sm:block text-xs text-zinc-500 flex-shrink-0">
+                        <span v-if="raidsTodayCount > 0" class="hidden sm:block text-xs text-muted flex-shrink-0">
                             Déjà {{ raidsTodayCount }} raid{{ raidsTodayCount > 1 ? 's' : '' }} aujourd'hui
                         </span>
                     </div>
@@ -239,7 +239,7 @@
                             <button v-if="rowScrollState['raidable']?.canLeft" @click="scrollRow('raidable', 'left')"
                                 class="absolute left-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
                                 <span
-                                    class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45 transition-colors">
+                                    class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-[#18191c]/45">
                                     <Icon name="lucide:chevron-left" size="52"
                                         class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                                 </span>
@@ -250,38 +250,41 @@
                         <div :ref="(el: any) => setRowRef('raidable', el)"
                             class="flex gap-3 overflow-x-auto scrollbar-hide px-4 sm:px-12 pb-2">
                             <div v-for="s in raidableStreamers" :key="s.username" class="flex-shrink-0 w-[200px]">
-                                <div class="rounded-xl overflow-hidden border border-yellow-500/20 bg-zinc-900 hover:border-yellow-500/40 transition-colors duration-200 cursor-pointer"
+                                <div class="rounded-xl overflow-hidden border border-accent/20 bg-surface-dark hover:border-accent/40 cursor-pointer"
                                     @click="openRaidFor(s)">
                                     <!-- Thumbnail -->
-                                    <div class="relative aspect-video overflow-hidden bg-zinc-800">
+                                    <div class="relative aspect-video overflow-hidden bg-surface-darker">
                                         <img v-if="s.nextSlot?.twitchThumbnailUrl"
                                             :src="s.nextSlot.twitchThumbnailUrl.replace(/\d+x\d+/, '320x180')"
                                             class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-                                        <div v-else class="absolute inset-0 bg-zinc-800" />
-                                        <!-- Coins badge -->
-                                        <div
-                                            class="absolute top-2 right-2 flex items-center gap-1 bg-yellow-500 text-zinc-900 text-xs font-bold px-1.25 py-0.25 rounded">
-                                            <Icon name="lucide:coins" size="10" />+{{ raidCoinsFor(s) }}
+                                        <div v-else class="absolute inset-0 bg-surface-darker" />
+                                        <!-- Charm badge -->
+                                        <div class="absolute top-2 right-2 flex items-center gap-1 text-xs font-bold px-1.25 py-0.25 rounded"
+                                            :style="{ backgroundColor: 'rgba(0,0,0,0.8)', color: 'white' }">
+                                            <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-3 h-3" alt="" />
+                                            +{{ raidCoinsFor(s) }}
                                         </div>
                                         <!-- Viewers -->
                                         <div class="absolute bottom-2 left-2 flex items-center gap-1 text-xs px-1.25 py-0.25 rounded"
-                                            :style="{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'white' }">
-                                            <Icon name="lucide:eye" size="11" />{{ s.nextSlot?.twitchViewerCount ?? 0 }}
+                                            :style="{ backgroundColor: 'rgba(0,0,0,0.8)', color: 'white' }">
+                                            <Icon name="lucide:eye" size="11" />
+                                            {{ s.nextSlot?.twitchViewerCount ?? 0 }}
                                         </div>
                                     </div>
                                     <!-- Infos -->
                                     <div class="p-2.5 flex items-center gap-2">
                                         <img :src="avatarUrl(s.avatar_url, 32)"
-                                            class="w-7 h-7 rounded-full object-cover flex-shrink-0 ring-1 ring-zinc-700" />
+                                            class="w-7 h-7 rounded-full object-cover flex-shrink-0 ring-1 ring-white/8" />
                                         <div class="min-w-0">
                                             <div class="flex items-center gap-1">
-                                                <p class="text-xs font-semibold text-white truncate">{{ s.username }}
+                                                <p class="text-xs font-semibold text-white truncate">
+                                                    {{ s.username }}
                                                 </p>
                                                 <Icon v-if="s.is_sub" name="lucide:badge-check" size="12"
-                                                    class="text-purple-400 shrink-0"
+                                                    class="text-primary shrink-0"
                                                     v-tooltip.top="{ value: 'Vérifié', pt: { text: '!text-xs' } }" />
                                             </div>
-                                            <p class="text-[10px] text-zinc-500 truncate">
+                                            <p class="text-[10px] text-muted truncate">
                                                 {{ s.nextSlot?.twitchGameName || '—' }}
                                             </p>
                                         </div>
@@ -295,7 +298,7 @@
                             <button v-if="rowScrollState['raidable']?.canRight" @click="scrollRow('raidable', 'right')"
                                 class="absolute right-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
                                 <span
-                                    class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65 transition-colors">
+                                    class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-[#18191c]/65">
                                     <Icon name="lucide:chevron-right" size="52"
                                         class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                                 </span>
@@ -392,7 +395,7 @@
                             <button v-if="rowScrollState[row.key]?.canLeft" @click="scrollRow(row.key, 'left')" class="absolute left-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
                                    opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
                                 <span
-                                    class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45 transition-colors">
+                                    class="flex items-center justify-center w-full h-full rounded-r-md group-hover/btn:bg-zinc-950/45">
                                     <Icon name="lucide:chevron-left" size="52"
                                         class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                                 </span>
@@ -417,7 +420,7 @@
                                     <div class="flex items-center gap-1">
                                         <p class="text-sm font-semibold text-white">Voir tout</p>
                                         <Icon name="lucide:chevron-right" size="16"
-                                            class="text-zinc-600 group-hover/expand:text-zinc-400 transition-colors" />
+                                            class="text-zinc-600 group-hover/expand:text-zinc-400" />
                                     </div>
                                     <span class="text-xs text-zinc-500">+{{ row.streamers.length - (row.key === 'live' ?
                                         ROW_PREVIEW + 2 : ROW_PREVIEW) }} streamers</span>
@@ -430,7 +433,7 @@
                             <button v-if="rowScrollState[row.key]?.canRight" @click="scrollRow(row.key, 'right')" class="absolute right-0 top-0 bottom-2 z-30 w-12 sm:w-16 flex items-center justify-center
                                    opacity-0 group-hover/row:opacity-100 transition-opacity duration-200 group/btn">
                                 <span
-                                    class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65 transition-colors">
+                                    class="flex items-center justify-center w-full h-full rounded-l-md group-hover/btn:bg-zinc-950/65">
                                     <Icon name="lucide:chevron-right" size="52"
                                         class="text-white/80 group-hover/btn:scale-125 transition-transform drop-shadow-lg" />
                                 </span>
@@ -469,15 +472,14 @@
                 </div>
                 <p class="text-xs text-zinc-500 text-center">Tes Coins seront crédités dans {{
                     raidAssistantCountdown }}s</p>
-                <button @click="cancelRaidAssistant"
-                    class="w-full text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+                <button @click="cancelRaidAssistant" class="w-full text-xs text-zinc-500 hover:text-zinc-300">
                     Annuler le raid
                 </button>
             </div>
 
             <div v-else-if="raidAssistantStep === 'confirm'" class="flex flex-col gap-5 p-6">
                 <button @click="raidAssistantStep = 'list'"
-                    class="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors w-fit">
+                    class="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white w-fit">
                     <Icon name="lucide:arrow-left" size="14" /> Retour aux suggestions
                 </button>
                 <div class="flex items-center gap-3">
@@ -523,7 +525,7 @@
                         <span class="font-semibold text-white text-sm">Raid Assistant</span>
                     </div>
                     <button @click="raidAssistantOpen = false"
-                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-zinc-800 text-zinc-400 transition-colors">
+                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-zinc-800 text-zinc-400">
                         <Icon name="lucide:x" size="16" />
                     </button>
                 </div>
@@ -541,8 +543,7 @@
                     </button>
                 </div>
                 <div v-else class="flex flex-col divide-y divide-zinc-800 overflow-y-auto" style="max-height: 60vh">
-                    <div v-for="s in raidSuggestions" :key="s.username"
-                        class="flex items-center gap-3 px-5 py-3 transition-colors">
+                    <div v-for="s in raidSuggestions" :key="s.username" class="flex items-center gap-3 px-5 py-3">
                         <img :src="avatarUrl(s.avatar_url, 64)"
                             class="w-9 h-9 rounded-xl object-cover ring-1 ring-zinc-700 flex-shrink-0" />
                         <div class="flex-1 min-w-0">
