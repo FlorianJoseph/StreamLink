@@ -22,7 +22,7 @@
                                 <span class="capitalize">{{ tab }}</span>
                                 <!-- Barre active -->
                                 <span v-if="activeTab === tab"
-                                    class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6A5AE0] rounded-full" />
+                                    class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
                             </button>
                         </div>
 
@@ -34,7 +34,7 @@
 
                                 <!-- Bouton ajouter -->
                                 <button @click="openSlotModal('Lundi')"
-                                    class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-[#6A5AE0] hover:bg-[#5849c4] text-white text-sm font-semibold transition-colors">
+                                    class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-[#5849c4] text-white text-sm font-semibold transition-colors">
                                     <Icon name="lucide:plus" size="18" class="shrink-0" />
                                     Ajouter un créneau
                                 </button>
@@ -219,29 +219,50 @@
                                 <div class="h-px bg-white/8" />
 
                                 <!-- Modal polices -->
-                                <Dialog v-model:visible="fontModal" modal dismissableMask header="Choisir une police"
-                                    :style="{
-                                        width: isMobile ? 'auto' : '32rem',
-                                        margin: '1rem',
-                                        position: isMobile ? 'relative' : 'absolute',
-                                        left: isMobile ? 'auto' : '1rem',
-                                        top: isMobile ? 'auto' : '3rem',
-                                        backgroundColor: '#1E1F22'
-                                    }" :draggable="false">
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <button v-for="font in FONTS" :key="font.name"
-                                            class="relative flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all"
-                                            :class="currentFont === font.name
-                                                ? 'border-[#6A5AE0] bg-[#6A5AE0]/15'
-                                                : 'border-white/8 hover:border-white/20'" @click="onFontClick(font)">
-                                            <span class="text-sm" :style="{ fontFamily: font.name }">
-                                                {{ font.label }}</span>
-                                            <span v-if="font.premium && !isSub && !hasFeature('premium_theme')"
-                                                class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#6A5AE0]/20 text-[#a89ff0]">
-                                                Charmi+
-                                            </span>
-                                        </button>
-                                    </div>
+                                <Dialog v-model:visible="fontModal" modal dismissableMask :draggable="false" :style="{
+                                    width: isMobile ? 'auto' : '32rem',
+                                    margin: '1rem',
+                                    position: isMobile ? 'relative' : 'absolute',
+                                    left: isMobile ? 'auto' : '1rem',
+                                    top: isMobile ? 'auto' : '3rem'
+                                }"
+                                    :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
+                                    <template #container>
+                                        <div
+                                            class="flex flex-col gap-4 rounded-xl border border-white/8 bg-dark">
+
+                                            <!-- Header -->
+                                            <div class="flex items-center justify-between px-5 pt-5">
+                                                <h2 class="font-heading text-xl font-bold text-white">Choisir une police
+                                                </h2>
+                                                <button @click="fontModal = false"
+                                                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
+                                                    <Icon name="lucide:x" size="22" />
+                                                </button>
+                                            </div>
+
+                                            <div class="overflow-y-auto px-5 pb-5" style="max-height: 80vh;">
+
+                                                <!-- Grille polices -->
+                                                <div class="grid grid-cols-2 gap-2">
+                                                    <button v-for="font in FONTS" :key="font.name"
+                                                        class="relative flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all"
+                                                        :class="currentFont === font.name
+                                                            ? 'border-primary bg-primary/20 text-white'
+                                                            : 'border-white/8 hover:border-white/20'"
+                                                        @click="onFontClick(font)">
+                                                        <span class="text-sm" :style="{ fontFamily: font.name }">{{
+                                                            font.label }}</span>
+                                                        <span
+                                                            v-if="font.premium && !isSub && !hasFeature('premium_theme')"
+                                                            class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-primary/20 text-[#a89ff0]">
+                                                            Charmi+
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
                                 </Dialog>
 
                                 <FeatureUnlockModal v-model="premiumModal" featureKey="premium_theme" />
@@ -292,7 +313,7 @@
                         <div class="flex items-center gap-1 p-1 rounded-md bg-surface-darker border border-white/8">
                             <button v-for="option in formatOptions" :key="option" @click="onFormatChange(option)"
                                 class="flex items-center justify-center w-8 h-8 rounded-md transition-all" :class="formatValue === option
-                                    ? 'bg-[#6A5AE0] text-white shadow-sm'
+                                    ? 'bg-primary text-white shadow-sm'
                                     : 'text-white/40 hover:text-white/70'">
                                 <Icon :name="option === 'landscape' ? 'lucide:monitor' : 'lucide:smartphone'"
                                     size="16" />
@@ -313,7 +334,7 @@
                             <!-- Télécharger -->
                             <button :disabled="isExporting"
                                 @click="mobileFormat ? exportScheduleMobile(currentFont, showBranding) : exportSchedule(currentFont, showBranding)"
-                                class="flex items-center gap-2 px-4 py-2 rounded-md bg-[#6A5AE0] hover:bg-[#5849c4] text-white disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors">
+                                class="flex items-center gap-2 px-4 py-2 rounded-md bg-primary hover:bg-[#5849c4] text-white disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors">
                                 <Icon :name="isExporting ? 'lucide:loader-circle' : 'lucide:download'" size="18"
                                     :class="isExporting ? 'animate-spin' : ''" />
                                 <span>Télécharger</span>
@@ -521,193 +542,207 @@
     </template>
 
     <!-- Modal d'ajout de créneau -->
-    <Dialog v-model:visible="visible" modal :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'"
-        :style="{ width: '30rem', margin: '1rem', backgroundColor: '#1E1F22' }" :draggable="false">
-        <div class="flex flex-col space-y-5 mb-2">
+    <Dialog v-model:visible="visible" modal :draggable="false" :style="{ width: '30rem', margin: '1rem' }"
+        :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
+        <template #container>
+            <div class="flex flex-col rounded-xl border border-white/8 bg-dark">
 
-            <!-- Catégorie Twitch -->
-            <div class="flex flex-col gap-2">
-                <label for="game-search" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:gamepad-2" size="16" class="shrink-0" />
-                    Catégorie Twitch
-                    <span class="text-red-400">*</span>
-                </label>
-                <InputGroup>
-                    <InputGroupAddon style="--p-inputgroup-addon-color:white; --p-inputgroup-addon-background:#18191c">
-                        <Icon name="lucide:search" size="18" class="text-muted" />
-                    </InputGroupAddon>
-                    <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
-                        optionLabel="label" placeholder="Ex: League of Legends, Valorant..." fluid forceSelection
-                        style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c"
-                        id="game-search" showClear>
-                        <template #option="slotProps">
-                            <div class="flex items-center gap-2">
-                                <img v-if="slotProps.option.cover" :src="slotProps.option.cover"
-                                    :alt="slotProps.option.label"
-                                    class="w-8 h-10 rounded border border-white/8 flex-shrink-0" />
-                                <div v-else
-                                    class="w-8 h-10 rounded bg-zinc-800 border border-white/8 flex items-center justify-center flex-shrink-0">
-                                    <Icon name="lucide:image-off" size="18" class="text-zinc-600 shrink-0" />
-                                </div>
-                                <span>{{ slotProps.option.label }}</span>
-                            </div>
-                        </template>
-                        <template #empty>
-                            <div class="flex justify-center items-center py-2 text-sm text-zinc-400">
-                                <span v-if="isSearching">Recherche en cours...</span>
-                                <span v-else-if="selectedGame.length > 0 && selectedGame.length < 3">
-                                    Tapez au moins 3 caractères…
-                                </span>
-                                <span v-else>
-                                    Aucun jeu trouvé
-                                </span>
-                            </div>
-                        </template>
-                    </AutoComplete>
-                </InputGroup>
-            </div>
-
-            <!-- Titre du stream -->
-            <div class="flex flex-col gap-2 relative">
-                <label for="stream-title" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:type" size="16" class="shrink-0" />
-                    Titre du stream
-                </label>
-                <InputText id="stream-title" type="text" v-model="title"
-                    :placeholder="`${selectedGame?.label || 'Ex: Gameplay, collaboration...'}`" fluid maxlength="30"
-                    style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
-                <div class="flex justify-between items-center absolute bottom-1 right-2">
-                    <small class="text-zinc-500 text-xs ml-auto">
-                        {{ title.length }}/30
-                    </small>
+                <!-- Header -->
+                <div class="flex items-center justify-between rounded-t-xl px-5 pt-5 top-0 bg-dark z-10">
+                    <h2 class="font-heading text-xl font-bold text-white">
+                        {{ editingSlot ? 'Modifier le stream' : 'Ajouter un stream' }}
+                    </h2>
+                    <button @click="visible = false"
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
+                        <Icon name="lucide:x" size="22" />
+                    </button>
                 </div>
-            </div>
 
-            <!-- Couleur du créneau -->
-            <div class="flex flex-col gap-2">
-                <div class="flex items-start justify-between">
-                    <div class="flex flex-col gap-1">
+                <!-- Contenu -->
+                <div class="flex flex-col gap-5 p-5 overflow-y-auto" style="max-height: 80vh;">
+
+                    <!-- Catégorie Twitch -->
+                    <div class="flex flex-col gap-2">
+                        <label for="game-search" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <Icon name="lucide:gamepad-2" size="16" class="shrink-0" />
+                            Catégorie Twitch
+                            <span class="text-red-400">*</span>
+                        </label>
+                        <InputGroup>
+                            <InputGroupAddon
+                                style="--p-inputgroup-addon-color:white; --p-inputgroup-addon-background:#18191c">
+                                <Icon name="lucide:search" size="18" class="text-muted" />
+                            </InputGroupAddon>
+                            <AutoComplete v-model="selectedGame" :suggestions="gameSuggestions" @complete="searchGames"
+                                optionLabel="label" placeholder="Ex: League of Legends, Valorant..." fluid
+                                forceSelection
+                                style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c"
+                                id="game-search" showClear>
+                                <template #option="slotProps">
+                                    <div class="flex items-center gap-2">
+                                        <img v-if="slotProps.option.cover" :src="slotProps.option.cover"
+                                            :alt="slotProps.option.label"
+                                            class="w-8 h-10 rounded border border-white/8 flex-shrink-0" />
+                                        <div v-else
+                                            class="w-8 h-10 rounded bg-surface-darker border border-white/8 flex items-center justify-center flex-shrink-0">
+                                            <Icon name="lucide:image-off" size="18" class="text-muted shrink-0" />
+                                        </div>
+                                        <span>{{ slotProps.option.label }}</span>
+                                    </div>
+                                </template>
+                                <template #empty>
+                                    <div class="flex justify-center items-center py-2 text-sm text-muted">
+                                        <span v-if="isSearching">Recherche en cours...</span>
+                                        <span v-else-if="selectedGame.length > 0 && selectedGame.length < 3">Tapez au
+                                            moins 3 caractères…</span>
+                                        <span v-else>Aucun jeu trouvé</span>
+                                    </div>
+                                </template>
+                            </AutoComplete>
+                        </InputGroup>
+                    </div>
+
+                    <!-- Titre du stream -->
+                    <div class="flex flex-col gap-2 relative">
+                        <label for="stream-title" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <Icon name="lucide:type" size="16" class="shrink-0" />
+                            Titre du stream
+                        </label>
+                        <InputText id="stream-title" type="text" v-model="title"
+                            :placeholder="`${selectedGame?.label || 'Ex: Gameplay, collaboration...'}`" fluid
+                            maxlength="30"
+                            style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
+                        <small class="text-muted text-xs absolute bottom-1 right-2">{{ title.length }}/30</small>
+                    </div>
+
+                    <!-- Couleur du créneau -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-start justify-between">
+                            <div class="flex flex-col gap-1">
+                                <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                                    <Icon name="lucide:palette" size="16" class="shrink-0" />
+                                    Couleur du créneau
+                                </label>
+                                <span class="text-xs text-muted">
+                                    {{ useGameColor ?
+                                        'Suggérée automatiquement en fonction du jeu sélectionné mais modifiable' :
+                                        'Personnalisée' }}
+                                </span>
+                            </div>
+                            <div v-if="!useGameColor"
+                                class="px-2 py-1 bg-primary/20 text-[#a89ff0] text-xs rounded-full flex items-center gap-1">
+                                <Icon name="lucide:wand-2" size="14" class="shrink-0" />
+                                Modifiée
+                            </div>
+                        </div>
+                        <InputGroup>
+                            <InputGroupAddon
+                                style="--p-inputgroup-addon-color:white; --p-inputgroup-addon-background:#18191c">
+                                <ColorPicker ref="slotColorPicker" v-model="colorInput" format="hex" @click.stop
+                                    style="--p-colorpicker-preview-focus-ring-color:none"
+                                    @change="useGameColor = false" />
+                            </InputGroupAddon>
+                            <InputText v-model="colorInput" @blur="colorInput = slotColor" @input="useGameColor = false"
+                                style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c"
+                                maxlength="7" :style="{ color: isColorInvalid ? '#f87171' : '#ffffff' }" />
+                            <InputGroupAddon v-tooltip.bottom="'Réinitialiser en couleur automatique'"
+                                class="cursor-pointer flex items-center gap-1" @click="resetColor"
+                                style="--p-inputgroup-addon-background:#18191c;">
+                                <span class="text-sm hover:text-white transition-colors">Réinitialiser</span>
+                            </InputGroupAddon>
+                        </InputGroup>
+                    </div>
+
+                    <!-- Jours de stream -->
+                    <div class="flex flex-col gap-2">
                         <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                            <Icon name="lucide:palette" size="16" class="shrink-0" />
-                            Couleur du créneau
+                            <Icon name="lucide:calendar-days" size="16" class="shrink-0" />
+                            Jours de stream
+                            <span class="text-red-400">*</span>
                         </label>
                         <span class="text-xs text-muted">
-                            {{ useGameColor ? 'Suggérée automatiquement en fonction du jeu sélectionné mais modifiable'
-                                :
-                                'Personnalisée' }}
+                            {{ editingSlot ?
+                                'Sélectionne un nouveau jour pour déplacer ce créneau' :
+                                'Sélectionne un ou plusieurs jours pour ce créneau'
+                            }}
                         </span>
+                        <SelectButton v-model="selectedDays" :options="daysOptions" optionLabel="label"
+                            :multiple="!editingSlot" aria-labelledby="multiple" class="mt-1" :pt="{
+                                root: { class: 'flex gap-1 w-full flex-wrap' },
+                                pcToggleButton: {
+                                    root: { class: 'flex-1 min-w-[80px] sm:min-w-[90px] !rounded-md' },
+                                    label: { class: 'text-xs sm:text-base' },
+                                }
+                            }" />
                     </div>
-                    <div v-if="!useGameColor"
-                        class="px-2 py-1 bg-[#6A5AE0]/20 text-[#a89ff0] text-xs rounded-full flex items-center gap-1">
-                        <Icon name="lucide:wand-2" size="14" class="shrink-0" />
-                        Modifiée
+
+                    <!-- Horaires -->
+                    <div class="flex flex-col gap-2">
+                        <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <Icon name="lucide:clock" size="16" />
+                            Horaires
+                            <span class="text-red-400">*</span>
+                        </label>
+                        <div class="grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
+                            <div class="flex flex-col gap-1">
+                                <label for="start-time" class="text-xs text-muted">Début</label>
+                                <InputText id="start-time" type="time" v-model="startTime"
+                                    style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
+                            </div>
+                            <Icon name="lucide:arrow-right" size="18" class="text-muted mt-5 shrink-0" />
+                            <div class="flex flex-col gap-1">
+                                <label for="end-time" class="text-xs text-muted">Fin</label>
+                                <InputText id="end-time" type="time" v-model="endTime"
+                                    style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Taille du créneau -->
+                    <div class="flex flex-col gap-2">
+                        <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <Icon name="lucide:maximize-2" size="16" class="shrink-0" />
+                            Taille du créneau
+                            <span class="text-red-400">*</span>
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div v-for="option in sizeOptions" :key="option.value"
+                                class="flex flex-col items-center gap-1 p-2 rounded-lg border-2 cursor-pointer transition-all"
+                                :class="selectedSize === option.value
+                                    ? 'border-primary bg-primary/15'
+                                    : 'border-white/8 hover:border-white/20'" @click="selectedSize = option.value">
+                                <Icon
+                                    :name="option.value === 'fixed' ? 'lucide:square-split-vertical' : 'lucide:expand'"
+                                    size="16" :class="selectedSize === option.value ? 'text-white' : 'text-muted'" />
+                                <span class="text-sm font-semibold"
+                                    :class="selectedSize === option.value ? 'text-white' : 'text-muted'">
+                                    {{ option.label }}
+                                </span>
+                                <span class="text-xs text-center leading-tight text-muted">
+                                    {{ option.value === 'fixed' ? 'Moitié de journée' : "Prend tout l'espace disponible"
+                                    }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <InputGroup>
-                    <InputGroupAddon style="--p-inputgroup-addon-color:white; --p-inputgroup-addon-background:#18191c">
-                        <ColorPicker ref="slotColorPicker" v-model="colorInput" format="hex" @click.stop
-                            style="--p-colorpicker-preview-focus-ring-color :none" @change="useGameColor = false" />
-                    </InputGroupAddon>
-                    <InputText v-model="colorInput" @blur="colorInput = slotColor" @input="useGameColor = false"
-                        style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" maxlength="7"
-                        :style="{ color: isColorInvalid ? '#f87171' : '#ffffff' }" />
-                    <InputGroupAddon v-tooltip.bottom="'Réinitialiser en couleur automatique'"
-                        class="cursor-pointer flex items-center gap-1" @click="resetColor"
-                        style="--p-inputgroup-addon-background:#18191c;">
-                        <span class="text-sm sm:text-base hover:text-white">Réinitialiser</span>
-                    </InputGroupAddon>
-                </InputGroup>
-            </div>
-
-            <!-- Jours de stream -->
-            <div class="flex flex-col gap-2">
-                <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:calendar-days" size="16" class="shrink-0" />
-                    Jours de stream
-                    <span class="text-red-400">*</span>
-                </label>
-                <span class="text-xs text-muted">
-                    {{ editingSlot
-                        ? 'Sélectionne un nouveau jour pour déplacer ce créneau'
-                        : 'Sélectionne un ou plusieurs jours pour ce créneau' }}
-                </span>
-                <SelectButton v-model="selectedDays" :options="daysOptions" optionLabel="label" :multiple="!editingSlot"
-                    aria-labelledby="multiple" class="mt-1" :pt="{
-                        root: { class: 'flex gap-1 w-full flex-wrap' },
-                        pcToggleButton: {
-                            root: { class: 'flex-1 min-w-[80px] sm:min-w-[90px] !rounded-md' },
-                            label: { class: 'text-xs sm:text-base' },
-                        }
-                    }" />
-            </div>
-
-            <!-- Horaires -->
-            <div class="flex flex-col gap-2">
-                <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:clock" size="16" />
-                    Horaires
-                    <span class="text-red-400">*</span>
-                </label>
-                <div class="grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
-                    <div class="flex flex-col gap-1">
-                        <label for="start-time" class="text-xs text-muted">Début</label>
-                        <InputText id="start-time" type="time" v-model="startTime"
-                            style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
-                    </div>
-                    <Icon name="lucide:arrow-right" size="18" class="text-muted mt-5 shrink-0" />
-                    <div class="flex flex-col gap-1">
-                        <label for="end-time" class="text-xs text-muted">Fin</label>
-                        <InputText id="end-time" type="time" v-model="endTime"
-                            style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
-                    </div>
+                <!-- Footer sticky -->
+                <div class="flex gap-2 px-5 pb-5 bottom-0 bg-dark rounded-b-xl">
+                    <button type="button" @click="visible = false"
+                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-sm font-semibold transition-colors">
+                        <Icon name="lucide:x" size="16" class="shrink-0" />
+                        <span class="text-xs sm:text-base shrink-0">Annuler</span>
+                    </button>
+                    <button type="button" @click="saveSlot"
+                        :disabled="isColorInvalid || !selectedGame?.label || !startTime || !endTime || selectedDays.length === 0"
+                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
+                        <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="16" class="shrink-0" />
+                        <span class="text-xs sm:text-base shrink-0">{{ editingSlot ? 'Mettre à jour' : 'Enregistrer'
+                            }}</span>
+                    </button>
                 </div>
-            </div>
 
-            <!-- Taille du créneau -->
-            <div class="flex flex-col gap-2">
-                <label class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                    <Icon name="lucide:maximize-2" size="16" class="shrink-0" />
-                    Taille du créneau
-                    <span class="text-red-400">*</span>
-                </label>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <div v-for="option in sizeOptions" :key="option.value"
-                        class="flex flex-col items-center gap-1 p-2 rounded-lg border-2 cursor-pointer transition-all"
-                        :class="selectedSize === option.value
-                            ? 'border-[#6A5AE0] bg-[#6A5AE0]/15'
-                            : 'border-white/8 hover:border-white/20 '" @click="selectedSize = option.value">
-                        <Icon :name="option.value === 'fixed' ? 'lucide:square-split-vertical' : 'lucide:expand'"
-                            size="16" :class="selectedSize === option.value ? 'text-white' : 'text-muted'" />
-                        <span class="text-sm font-semibold"
-                            :class="selectedSize === option.value ? 'text-white' : 'text-muted'">
-                            {{ option.label }}
-                        </span>
-                        <span class="text-xs text-center leading-tight"
-                            :class="selectedSize === option.value ? 'text-muted' : 'text-muted/80'">
-                            {{ option.value === 'fixed'
-                                ? 'Moitié de journée'
-                                : 'Prend tout l\'espace disponible' }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <template #footer>
-            <div class="flex gap-2 w-full">
-                <button type="button" @click="visible = false"
-                    class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-sm font-semibold transition-colors">
-                    <Icon name="lucide:x" size="16" class="shrink-0" />
-                    <span class="text-xs sm:text-base shrink-0">Annuler</span>
-                </button>
-                <button type="button" @click="saveSlot"
-                    :disabled="isColorInvalid || !selectedGame?.label || !startTime || !endTime || selectedDays.length === 0"
-                    class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-[#6A5AE0] hover:bg-[#5849c4] text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
-                    <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="16" class="shrink-0" />
-                    <span class="text-xs sm:text-base shrink-0">
-                        {{ editingSlot ? 'Mettre à jour' : 'Enregistrer' }}</span>
-                </button>
             </div>
         </template>
     </Dialog>

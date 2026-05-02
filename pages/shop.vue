@@ -106,7 +106,7 @@
                             <div class="flex items-center gap-2 flex-wrap">
                                 <span class="font-bold text-sm text-white">{{ feature.label }}</span>
                                 <span v-if="hasFeature(feature.key) && !isSub"
-                                    class="text-xs px-1.5 py-0.5 rounded-full bg-primary/15 text-primary font-bold">
+                                    class="text-xs px-1.5 py-0.5 rounded-full bg-[#6A5AE0]/20 text-[#a89ff0]">
                                     {{ getExpiryLabel(feature.key) }}
                                 </span>
                             </div>
@@ -127,13 +127,13 @@
                                 :key="price.id"
                                 class="flex items-center justify-between px-3 py-2 rounded-md border border-white/8 hover:border-primary/30 hover:bg-primary/5 cursor-pointer"
                                 @click="handleSpend(feature, price)">
-                                <span class="text-sm text-white/70">
-                                    {{ hasFeature(feature.key) ? 'Prolonger de ' : 'Débloquer pendant ' }}{{ price.label
-                                    }}
+                                <span class="text-xs text-white/70">
+                                    {{ hasFeature(feature.key) ? 'Prolonger de ' : 'Débloquer pendant ' }}
+                                    {{ price.label }}
                                 </span>
                                 <div class="flex items-center gap-1 shrink-0">
-                                    <img src="/images/assets/charmi-monnaie-violet.svg" alt="" class="w-4 h-4" />
-                                    <span class="text-sm font-bold text-primary">{{ price.cost }}</span>
+                                    <img src="/images/assets/charmi-monnaie-violet.svg" alt="" class="w-3.5 h-3.5" />
+                                    <span class="text-xs font-bold text-primary">{{ price.cost }}</span>
                                 </div>
                             </div>
                         </template>
@@ -160,8 +160,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div v-for="pack in coinPacks" :key="pack.priceId"
-                    class="relative flex items-center justify-between p-5 rounded-xl border cursor-pointer"
-                    :class="pack.best
+                    class="relative flex items-center justify-between p-5 rounded-xl border cursor-pointer" :class="pack.best
                         ? 'border-accent/40 bg-accent/5 hover:border-accent/70 sm:scale-105'
                         : 'border-white/8 bg-white/[0.03] hover:border-white/15'" @click="openCheckout(pack.priceId)">
 
@@ -196,72 +195,84 @@
         :featureKey="feature.key" />
 
     <!-- Modale confirmation achat -->
-    <Dialog v-model:visible="confirmModal" modal dismissableMask header="Confirmer l'achat"
-        :style="{ width: '25rem', margin: '1rem' }" :draggable="false">
-        <div class="flex flex-col gap-4">
-            <p class="text-sm text-white/70">
-                Tu vas dépenser
-                <span class="font-bold text-accent">{{ pendingPrice?.cost }} Charm</span>
-                pour <span>{{ hasFeature(pendingFeature?.key) ? 'prolonger ' : 'débloquer ' }}</span>
-                <span class="font-bold text-white">{{ pendingFeature?.label }}</span>
-                pendant <span class="font-bold text-white">{{ pendingPrice?.label }}</span>.
-            </p>
+    <Dialog v-model:visible="confirmModal" dismissableMask modal :draggable="false"
+        :style="{ width: '25rem', margin: '1rem' }"
+        :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
+        <template #container>
+            <div class="flex flex-col gap-5 p-5 rounded-xl border border-white/8 bg-dark">
 
-            <!-- Upsell abonnement -->
-            <div class="flex items-center justify-between p-3 rounded-md border border-accent/20 bg-accent/5 hover:bg-accent/10 cursor-pointer"
-                @click="confirmModal = false; openCheckout('sub', 'subscription')">
-                <div class="flex flex-col gap-0.5">
-                    <div class="flex items-center gap-2">
-                        <img src="/images/assets/charmi-monnaie-jaune.svg" alt="" class="w-4 h-4" />
-                        <span class="text-xs font-bold text-accent">
-                            {{ upsellDiff
-                                ? `Pour ${upsellDiff}€ de plus, tu débloques tout avec Charmi+`
-                                : 'L\'abonnement Charmi+, c\'est que 7,99€/mois' }}
-                        </span>
+                <!-- Header -->
+                <div class="flex items-center justify-between">
+                    <h2 class="font-heading text-xl font-bold text-white">Confirmer l'achat</h2>
+                    <button @click="confirmModal = false"
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
+                        <Icon name="lucide:x" size="22" />
+                    </button>
+                </div>
+
+                <!-- Résumé -->
+                <p class="text-sm text-muted">
+                    Tu vas dépenser
+                    <span class="font-bold text-accent">{{ pendingPrice?.cost }} Charm</span>
+                    pour {{ hasFeature(pendingFeature?.key) ? 'prolonger ' : 'débloquer ' }}<span
+                        class="font-bold text-white">{{ pendingFeature?.label }}</span>
+                    pendant <span class="font-bold text-white">{{ pendingPrice?.label }}</span>.
+                </p>
+
+                <!-- Solde -->
+                <div class="flex flex-col gap-1.5 rounded-lg border border-white/8 bg-surface-darker p-3">
+                    <div class="flex items-center justify-between text-xs text-muted">
+                        <span>Solde actuel</span>
+                        <div class="flex items-center gap-1">
+                            <img src="/images/assets/charmi-monnaie-jaune.svg" alt="Charm" class="w-3 h-3 shrink-0" />
+                            <span class="text-accent font-semibold">{{ balance }}</span>
+                        </div>
                     </div>
-                    <p class="text-[11px] text-muted">
-                        Accès illimité + économise jusqu'à
-                        <span class="text-accent font-bold">~{{ savedWithSubAllFeatures }}€/mois</span>
+                    <div class="flex items-center justify-between text-xs text-muted">
+                        <span>Solde après achat</span>
+                        <div class="flex items-center gap-1">
+                            <img src="/images/assets/charmi-monnaie-jaune.svg" alt="Charm" class="w-3 h-3 shrink-0" />
+                            <span class="font-semibold"
+                                :class="balance - (pendingPrice?.cost ?? 0) < 0 ? 'text-red-400' : 'text-accent'">
+                                {{ balance - (pendingPrice?.cost ?? 0) }}
+                            </span>
+                        </div>
+                    </div>
+                    <p v-if="balance < (pendingPrice?.cost ?? 0)" class="text-xs text-red-400 mt-1">
+                        Il te manque {{ (pendingPrice?.cost ?? 0) - balance }} Charm
                     </p>
                 </div>
-            </div>
 
-            <!-- Soldes -->
-            <div class="flex flex-col gap-2 px-1">
-                <div class="flex items-center justify-between text-xs text-muted">
-                    <span>Solde actuel</span>
-                    <div class="flex items-center gap-1">
-                        <img src="/images/assets/charmi-monnaie-jaune.svg" alt="" class="w-3.5 h-3.5" />
-                        <span class="text-accent font-bold">{{ balance }}</span>
+                <!-- Upsell Charmi+ -->
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 cursor-pointer transition-all"
+                    @click="confirmModal = false; openCheckout('sub', 'subscription')">
+                    <img src="/images/mascotte/charmi-happy-violet.svg" alt="" class="w-8 h-8 shrink-0 opacity-80" />
+                    <div class="flex flex-col gap-0.5 flex-1">
+                        <span class="text-xs font-semibold text-[#a89ff0]">Passe à Charmi+ et garde tes Charm</span>
+                        <p class="text-[11px] text-muted">
+                            {{ upsellDiff
+                                ? `Sans limite, pour seulement ${upsellDiff}€ de plus`
+                                : 'Sans limite, pour seulement 7,99€/mois' }}
+                        </p>
                     </div>
+                    <Icon name="lucide:arrow-right" size="14" class="text-[#a89ff0] shrink-0" />
                 </div>
-                <div class="flex items-center justify-between text-xs text-muted">
-                    <span>Solde après achat</span>
-                    <div class="flex items-center gap-1">
-                        <img src="/images/assets/charmi-monnaie-jaune.svg" alt="" class="w-3.5 h-3.5" />
-                        <span class="font-bold"
-                            :class="balance - (pendingPrice?.cost ?? 0) < 0 ? 'text-red-400' : 'text-accent'">
-                            {{ balance - (pendingPrice?.cost ?? 0) }}
-                        </span>
-                    </div>
-                </div>
-                <p v-if="balance < (pendingPrice?.cost ?? 0)" class="text-xs text-red-400">
-                    Il te manque {{ (pendingPrice?.cost ?? 0) - balance }} Charm
-                </p>
-            </div>
-        </div>
 
-        <template #footer>
-            <div class="flex gap-2 w-full">
-                <Button v-if="balance < (pendingPrice?.cost ?? 0)" severity="contrast" class="w-full"
-                    @click="confirmModal = false; openCheckout(recommendedPack?.priceId)">
-                    <img src="/images/assets/charmi-monnaie-violet.svg" alt="" class="w-4 h-4" />
-                    <span class="text-sm">Acheter {{ recommendedPack?.coins }} Charm</span>
-                </Button>
-                <Button v-else severity="contrast" class="w-full" :disabled="spending" @click="confirmSpend">
-                    <Icon name="lucide:check" size="16" />
-                    <span class="text-sm">Confirmer</span>
-                </Button>
+                <!-- Actions -->
+                <div class="flex gap-2">
+                    <button v-if="balance < (pendingPrice?.cost ?? 0)"
+                        @click="confirmModal = false; openCheckout(recommendedPack?.priceId)"
+                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors active:scale-[0.98]">
+                        <img src="/images/assets/charmi-monnaie-blanc.svg" alt="" class="w-4 h-4" />
+                        <span>Acheter {{ recommendedPack?.coins }} Charm</span>
+                    </button>
+                    <button v-else :disabled="spending" @click="confirmSpend"
+                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
+                        <Icon name="lucide:check" size="16" />
+                        <span>Confirmer</span>
+                    </button>
+                </div>
+
             </div>
         </template>
     </Dialog>
