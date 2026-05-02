@@ -33,7 +33,7 @@
 
         </div>
         <!-- Label -->
-        <p class="text-[10px] font-semibold truncate">
+        <p class="text-[11px] font-semibold truncate">
             {{ theme.label }}
         </p>
     </div>

@@ -34,286 +34,310 @@
                         <span>{{ item.label }}</span>
                     </div>
                 </template>
-            </Menu> -->
-            <!-- Header -->
+</Menu> -->
             <div class="flex justify-center gap-4 flex-col w-full lg:w-lg xl:w-2xl 2xl:w-2xl">
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
-                    <template #legend>
-                        <div class="flex items-center gap-2">
-                            <Icon name="lucide:square-user" size="24" />
-                            <span class="font-semibold">En-tête</span>
-                        </div>
-                    </template>
-                    <div class="flex flex-col gap-4">
+
+                <!-- En-tête -->
+                <section class="rounded-xl border border-white/8 bg-surface-dark overflow-hidden">
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/8">
+                        <Icon name="lucide:square-user" size="18" class="text-muted shrink-0" />
+                        <span class="text-sm font-bold text-white">En-tête</span>
+                    </div>
+                    <div class="p-4 flex flex-col gap-5">
                         <div class="flex items-center gap-4">
                             <AvatarUploader />
                             <AvatarUploaderButton />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <p class="font-semibold">Taille du pseudo</p>
-                            <div class="flex justify-center gap-2 w-full">
-                                <Button variant="outlined" severity="contrast" class="flex-1 transition"
-                                    :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isUsernameNormal }"
+                            <p class="text-sm font-semibold text-muted">Taille du pseudo</p>
+                            <div class="flex gap-1.5">
+                                <button class="flex-1 px-4 py-2 rounded-md border transition-all" :class="isUsernameNormal
+                                    ? 'bg-primary/20 border-primary text-white'
+                                    : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
                                     @click="updateSection('username_style', { size: 'normal' })">
-                                    <span class="text-sm sm:text-base">Normal</span>
-                                </Button>
-                                <Button variant="outlined" severity="contrast" class="flex-1 transition"
-                                    :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isUsernameMedium }"
+                                    Normal
+                                </button>
+                                <button class="flex-1 px-4 py-2 rounded-md border transition-all" :class="isUsernameMedium
+                                    ? 'bg-primary/20 border-primary text-white'
+                                    : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
                                     @click="updateSection('username_style', { size: 'medium' })">
-                                    <span class="text-sm sm:text-base">Moyen</span>
-                                </Button>
+                                    Moyen
+                                </button>
                             </div>
                         </div>
                     </div>
-                </Fieldset>
+                </section>
 
                 <!-- Thème -->
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem" id="theme">
-                    <template #legend>
-                        <div class="flex items-center gap-2">
-                            <Icon name="lucide:panels-top-left" size="24" />
-                            <span class="font-semibold">Thème</span>
-                        </div>
-                    </template>
-                    <div
-                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-6 gap-4 justify-items-center">
-                        <ThemePreviewCard v-for="(theme, key) in THEME_PRESETS" :key="key" :theme="theme"
-                            @click="designStore.applyTheme(theme)" :isSelected="isThemeActive(theme).value"
-                            :hasAccess="isSub || hasFeature('premium_theme')" />
+                <section class="rounded-xl border border-white/8 bg-surface-dark overflow-hidden" id="theme">
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/8">
+                        <Icon name="lucide:panels-top-left" size="18" class="text-muted shrink-0" />
+                        <span class="text-sm font-bold text-white">Thème</span>
                     </div>
-                </Fieldset>
+                    <div class="p-4">
+                        <div
+                            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-6 gap-4 justify-items-center">
+                            <ThemePreviewCard v-for="(theme, key) in THEME_PRESETS" :key="key" :theme="theme"
+                                @click="designStore.applyTheme(theme)" :isSelected="isThemeActive(theme).value"
+                                :hasAccess="isSub || hasFeature('premium_theme')" />
+                        </div>
+                    </div>
+                </section>
 
                 <FeatureUnlockModal v-model="premiumThemeModal" featureKey="premium_theme" />
 
                 <!-- Arrière-plan -->
-                <Fieldset style=" --p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem"
-                    id="background">
-                    <template #legend>
-                        <div class="flex items-center gap-2">
-                            <Icon name="lucide:images" size="24" />
-                            <span class="font-semibold">Arrière-plan</span>
-                        </div>
-                    </template>
-                    <div class="flex flex-col gap-4">
+                <section class="rounded-xl border border-white/8 bg-surface-dark overflow-hidden" id="background">
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/8">
+                        <Icon name="lucide:images" size="18" class="text-muted shrink-0" />
+                        <span class="text-sm font-bold text-white">Arrière-plan</span>
+                    </div>
+                    <div class="p-4">
                         <InputGroup class="flex-1" @click="openPicker(wallpaperColorPicker, 'wallpaper')">
-                            <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                            <InputGroupAddon
+                                style="--p-inputgroup-addon-color:white; --p-inputgroup-addon-background:#18191c">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-sm sm:text-base lg:text-sm xl:text-base">Couleur</span>
+                                    <span class="text-sm">Couleur</span>
                                     <ColorPicker ref="wallpaperColorPicker" v-model="wallpaperColorLocal" format="hex"
-                                        @click.stop style="--p-colorpicker-preview-focus-ring-color :none" />
+                                        @click.stop style="--p-colorpicker-preview-focus-ring-color:none" />
                                 </div>
                             </InputGroupAddon>
                             <InputText v-model="wallpaperColorLocal"
                                 @input="wallpaperColorLocal = wallpaperColorLocal.toUpperCase()"
-                                style="--p-inputtext-focus-border-color:white" @blur="validateWallpaperColor"
-                                maxlength="7" :style="{ color: !isWallpaperColorValid ? '#f87171' : '#ffffff' }"
+                                style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c"
+                                @blur="validateWallpaperColor" maxlength="7"
+                                :style="{ color: !isWallpaperColorValid ? '#f87171' : '#ffffff' }"
                                 :invalid="!isWallpaperColorValid" />
                         </InputGroup>
                     </div>
-                </Fieldset>
+                </section>
 
                 <!-- Texte -->
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
-                    <template #legend>
-                        <div class="flex items-center gap-2">
-                            <Icon name="lucide:type" size="24" />
-                            <span class="font-semibold">Texte</span>
-                        </div>
-                    </template>
-                    <div class="flex flex-col gap-4">
+                <section class="rounded-xl border border-white/8 bg-surface-dark overflow-hidden">
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/8">
+                        <Icon name="lucide:type" size="18" class="text-muted shrink-0" />
+                        <span class="text-sm font-bold text-white">Texte</span>
+                    </div>
+                    <div class="p-4 flex flex-col gap-4">
+
+                        <!-- Police -->
                         <div class="flex flex-col gap-2">
-                            <p class="font-semibold">Police</p>
+                            <p class="text-sm font-semibold text-muted">Police</p>
                             <button
-                                class="flex items-center justify-between px-3 py-2.5 rounded-lg border border-zinc-700 hover:border-zinc-500 transition-all w-full"
+                                class="flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/8 hover:border-white/20 transition-all w-full"
                                 @click="fontModal = true">
-                                <span class="text-sm" :style="{ fontFamily: currentFont }">{{ currentFont ??
-                                    'Inter' }}</span>
-                                <Icon name="lucide:chevron-right" size="16" class="text-zinc-400" />
+                                <span class="text-sm" :style="{ fontFamily: currentFont }">
+                                    {{ currentFont ?? 'Inter' }}</span>
+                                <Icon name="lucide:chevron-right" size="16" class="text-muted" />
                             </button>
                         </div>
+
+                        <!-- Couleurs -->
                         <div class="flex flex-col gap-2">
-                            <p class="font-semibold">Couleurs</p>
-                            <div class="flex justify-center gap-2 w-full sm:flex-row flex-col">
+                            <p class="text-sm font-semibold text-muted">Couleurs</p>
+                            <div class="flex gap-2 w-full sm:flex-row flex-col">
                                 <InputGroup class="flex-1" @click="openPicker(usernameColorPicker, 'username')">
-                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                                    <InputGroupAddon
+                                        style="--p-inputgroup-addon-color:white; --p-inputgroup-addon-background:#18191c">
                                         <div class="flex items-center gap-2">
-                                            <span class="text-sm sm:text-base lg:text-sm xl:text-base">Pseudo</span>
+                                            <span class="text-sm">Pseudo</span>
                                             <ColorPicker ref="usernameColorPicker" v-model="usernameColorLocal"
                                                 format="hex" @click.stop
-                                                style="--p-colorpicker-preview-focus-ring-color :none" />
+                                                style="--p-colorpicker-preview-focus-ring-color:none" />
                                         </div>
                                     </InputGroupAddon>
                                     <InputText v-model="usernameColorLocal"
                                         @input="usernameColorLocal = usernameColorLocal.toUpperCase()"
-                                        style="--p-inputtext-focus-border-color:white" @blur="validateUsernameColor"
-                                        maxlength="7" :style="{ color: !isUsernameColorValid ? '#f87171' : '#ffffff' }"
+                                        style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c"
+                                        @blur="validateUsernameColor" maxlength="7"
+                                        :style="{ color: !isUsernameColorValid ? '#f87171' : '#ffffff' }"
                                         :invalid="!isUsernameColorValid" />
                                 </InputGroup>
                                 <InputGroup class="flex-1" @click="openPicker(descriptionColorPicker, 'description')">
-                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                                    <InputGroupAddon
+                                        style="--p-inputgroup-addon-color:white; --p-inputgroup-addon-background:#18191c">
                                         <div class="flex items-center gap-2">
-                                            <span
-                                                class="text-sm sm:text-base lg:text-sm xl:text-base">Description</span>
+                                            <span class="text-sm">Description</span>
                                             <ColorPicker ref="descriptionColorPicker" v-model="descriptionColorLocal"
                                                 format="hex" @click.stop
-                                                style="--p-colorpicker-preview-focus-ring-color :none" />
+                                                style="--p-colorpicker-preview-focus-ring-color:none" />
                                         </div>
                                     </InputGroupAddon>
                                     <InputText v-model="descriptionColorLocal"
                                         @input="descriptionColorLocal = descriptionColorLocal.toUpperCase()"
-                                        style="--p-inputtext-focus-border-color:white" @blur="validateDescriptionColor"
-                                        maxlength="7"
+                                        style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c"
+                                        @blur="validateDescriptionColor" maxlength="7"
                                         :style="{ color: !isDescriptionColorValid ? '#f87171' : '#ffffff' }"
                                         :invalid="!isDescriptionColorValid" />
                                 </InputGroup>
                             </div>
                         </div>
                     </div>
-                </Fieldset>
+                </section>
 
                 <!-- Modal polices -->
-                <Dialog v-model:visible="fontModal" modal dismissableMask header="Choisir une police"
-                    :style="{ width: '32rem', margin: '1rem' }" :draggable="false">
-                    <div class="grid grid-cols-2 gap-2">
-                        <button v-for="font in FONTS" :key="font.name"
-                            class="relative flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all"
-                            :class="currentFont === font.name
-                                ? 'border-white bg-white/10'
-                                : 'border-zinc-700 hover:border-zinc-500'" @click="onFontClick(font)">
-                            <span class="text-sm" :style="{ fontFamily: font.name }">{{ font.label }}</span>
-                            <span v-if="font.premium && !isSub && !hasFeature('premium_theme')"
-                                class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">
-                                Premium
-                            </span>
-                        </button>
-                    </div>
+                <Dialog v-model:visible="fontModal" modal dismissableMask :draggable="false"
+                    :style="{ width: '32rem', margin: '1rem' }"
+                    :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
+                    <template #container>
+                        <div class="flex flex-col gap-4 rounded-xl border border-white/8 bg-dark">
+
+                            <!-- Header -->
+                            <div class="flex items-center justify-between px-5 pt-5">
+                                <h2 class="font-heading text-xl font-bold text-white">Choisir une police</h2>
+                                <button @click="fontModal = false"
+                                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
+                                    <Icon name="lucide:x" size="22" />
+                                </button>
+                            </div>
+
+                            <div class="overflow-y-auto px-5 pb-5" style="max-height: 80vh;">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button v-for="font in FONTS" :key="font.name"
+                                        class="relative flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all"
+                                        :class="currentFont === font.name
+                                            ? 'border-primary bg-primary/20 text-white'
+                                            : 'border-white/8 hover:border-white/20'" @click="onFontClick(font)">
+                                        <span class="text-sm" :style="{ fontFamily: font.name }">{{ font.label }}</span>
+                                        <span v-if="font.premium && !isSub && !hasFeature('premium_theme')"
+                                            class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-primary/20 text-[#a89ff0]">
+                                            Charmi+
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </Dialog>
 
                 <!-- Boutons -->
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem"
-                    id="buttons">
-                    <template #legend>
-                        <div class="flex items-center gap-2">
-                            <Icon name="lucide:stretch-horizontal" size="24" />
-                            <span class="font-semibold">Boutons</span>
-                        </div>
-                    </template>
-                    <div class="flex flex-col gap-4">
+                <section class="rounded-xl border border-white/8 bg-surface-dark overflow-hidden" id="buttons">
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/8">
+                        <Icon name="lucide:stretch-horizontal" size="18" class="text-muted shrink-0" />
+                        <span class="text-sm font-bold text-white">Boutons</span>
+                    </div>
+                    <div class="p-4 flex flex-col gap-5">
+
+                        <!-- Style -->
                         <div class="flex flex-col gap-2">
-                            <p class="font-semibold mb-2">Style</p>
-                            <div class="flex justify-center gap-2 w-full">
-                                <Button severity="contrast" class="flex-1 transition"
-                                    :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isFilled }"
+                            <p class="text-sm font-semibold text-muted">Style</p>
+                            <div class="flex gap-2 w-full">
+                                <button class="flex-1 px-4 py-2 rounded-md border transition-all" :class="isFilled
+                                    ? 'bg-primary/20 border-primary text-white'
+                                    : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
                                     @click="updateSection('button_style', { variant: 'filled' })">
-                                    <span class="text-sm sm:text-base">Plein</span>
-                                </Button>
-                                <Button variant="outlined" severity="contrast" class="flex-1 transition"
-                                    :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-black': isOutlined }"
+                                    Plein
+                                </button>
+                                <button class="flex-1 px-4 py-2 rounded-md border transition-all" :class="isOutlined
+                                    ? 'bg-primary/20 border-primary text-white'
+                                    : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
                                     @click="updateSection('button_style', { variant: 'outlined' })">
-                                    <span class="text-sm sm:text-base">Bordure</span>
-                                </Button>
+                                    Bordure
+                                </button>
                             </div>
                         </div>
-                        <Divider />
-                        <div class="flex flex-col sm:flex-row items-center gap-8 justify-between w-full">
-                            <p class="font-semibold">Corners</p>
-                            <div class="flex items-center gap-6 w-full sm:w-2/3">
-                                <span class="text-sm sm:text-base">Carré</span>
+
+                        <div class="h-px bg-white/8" />
+
+                        <!-- Corners -->
+                        <div class="flex flex-col sm:flex-row items-center gap-6 justify-between w-full">
+                            <p class="text-sm font-semibold text-muted shrink-0">Coins</p>
+                            <div class="flex items-center gap-4 w-full sm:w-2/3">
+                                <span class="text-xs text-muted shrink-0">Carré</span>
                                 <div class="relative w-full">
-                                    <!-- Label au-dessus du curseur -->
                                     <span
-                                        class="absolute -top-8 text-xs opacity-70 whitespace-nowrap transition-transform"
+                                        class="absolute -top-6 text-xs text-muted whitespace-nowrap transition-transform"
                                         :style="{ left: `${cornerValue}%`, transform: 'translateX(-50%)' }">
                                         {{ valueToLabel[cornerValue] }}
                                     </span>
                                     <Slider v-model="cornerValue" :step="25" :min="0" :max="100" class="w-full"
-                                        style="--p-slider-handle-focus-ring-color: none;--p-slider-range-background: #fff" />
+                                        style="--p-slider-track-background: rgba(255,255,255,0.1); --p-slider-range-background: #6A5AE0; --p-slider-handle-background: #6A5AE0; 
+                                        --p-slider-handle-border-color: #6A5AE0; --p-slider-handle-hover-background: #5849c4; --p-slider-handle-hover-border-color: #5849c4; 
+                                        --p-slider-handle-content-background: #18191c; --p-slider-handle-focus-ring-color: none;" />
                                 </div>
-                                <span class="text-sm sm:text-base">Arrondi</span>
+                                <span class="text-xs text-muted shrink-0">Arrondi</span>
                             </div>
                         </div>
-                        <Divider />
+
+                        <div class="h-px bg-white/8" />
+
+                        <!-- Couleurs -->
                         <div class="flex flex-col gap-2">
-                            <p class="font-semibold">Couleurs</p>
-                            <div class="flex justify-center gap-2 w-full sm:flex-row flex-col">
+                            <p class="text-sm font-semibold text-muted">Couleurs</p>
+                            <div class="flex gap-2 w-full sm:flex-row flex-col">
                                 <InputGroup class="flex-1" @click="openPicker(buttonBgColorPicker, 'buttonBg')">
-                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                                    <InputGroupAddon
+                                        style="--p-inputgroup-addon-color:white; --p-inputgroup-addon-background:#18191c">
                                         <div class="flex items-center gap-2">
-                                            <span class="text-sm sm:text-base lg:text-sm xl:text-base">Bouton</span>
+                                            <span class="text-sm">Bouton</span>
                                             <ColorPicker ref="buttonBgColorPicker" v-model="buttonBgColorLocal"
                                                 format="hex" @click.stop
-                                                style="--p-colorpicker-preview-focus-ring-color :none" />
+                                                style="--p-colorpicker-preview-focus-ring-color:none" />
                                         </div>
                                     </InputGroupAddon>
                                     <InputText v-model="buttonBgColorLocal"
                                         @input="buttonBgColorLocal = buttonBgColorLocal.toUpperCase()"
-                                        style="--p-inputtext-focus-border-color:white" @blur="validateButtonBgColor"
-                                        maxlength="7" :style="{ color: !isButtonBgColorValid ? '#f87171' : '#ffffff' }"
+                                        style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c"
+                                        @blur="validateButtonBgColor" maxlength="7"
+                                        :style="{ color: !isButtonBgColorValid ? '#f87171' : '#ffffff' }"
                                         :invalid="!isButtonBgColorValid" />
                                 </InputGroup>
                                 <InputGroup class="flex-1" @click="openPicker(buttonTextColorPicker, 'buttonText')">
-                                    <InputGroupAddon style="--p-inputgroup-addon-color:white">
+                                    <InputGroupAddon
+                                        style="--p-inputgroup-addon-color:white; --p-inputgroup-addon-background:#18191c">
                                         <div class="flex items-center gap-2">
-                                            <span class="text-sm sm:text-base lg:text-sm xl:text-base">Texte</span>
+                                            <span class="text-sm">Texte</span>
                                             <ColorPicker ref="buttonTextColorPicker" v-model="buttonTextColorLocal"
                                                 format="hex" @click.stop
-                                                style="--p-colorpicker-preview-focus-ring-color :none" />
+                                                style="--p-colorpicker-preview-focus-ring-color:none" />
                                         </div>
                                     </InputGroupAddon>
                                     <InputText v-model="buttonTextColorLocal"
                                         @input="buttonTextColorLocal = buttonTextColorLocal.toUpperCase()"
-                                        style="--p-inputtext-focus-border-color:white" @blur="validateButtonTextColor"
-                                        maxlength="7"
+                                        style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c"
+                                        @blur="validateButtonTextColor" maxlength="7"
                                         :style="{ color: !isButtonTextColorValid ? '#f87171' : '#ffffff' }"
                                         :invalid="!isButtonTextColorValid" />
                                 </InputGroup>
                             </div>
                         </div>
                     </div>
-                </Fieldset>
+                </section>
 
                 <!-- Bloc branding -->
-                <Fieldset style="--p-fieldset-legend-background: none; --p-fieldset-content-padding: 0.5rem">
-                    <template #legend>
-                        <div class="flex items-center gap-2">
-                            <Icon name="lucide:panel-bottom" size="24" />
-                            <span class="font-semibold">Footer</span>
-                        </div>
-                    </template>
-                    <div v-if="!hasFeature('no_branding')"
-                        class="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:items-center justify-between">
-                        <div class="flex flex-col sm:gap-0.5">
-                            <span class="text-sm font-semibold">Masquer le footer</span>
-                            <span class="text-xs text-zinc-400">
-                                <template v-if="hasFeature('no_branding')">
-                                    {{ getExpiryLabel('no_branding') }}
-                                </template>
-                                <template v-else>
-                                    Masque le footer de ta page de liens
-                                </template>
-                            </span>
-                        </div>
-                        <Button v-if="!hasFeature('no_branding')" severity="contrast" size="small"
-                            @click="brandingModal = true">
-                            <Icon name="lucide:coins" size="16" class="shrink-0" />
-                            <span class="text-sm">Débloquer</span>
-                        </Button>
+                <section class="rounded-xl border border-white/8 bg-surface-dark overflow-hidden">
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/8">
+                        <Icon name="lucide:panel-bottom" size="18" class="text-muted shrink-0" />
+                        <span class="text-sm font-bold text-white">Footer</span>
                     </div>
-                    <div v-else class="flex gap-2 items-center justify-between">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-semibold">Masquer le footer</span>
-                            <span class="text-xs text-zinc-400">
-                                <template v-if="!hasFeature('no_branding')">
-                                    Masque le footer de ta page de liens
-                                </template>
+                    <div class="p-4 flex items-center justify-between gap-3">
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-sm font-semibold text-white">Masquer le footer</span>
+                            <span class="text-xs text-muted">
+                                <template v-if="isSub">Inclus dans ton abonnement</template>
+                                <template v-else-if="hasFeature('no_branding')">
+                                    {{ getExpiryLabel('no_branding') }}</template>
+                                <template v-else>Masque le footer Charmi sur ta page publique</template>
                             </span>
                         </div>
-                        <span v-if="isSub" class="text-sm text-gray-400  font-semibold">Inclus dans
-                            l'abonnement</span>
-                        <span v-else class="text-sm text-emerald-400">{{ getExpiryLabel('no_branding') }}</span>
+
+                        <template v-if="!hasFeature('no_branding') && !isSub">
+                            <button @click="brandingModal = true"
+                                class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-darker border border-white/8 hover:border-white/20 font-semibold text-white transition-colors shrink-0">
+                                <img src="/images/assets/charmi-monnaie-blanc.svg" alt="" class="w-3.5 h-3.5" />
+                                Débloquer
+                            </button>
+                        </template>
+                        <template v-else>
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <Icon name="lucide:check-circle" size="14" class="text-emerald-400" />
+                                <span class="text-xs text-emerald-400 font-semibold">Actif</span>
+                            </div>
+                        </template>
                     </div>
                     <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
-                </Fieldset>
+                </section>
+                <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
             </div>
         </div>
     </template>
