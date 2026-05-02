@@ -172,20 +172,15 @@
                                     </template>
                                 </div>
 
-                                <div class="flex flex-row w-full gap-3 items-center"
-                                    v-if="schedule?.style?.backgroundUrl">
-                                    <span class="font-semibold text-sm min-w-16">Opacité</span>
-                                    <InputNumber v-model="backgroundOpacity" :min="0" :max="100" fluid
-                                        @update:modelValue="updateBackgroundOpacity" showButtons
-                                        buttonLayout="horizontal"
-                                        style="--p-inputtext-focus-border-color: #6A5AE0; --p-inputtext-background: #18191c">
-                                        <template #incrementbuttonicon>
-                                            <Icon name="lucide:plus" size="18" />
-                                        </template>
-                                        <template #decrementbuttonicon>
-                                            <Icon name="lucide:minus" size="18" />
-                                        </template>
-                                    </InputNumber>
+                                <div class="flex flex-col w-full gap-2" v-if="schedule?.style?.backgroundUrl">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-semibold text-sm">Opacité</span>
+                                        <span class="text-sm text-muted">{{ backgroundOpacity }}%</span>
+                                    </div>
+                                    <Slider v-model="backgroundOpacity" :min="0" :max="100"
+                                        @update:modelValue="updateBackgroundOpacity" style="--p-slider-track-background: rgba(255,255,255,0.1); --p-slider-range-background: #6A5AE0; --p-slider-handle-background: #6A5AE0; 
+                                        --p-slider-handle-border-color: #6A5AE0; --p-slider-handle-hover-background: #5849c4; --p-slider-handle-hover-border-color: #5849c4; 
+                                        --p-slider-handle-content-background: #18191c;" />
                                 </div>
 
                                 <!-- Section Texte -->
@@ -526,8 +521,7 @@
     </template>
 
     <!-- Modal d'ajout de créneau -->
-    <Dialog v-model:visible="visible" modal
-        :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'"
+    <Dialog v-model:visible="visible" modal :header="editingSlot ? 'Modifier le stream' : 'Ajouter un stream'"
         :style="{ width: '30rem', margin: '1rem', backgroundColor: '#1E1F22' }" :draggable="false">
         <div class="flex flex-col space-y-5 mb-2">
 
@@ -711,8 +705,8 @@
                     :disabled="isColorInvalid || !selectedGame?.label || !startTime || !endTime || selectedDays.length === 0"
                     class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-[#6A5AE0] hover:bg-[#5849c4] text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
                     <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="16" class="shrink-0" />
-                    <span class="text-xs sm:text-base shrink-0">{{ editingSlot ? 'Mettre à jour' : 'Enregistrer'
-                        }}</span>
+                    <span class="text-xs sm:text-base shrink-0">
+                        {{ editingSlot ? 'Mettre à jour' : 'Enregistrer' }}</span>
                 </button>
             </div>
         </template>
