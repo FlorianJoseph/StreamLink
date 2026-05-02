@@ -41,10 +41,11 @@
 
                                 <!-- État vide -->
                                 <div v-if="!daysOptions.some(day => slotsForDay(day.label).length > 0)"
-                                    class="flex flex-col items-center justify-center py-12 text-center">
-                                    <Icon name="lucide:calendar-x" size="48" class="text-white/20 mb-4" />
-                                    <p class="text-white/60 text-sm mb-2">Aucun stream programmé cette semaine</p>
-                                    <p class="text-white/40 text-xs">Clique sur "Ajouter un créneau" ou directement sur
+                                    class="flex flex-col items-center justify-center py-12 text-center gap-3">
+                                    <img src="/images/mascotte/charmi-confused-violet.svg" alt=""
+                                        class="w-16 h-16 opacity-60" />
+                                    <p class="text-sm text-muted">Aucun stream programmé cette semaine</p>
+                                    <p class="text-xs text-muted/60">Clique sur "Ajouter un créneau" ou directement sur
                                         le planning pour commencer</p>
                                 </div>
 
@@ -228,8 +229,7 @@
                                 }"
                                     :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
                                     <template #container>
-                                        <div
-                                            class="flex flex-col gap-4 rounded-xl border border-white/8 bg-dark">
+                                        <div class="flex flex-col gap-4 rounded-xl border border-white/8 bg-dark">
 
                                             <!-- Header -->
                                             <div class="flex items-center justify-between px-5 pt-5">
@@ -739,7 +739,7 @@
                         class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
                         <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="16" class="shrink-0" />
                         <span class="text-xs sm:text-base shrink-0">{{ editingSlot ? 'Mettre à jour' : 'Enregistrer'
-                            }}</span>
+                        }}</span>
                     </button>
                 </div>
 
