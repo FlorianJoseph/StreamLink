@@ -73,31 +73,31 @@
                                         <span class="text-muted text-xs">Charm / jour</span>
                                     </div>
                                     <NuxtLink v-if="!isSub" to="/shop"
-                                        class="text-xs text-muted hover:text-white w-fit">
-                                        Abonne-toi → 6/jour auto
+                                        class="text-xs text-muted hover:text-white w-fit transition-colors">
+                                        Passe à Charmi+ pour 6/jour auto
                                     </NuxtLink>
                                 </div>
                                 <template v-if="isSub">
-                                    <div class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md
-                        bg-primary/10 text-primary text-sm font-bold">
+                                    <div class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md
+                        bg-primary/10 text-primary font-medium">
                                         Récompense automatique
                                     </div>
                                 </template>
 
                                 <template v-else-if="dailyClaimed">
-                                    <div disabled class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md
-                            bg-white/5 text-muted text-sm font-bold">
+                                    <div disabled class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md
+                            bg-white/5 text-muted font-medium">
                                         Déjà récupéré
                                     </div>
                                 </template>
 
                                 <template v-else>
                                     <button :disabled="dailyLoading"
-                                        class="w-full flex items-center justify-center gap-2 bg-accent text-dark hover:bg-accent/90 font-bold px-3 py-2 rounded-md"
+                                        class="w-full flex items-center justify-center gap-2 bg-accent text-dark hover:bg-accent/90 font-medium px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                         @click="claimDaily">
                                         <Icon v-if="dailyLoading" name="lucide:loader-circle" size="16"
                                             class="animate-spin shrink-0" />
-                                        <span class="text-sm font-bold">
+                                        <span class="font-medium">
                                             {{ dailyLoading ? 'Chargement...' : 'Réclamer' }}</span>
                                     </button>
                                 </template>
@@ -132,20 +132,20 @@
                         <div class="flex flex-col gap-2 shrink-0 self-center w-full sm:w-45">
                             <p class="text-xs text-muted hidden sm:block">Être informé en avant-première</p>
                             <button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
-                                class="flex items-center gap-2 w-full justify-center px-3 py-1.5 rounded-md text-sm font-bold"
+                                class="flex items-center gap-2 w-full justify-center px-4 py-2 rounded-md transition-colors"
                                 :class="newsletterStore.subscribed
                                     ? 'bg-primary/30 text-white/50'
                                     : 'bg-primary text-white hover:bg-primary/90'"
                                 :style="newsletterStore.subscribed ? { cursor: 'default', pointerEvents: 'auto' } : {}">
-                                <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'" size="16"
+                                <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'" size="18"
                                     class="shrink-0" />
                                 <span>{{ newsletterStore.subscribed ? 'Activé' : 'Me notifier' }}</span>
                             </button>
                             <a href="https://discord.gg/fVFguWc76b" target="_blank">
                                 <button
-                                    class="flex items-center gap-2 w-full justify-center px-3 py-1.5 rounded-md bg-[#5865f2] text-[#e0e3ff] hover:bg-[#5865f2]/90">
-                                    <Icon name="simple-icons:discord" size="16" />
-                                    <span class="text-sm">Discord</span>
+                                    class="flex items-center gap-2 w-full justify-center px-4 py-2 rounded-md bg-[#5865f2] text-[#e0e3ff] hover:bg-[#5865f2]/90 transition-colors">
+                                    <Icon name="simple-icons:discord" size="18" />
+                                    <span class="">Discord</span>
                                 </button>
                             </a>
                         </div>

@@ -325,7 +325,7 @@
                             <!-- Aperçu -->
                             <button :disabled="isPreviewing"
                                 @click="mobileFormat ? previewScheduleMobile(currentFont, showBranding) : previewSchedule(currentFont, showBranding)"
-                                class="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/8 text-white/60 hover:text-white hover:border-white/20 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors">
+                                class="flex items-center gap-2 px-4 py-2 rounded-md border border-white/8 text-white/60 hover:text-white hover:border-white/20 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors">
                                 <Icon :name="isPreviewing ? 'lucide:loader-circle' : 'lucide:eye'" size="18"
                                     :class="isPreviewing ? 'animate-spin' : ''" />
                                 <span class="hidden sm:inline whitespace-nowrap">Aperçu</span>

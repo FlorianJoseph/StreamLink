@@ -12,12 +12,8 @@
             <div class="flex-1 lg:flex-[2] min-w-0">
                 <StreamLinkDesign />
             </div>
-            <div class="hidden lg:block">
-                <Divider layout="vertical" />
-            </div>
-            <div class="lg:hidden block">
-                <Divider />
-            </div>
+            <div class="hidden lg:block w-px bg-white/8 self-stretch" />
+            <div class="lg:hidden h-px bg-white/8 mt-8" />
             <!-- Aperçu du streamlink -->
             <div class="sticky top-0 lg:self-start mx-auto">
                 <StreamLinkPreview />
