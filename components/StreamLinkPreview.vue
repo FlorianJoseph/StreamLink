@@ -1,17 +1,5 @@
 <template>
-    <div class="flex flex-col gap-4">
-        <div class="pb-4 lg:py-4">
-            <div class="flex flex-col items-center justify-end">
-                <!-- Titre -->
-                <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center">
-                    Aperçu de ma page
-                </h1>
-                <!-- Sous-titre -->
-                <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
-                    Voici comment ta page apparaîtra à tes visiteurs
-                </p>
-            </div>
-        </div>
+    <div class="flex flex-col gap-4 py-8">
         <StreamLinkShare />
         <div class="flex flex-col w-full h-160 sm:w-sm rounded-xl relative overflow-auto preview-scroll"
             :style="{ backgroundColor: wallpaperColor }">

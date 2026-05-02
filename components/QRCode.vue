@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-3 p-4 bg-white/[0.03] border border-white/8 rounded-xl">
+    <div class="flex flex-col gap-3 p-4 bg-surface-dark border border-white/8 rounded-xl">
         <p class="text-white text-sm font-bold">Partager ta page</p>
 
         <!-- Lien + Copier -->

@@ -409,7 +409,7 @@
                             <!-- Tile "Voir tout" -->
                             <div v-if="rowHasMore(row)"
                                 @click="row.key === 'live' ? selectFilter('live') : goToCategory(CATEGORY_KEY[row.label] ?? row.key)"
-                                class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-white/8 bg-surface-dark hover:border-white/15 hover:bg-white/[0.03] cursor-pointer flex flex-col items-center justify-center gap-3 group/expand"
+                                class="flex-shrink-0 w-[312px] sm:w-[336px] rounded-xl border border-white/8 bg-surface-dark hover:border-white/15 hover:bg-surface-dark cursor-pointer flex flex-col items-center justify-center gap-3 group/expand"
                                 :style="{ minHeight: '220px' }">
                                 <div class="flex flex-col items-center gap-1.5">
                                     <div class="flex items-center gap-1">

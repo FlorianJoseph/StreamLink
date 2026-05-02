@@ -96,7 +96,7 @@
 
             <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div v-for="feature in features" :key="feature.key"
-                    class="flex flex-col gap-4 p-5 rounded-xl border border-white/8 bg-white/[0.03]">
+                    class="flex flex-col gap-4 p-5 rounded-xl border border-white/8 bg-surface-dark">
 
                     <div class="flex items-start gap-3">
                         <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 shrink-0">
@@ -162,7 +162,7 @@
                 <div v-for="pack in coinPacks" :key="pack.priceId"
                     class="relative flex items-center justify-between p-5 rounded-xl border cursor-pointer" :class="pack.best
                         ? 'border-accent/40 bg-accent/5 hover:border-accent/70 sm:scale-105'
-                        : 'border-white/8 bg-white/[0.03] hover:border-white/15'" @click="openCheckout(pack.priceId)">
+                        : 'border-white/8 bg-surface-dark hover:border-white/15'" @click="openCheckout(pack.priceId)">
 
                     <div class="flex items-center gap-3">
                         <img src="/images/assets/charmi-monnaie-jaune.svg" alt=""

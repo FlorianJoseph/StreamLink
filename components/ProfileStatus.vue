@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isReady" class="flex flex-col gap-4 p-4 bg-white/[0.03] border border-white/8 rounded-xl">
+    <div v-if="isReady" class="flex flex-col gap-4 p-4 bg-surface-dark border border-white/8 rounded-xl">
 
         <!-- Header statut -->
         <div class="flex flex-col gap-2">

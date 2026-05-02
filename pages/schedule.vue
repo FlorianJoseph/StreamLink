@@ -10,7 +10,7 @@
             <div class="flex flex-col lg:flex-row gap-6">
                 <div class="w-full lg:w-md shrink-0 lg:h-[46.1rem]">
                     <!-- Tabs custom -->
-                    <div class="border border-white/8 rounded-xl h-full flex flex-col bg-white/[0.03]">
+                    <div class="border border-white/8 rounded-xl h-full flex flex-col bg-surface-dark">
 
                         <!-- TabList -->
                         <div class="flex shrink-0 border-b border-white/8">
@@ -308,7 +308,7 @@
 
                     <!-- Barre d'outils -->
                     <div
-                        class="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-white/8 bg-white/[0.03]">
+                        class="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-white/8 bg-surface-dark">
                         <!-- Toggle format landscape / mobile -->
                         <div class="flex items-center gap-1 p-1 rounded-md bg-surface-darker border border-white/8">
                             <button v-for="option in formatOptions" :key="option" @click="onFormatChange(option)"

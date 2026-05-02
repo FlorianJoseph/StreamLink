@@ -33,7 +33,7 @@
                         <div class="flex flex-col gap-6">
 
                             <!-- Outils -->
-                            <div class="flex flex-col gap-2 p-4 bg-white/[0.03] border border-white/8 rounded-xl">
+                            <div class="flex flex-col gap-2 p-4 bg-surface-dark border border-white/8 rounded-xl">
                                 <p class="text-white text-sm font-bold">Accès rapide</p>
                                 <div class="flex flex-col gap-1">
                                     <NuxtLink v-for="tool in toolsSections" :key="tool.title" :to="tool.to" class="group flex items-center gap-3 p-3 rounded-lg border border-transparent
@@ -52,7 +52,7 @@
                             <!-- Charm quotidien -->
                             <div class="rounded-xl p-5 border flex flex-col gap-4" :class="{
                                 'bg-primary/8 border-primary/20': isSub,
-                                'bg-white/[0.03] border-white/8': !isSub && dailyClaimed,
+                                'bg-surface-dark border-white/8': !isSub && dailyClaimed,
                                 'bg-accent/8 border-accent/20': !isSub && !dailyClaimed,
                             }">
 
@@ -109,7 +109,7 @@
                     </div>
 
                     <!-- Prochainement -->
-                    <div class="p-4 bg-white/[0.03] border border-white/8 rounded-xl
+                    <div class="p-4 bg-surface-dark border border-white/8 rounded-xl
                         flex flex-col sm:flex-row sm:items-start gap-5">
 
                         <!-- Items roadmap -->
