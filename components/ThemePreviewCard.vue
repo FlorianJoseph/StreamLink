@@ -1,9 +1,9 @@
 <template>
     <div class="flex flex-col items-center gap-1">
         <div class="relative rounded-xl overflow-hidden cursor-pointer transition 
-    hover:ring-2 hover:ring-white hover:ring-2 hover:ring-white border-2 border-black "
+    hover:ring-2 hover:ring-primary hover:ring-2 hover:ring-primary border-2 border-black "
             :style="{ backgroundColor: '#' + theme.wallpaper_style.backgroundColor }" :class="{
-                'ring-2 ring-white': isSelected
+                'ring-2 ring-primary': isSelected
             }" style="width: 100px; height: 110px" @mouseenter="hovered = true" @mouseleave="hovered = false">
 
             <!-- Aa en haut à gauche -->
@@ -23,10 +23,10 @@
 
             <!-- Badge exclusif -->
             <div v-if="theme.premium && !hasAccess"
-                class="absolute top-1.5 right-1.5 z-10 flex items-center gap-1 py-0.5 px-1.5 rounded-full text-[9px] font-semibold bg-amber-500 text-amber-950 overflow-hidden transition-all duration-200">
+                class="absolute top-1.5 right-1.5 z-10 flex items-center gap-1 py-0.5 px-1.5 rounded-full text-[9px] font-bold bg-[#6A5AE0] text-white">
                 <span class="whitespace-nowrap overflow-hidden transition-all duration-200"
                     :style="{ maxWidth: hovered ? '60px' : '0px', opacity: hovered ? 1 : 0, marginRight: hovered ? '0' : '-4px' }">
-                    Premium
+                    Charmi+
                 </span>
                 <Icon name="lucide:sparkles" size="10" class="shrink-0" />
             </div>

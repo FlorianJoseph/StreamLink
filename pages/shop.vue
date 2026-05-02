@@ -219,6 +219,21 @@
                     pendant <span class="font-bold text-white">{{ pendingPrice?.label }}</span>.
                 </p>
 
+                <!-- Upsell Charmi+ -->
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 cursor-pointer transition-all"
+                    @click="confirmModal = false; openCheckout('sub', 'subscription')">
+                    <img src="/images/mascotte/charmi-happy-violet.svg" alt="" class="w-8 h-8 shrink-0 opacity-80" />
+                    <div class="flex flex-col gap-0.5 flex-1">
+                        <span class="text-xs font-semibold text-[#a89ff0]">Passe à Charmi+ et garde tes Charm</span>
+                        <p class="text-[11px] text-muted">
+                            {{ upsellDiff
+                                ? `Sans limite, pour seulement ${upsellDiff}€ de plus`
+                                : 'Sans limite, pour seulement 7,99€/mois' }}
+                        </p>
+                    </div>
+                    <Icon name="lucide:arrow-right" size="14" class="text-[#a89ff0] shrink-0" />
+                </div>
+
                 <!-- Solde -->
                 <div class="flex flex-col gap-1.5 rounded-lg border border-white/8 bg-surface-darker p-3">
                     <div class="flex items-center justify-between text-xs text-muted">
@@ -241,21 +256,6 @@
                     <p v-if="balance < (pendingPrice?.cost ?? 0)" class="text-xs text-red-400 mt-1">
                         Il te manque {{ (pendingPrice?.cost ?? 0) - balance }} Charm
                     </p>
-                </div>
-
-                <!-- Upsell Charmi+ -->
-                <div class="flex items-center gap-3 p-3 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 cursor-pointer transition-all"
-                    @click="confirmModal = false; openCheckout('sub', 'subscription')">
-                    <img src="/images/mascotte/charmi-happy-violet.svg" alt="" class="w-8 h-8 shrink-0 opacity-80" />
-                    <div class="flex flex-col gap-0.5 flex-1">
-                        <span class="text-xs font-semibold text-[#a89ff0]">Passe à Charmi+ et garde tes Charm</span>
-                        <p class="text-[11px] text-muted">
-                            {{ upsellDiff
-                                ? `Sans limite, pour seulement ${upsellDiff}€ de plus`
-                                : 'Sans limite, pour seulement 7,99€/mois' }}
-                        </p>
-                    </div>
-                    <Icon name="lucide:arrow-right" size="14" class="text-[#a89ff0] shrink-0" />
                 </div>
 
                 <!-- Actions -->
@@ -398,29 +398,12 @@ const coinToEuro = (coins: number) => {
     return ((coins * 2.99) / 300).toFixed(2)
 }
 
-// Coût total si toutes les features achetées 30j
-const allFeaturesMonthlyCoins = computed(() => {
-    if (!features.value) return 0
-    return features.value.reduce((total: number, feature: any) => {
-        const price30j = feature.FeaturePrices?.find((p: any) => p.duration_days === 30)
-        return total + (price30j?.cost ?? 0)
-    }, 0)
-})
-
-const allFeaturesMonthlyEuro = computed(() =>
-    parseFloat(coinToEuro(allFeaturesMonthlyCoins.value)).toFixed(2)
-)
-
-const savedWithSubAllFeatures = computed(() =>
-    Math.max(0, parseFloat(allFeaturesMonthlyEuro.value) - 7.99).toFixed(2)
-)
-
 const upsellDiff = computed(() => {
     if (!pendingPrice.value) return 0
     const coinCost = parseFloat(coinToEuro(pendingPrice.value.cost))
     if (coinCost < 2) return null
-    const diff = parseFloat((7.99 - coinCost).toFixed(2))
-    return diff > 0 ? diff : null
+    const diffNum = 7.99 - coinCost
+    return diffNum > 0 ? diffNum.toFixed(2) : null
 })
 
 const recommendedPack = computed(() => {

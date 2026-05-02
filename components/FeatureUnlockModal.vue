@@ -17,6 +17,17 @@
                 <!-- Description -->
                 <p class="text-sm text-muted">{{ feature?.description }}</p>
 
+                <!-- Upsell Charmi+ -->
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 cursor-pointer transition-all"
+                    @click="visible = false; navigateTo('/shop')">
+                    <img src="/images/mascotte/charmi-happy-violet.svg" alt="" class="w-8 h-8 shrink-0 opacity-80" />
+                    <div class="flex flex-col gap-0.5 flex-1">
+                        <span class="text-xs font-semibold text-[#a89ff0]">Passe à Charmi+ et garde tes Charm</span>
+                        <p class="text-[11px] text-muted">Sans limite, pour seulement 7,99€/mois</p>
+                    </div>
+                    <Icon name="lucide:arrow-right" size="14" class="text-[#a89ff0] shrink-0" />
+                </div>
+
                 <!-- Prix -->
                 <div class="flex flex-col gap-2">
                     <div v-for="price in prices" :key="price.id"
@@ -54,17 +65,6 @@
                     <p v-if="selectedPrice && balance < selectedPrice.cost" class="text-xs text-red-400 mt-1">
                         Il te manque {{ selectedPrice.cost - balance }} Charm
                     </p>
-                </div>
-
-                <!-- Upsell Charmi+ -->
-                <div class="flex items-center gap-3 p-3 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 cursor-pointer transition-all"
-                    @click="visible = false; navigateTo('/shop')">
-                    <img src="/images/mascotte/charmi-happy-violet.svg" alt="" class="w-8 h-8 shrink-0 opacity-80" />
-                    <div class="flex flex-col gap-0.5 flex-1">
-                        <span class="text-xs font-semibold text-[#a89ff0]">Passe à Charmi+ et garde tes Charm</span>
-                        <p class="text-[11px] text-muted">Sans limite, pour seulement 7,99€/mois</p>
-                    </div>
-                    <Icon name="lucide:arrow-right" size="14" class="text-[#a89ff0] shrink-0" />
                 </div>
 
                 <!-- Actions -->
