@@ -180,7 +180,7 @@ const greeting = computed(() => {
 })
 
 const streamMessage = computed(() => {
-    if (!slots.value.length) return "Pas de stream prévu. Ajoute ton planning et trouve des streamers à raider. 👀"
+    if (!slots.value.length) return "Pas de stream prévu. Ajoute ton planning et trouve des streamers à raid sur la"
 
     const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
     const now = new Date()
