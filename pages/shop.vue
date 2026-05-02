@@ -5,7 +5,7 @@
             strokeWidth="6" fill="transparent" animationDuration=".5s" />
     </div>
 
-    <div v-else class="flex flex-col gap-10 fade-in py-8 max-w-6xl mx-auto w-full">
+    <div v-else class="flex flex-col gap-10 fade-in py-6 max-w-6xl mx-auto w-full">
 
         <!-- Section Abonnement -->
         <section>

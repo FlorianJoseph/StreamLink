@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-4 py-8">
+    <div class="flex flex-col gap-4">
         <!-- Avatar et bouton de modification -->
         <div class="flex flex-row gap-4 items-center max-w-2xl lg:w-lg xl:w-2xl">
             <AvatarUploader />

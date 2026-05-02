@@ -1,45 +1,32 @@
     <template>
         <div class="flex flex-col gap-4">
-            <!-- En-tête -->
-            <div class="py-4">
-                <div class="flex flex-col lg:items-start items-center justify-end">
-                    <!-- Titre -->
-                    <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
-                        Personnaliser ma page de liens
-                    </h1>
-                    <!-- Sous-titre -->
-                    <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400" id="header">
-                        Choisis tes couleurs et styles pour refléter ton identité
-                    </p>
+            <!-- Barre d'outils -->
+            <div
+                class="sticky top-0 z-60 w-full lg:w-lg xl:w-2xl 2xl:w-2xl mx-auto flex items-center justify-between px-3 py-2 rounded-xl border border-white/8 bg-surface-dark">
+                <!-- Annuler -->
+                <button :disabled="!isDirty" @click="resetDesign"
+                    class="flex items-center gap-2 px-4 py-2 rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 font-semibold transition-colors disabled:opacity-40 disabled:pointer-events-none">
+                    <Icon name="lucide:rotate-ccw" size="18" />
+                    <span class="hidden sm:inline whitespace-nowrap">Annuler les modifications</span>
+                </button>
+
+                <!-- Undo / Redo / Save -->
+                <div class="flex items-center gap-1 sm:gap-2">
+                    <button :disabled="!history.length" @click="undo"
+                        class="w-10 h-10 flex items-center justify-center rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-muted hover:text-white transition-colors disabled:opacity-40 disabled:pointer-events-none">
+                        <Icon name="lucide:undo" size="18" />
+                    </button>
+                    <button :disabled="!future.length" @click="redo"
+                        class="w-10 h-10 flex items-center justify-center rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-muted hover:text-white transition-colors disabled:opacity-40 disabled:pointer-events-none">
+                        <Icon name="lucide:redo" size="18" />
+                    </button>
+                    <button :disabled="!isDirty" @click="handleSave"
+                        class="flex items-center gap-2 px-4 py-2 rounded-md bg-primary hover:bg-primary/80 text-white font-semibold transition-colors disabled:opacity-40 disabled:pointer-events-none">
+                        <Icon name="lucide:save" size="18" />
+                        <span class="hidden sm:inline">Enregistrer</span>
+                    </button>
                 </div>
             </div>
-            <!-- Barre d'outils -->
-            <Menubar class="sticky top-0 z-60 w-full lg:w-lg xl:w-2xl 2xl:w-2xl mx-auto">
-                <template #start>
-                    <Button severity="secondary" :disabled="!isDirty" @click="resetDesign">
-                        <Icon name="lucide:rotate-ccw" size="18" />
-                        <span
-                            class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base whitespace-nowrap">Annuler
-                            les
-                            modifications</span>
-                    </Button>
-                </template>
-                <template #end>
-                    <div class="flex items-center gap-1 sm:gap-2">
-                        <Button severity="secondary" :disabled="!history.length" @click="undo">
-                            <Icon name="lucide:undo" size="18" />
-                        </Button>
-                        <Button severity="secondary" :disabled="!future.length" @click="redo">
-                            <Icon name="lucide:redo" size="18" />
-                        </Button>
-                        <Button severity="contrast" :disabled="!isDirty" @click="handleSave">
-                            <Icon name="lucide:save" size="18" />
-                            <span
-                                class="hidden sm:inline text-xs md:text-base lg:text-xs xl:text-base">Enregistrer</span>
-                        </Button>
-                    </div>
-                </template>
-            </Menubar>
             <!-- <Menu :model="items" class="fixed top-45 left-5 z-50 2xl:block hidden">
                 <template #item="{ item, props }">
                     <div v-bind="props.action" @click="scrollToSection(item.anchor)">

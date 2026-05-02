@@ -5,7 +5,7 @@
             strokeWidth="6" fill="transparent" animationDuration=".5s" />
     </div>
     <template v-else>
-        <div class="flex flex-col gap-4 fade-in py-8">
+        <div class="flex flex-col gap-4 fade-in py-6">
 
             <div class="flex flex-col lg:flex-row gap-6">
                 <div class="w-full lg:w-md shrink-0 lg:h-[46.1rem]">

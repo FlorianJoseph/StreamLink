@@ -7,7 +7,7 @@
     </div>
     <div v-else>
         <div
-            class="flex flex-col lg:flex-row sm:max-w-4xl lg:max-w-5xl xl:max-w-full sm:gap-6 lg:gap-12 xl:gap-24 2xl:gap-42 fade-in">
+            class="flex flex-col lg:flex-row sm:max-w-4xl lg:max-w-5xl xl:max-w-full sm:gap-6 lg:gap-12 xl:gap-24 2xl:gap-42 fade-in py-6">
             <!-- Édition du streamlink -->
             <div class="flex-1 lg:flex-[2] min-w-0">
                 <StreamLinkDesign />

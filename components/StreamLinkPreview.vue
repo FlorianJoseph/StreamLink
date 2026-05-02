@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-4 py-8">
+    <div class="flex flex-col gap-4">
         <StreamLinkShare />
         <div class="flex flex-col w-full h-160 sm:w-sm rounded-xl relative overflow-auto preview-scroll"
             :style="{ backgroundColor: wallpaperColor }">
