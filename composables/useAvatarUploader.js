@@ -2,8 +2,8 @@ export const useAvatarUploader = (streamer) => {
     const supabase = useSupabaseClient()
     const streamerStore = useStreamerStore()
 
-    const imageUrl = ref(null)
-    const previewUrl = ref(null)
+    const imageUrl = useState('avatar-image', () => null)
+    const previewUrl = useState('avatar-preview', () => null)
     const croppedImage = ref(null)
 
     const defaultAvatar = "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png"
