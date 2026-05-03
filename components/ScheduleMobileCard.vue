@@ -1,5 +1,5 @@
 <template>
-    <div id="scheduleCardMobile" class="export-footer rounded-lg" :style="{
+    <div id="scheduleCardMobile" class="export-footer rounded-lg ring-2 ring-white/8" :style="{
         backgroundColor: scheduleBgColor,
         backgroundImage: schedule?.style?.backgroundUrl ? `url(${schedule.style.backgroundUrl})` : undefined,
         backgroundSize: 'cover',

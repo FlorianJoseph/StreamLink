@@ -22,10 +22,16 @@
                     @click="visible = false; navigateTo('/shop')">
                     <img src="/images/mascotte/charmi-happy-violet.svg" alt="" class="w-8 h-8 shrink-0 opacity-80" />
                     <div class="flex flex-col gap-0.5 flex-1">
-                        <span class="text-xs font-semibold text-[#a89ff0]">Passe à Charmi+ et garde tes Charm</span>
-                        <p class="text-[11px] text-muted">Sans limite, pour seulement 7,99€/mois</p>
+                        <span class="text-sm font-semibold text-[#a89ff0]">Passe à Charmi+ pour tout débloquer</span>
+                        <p class="text-xs text-muted">Accès illimité pour seulement 7,99€/mois</p>
                     </div>
                     <Icon name="lucide:arrow-right" size="14" class="text-[#a89ff0] shrink-0" />
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <div class="h-px flex-1 bg-white/8" />
+                    <span class="text-xs text-muted">ou débloquer temporairement avec des Charm</span>
+                    <div class="h-px flex-1 bg-white/8" />
                 </div>
 
                 <!-- Prix -->

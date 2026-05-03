@@ -210,8 +210,9 @@
                                         <button
                                             class="flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/8 hover:border-white/20 transition-all w-full"
                                             @click="fontModal = true">
-                                            <span class="text-sm" :style="{ fontFamily: currentFont }">{{ currentFont ??
-                                                'Inter' }}</span>
+                                            <span class="text-sm" :style="{ fontFamily: currentFont }">
+                                                {{ currentFont ?? 'Plus Jakarta Sans' }}
+                                            </span>
                                             <Icon name="lucide:chevron-right" size="16" class="text-muted" />
                                         </button>
                                     </div>
@@ -362,7 +363,7 @@
                         }]">
                             <!-- Planning desktop -->
                             <div v-show="!mobileFormat" id="scheduleCard">
-                                <div class="p-4 relative rounded-lg export-footer" :style="{
+                                <div class="p-4 relative rounded-lg ring ring-white/8 export-footer" :style="{
                                     backgroundColor: scheduleBgColor,
                                     backgroundImage: schedule?.style?.backgroundUrl ? `url(${schedule.style.backgroundUrl})` : undefined,
                                     backgroundSize: 'cover',
@@ -390,9 +391,9 @@
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer"
                                                         @click="editField('title')">
-                                                        <h1 class="text-4xl font-bold"
+                                                        <div class="text-4xl font-bold"
                                                             :style="{ fontFamily: currentFont }"> {{ schedule?.title }}
-                                                        </h1>
+                                                        </div>
                                                         <Icon name="lucide:pencil" size="34"
                                                             class="transition ignore-export" />
                                                     </div>
@@ -738,8 +739,9 @@
                         :disabled="isColorInvalid || !selectedGame?.label || !startTime || !endTime || selectedDays.length === 0"
                         class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                         <Icon :name="editingSlot ? 'lucide:check' : 'lucide:save'" size="16" class="shrink-0" />
-                        <span class="text-xs sm:text-base shrink-0">{{ editingSlot ? 'Mettre à jour' : 'Enregistrer'
-                        }}</span>
+                        <span class="text-xs sm:text-base shrink-0">
+                            {{ editingSlot ? 'Mettre à jour' : 'Enregistrer' }}
+                        </span>
                     </button>
                 </div>
 

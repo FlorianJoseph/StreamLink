@@ -127,7 +127,7 @@
                                 class="flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/8 hover:border-white/20 transition-all w-full"
                                 @click="fontModal = true">
                                 <span class="text-sm" :style="{ fontFamily: currentFont }">
-                                    {{ currentFont ?? 'Inter' }}</span>
+                                    {{ currentFont ?? 'Plus Jakarta Sans' }}</span>
                                 <Icon name="lucide:chevron-right" size="16" class="text-muted" />
                             </button>
                         </div>
@@ -312,12 +312,12 @@
                     </div>
                     <div class="p-4 flex items-center justify-between gap-3">
                         <div class="flex flex-col gap-0.5">
-                            <span class="text-sm font-semibold text-white">Masquer le footer</span>
+                            <span class="text-sm font-semibold text-white">Masquer le logo</span>
                             <span class="text-xs text-muted">
                                 <template v-if="isSub">Inclus dans ton abonnement</template>
                                 <template v-else-if="hasFeature('no_branding')">
                                     {{ getExpiryLabel('no_branding') }}</template>
-                                <template v-else>Masque le footer Charmi sur ta page publique</template>
+                                <template v-else>Masque le logo Charmi sur ta page publique et ton planning</template>
                             </span>
                         </div>
 

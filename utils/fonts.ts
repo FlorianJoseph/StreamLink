@@ -8,7 +8,7 @@ export const FONTS = [
     { name: 'DM Serif Display', label: 'DM Serif Display', premium: true },
     { name: 'Exo 2', label: 'Exo 2', premium: true },
     { name: 'Fira Code', label: 'Fira Code', premium: true },
-    { name: 'Inter', label: 'Inter', premium: false },
+    { name: 'Plus Jakarta Sans', label: 'Plus Jakarta Sans', premium: false },
     { name: 'JetBrains Mono', label: 'JetBrains Mono', premium: true },
     { name: 'Josefin Sans', label: 'Josefin Sans', premium: true },
     { name: 'Kanit', label: 'Kanit', premium: false },

@@ -65,7 +65,7 @@
         </span>
       </div>
 
-      <span class="text-white/10">|</span>
+      <span class="text-white/10 hidden sm:inline">|</span>
       <span>
         <strong class="text-accent tabular-nums">
           <template v-if="!stats[1].loaded || stats[1].error">
@@ -74,7 +74,7 @@
           <template v-else>{{ animatedStats[1] }}+</template>
         </strong> liens partagés
       </span>
-      <span class="text-white/10">|</span>
+      <span class="text-white/10 hidden sm:inline">|</span>
       <span>
         <strong class="text-accent tabular-nums">
           <template v-if="!stats[2].loaded || stats[2].error">
@@ -83,7 +83,7 @@
           <template v-else>{{ animatedStats[2] }}+</template>
         </strong> streams planifiés
       </span>
-      <span class="text-white/10">|</span>
+      <span class="text-white/10 hidden sm:inline">|</span>
       <span>
         <strong class="text-accent tabular-nums">
           <template v-if="!raids">
@@ -92,7 +92,7 @@
           <template v-else>{{ animatedRaids[0] }}+</template>
         </strong> raids effectués
       </span>
-      <span class="text-white/10">|</span>
+      <span class="text-white/10 hidden sm:inline">|</span>
       <span>
         <strong class="text-accent tabular-nums">
           <template v-if="!pageViews">

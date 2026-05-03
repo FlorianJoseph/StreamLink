@@ -10,7 +10,7 @@
         <!-- Section Abonnement -->
         <section>
             <div class="flex items-center gap-2 mb-5">
-                <img src="/images/assets/charmi-monnaie-violet.svg" class="w-5 h-5" alt="" />
+                <img src="/images/mascotte/charmi-happy-violet.svg" class="w-5 h-5" alt="" />
                 <h2 class="text-xl font-bold text-white">Charmi+</h2>
             </div>
 
@@ -30,7 +30,7 @@
                     </div>
                     <div v-else-if="pack.popular"
                         class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs font-bold bg-accent text-dark hidden sm:block">
-                        Le choix des streamers
+                        Recommandé
                     </div>
 
                     <!-- Prix -->
@@ -54,7 +54,7 @@
                     <!-- CTA -->
                     <div class="flex flex-col gap-2 mt-auto">
                         <button @click="isSub ? openPortal() : openCheckout(pack.priceId, 'subscription')"
-                            class="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-md font-bold text-sm"
+                            class="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-md font-bold text-sm transition-colors"
                             :class="isSub
                                 ? 'bg-white/5 text-white border border-white/8 hover:bg-white/10'
                                 : 'bg-primary text-white hover:bg-primary/90'">
@@ -78,15 +78,14 @@
 
         <!-- Bandeau économie -->
         <div v-if="!isSub"
-            class="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-accent/10 border border-accent/20 text-xs sm:text-sm text-accent font-bold">
-            <Icon name="lucide:flame" size="16" class="shrink-0" />
-            L'abonnement Charmi+ te revient moins cher à partir de 2 fonctionnalités.
+            class="flex items-center px-4 py-3 rounded-xl bg-accent/10 border border-accent/20 text-xs sm:text-sm text-accent font-bold">
+            L'abonnement Charmi+ te revient moins cher à partir de 2 fonctionnalités
         </div>
 
         <!-- Section Features à la carte -->
         <section>
             <div class="flex items-center gap-2 mb-5">
-                <Icon name="lucide:sparkles" size="18" class="text-primary" />
+                <img src="/images/assets/charmi-monnaie-violet.svg" class="w-5 h-5" alt="" />
                 <h2 class="text-xl font-bold text-white">Débloque ce dont tu as besoin</h2>
             </div>
 
@@ -150,7 +149,7 @@
                 <img src="/images/assets/charmi-monnaie-jaune.svg" alt="Charm" class="w-5 h-5" />
                 <div class="flex flex-col gap-0.5">
                     <h2 class="text-xl font-bold text-white">Acheter des Charm</h2>
-                    <p class="text-muted text-xs">Pas encore prêt à t'abonner ? Commence par ici.</p>
+                    <p class="text-muted text-xs">Pas encore prêt à t'abonner ? Commence par ici</p>
                 </div>
                 <div class="flex items-center gap-1.5 ml-auto text-xs sm:text-sm text-muted">
                     <img src="/images/assets/charmi-monnaie-violet.svg" alt="" class="w-4 h-4" />
@@ -224,11 +223,11 @@
                     @click="confirmModal = false; openCheckout('sub', 'subscription')">
                     <img src="/images/mascotte/charmi-happy-violet.svg" alt="" class="w-8 h-8 shrink-0 opacity-80" />
                     <div class="flex flex-col gap-0.5 flex-1">
-                        <span class="text-xs font-semibold text-[#a89ff0]">Passe à Charmi+ et garde tes Charm</span>
-                        <p class="text-[11px] text-muted">
+                        <span class="text-sm font-semibold text-[#a89ff0]">Passe à Charmi+ pour tout débloquer</span>
+                        <p class="text-xs text-muted">
                             {{ upsellDiff
-                                ? `Sans limite, pour seulement ${upsellDiff}€ de plus`
-                                : 'Sans limite, pour seulement 7,99€/mois' }}
+                                ? `Accès illimité pour seulement ${upsellDiff}€ de plus`
+                                : 'Accès illimité pour seulement 7,99€/mois' }}
                         </p>
                     </div>
                     <Icon name="lucide:arrow-right" size="14" class="text-[#a89ff0] shrink-0" />

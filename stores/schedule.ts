@@ -23,7 +23,7 @@ export const useScheduleStore = defineStore('schedule', () => {
                 user_id: uid.value,
                 title: 'Mon planning de stream',
                 subtitle: getCurrentWeekSubtitle(),
-                style: { bgColor: '18181B', textColor: 'FFFFFF' }
+                style: { bgColor: '18181B', textColor: 'FFFFFF', fontFamily: 'Plus Jakarta Sans' },
             }
         ))
 
