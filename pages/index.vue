@@ -42,25 +42,64 @@
   <!-- SOCIAL PROOF -->
   <section class="bg-surface-darker border-y border-white/5 py-5">
     <div class="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-center gap-6 text-sm text-muted">
-      <span>
-        <strong class="text-accent tabular-nums">
-          <template v-if="!stats[0].loaded || stats[0].error">—</template>
-          <template v-else>{{ animatedStats[0] }}+</template>
-        </strong> streamers actifs
-      </span>
+
+      <!-- Avatars + streamers actifs -->
+      <div class="flex items-center gap-3">
+        <div class="flex -space-x-2">
+          <template v-if="recentStreamers.length">
+            <img v-for="s in recentStreamers" :key="s.username" :src="s.avatar_url" :alt="s.username"
+              class="w-7 h-7 rounded-full object-cover ring-2 ring-surface-darker" />
+          </template>
+          <template v-else>
+            <div v-for="i in 5" :key="i"
+              class="w-7 h-7 rounded-full bg-white/8 animate-pulse ring-2 ring-surface-darker" />
+          </template>
+        </div>
+        <span>
+          <strong class="text-accent tabular-nums">
+            <template v-if="!stats[0].loaded || stats[0].error">
+              <span class="inline-block w-8 h-3.5 rounded bg-white/8 animate-pulse align-middle" />
+            </template>
+            <template v-else>{{ animatedStats[0] }}+</template>
+          </strong> streamers actifs
+        </span>
+      </div>
+
       <span class="text-white/10">|</span>
       <span>
         <strong class="text-accent tabular-nums">
-          <template v-if="!stats[1].loaded || stats[1].error">—</template>
+          <template v-if="!stats[1].loaded || stats[1].error">
+            <span class="inline-block w-8 h-3.5 rounded bg-white/8 animate-pulse align-middle" />
+          </template>
           <template v-else>{{ animatedStats[1] }}+</template>
         </strong> liens partagés
       </span>
       <span class="text-white/10">|</span>
       <span>
         <strong class="text-accent tabular-nums">
-          <template v-if="!stats[2].loaded || stats[2].error">—</template>
+          <template v-if="!stats[2].loaded || stats[2].error">
+            <span class="inline-block w-8 h-3.5 rounded bg-white/8 animate-pulse align-middle" />
+          </template>
           <template v-else>{{ animatedStats[2] }}+</template>
         </strong> streams planifiés
+      </span>
+      <span class="text-white/10">|</span>
+      <span>
+        <strong class="text-accent tabular-nums">
+          <template v-if="!raids">
+            <span class="inline-block w-8 h-3.5 rounded bg-white/8 animate-pulse align-middle" />
+          </template>
+          <template v-else>{{ animatedRaids[0] }}+</template>
+        </strong> raids effectués
+      </span>
+      <span class="text-white/10">|</span>
+      <span>
+        <strong class="text-accent tabular-nums">
+          <template v-if="!pageViews">
+            <span class="inline-block w-8 h-3.5 rounded bg-white/8 animate-pulse align-middle" />
+          </template>
+          <template v-else>{{ animatedPageViews[0] }}+</template>
+        </strong> vues de pages
       </span>
     </div>
   </section>
@@ -91,8 +130,8 @@
             <Icon name="lucide:arrow-right" size="14" aria-hidden="true" />
           </NuxtLink>
         </div>
-        <div class="rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
-          <img src="/screenshots/page.png" alt="Page de liens Charmi" class="w-full object-cover" loading="eager"
+        <div class="rounded-xl overflow-hidden border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
+          <img src="/screenshots/page.webp" alt="Page de liens Charmi" class="w-full object-cover" loading="eager"
             decoding="async" />
         </div>
       </div>
@@ -120,8 +159,8 @@
           </NuxtLink>
         </div>
         <div
-          class="lg:order-1 rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
-          <img src="/screenshots/planning.png" alt="Planning de streams Charmi" class="w-full object-cover"
+          class="lg:order-1 rounded-xl overflow-hidden border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
+          <img src="/screenshots/planning.webp" alt="Planning de streams Charmi" class="w-full object-cover"
             loading="eager" decoding="async" />
         </div>
       </div>
@@ -149,9 +188,9 @@
             <Icon name="lucide:arrow-right" size="14" aria-hidden="true" />
           </NuxtLink>
         </div>
-        <div class="rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
-          <img src="/screenshots/decouverte.png" alt="Page Découverte Charmi" class="w-full object-cover" loading="eager"
-            decoding="async" />
+        <div class="rounded-xl overflow-hidden border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
+          <img src="/screenshots/decouverte.webp" alt="Page Découverte Charmi" class="w-full object-cover"
+            loading="eager" decoding="async" />
         </div>
       </div>
 
@@ -162,14 +201,16 @@
   <section class="relative overflow-hidden bg-primary px-6 md:px-12 lg:px-16 py-24">
     <img src="/images/assets/charmi-pattern-blanc.svg"
       class="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none select-none" aria-hidden="true"
-      loading="lazy" />
+      loading="eager" />
     <div
       class="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
       <div class="flex flex-col gap-3">
         <h2 class="text-white text-[clamp(1.75rem,3vw,2.5rem)] leading-tight">
-          Lance-toi.<br>
-          <span class="text-white/50 text-xl italic font-normal">Keep on streaming.</span>
+          Prêt à faire grandir<br>ta communauté ?
         </h2>
+        <p class="text-white/60 text-base max-w-md">
+          Rejoins les streamers qui utilisent Charmi pour se faire découvrir, raid et garder leur commu engagée.
+        </p>
       </div>
       <NuxtLink to="/admin/links"
         class="shrink-0 flex items-center gap-2 px-6 py-3 bg-white text-primary hover:bg-white/90 font-semibold rounded-full transition-colors duration-150 whitespace-nowrap
@@ -202,23 +243,28 @@ const stats = ref<StatItem[]>([
   { label: 'Streams planifiés', value: 0, loaded: false, error: false },
 ])
 
+const recentStreamers = ref<any[]>([])
+const raids = ref(0)
+const pageViews = ref(0)
 
 const reducedMotion = usePreferredReducedMotion()
 const animatedStats = ref([0, 0, 0])
+const animatedRaids = ref([0])
+const animatedPageViews = ref([0])
 
-function animateCountUp(targets: number[]) {
+function animateCountUp(targets: number[], animated: Ref<number[]>) {
   if (reducedMotion.value === 'reduce') {
-    animatedStats.value = [...targets]
+    animated.value = [...targets]
     return
   }
   const duration = 1200
   const start = performance.now()
-  const startValues = [...animatedStats.value]
+  const startValues = [...animated.value]
 
   function tick(now: number) {
     const progress = Math.min((now - start) / duration, 1)
     const eased = 1 - Math.pow(1 - progress, 3)
-    animatedStats.value = targets.map((target, i) =>
+    animated.value = targets.map((target, i) =>
       Math.round(startValues[i]! + (target - startValues[i]!) * eased)
     )
     if (progress < 1) requestAnimationFrame(tick)
@@ -227,13 +273,23 @@ function animateCountUp(targets: number[]) {
 }
 
 onMounted(async () => {
-  const results = await Promise.allSettled([
-    statsStore.fetchTotalStreamers(),
-    statsStore.fetchTotalLinks(),
-    statsStore.fetchTotalSlots(),
+  const [statsResults, recent, raidsData, pageViewsData] = await Promise.all([
+    Promise.allSettled([
+      statsStore.fetchTotalStreamers(),
+      statsStore.fetchTotalLinks(),
+      statsStore.fetchTotalSlots(),
+    ]),
+    $fetch<any[]>('/api/streamers/recent?limit=5').catch(() => []),
+    $fetch<{ count: number }>('/api/stats/raids-weekly').catch(() => ({ count: 0 })),
+    $fetch<{ count: number }>('/api/stats/page-views').catch(() => ({ count: 0 })),
   ])
+  console.log(raidsData)
 
-  results.forEach((result, i) => {
+  recentStreamers.value = recent
+  raids.value = raidsData.count
+  pageViews.value = pageViewsData.count
+
+  statsResults.forEach((result, i) => {
     if (result.status === 'fulfilled' && result.value.data != null) {
       stats.value[i]!.value = result.value.data
     } else {
@@ -242,7 +298,8 @@ onMounted(async () => {
     stats.value[i]!.loaded = true
   })
 
-  // Déclenche count-up sur les valeurs non-error
-  animateCountUp(stats.value.map(s => s.error ? 0 : s.value))
+  animateCountUp(stats.value.map(s => s.error ? 0 : s.value), animatedStats)
+  animateCountUp([raids.value], animatedRaids)
+  animateCountUp([pageViews.value], animatedPageViews)
 })
 </script>

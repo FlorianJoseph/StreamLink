@@ -113,15 +113,11 @@
                 </div>
 
                 <!-- Footer CTA -->
-                <div v-if="!noBranding" class="flex flex-col items-center gap-2 text-center">
-                    <p class="text-sm text-center font-semibold tracking-wide" :style="{ color: textColor + 'CC' }">
-                        Ton univers, en une page.
-                    </p>
-                    <div :class="['py-2.5 px-5 rounded-lg font-semibold tracking-wide transition-all shadow-md text-sm group cursor-pointer',
-                        isColorDark(buttonBackgroundColor) ? 'hover:brightness-110' : 'hover:brightness-90']"
-                        :style="{ backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000' }">
-                        Créer ma page comme
-                        <span class="font-extrabold group-hover:underline">{{ streamer?.username }}</span>
+                <div v-if="!noBranding" class="flex flex-col items-center gap-2 text-center mt-8">
+                    <div class="flex items-center gap-2 py-2.5 px-3.5 rounded-full font-semibold text-sm transition-all shadow-md"
+                        style="background: #6A5AE0; color: white;">
+                        <img src="/images/logo/charmi-favicon-blanc.svg" class="w-4 h-4" alt="" loading="eager" />
+                        Rejoins {{ streamer?.username }} sur Charmi
                     </div>
                 </div>
 

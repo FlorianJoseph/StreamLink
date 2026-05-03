@@ -197,7 +197,7 @@
                     <button
                         class="flex items-center hover:opacity-90 gap-2 py-3 px-4 rounded-full font-semibold transition-all shadow-md mt-8"
                         style="background: #6A5AE0; color: white;">
-                        <img src="/images/logo/charmi-favicon-blanc.svg" class="w-5 h-5" alt="" loading="eager"/>
+                        <img src="/images/logo/charmi-favicon-blanc.svg" class="w-5 h-5" alt="" loading="eager" />
                         Rejoins {{ user.username }} sur Charmi
                     </button>
                 </NuxtLink>
@@ -424,9 +424,9 @@ const groupedSlots = computed(() => {
         const rebase = (d: number) => d === 0 ? 7 : d
         const targetIndexRebased = rebase(targetIndex)
         const todayIndexRebased = rebase(todayIndex)
-        if (targetIndexRebased < todayIndexRebased) continue
 
-        const diff = targetIndexRebased - todayIndexRebased
+        let diff = targetIndexRebased - todayIndexRebased
+        if (diff < 0) diff += 7
         const targetDate = new Date(today)
         targetDate.setDate(today.getDate() + diff)
 
