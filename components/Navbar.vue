@@ -231,6 +231,7 @@ const popoverItems = ref([
         items: [
             { label: 'Statistiques', icon: 'lucide:chart-column', route: '/_secret-admin/dashboard', adminOnly: true },
             { label: 'Mails', icon: 'lucide:mail', route: '/_secret-admin/mails', adminOnly: true },
+            { label: 'Toasts', icon: 'lucide:bell', route: '/_secret-admin/toast', adminOnly: true },
             { label: 'Compte', icon: 'lucide:user', route: '/admin/account' },
             { label: 'Mes Charm', icon: 'lucide:wallet', route: '/admin/wallet' },
             { label: 'Déconnexion', icon: 'lucide:log-out', command: () => logOut() },
