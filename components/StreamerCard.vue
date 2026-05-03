@@ -85,12 +85,12 @@
 
                     <!-- CTA principal -->
                     <button v-if="isLive" @click="openPlayer(props.streamer)"
-                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-md bg-white hover:bg-white/90 text-[#1e1f22] font-bold text-sm">
+                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-md bg-white hover:bg-white/90 text-[#1e1f22] font-bold text-sm transition-colors">
                         <Icon name="lucide:play" size="20" class="flex-shrink-0 fill-[#1e1f22]" />
                         Regarder
                     </button>
                     <NuxtLink v-else :to="`/${streamer.username}`" target="_blank"
-                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-md bg-white hover:bg-white/90 text-[#1e1f22] font-bold text-sm no-underline">
+                        class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-md bg-white hover:bg-white/90 text-[#1e1f22] font-bold text-sm no-underline transition-colors">
                         <Icon name="lucide:user" size="20" class="flex-shrink-0" />
                         Voir le profil
                     </NuxtLink>
@@ -98,7 +98,7 @@
                     <!-- Profil (si live) -->
                     <NuxtLink v-if="isLive" :to="`/${streamer.username}`" target="_blank"
                         v-tooltip.top="{ value: 'Profil', pt: { text: '!text-xs' } }"
-                        class="w-10 h-10 flex items-center justify-center rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted hover:text-white no-underline">
+                        class="w-10 h-10 flex items-center justify-center rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted hover:text-white no-underline transition-colors">
                         <Icon name="lucide:user" size="20" />
                     </NuxtLink>
 
