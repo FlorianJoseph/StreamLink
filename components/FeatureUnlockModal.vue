@@ -71,12 +71,12 @@
                 <div class="flex gap-2">
                     <button v-if="selectedPrice && balance < selectedPrice.cost"
                         @click="visible = false; navigateTo('/shop')"
-                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors active:scale-[0.98]">
+                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors">
                         <img src="/images/assets/charmi-monnaie-blanc.svg" alt="" class="w-4 h-4" />
                         <span>Acheter des Charm</span>
                     </button>
                     <button v-else :disabled="!selectedPrice || spending" @click="handleSpend"
-                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
+                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                         <Icon name="lucide:unlock" size="16" />
                         <span>Débloquer</span>
                     </button>

@@ -9,7 +9,7 @@
         <!-- Actions -->
         <div class="flex items-center gap-2">
             <button @click="copyText"
-                class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors active:scale-[0.98]">
+                class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors">
                 <Icon :name="copied ? 'lucide:check' : 'lucide:copy'" size="16" class="shrink-0" />
                 {{ copied ? 'Copié !' : 'Copier le lien' }}
             </button>

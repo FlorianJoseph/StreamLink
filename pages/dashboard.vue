@@ -15,7 +15,7 @@
                     <p class="text-muted text-sm mt-0.5">
                         {{ streamMessage }}
                         <NuxtLink to="/discover" class="text-primary hover:underline">
-                            Découverte →
+                            page découverte →
                         </NuxtLink>
                     </p>
                 </div>

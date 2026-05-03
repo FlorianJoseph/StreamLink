@@ -1,67 +1,55 @@
 <template>
-    <Card class="w-full sm:max-w-md lg:max-w-2xl mx-auto">
-        <template #title>
-            <div class="py-2 pt-0 sm:py-4 sm:pt-8 lg:pt-4">
-                <div class="flex flex-col items-center sm:h-12 justify-end">
-                    <!-- Titre -->
-                    <h1 class="text-xl sm:text-3xl md:text-3xl font-bold text-center">
-                        Conditions d'utilisation
-                    </h1>
-                    <!-- Sous-titre -->
-                    <p class="text-xs sm:text-base text-center max-w-xl">
-                        Vous devez accepter les conditions d'utilisation pour continuer.
+    <div
+        class="w-full sm:max-w-md lg:max-w-2xl mx-auto flex flex-col gap-6 p-7 rounded-xl border border-white/8 bg-surface-darker">
+
+        <!-- Header -->
+        <div class="flex flex-col items-center gap-1 text-center">
+            <h1 class="font-heading text-2xl font-bold text-white">
+                Conditions d'utilisation
+            </h1>
+            <p class="text-sm text-muted">Tu dois accepter les conditions pour continuer</p>
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="flex flex-col gap-2">
+
+            <!-- CGU + Privacy (obligatoire) -->
+            <label class="flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors"
+                :class="privacy ? 'bg-primary/8 border border-primary/20' : 'border border-white/8 hover:bg-white/3'">
+                <Checkbox v-model="privacy" binary
+                    style="--p-checkbox-checked-background:#6A5AE0; --p-checkbox-checked-border-color:#6A5AE0; --p-checkbox-checked-hover-background:#5849c4; --p-checkbox-checked-hover-border-color:#5849c4;" />
+                <div class="flex flex-col gap-1">
+                    <p class="text-sm text-white leading-relaxed">
+                        J'ai lu et j'accepte les
+                        <NuxtLink to="/privacy" class="text-primary hover:underline">Conditions d'utilisation</NuxtLink>
+                        et la
+                        <NuxtLink to="/privacy" class="text-primary hover:underline">Politique de confidentialité
+                        </NuxtLink>
                     </p>
+                    <span class="text-xs text-muted">Obligatoire</span>
+                    <p v-if="error" class="text-xs text-red-400 mt-1">{{ error }}</p>
                 </div>
-            </div>
-        </template>
-        <template #content>
-            <div class="flex flex-col gap-6">
-                <div class="flex flex-col gap-3">
-                    <label
-                        class="flex items-start gap-3 w-full cursor-pointer hover:bg-gray-400/10 rounded-lg p-3 transition-all "
-                        :class="privacy && 'bg-gray-400/5 border-gray-300'">
-                        <Checkbox v-model="privacy" binary style="--p-checkbox-checked-background: #f0f0f0;
-           --p-checkbox-checked-border-color: #f0f0f0;
-           --p-checkbox-checked-hover-border-color: #f0f0f0;
-           --p-checkbox-checked-hover-background: #f0f0f0;" />
-                        <div class="flex-1 sm:text-sm text-xs">
-                            <p class="flex flex-wrap">
-                                J'ai lu et j'accepte les&nbsp;
-                                <NuxtLink to="/privacy" class="hover:underline text-blue-500">
-                                    Conditions d'utilisation
-                                </NuxtLink>
-                                <span>&nbsp;et la&nbsp;</span>
-                                <NuxtLink to="/privacy" class="hover:underline text-blue-500">
-                                    Politique de confidentialité
-                                </NuxtLink>.
-                            </p>
-                            <small class="text-gray-400">(Obligatoire)</small>
-                            <div v-if="error" class="text-red-500 text-sm mt-1">
-                                {{ error }}
-                            </div>
-                        </div>
-                    </label>
-                    <label
-                        class="flex items-start gap-3 w-full cursor-pointer hover:bg-gray-400/10 rounded-lg p-3 transition-all "
-                        :class="newsletter && 'bg-gray-400/5 border-gray-300'">
-                        <Checkbox v-model="newsletter" binary style="--p-checkbox-checked-background: #f0f0f0;
-           --p-checkbox-checked-border-color: #f0f0f0;
-           --p-checkbox-checked-hover-border-color: #f0f0f0;
-           --p-checkbox-checked-hover-background: #f0f0f0;" />
-                        <div class="flex-1 sm:text-sm text-xs">
-                            <p> Je souhaite recevoir les mises à jour importantes et nouveautés liées à StreamLink.</p>
-                            <small class="text-gray-400">(Facultatif, vous pouvez modifier à tout moment depuis votre
-                                profil de compte)</small>
-                        </div>
-                    </label>
+            </label>
+
+            <!-- Newsletter (optionnelle) -->
+            <label class="flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors"
+                :class="newsletter ? 'bg-primary/8 border border-primary/20' : 'border border-white/8 hover:bg-white/3'">
+                <Checkbox v-model="newsletter" binary
+                    style="--p-checkbox-checked-background:#6A5AE0; --p-checkbox-checked-border-color:#6A5AE0; --p-checkbox-checked-hover-background:#5849c4; --p-checkbox-checked-hover-border-color:#5849c4;" />
+                <div class="flex flex-col gap-1">
+                    <p class="text-sm text-white">Je veux recevoir les nouveautés et mises à jour de Charmi</p>
+                    <span class="text-xs text-muted">Facultatif, modifiable à tout moment depuis ton compte</span>
                 </div>
-                <Button severity="contrast" class="font-semibold w-full" @click="acceptTerms" :disabled="!privacy">
-                    <Icon name="lucide:check" size="20" />
-                    <span class="text-sm sm:text-base font-semibold">Accepter</span>
-                </Button>
-            </div>
-        </template>
-    </Card>
+            </label>
+        </div>
+
+        <!-- CTA -->
+        <button @click="acceptTerms" :disabled="!privacy"
+            class="flex items-center justify-center gap-2 w-full py-3 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            <Icon name="lucide:check" size="16" />
+            Accepter et continuer
+        </button>
+    </div>
 </template>
 
 <script setup>
