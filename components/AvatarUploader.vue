@@ -1,6 +1,6 @@
 <template>
     <!-- Avatar avec preview -->
-    <img :src="previewUrl || streamer?.avatar_url || defaultAvatar" alt="Avatar"
+    <img :src="previewUrl || avatarUrl(streamer?.avatar_url, 128) || defaultAvatar" alt="Avatar"
         class="w-16 h-16 rounded-full object-cover shrink-0 hover:cursor-pointer hover:opacity-75 transition-opacity"
         @click="openModal" />
 
@@ -52,6 +52,7 @@
 
 <script setup>
 import { Cropper, CircleStencil } from 'vue-advanced-cropper'
+import { avatarUrl } from '~/utils/avatar'
 
 const streamerStore = useStreamerStore()
 const { streamer } = storeToRefs(streamerStore)

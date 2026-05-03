@@ -27,7 +27,7 @@
                 <div class="relative flex-shrink-0">
                     <div class="avatar-ring"
                         :style="{ '--ring-color': isColorDark(wallpaperColor) ? buttonBackgroundColor + '88' : buttonBackgroundColor }">
-                        <img :src="user?.avatar_url || defaultAvatar" alt="Avatar"
+                        <img :src="avatarUrl(user?.avatar_url, 128) || defaultAvatar" alt="Avatar"
                             class="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover" />
                     </div>
                 </div>
@@ -239,7 +239,7 @@
                         escape: false,
                         pt: { text: '!text-xs' }
                     }">
-                    <img :src="s.avatar_url || defaultAvatar" :alt="s.username"
+                    <img :src="avatarUrl(s.avatar_url, 64) || defaultAvatar" :alt="s.username"
                         class="w-12 h-12 rounded-full object-cover border-2 transition-all duration-200 group-hover:scale-110"
                         :style="{ borderColor: textColor + '30', '--hover-color': textColor + '80' }" />
                     <span v-if="s.isLive"

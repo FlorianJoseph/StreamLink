@@ -8,7 +8,6 @@
 
     <div v-else class="flex flex-col fade-in">
         <!-- ─── Header sticky ─── -->
-        <!-- ─── Header sticky ─── -->
         <div
             class="sticky top-0 z-40 bg-[#18191c]/95 backdrop-blur border-b border-white/5 py-2 px-4 sm:px-6 flex flex-col gap-2">
 
@@ -310,8 +309,10 @@
                     <div class="flex flex-col px-4 sm:px-12">
                         <div class="flex items-center gap-3">
                             <Icon name="lucide:trophy" size="18" class="text-accent flex-shrink-0" />
-                            <h2 class="text-xl font-bold text-white truncate">Top Raiders
-                                <h2 class="hidden sm:inline">cette semaine</h2>
+                            <h2 class="text-xl font-bold text-white truncate">
+                                Top Raiders <span class="hidden sm:inline"
+                                    style="font-family: var(--font-heading); font-variation-settings: 'wght' 700">cette
+                                    semaine</span>
                             </h2>
                         </div>
                         <span class="hidden sm:flex text-xs text-muted items-center gap-1.5 mt-1 ml-0.5">

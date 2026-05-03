@@ -20,7 +20,7 @@
                     <div class="relative flex-shrink-0">
                         <div class="avatar-ring"
                             :style="{ '--ring-color': isColorDark(wallpaperColor) ? buttonBackgroundColor + '88' : buttonBackgroundColor }">
-                            <img :src="streamer?.avatar_url || defaultAvatar" alt="Avatar"
+                            <img :src="avatarUrl(streamer?.avatar_url, 128) || defaultAvatar" alt="Avatar"
                                 class="w-14 h-14 rounded-full object-cover" />
                         </div>
                     </div>
