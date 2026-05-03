@@ -34,7 +34,7 @@
 
                                 <!-- Bouton ajouter -->
                                 <button @click="openSlotModal('Lundi')"
-                                    class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-[#5849c4] text-white text-sm font-semibold transition-colors">
+                                    class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-[#5849c4] text-white text-sm sm:text-base font-medium transition-colors">
                                     <Icon name="lucide:plus" size="18" class="shrink-0" />
                                     Ajouter un créneau
                                 </button>
@@ -326,7 +326,7 @@
                             <!-- Aperçu -->
                             <button :disabled="isPreviewing"
                                 @click="mobileFormat ? previewScheduleMobile(currentFont, showBranding) : previewSchedule(currentFont, showBranding)"
-                                class="flex items-center gap-2 px-4 py-2 rounded-md border border-white/8 text-white/60 hover:text-white hover:border-white/20 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors">
+                                class="flex items-center gap-2 p-2 sm:px-4 sm:py-2 rounded-md border border-white/8 text-white/60 hover:text-white hover:border-white/20 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors">
                                 <Icon :name="isPreviewing ? 'lucide:loader-circle' : 'lucide:eye'" size="18"
                                     :class="isPreviewing ? 'animate-spin' : ''" />
                                 <span class="hidden sm:inline whitespace-nowrap">Aperçu</span>
@@ -335,7 +335,7 @@
                             <!-- Télécharger -->
                             <button :disabled="isExporting"
                                 @click="mobileFormat ? exportScheduleMobile(currentFont, showBranding) : exportSchedule(currentFont, showBranding)"
-                                class="flex items-center gap-2 px-4 py-2 rounded-md bg-primary hover:bg-[#5849c4] text-white disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors">
+                                class="flex items-center gap-2 px-4 py-2 rounded-md text-sm sm:text-base bg-primary hover:bg-[#5849c4] text-white disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors">
                                 <Icon :name="isExporting ? 'lucide:loader-circle' : 'lucide:download'" size="18"
                                     :class="isExporting ? 'animate-spin' : ''" />
                                 <span>Télécharger</span>

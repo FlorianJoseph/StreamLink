@@ -36,7 +36,7 @@
             <div class="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <p class="text-sm text-muted">Reçois les mises à jour importantes et nouveautés de Charmi.</p>
                 <button @click="newsletterStore.toggle"
-                    class="flex items-center gap-2 px-4 py-2 rounded-md border text-sm font-semibold transition-colors shrink-0"
+                    class="flex items-center justify-center gap-2 px-4 py-2 rounded-md border text-sm font-semibold transition-colors w-full sm:w-auto"
                     :class="newsletterStore.subscribed
                         ? 'border-white/8 text-muted hover:border-white/20 hover:text-white'
                         : 'bg-primary hover:bg-primary/80 text-white border-transparent'">
@@ -59,7 +59,7 @@
                         perdues.</span>
                 </div>
                 <button @click="confirmDelete()"
-                    class="flex items-center gap-2 px-4 py-2 rounded-md border border-red-500/30 hover:border-red-500/60 hover:bg-red-500/10 text-red-400 text-sm font-semibold transition-colors shrink-0">
+                    class="flex items-center justify-center gap-2 px-4 py-2 rounded-md border border-red-500/30 hover:border-red-500/60 hover:bg-red-500/10 text-red-400 text-sm font-semibold transition-colors w-full sm:w-auto">
                     <Icon name="lucide:trash-2" size="16" />
                     Supprimer le compte
                 </button>

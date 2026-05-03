@@ -8,7 +8,7 @@
 
         <!-- Solde -->
         <section class="rounded-xl border border-white/8 bg-surface-dark overflow-hidden">
-            <div class="p-4 flex items-center justify-between">
+            <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex flex-col gap-0.5">
                     <span class="text-xs text-muted">Solde actuel</span>
                     <div class="flex items-center gap-1.5">
@@ -19,7 +19,7 @@
                 </div>
                 <NuxtLink to="/shop">
                     <button
-                        class="flex items-center gap-2 px-4 py-2 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors">
+                        class="flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors w-full sm:w-auto">
                         <img src="/images/assets/charmi-monnaie-blanc.svg" alt="" class="w-4 h-4" />
                         Acheter des Charm
                     </button>

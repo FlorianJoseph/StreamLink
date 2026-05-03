@@ -12,7 +12,7 @@
                 <StreamLinkEdit />
             </div>
             <div class="hidden lg:block w-px bg-white/8 self-stretch" />
-            <div class="lg:hidden h-px bg-white/8" />
+            <div class="lg:hidden h-px bg-white/8 my-8" />
             <!-- Aperçu du streamlink -->
             <div class="sticky top-0 lg:self-start mx-auto">
                 <StreamLinkPreview />

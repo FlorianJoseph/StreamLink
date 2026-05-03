@@ -143,7 +143,7 @@
 
         <!-- Bouton Ajouter un lien -->
         <button @click="newlinkModal = true"
-            class="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white font-medium transition-colors">
+            class="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white font-medium text-sm sm:text-base transition-colors">
             <Icon name="lucide:plus" size="18" />
             Ajouter un lien
         </button>
