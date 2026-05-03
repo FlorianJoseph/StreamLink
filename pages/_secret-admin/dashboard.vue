@@ -1,13 +1,9 @@
 <template>
-    <div class="w-full space-y-8">
+    <div class="w-full flex flex-col gap-8 py-6">
 
-        <!-- HEADER / OVERVIEW -->
+        <!-- HEADER -->
         <div>
-            <h2 class="text-xl font-semibold text-gray-200 mb-4">
-                Vue d'ensemble - {{ currentDate }}
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <StatCard label="Health Score" :value="healthScore + '/100'" :trend="healthScore > 50 ? 'up' : 'down'"
                     :sub="healthScore > 50 ? 'Bon' : 'En dessous du seuil'" />
                 <StatCard label="Activation" :value="activationRate + '%'"
@@ -19,11 +15,8 @@
 
         <!-- ACQUISITION -->
         <div>
-            <h2 class="text-lg font-semibold text-gray-200 mb-4">
-                Acquisition
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <h2 class="text-sm font-bold text-muted uppercase tracking-wider mb-4">Acquisition</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <StatCard label="Utilisateurs" :value="totalStreamers"
                     :breakdown="{ d7: totalStreamers7D, d30: totalStreamers30D }" />
                 <StatCard label="Profils visibles" :value="totalStreamersVisible"
@@ -35,19 +28,14 @@
 
         <!-- FUNNEL -->
         <div>
-            <h2 class="text-lg font-semibold text-gray-200 mb-4">
-                Funnel d'activation
-            </h2>
+            <h2 class="text-sm font-bold text-muted uppercase tracking-wider mb-4">Funnel d'activation</h2>
             <Funnel :steps="funnelSteps" />
         </div>
 
         <!-- ENGAGEMENT -->
         <div>
-            <h2 class="text-lg font-semibold text-gray-200 mb-4">
-                Engagement
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <h2 class="text-sm font-bold text-muted uppercase tracking-wider mb-4">Engagement</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard label="Total Liens" :value="totalLinks" :breakdown="{ d7: totalLinks7D, d30: totalLinks30D }"
                     :trend="totalLinks7D > 0 ? 'up' : totalLinks7D < 0 ? 'down' : 'neutral'" />
                 <StatCard label="Total Streams" :value="totalSlots"
@@ -58,10 +46,10 @@
                     :note="`${totalStreamersWithSlot} streamers avec slot`" />
                 <StatCard label="Streamer avec lien qui crée un stream" :value="funnelIntegrity + '%'" />
                 <StatCard label="Newsletter avec profil visible" :value="newsletterConversion + '%'"
-                    :note="`${totalNewsletterNotVisible} streamers non visible`" />
+                    :note="`${totalNewsletterNotVisible} streamers non visibles`" />
                 <StatCard label="Vues de pages" :value="totalPageEvents"
                     :breakdown="{ d7: totalPageEvents7D, d30: totalPageEvents30D }" />
-                <StatCard label="Moyenne de vues par page" :value="viewerToStreamerRatio"/>
+                <StatCard label="Moyenne de vues par page" :value="viewerToStreamerRatio" />
             </div>
         </div>
 

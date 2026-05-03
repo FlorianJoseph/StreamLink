@@ -1,22 +1,26 @@
 <template>
-    <div class="rounded-2xl p-6 border-2 border-zinc-700">
-        <h3 class="font-semibold text-sm uppercase tracking-wider text-gray-400 mb-6">
+    <div class="rounded-xl p-5 border border-white/8 bg-surface-dark">
+        <h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-5">
             Activation Funnel
         </h3>
 
-        <div class="space-y-6">
-            <div v-for="(step, index) in steps" :key="step.label" class="relative">
-                <div class="flex items-center justify-between">
-                    <span class="text-gray-300 font-medium">{{ step.label }}</span>
-                    <span class="text-gray-300 font-semibold">{{ step.value }}</span>
+        <div class="flex flex-col gap-5">
+            <div v-for="(step, index) in steps" :key="step.label">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-white font-medium">{{ step.label }}</span>
+                    <span class="text-sm text-white font-bold">{{ step.value }}</span>
                 </div>
 
-                <div class="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div class="h-2 rounded-full transition-all duration-500"
-                        :style="{ width: step.percentage + '%', background: step.highlight ? 'linear-gradient(to right, #10b981, #059669)' : 'linear-gradient(to right, #8b5cf6, #a78bfa)' }" />
+                <div class="h-1.5 bg-white/8 rounded-full overflow-hidden">
+                    <div class="h-1.5 rounded-full transition-all duration-500" :style="{
+                        width: step.percentage + '%',
+                        background: step.highlight
+                            ? 'linear-gradient(to right, #10b981, #059669)'
+                            : 'linear-gradient(to right, #6A5AE0, #a89ff0)'
+                    }" />
                 </div>
 
-                <p v-if="index > 0" class="text-xs text-gray-400 mt-1">
+                <p v-if="index > 0" class="text-xs text-muted mt-1">
                     {{ step.percentage }}% conversion
                 </p>
             </div>

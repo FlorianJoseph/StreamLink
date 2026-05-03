@@ -8,7 +8,7 @@
             <!-- Logo + headline -->
             <div class="flex flex-col items-center gap-4 text-center">
                 <div class="flex flex-col gap-1">
-                    <h1 class="font-heading text-2xl font-bold text-white" style="font-variation-settings: 'wght' 900">
+                    <h1 class="font-heading text-2xl font-bold text-white">
                         Bienvenue sur Charmi
                     </h1>
                     <p class="text-sm text-muted">Connecte-toi avec Twitch pour commencer</p>

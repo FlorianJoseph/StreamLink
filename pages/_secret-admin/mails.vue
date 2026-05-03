@@ -1,42 +1,35 @@
 <template>
-    <div class="w-full space-y-8">
+    <div class="w-full flex flex-col gap-8 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <!-- Header -->
-        <div class="border-b pb-4">
-            <h1 class="text-2xl font-bold tracking-tight">Newsletter</h1>
-            <p class="text-sm text-zinc-500 mt-0.5">Envoi segmenté vers vos utilisateurs</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            <!-- Colonne gauche — Calendrier -->
-            <div class="rounded-xl border overflow-hidden self-start">
-                <!-- Cal header -->
-                <div class="flex items-center justify-between px-4 py-3 border-b bg-zinc-50 dark:bg-zinc-900">
+            <!-- Calendrier -->
+            <div class="rounded-xl border border-white/8 bg-surface-dark overflow-hidden self-start">
+                <!-- Header cal -->
+                <div class="flex items-center justify-between px-4 py-3 border-b border-white/8">
                     <button @click="prevMonth"
-                        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-zinc-500">
-                        <Icon name="lucide:chevron-left" size="24" />
+                        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white/8 text-muted hover:text-white transition-colors">
+                        <Icon name="lucide:chevron-left" size="18" />
                     </button>
-                    <span class="text-xs font-semibold uppercase tracking-widest text-zinc-400 capitalize">
+                    <span class="text-xs font-bold uppercase tracking-widest text-muted capitalize">
                         {{ monthLabel }}
                     </span>
                     <button @click="nextMonth"
-                        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-zinc-500">
-                        <Icon name="lucide:chevron-right" size="24" />
+                        class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-white/8 text-muted hover:text-white transition-colors">
+                        <Icon name="lucide:chevron-right" size="20" />
                     </button>
                 </div>
 
-                <!-- Légende + counts -->
-                <div class="flex items-center gap-1 px-4 py-2.5 border-b flex-wrap">
+                <!-- Segments -->
+                <div class="flex items-center gap-1 px-4 py-2.5 border-b border-white/8 flex-wrap">
                     <button v-for="seg in segmentsMeta" :key="seg.value"
                         @click="selectedSegment = selectedSegment === seg.value ? null : seg.value"
-                        class="flex items-center gap-1.5 rounded-lg px-2 py-1 transition-colors text-xs font-medium"
+                        class="flex items-center gap-1.5 rounded-full px-2 py-1 transition-colors text-xs font-medium"
                         :class="selectedSegment === seg.value
-                            ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100'
-                            : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'">
-                        <span class="w-2 h-2 rounded-full flex-shrink-0" :style="{ background: seg.color }"></span>
+                            ? 'bg-white/8 text-white'
+                            : 'text-muted hover:text-white'">
+                        <span class="w-2 h-2 rounded-full shrink-0" :style="{ background: seg.color }" />
                         {{ seg.label }}
-                        <span v-if="segmentCounts[seg.value] !== undefined" class="font-mono font-semibold tabular-nums"
+                        <span v-if="segmentCounts[seg.value] !== undefined" class="font-mono font-bold tabular-nums"
                             :style="{ color: seg.color }">
                             {{ segmentCounts[seg.value] }}
                         </span>
@@ -49,28 +42,28 @@
                 <div class="p-3">
                     <div class="grid grid-cols-7 mb-1">
                         <div v-for="d in dayNames" :key="d"
-                            class="text-center text-[10px] font-semibold uppercase tracking-widest text-zinc-400 pb-2">
+                            class="text-center text-[10px] font-bold uppercase tracking-widest text-muted pb-2">
                             {{ d }}
                         </div>
                     </div>
                     <div class="grid grid-cols-7 gap-1">
-                        <div v-for="n in firstDayOffset" :key="'e' + n"></div>
+                        <div v-for="n in firstDayOffset" :key="'e' + n" />
                         <div v-for="day in daysInMonth" :key="day"
                             class="rounded-lg flex flex-col items-start p-1 min-h-[48px] transition-colors" :class="{
                                 'opacity-40': isPast(day),
-                                'bg-zinc-50 dark:bg-zinc-900': isWeekend(day),
-                                'ring-1 ring-zinc-900 dark:ring-white ring-inset': isToday(day),
+                                'bg-white/3': isWeekend(day),
+                                'ring-1 ring-white/20 ring-inset': isToday(day),
                             }">
                             <span
                                 class="text-[11px] font-medium leading-none mb-1 w-5 h-5 flex items-center justify-center rounded"
                                 :class="isToday(day)
-                                    ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-semibold'
-                                    : 'text-zinc-500 dark:text-zinc-400'">
+                                    ? 'bg-primary text-white font-bold'
+                                    : 'text-muted'">
                                 {{ day }}
                             </span>
                             <div class="flex flex-col gap-0.5 w-full">
                                 <span v-for="seg in getDaySends(day)" :key="seg.value"
-                                    class="text-[9px] font-semibold text-white rounded px-1 leading-[14px] truncate"
+                                    class="text-[9px] font-bold text-white rounded px-1 leading-[14px] truncate"
                                     :style="{ background: seg.color }"
                                     :class="{ 'opacity-25': selectedSegment && seg.value !== selectedSegment }">
                                     {{ seg.shortLabel }}
@@ -81,62 +74,45 @@
                 </div>
 
                 <!-- Prochain envoi -->
-                <div v-if="nextSend" class="px-4 py-2.5 border-t flex items-center justify-between"
-                    :class="nextSend.isToday ? 'bg-green-950' : 'bg-zinc-900'">
+                <div v-if="nextSend" class="px-4 py-2.5 border-t border-white/8 flex items-center justify-between"
+                    :class="nextSend.isToday ? 'bg-emerald-500/10' : 'bg-surface-darker'">
                     <p class="text-xs flex items-center gap-1.5 font-medium"
-                        :class="nextSend.isToday ? 'text-green-400' : 'text-zinc-400'">
+                        :class="nextSend.isToday ? 'text-emerald-400' : 'text-muted'">
                         <Icon :name="nextSend.isToday ? 'lucide:zap' : 'lucide:clock'" size="12" class="shrink-0" />
                         {{ nextSend.label }}
                     </p>
-                    <Button @click="sendEmails" severity="contrast" :disabled="!selectedSegment || sending"
-                        :loading="sending" size="small">
-                        <Icon name="lucide:send" size="16" />
+                    <button @click="sendEmails" :disabled="!selectedSegment || sending"
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary hover:bg-primary/80 text-white text-xs font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                        <Icon v-if="sending" name="lucide:loader-circle" size="14" class="animate-spin" />
+                        <Icon v-else name="lucide:send" size="14" />
                         Envoyer {{ selectedSegment ? segmentCounts[selectedSegment] : 0 }} emails
-                    </Button>
+                    </button>
                 </div>
             </div>
 
+            <!-- Historique -->
+            <div v-if="emailsLoading" class="flex items-center gap-2 text-sm text-muted py-4">
+                <Icon name="lucide:loader-2" size="16" class="animate-spin" />
+                Chargement…
+            </div>
 
-            <!-- Colonne droite : Historique -->
-            <div class="space-y-3">
-                <h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-400">Historique</h2>
-
-                <div v-if="emailsLoading" class="flex items-center gap-2 text-sm text-zinc-400 py-4">
-                    <Icon name="lucide:loader-2" size="16" class="animate-spin" />
-                    Chargement…
+            <div v-else class="rounded-xl border border-white/8 bg-surface-dark overflow-hidden">
+                <div class="divide-y divide-white/5">
+                    <div v-for="mail in emails" :key="mail.id"
+                        class="flex items-center gap-3 px-4 py-3 hover:bg-white/3 transition-colors">
+                        <span class="w-1.5 h-1.5 rounded-full shrink-0" :class="mail.last_event === 'delivered' ? 'bg-emerald-500' :
+                            mail.last_event === 'bounced' ? 'bg-red-500' : 'bg-white/20'" />
+                        <span class="text-xs text-muted font-mono w-50 shrink-0">{{ mail.to[0] }}</span>
+                        <span class="text-sm text-white font-medium truncate flex-1">{{ mail.subject }}</span>
+                        <span class="text-xs text-muted shrink-0">{{ timeAgo(mail.created_at) }}</span>
+                    </div>
                 </div>
 
-                <!-- Liste des emails -->
-                <div v-else class="rounded-xl border overflow-hidden">
-                    <div class="divide-y">
-                        <div v-for="mail in emails" :key="mail.id"
-                            class="flex items-center gap-3 px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors">
-                            <!-- Statut -->
-                            <span :class="[
-                                'w-1.5 h-1.5 rounded-full flex-shrink-0',
-                                mail.last_event === 'delivered' ? 'bg-green-500' :
-                                    mail.last_event === 'bounced' ? 'bg-red-500' :
-                                        'bg-zinc-300'
-                            ]" />
-                            <!-- To -->
-                            <span class="text-xs text-zinc-400 font-mono w-50 flex-shrink-0">
-                                {{ mail.to[0] }}
-                            </span>
-                            <!-- Subject -->
-                            <span class="text-sm font-medium truncate flex-1">{{ mail.subject }}</span>
-                            <!-- Date -->
-                            <span class="text-xs text-zinc-400 flex-shrink-0">
-                                {{ timeAgo(mail.created_at) }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div v-if="hasMore" class="border-t px-4 py-2.5">
-                        <button @click="loadEmails"
-                            class="text-xs text-zinc-400 hover:text-zinc-600 transition-colors font-medium">
-                            Charger plus
-                        </button>
-                    </div>
+                <div v-if="hasMore" class="border-t border-white/8 px-4 py-2.5">
+                    <button @click="loadEmails"
+                        class="text-xs text-muted hover:text-white transition-colors font-medium">
+                        Charger plus
+                    </button>
                 </div>
             </div>
         </div>
