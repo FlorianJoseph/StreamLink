@@ -70,12 +70,19 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'Charmi',
-      titleTemplate: 'Charmi',
+      titleTemplate: '%s | Charmi',
       meta: [
-        { name: 'description', content: 'La plateforme des streamers Twitch. Centralise tes liens, ton planning et ta visibilité.' },
+        { name: 'description', content: 'Le compagnon des streamers Twitch. Centralise tes liens, ton planning et ta visibilité.' },
         { property: 'og:title', content: 'Charmi' },
-        { property: 'og:description', content: 'La plateforme des streamers Twitch.' },
-        { property: 'og:image', content: '/images/logo/charmi-full-violet.png' },
+        { property: 'og:description', content: 'Le compagnon des streamers Twitch.' },
+        { property: 'og:image', content: 'https://charmi.gg/images/logo/charmi-full-violet.png' },
+        { property: 'og:url', content: 'https://charmi.gg' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'Charmi' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'Charmi' },
+        { name: 'twitter:description', content: 'Le compagnon des streamers Twitch.' },
+        { name: 'twitter:image', content: 'https://charmi.gg/images/logo/charmi-full-violet.png' },
         { name: 'theme-color', content: '#6A5AE0' },
       ],
       link: [
