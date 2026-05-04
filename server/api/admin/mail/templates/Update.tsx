@@ -16,7 +16,7 @@ import {
     Tailwind,
 } from "@react-email/components";
 
-const baseUrl = "https://stream-link.fr";
+const baseUrl = "https://charmi.gg";
 
 interface Feature {
     title: string;
@@ -219,10 +219,10 @@ export const UpdateEmail = ({
                     {/* Footer */}
                     <Section className="px-8 py-6 text-center" style={{ backgroundColor: "#121212" }}>
                         <Text className="text-zinc-600 text-xs m-0 mb-2">
-                            StreamLink · stream-link.fr
+                            Charmi · charmi.gg
                         </Text>
                         <Text className="text-zinc-600 text-xs m-0">
-                            Tu reçois cet email car tu as activé les notifications sur StreamLink.{" "}
+                            Tu reçois cet email car tu as activé les notifications sur Charmi.{" "}
                             <Link href={`${baseUrl}/admin/account`} className="text-zinc-500 underline">
                                 Désactiver
                             </Link>
