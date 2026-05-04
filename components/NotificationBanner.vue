@@ -1,44 +1,39 @@
 <template>
-    <div v-if="visible" class="relative bg-indigo-600 w-full z-50 lg:mb-[-20px]">
-        <div class="bg-surface-900 text-surface-100 py-3 sm:py-4 px-4 sm:px-6 lg:px-20">
+    <div v-if="visible" class="relative w-full z-50 bg-primary">
+        <div class="py-3 px-4 sm:px-6 lg:px-20">
             <div class="flex items-center justify-between gap-3 sm:gap-4">
-                <!-- Badge Nouveauté -->
-                <div class="flex items-center gap-1.5 flex-shrink-0">
-                    <Icon name="lucide:star" size="16" class="sm:w-[18px] sm:h-[18px] text-yellow-300" />
-                    <span class="font-bold text-xs sm:text-sm lg:text-base">Nouveauté</span>
+
+                <!-- Badge -->
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <img src="/images/logo/charmi-favicon-blanc.svg" class="w-5 h-5" alt="" loading="eager" />
+                    <span class="font-bold text-xs sm:text-sm text-white">Nouveauté</span>
                 </div>
 
-                <!-- Message central -->
-                <div>
-                    <p class="text-xs sm:text-sm lg:text-base leading-relaxed">
-                        <!-- Mobile -->
-                        <span class="lg:hidden flex flex-col gap-1">
-                            <NuxtLink :to="destination" class="font-bold underline hover:text-indigo-200">
-                                La page Découverte est repensée : trouve des streamers compatibles et gagne des Coins en
-                                les raidant
+                <!-- Message -->
+                <div class="flex flex-1 min-w-0 justify-start sm:justify-center">
+                    <p class="text-xs sm:text-base text-white/90 leading-relaxed">
+                        <span class="lg:hidden">
+                            <NuxtLink :to="destination" class="font-bold underline hover:text-white">
+                                StreamLink devient Charmi ! Nouveau nom, nouveau design, même communauté
                             </NuxtLink>
                         </span>
-
-                        <!-- Desktop -->
                         <span class="hidden lg:inline">
-                            La page Découverte est repensée : trouve des streamers compatibles et gagne des Coins en les
-                            raidant
+                            StreamLink devient Charmi ! Nouveau nom, nouveau design, même communauté
                         </span>
                     </p>
                 </div>
 
                 <!-- Actions -->
-                <div class="flex items-center gap-2 flex-shrink-0">
+                <div class="flex items-center gap-2 shrink-0">
                     <NuxtLink :to="destination"
-                        class="hidden sm:flex bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm lg:text-base whitespace-nowrap">
-                        <div class="flex items-center gap-2">
-                            <Icon name="lucide:coins" size="18" />
-                            Gagner des Coins
-                        </div>
+                        class="hidden sm:flex items-center gap-2 bg-white text-primary font-semibold px-4 py-1.5 rounded-md hover:bg-white/90 transition-colors whitespace-nowrap">
+                        <img src="/images/mascotte/charmi-happy-violet.svg" class="w-5 h-5" alt="" loading="eager" />
+                        Découvrir Charmi
                     </NuxtLink>
-                    <Button @click="closeBanner" rounded severity="contrast" variant="text" class="flex-shrink-0">
-                        <Icon name="lucide:x" size="18" class="sm:w-5 sm:h-5" />
-                    </Button>
+                    <button @click="closeBanner"
+                        class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 text-white transition-colors">
+                        <Icon name="lucide:x" size="16" />
+                    </button>
                 </div>
             </div>
         </div>
@@ -48,7 +43,7 @@
 <script setup>
 // const streamerStore = useStreamerStore()
 // const { streamer } = storeToRefs(streamerStore)
-const destination = ref('/discover')
+const destination = ref('/')
 
 // watchEffect(() => {
 //     if (streamer.value?.username) {
@@ -58,7 +53,7 @@ const destination = ref('/discover')
 
 const user = useSupabaseUser()
 
-const STORAGE_KEY = 'discoverv3'
+const STORAGE_KEY = 'branding'
 const visible = ref(false)
 
 const closeBanner = () => {
