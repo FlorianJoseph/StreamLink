@@ -1,46 +1,39 @@
 <template>
-    <div class="border-2 border-zinc-700 rounded-2xl p-6">
-        <p class="font-semibold text-xs uppercase tracking-wider text-gray-400">
+    <div class="border border-white/8 rounded-xl p-4 bg-surface-dark">
+        <p class="text-xs font-bold text-muted uppercase tracking-wider">
             {{ label }}
         </p>
 
-        <p class="mt-2 text-3xl font-semibold text-purple-500">
+        <p class="mt-2 text-3xl font-bold text-primary">
             {{ value }}
         </p>
 
-        <!-- Mode breakdown : 7j / 30j / ratio -->
-        <div v-if="breakdown" class="mt-3 space-y-1.5">
+        <!-- Breakdown 7j / 30j -->
+        <div v-if="breakdown" class="mt-3 flex flex-col gap-1.5">
             <div class="flex items-center justify-between">
-                <span class="text-xs text-gray-500">7 jours</span>
-                <span class="text-xs font-medium text-gray-300">{{ fmt(breakdown.d7) }}</span>
+                <span class="text-xs text-muted">7 jours</span>
+                <span class="text-xs font-semibold text-white">{{ fmt(breakdown.d7) }}</span>
             </div>
             <div class="flex items-center justify-between">
-                <span class="text-xs text-gray-500">30 jours</span>
-                <span class="text-xs font-medium text-gray-300">{{ fmt(breakdown.d30) }}</span>
+                <span class="text-xs text-muted">30 jours</span>
+                <span class="text-xs font-semibold text-white">{{ fmt(breakdown.d30) }}</span>
             </div>
-            <div class="mt-2 pt-2 border-t border-zinc-700 flex items-center justify-between">
-                <span class="text-xs text-gray-500">7j / 30j</span>
-                <span class="text-xs font-semibold" :class="ratioColor">
-                    {{ ratio }}%
-                </span>
+            <div class="pt-2 mt-1 border-t border-white/8 flex items-center justify-between">
+                <span class="text-xs text-muted">7j / 30j</span>
+                <span class="text-xs font-bold" :class="ratioColor">{{ ratio }}%</span>
             </div>
         </div>
 
-        <div v-else-if="note" class="mt-2 text-xs text-gray-500">
+        <!-- Note -->
+        <div v-else-if="note" class="mt-2 text-xs text-muted">
             {{ note }}
         </div>
 
-        <!-- Mode sub classique -->
-        <div v-else-if="sub" class="mt-1 flex items-center gap-1 text-sm font-medium" :class="subColorClass">
-            <span v-if="trend === 'up'">
-                <Icon name="lucide:move-up-right" />
-            </span>
-            <span v-else-if="trend === 'down'">
-                <Icon name="lucide:move-down-right" />
-            </span>
-            <span v-else-if="trend === 'neutral'">
-                <Icon name="lucide:minus" />
-            </span>
+        <!-- Sub + trend -->
+        <div v-else-if="sub" class="mt-1.5 flex items-center gap-1 text-sm font-semibold" :class="subColorClass">
+            <Icon v-if="trend === 'up'" name="lucide:move-up-right" size="15" />
+            <Icon v-else-if="trend === 'down'" name="lucide:move-down-right" size="15" />
+            <Icon v-else-if="trend === 'neutral'" name="lucide:minus" size="15" />
             <span>{{ sub }}</span>
         </div>
     </div>

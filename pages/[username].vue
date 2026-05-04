@@ -27,7 +27,7 @@
                 <div class="relative flex-shrink-0">
                     <div class="avatar-ring"
                         :style="{ '--ring-color': isColorDark(wallpaperColor) ? buttonBackgroundColor + '88' : buttonBackgroundColor }">
-                        <img :src="user?.avatar_url || defaultAvatar" alt="Avatar"
+                        <img :src="avatarUrl(user?.avatar_url, 128) || defaultAvatar" alt="Avatar"
                             class="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover" />
                     </div>
                 </div>
@@ -192,17 +192,13 @@
             </div>
 
             <!-- Footer CTA -->
-            <div v-if="!noBranding" class="flex flex-col items-center gap-2">
-                <p class="text-sm sm:text-base text-center font-semibold tracking-wide"
-                    :style="{ color: textColor + 'CC' }">
-                    Ton univers, en une page.
-                </p>
-                <NuxtLink :to="'/admin/links'">
-                    <button :class="['py-2.5 px-5 rounded-lg font-semibold tracking-wide transition-all shadow-md text-sm sm:text-base group',
-                        isColorDark(buttonBackgroundColor) ? 'hover:brightness-110' : 'hover:brightness-90']"
-                        :style="{ backgroundColor: buttonBackgroundColor, color: isColorDark(buttonBackgroundColor) ? '#fff' : '#000' }">
-                        Créer ma page comme
-                        <span class="font-extrabold group-hover:underline">{{ user.username }}</span>
+            <div v-if="!noBranding">
+                <NuxtLink to="/admin/links">
+                    <button
+                        class="flex items-center hover:opacity-90 text-sm sm:text-base gap-2 py-3 px-4 rounded-full font-semibold transition-all shadow-md mt-8"
+                        style="background: #6A5AE0; color: white;">
+                        <img src="/images/logo/charmi-favicon-blanc.svg" class="w-5 h-5" alt="" loading="eager" />
+                        Rejoins {{ user.username }} sur Charmi
                     </button>
                 </NuxtLink>
             </div>
@@ -232,14 +228,14 @@
                             : s.nextSlot?.isToday
                                 ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>Auj. à ${s.nextSlot.start_at?.slice(0, 5).replace(':', 'h')} · ${s.nextSlot.game?.label ?? ''}</span>`
                                 : s.nextSlot?.isTomorrow
-    ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>Demain à ${s.nextSlot.start_at?.slice(0, 5).replace(':', 'h')} · ${s.nextSlot.game?.label ?? ''}</span>`
+                                    ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>Demain à ${s.nextSlot.start_at?.slice(0, 5).replace(':', 'h')} · ${s.nextSlot.game?.label ?? ''}</span>`
                                     : s.nextSlot
                                         ? `<span class='font-semibold'>${s.username}</span><br><span class='opacity-70'>${s.nextSlot.day?.slice(0, 3)} à ${s.nextSlot.start_at?.slice(0, 5).replace(':', 'h')} · ${s.nextSlot.game?.label ?? ''}</span>`
                                         : `<span class='font-semibold'>${s.username}</span>`,
                         escape: false,
                         pt: { text: '!text-xs' }
                     }">
-                    <img :src="s.avatar_url || defaultAvatar" :alt="s.username"
+                    <img :src="avatarUrl(s.avatar_url, 64) || defaultAvatar" :alt="s.username"
                         class="w-12 h-12 rounded-full object-cover border-2 transition-all duration-200 group-hover:scale-110"
                         :style="{ borderColor: textColor + '30', '--hover-color': textColor + '80' }" />
                     <span v-if="s.isLive"
@@ -256,26 +252,19 @@
 
     <!-- Page d’erreur si le user n’existe pas -->
     <template v-else>
-        <div class="flex flex-col items-center text-center gap-6">
-            <!-- Icône pour illustrer l'erreur -->
-            <Icon name="lucide:info" size="48" />
-
-            <!-- Message principal -->
-            <h2 class="text-2xl font-bold">La page que vous cherchez n'existe pas</h2>
-
-            <!-- Message secondaire -->
-            <p class="text-gray-500 max-w-md">
-                Cette page n'existe pas encore. Créez votre page maintenant et commencez à partager vos liens
-                facilement
-                !
-            </p>
-
-            <!-- Bouton CTA -->
-            <NuxtLink :to="'/admin/links'">
+        <div class="flex flex-col items-center text-center gap-6 py-20 px-6">
+            <img src="/images/mascotte/charmi-confused-violet.svg" alt="" class="w-20 h-20 opacity-80" />
+            <div class="flex flex-col gap-2">
+                <h2 class="font-heading text-2xl font-bold text-white">Cette page n'existe pas</h2>
+                <p class="text-muted text-sm max-w-sm">
+                    Ce streamer n'a pas encore créé sa page Charmi. Crée la tienne et partage tes liens facilement !
+                </p>
+            </div>
+            <NuxtLink to="/admin/links">
                 <button
-                    class="py-2.5 px-5 rounded-lg font-semibold tracking-wide transition-all shadow-md text-sm sm:text-base group hover:brightness-90 bg-white text-black flex items-center gap-2">
-                    <Icon name="lucide:plus" size="20" />
-                    Créer ma page<span class="font-extrabold group-hover:underline">StreamLink</span>
+                    class="flex items-center gap-2 py-2.5 px-5 rounded-md bg-primary hover:bg-primary/80 text-white font-semibold text-sm transition-colors">
+                    <Icon name="lucide:plus" size="16" />
+                    Créer ma page Charmi
                 </button>
             </NuxtLink>
         </div>
@@ -435,9 +424,9 @@ const groupedSlots = computed(() => {
         const rebase = (d: number) => d === 0 ? 7 : d
         const targetIndexRebased = rebase(targetIndex)
         const todayIndexRebased = rebase(todayIndex)
-        if (targetIndexRebased < todayIndexRebased) continue
 
-        const diff = targetIndexRebased - todayIndexRebased
+        let diff = targetIndexRebased - todayIndexRebased
+        if (diff < 0) diff += 7
         const targetDate = new Date(today)
         targetDate.setDate(today.getDate() + diff)
 

@@ -1,65 +1,92 @@
 <template>
-    <Dialog v-model:visible="visible" modal dismissableMask :header="feature?.label"
-        :style="{ width: '25rem', margin: '1rem' }" :draggable="false">
-        <div class="flex flex-col gap-4">
-            <p class="text-sm text-zinc-400">{{ feature?.description }}</p>
-            <div class="flex flex-col gap-2">
-                <div v-for="price in prices" :key="price.id"
-                    class="flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all"
-                    :class="selectedPrice?.id === price.id ? 'border-white bg-white/10' : 'border-zinc-700 hover:border-zinc-500'"
-                    @click="selectedPrice = price">
-                    <span class="text-sm font-medium text-gray-300">{{ price.label }}</span>
-                    <div class="flex items-center gap-1">
-                        <Icon name="lucide:coins" size="14" class="text-amber-400 shrink-0" />
-                        <span class="text-sm font-bold text-amber-400">{{ price.cost }}</span>
+    <Dialog v-model:visible="visible" dismissableMask modal :draggable="false"
+        :style="{ width: '25rem', margin: '1rem' }"
+        :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
+        <template #container>
+            <div class="flex flex-col gap-5 p-5 rounded-xl border border-white/8 bg-dark">
+
+                <!-- Header -->
+                <div class="flex items-center justify-between">
+                    <h2 class="font-heading text-xl font-bold text-white">{{ feature?.label }}</h2>
+                    <button @click="visible = false"
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
+                        <Icon name="lucide:x" size="22" />
+                    </button>
+                </div>
+
+                <!-- Description -->
+                <p class="text-sm text-muted">{{ feature?.description }}</p>
+
+                <!-- Upsell Charmi+ -->
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 cursor-pointer transition-all"
+                    @click="visible = false; navigateTo('/shop')">
+                    <img src="/images/mascotte/charmi-happy-violet.svg" alt="" class="w-8 h-8 shrink-0 opacity-80" />
+                    <div class="flex flex-col gap-0.5 flex-1">
+                        <span class="text-sm font-semibold text-[#a89ff0]">Passe à Charmi+ pour tout débloquer</span>
+                        <p class="text-xs text-muted">Accès illimité pour seulement 7,99€/mois</p>
+                    </div>
+                    <Icon name="lucide:arrow-right" size="14" class="text-[#a89ff0] shrink-0" />
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <div class="h-px flex-1 bg-white/8" />
+                    <span class="text-xs text-muted">ou débloquer temporairement avec des Charm</span>
+                    <div class="h-px flex-1 bg-white/8" />
+                </div>
+
+                <!-- Prix -->
+                <div class="flex flex-col gap-2">
+                    <div v-for="price in prices" :key="price.id"
+                        class="flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all"
+                        :class="selectedPrice?.id === price.id
+                            ? 'border-primary bg-primary/20 text-white'
+                            : 'border-white/8 hover:border-white/20'" @click="selectedPrice = price">
+                        <span class="text-sm font-medium">{{ price.label }}</span>
+                        <div class="flex items-center gap-1.5 px-2 py-1 rounded-full ">
+                            <img src="/images/assets/charmi-monnaie-jaune.svg" alt="Charm" class="w-3 h-3 shrink-0" />
+                            <span class="text-xs font-bold text-accent">{{ price.cost }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="flex items-center justify-between text-xs text-zinc-500 px-1">
-                <span>Solde actuel</span>
-                <div class="flex items-center gap-1">
-                    <Icon name="lucide:coins" size="12" class="text-amber-400 shrink-0" />
-                    <span class="text-amber-400 font-semibold">{{ balance }}</span>
-                </div>
-            </div>
-            <div v-if="selectedPrice?.id" class="flex items-center justify-between text-xs text-zinc-500 px-1">
-                <span>Solde après achat</span>
-                <div class="flex items-center gap-1">
-                    <Icon name="lucide:coins" size="12" class="text-amber-400 shrink-0" />
-                    <span class="font-semibold"
-                        :class="balance - (selectedPrice?.cost ?? 0) < 0 ? 'text-red-400' : 'text-amber-400'">
-                        {{ balance - (selectedPrice?.cost ?? 0) }}
-                    </span>
-                </div>
-            </div>
-            <p v-if="selectedPrice && balance < selectedPrice.cost" class="text-xs text-red-400">
-                Il te manque {{ selectedPrice.cost - balance }} Coins
-            </p>
-            <!-- Upsell abonnement -->
-            <div class="flex items-center justify-between p-3 rounded-lg border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 cursor-pointer transition-all"
-                @click="visible = false; navigateTo('/shop#sub-section')">
-                <div class="flex flex-col gap-0.5">
-                    <div class="flex items-center gap-2">
-                        <Icon name="lucide:crown" size="14" class="text-amber-400 shrink-0" />
-                        <span class="text-xs font-semibold text-amber-400">S'abonner pour 7,99€/mois</span>
+
+                <!-- Solde -->
+                <div class="flex flex-col gap-1.5 rounded-lg border border-white/8 bg-surface-darker p-3">
+                    <div class="flex items-center justify-between text-xs text-muted">
+                        <span>Solde actuel</span>
+                        <div class="flex items-center gap-1">
+                            <img src="/images/assets/charmi-monnaie-jaune.svg" alt="Charm" class="w-3 h-3 shrink-0" />
+                            <span class="text-accent font-semibold">{{ balance }}</span>
+                        </div>
                     </div>
-                    <p class="text-[11px] text-gray-400">Accès illimité à toutes les fonctionnalités</p>
+                    <div v-if="selectedPrice?.id" class="flex items-center justify-between text-xs text-muted">
+                        <span>Solde après achat</span>
+                        <div class="flex items-center gap-1">
+                            <img src="/images/assets/charmi-monnaie-jaune.svg" alt="Charm" class="w-3 h-3 shrink-0" />
+                            <span class="font-semibold"
+                                :class="balance - (selectedPrice?.cost ?? 0) < 0 ? 'text-red-400' : 'text-accent'">
+                                {{ balance - (selectedPrice?.cost ?? 0) }}
+                            </span>
+                        </div>
+                    </div>
+                    <p v-if="selectedPrice && balance < selectedPrice.cost" class="text-xs text-red-400 mt-1">
+                        Il te manque {{ selectedPrice.cost - balance }} Charm
+                    </p>
                 </div>
-                <Icon name="lucide:arrow-right" size="14" class="text-amber-400 shrink-0" />
-            </div>
-        </div>
-        <template #footer>
-            <div class="w-full">
-                <Button v-if="selectedPrice && balance < selectedPrice.cost" severity="contrast" class="w-full"
-                    @click="visible = false; navigateTo('/shop#coins-section')">
-                    <Icon name="lucide:coins" size="18" />
-                    <span class="text-xs sm:text-base">Acheter des Coins</span>
-                </Button>
-                <Button v-else severity="contrast" class="w-full" :disabled="!selectedPrice || spending"
-                    @click="handleSpend">
-                    <Icon name="lucide:unlock" size="18" />
-                    <span class="text-xs sm:text-base">Débloquer</span>
-                </Button>
+
+                <!-- Actions -->
+                <div class="flex gap-2">
+                    <button v-if="selectedPrice && balance < selectedPrice.cost"
+                        @click="visible = false; navigateTo('/shop')"
+                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors">
+                        <img src="/images/assets/charmi-monnaie-blanc.svg" alt="" class="w-4 h-4" />
+                        <span>Acheter des Charm</span>
+                    </button>
+                    <button v-else :disabled="!selectedPrice || spending" @click="handleSpend"
+                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                        <Icon name="lucide:unlock" size="16" />
+                        <span>Débloquer</span>
+                    </button>
+                </div>
             </div>
         </template>
     </Dialog>

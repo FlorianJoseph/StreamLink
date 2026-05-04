@@ -91,29 +91,16 @@ export const useScheduleScreenshot = () => {
                     wrapper.style.userSelect = 'none'
 
                     const container = document.createElement('div')
-                    container.style.textAlign = 'right'
-                    container.style.lineHeight = '1.1'
-                    container.style.fontFamily = 'Inter, sans-serif'
 
-                    // Made with
-                    const madeWith = document.createElement('div')
-                    madeWith.textContent = 'Made with'
-                    madeWith.style.fontSize = '10px'
-                    madeWith.style.fontWeight = '400'
-                    madeWith.style.textTransform = 'uppercase'
-                    madeWith.style.letterSpacing = '0.12em'
-                    madeWith.style.textShadow = '0 1px 3px #000000'
+                    // Charmi logo
+                    const brand = document.createElement('img')
+                    brand.src = '/images/logo/charmi-full-blanc.svg'
+                    brand.style.height = '32px'
+                    brand.style.width = 'auto'
+                    brand.style.display = 'block'
+                    brand.style.marginLeft = 'auto'
+                    brand.style.filter = 'drop-shadow(0 1px 3px #000000)'
 
-                    // StreamLink
-                    const brand = document.createElement('div')
-                    brand.textContent = 'StreamLink'
-                    brand.style.fontSize = '12px'
-                    brand.style.letterSpacing = '0.04em'
-                    brand.style.fontWeight = '600'
-                    brand.style.textTransform = 'uppercase'
-                    brand.style.textShadow = '0 1px 3px #000000'
-
-                    container.appendChild(madeWith)
                     container.appendChild(brand)
                     wrapper.appendChild(container)
                     cloned.appendChild(wrapper)
@@ -162,7 +149,7 @@ export const useScheduleScreenshot = () => {
                 if (cloned.classList.contains('export-footer') && !mobileFooterInjected) {
                     mobileFooterInjected = true
                     if (showBranding === false) return
-                    
+
                     const wrapper = document.createElement('div')
                     wrapper.style.position = 'absolute'
                     wrapper.style.bottom = '60px'
@@ -172,29 +159,14 @@ export const useScheduleScreenshot = () => {
                     wrapper.style.userSelect = 'none'
 
                     const container = document.createElement('div')
-                    container.style.textAlign = 'right'
-                    container.style.lineHeight = '1.1'
-                    container.style.fontFamily = 'Inter, sans-serif'
+                    const brand = document.createElement('img')
+                    brand.src = '/images/logo/charmi-full-blanc.svg'
+                    brand.style.height = '80px'
+                    brand.style.width = 'auto'
+                    brand.style.display = 'block'
+                    brand.style.opacity = '0.75'
+                    brand.style.filter = 'drop-shadow(0 1px 3px #000000)'
 
-                    const madeWith = document.createElement('div')
-                    madeWith.textContent = 'Made with'
-                    madeWith.style.fontSize = '18px'
-                    madeWith.style.fontWeight = '400'
-                    madeWith.style.textTransform = 'uppercase'
-                    madeWith.style.letterSpacing = '0.12em'
-                    madeWith.style.color = 'rgba(255,255,255,0.7)'
-                    madeWith.style.textShadow = '0 1px 3px #000'
-
-                    const brand = document.createElement('div')
-                    brand.textContent = 'StreamLink'
-                    brand.style.fontSize = '22px'
-                    brand.style.fontWeight = '600'
-                    brand.style.textTransform = 'uppercase'
-                    brand.style.letterSpacing = '0.04em'
-                    brand.style.color = 'rgba(255,255,255,0.9)'
-                    brand.style.textShadow = '0 1px 3px #000'
-
-                    container.appendChild(madeWith)
                     container.appendChild(brand)
                     wrapper.appendChild(container)
                     cloned.appendChild(wrapper)

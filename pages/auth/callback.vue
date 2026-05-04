@@ -1,13 +1,12 @@
 <template>
-    <div class="flex flex-col justify-center items-center min-h-full text-center">
+    <div class="flex flex-col justify-center items-center min-h-full text-center gap-4">
         <ProgressSpinner
-            style="width: 50px; height: 50px;--p-progressspinner-color-one
-:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
+            style="width: 40px; height: 40px; --p-progressspinner-color-one:#6A5AE0; --p-progressspinner-color-two:#8B7FF0; --p-progressspinner-color-three:#6A5AE0; --p-progressspinner-color-four:#4A3AC0"
             strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Chargement..." />
-        <h2 class="text-lg font-medium mt-4">Connexion en cours...</h2>
-        <p class="text-gray-400 text-sm">
-            Ne fermez pas cette page, vous allez être redirigé automatiquement.
-        </p>
+        <div class="flex flex-col gap-1">
+            <h2 class="font-heading text-lg font-bold text-white">Connexion en cours…</h2>
+            <p class="text-sm text-muted">Ne ferme pas cette page, tu vas être redirigé automatiquement.</p>
+        </div>
     </div>
 </template>
 

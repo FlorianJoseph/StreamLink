@@ -1,5 +1,5 @@
 <template>
-    <div id="scheduleCardMobile" class="export-footer rounded-lg" :style="{
+    <div id="scheduleCardMobile" class="export-footer rounded-lg ring-2 ring-white/8" :style="{
         backgroundColor: scheduleBgColor,
         backgroundImage: schedule?.style?.backgroundUrl ? `url(${schedule.style.backgroundUrl})` : undefined,
         backgroundSize: 'cover',
@@ -10,7 +10,7 @@
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        gap: '48px',
+        gap: '64px',
         fontFamily: schedule?.style?.fontFamily
     }">
         <!-- Overlay image de fond -->
@@ -22,9 +22,11 @@
         <div class="relative z-10 flex flex-col gap-2 text-center">
             <h1 class="font-bold truncate" :style="{
                 color: scheduleTextColor,
+                fontFamily: schedule?.style?.fontFamily,
                 fontSize: '80px',
                 textShadow: '0 0 2px rgba(0,0,0,0.8)',
-                lineHeight: '1.1'
+                lineHeight: '1.1',
+                marginTop: '48px'
             }">
                 {{ schedule?.title }}
             </h1>
@@ -32,6 +34,7 @@
                 color: scheduleTextColor,
                 fontSize: '36px',
                 textShadow: '0 0 2px rgba(0,0,0,0.8)',
+                fontFamily: schedule?.style?.fontFamily
             }">
                 {{ schedule?.subtitle }}
             </p>
@@ -51,7 +54,8 @@
                             textShadow: '0 0 2px rgba(0,0,0,0.8)',
                             opacity: 0.9,
                             textTransform: 'uppercase',
-                            letterSpacing: '0.1em'
+                            letterSpacing: '0.1em',
+                            fontFamily: schedule?.style?.fontFamily
                         }">
                             {{ day.label.slice(0, 3) }}
                         </span>
@@ -87,7 +91,8 @@
                                     overflow: 'hidden',
                                     display: '-webkit-box',
                                     WebkitLineClamp: '1',
-                                    WebkitBoxOrient: 'vertical'
+                                    WebkitBoxOrient: 'vertical',
+                                    fontFamily: schedule?.style?.fontFamily
                                 }">
                                     {{ slot.title }}
                                 </span>
@@ -102,14 +107,19 @@
                                     opacity: 0.7,
                                     textShadow: '0 1px 3px rgba(0,0,0,0.8)',
                                     textTransform: 'uppercase',
-                                    letterSpacing: '0.06em'
+                                    letterSpacing: '0.06em',
+                                    fontFamily: schedule?.style?.fontFamily
                                 }">
                                     <Icon name="lucide:clock" size="24" style="flex-shrink: 0" />
-                                    <span>{{ formatTime(slot.start_at) }}<span v-if="endTimeVisible"> – {{
-                                        formatTime(slot.end_at) }}</span></span>
+                                    <span :style="{ fontFamily: schedule?.style?.fontFamily }">{{
+                                        formatTime(slot.start_at) }}<span v-if="endTimeVisible"> – {{
+                                            formatTime(slot.end_at) }}</span></span>
                                     <Icon v-if="slot.game?.label" name="lucide:gamepad-2" size="24"
                                         style="flex-shrink: 0" />
-                                    <span v-if="slot.game?.label" class="truncate">{{ slot.game?.label }}</span>
+                                    <span v-if="slot.game?.label" class="truncate"
+                                        :style="{ fontFamily: schedule?.style?.fontFamily }">.
+                                        {{ slot.game?.label }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -119,17 +129,9 @@
         </div>
 
         <!-- Footer branding -->
-        <div v-if="showBranding !== false" class="absolute z-20" style="bottom: 60px; right: 60px">
-            <div style="text-align: right; line-height: 1.1; font-family: Inter, sans-serif">
-                <div
-                    style="font-size: 18px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.7); text-shadow: 0 1px 3px #000">
-                    Made with
-                </div>
-                <div
-                    style="font-size: 22px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(255,255,255,0.9); text-shadow: 0 1px 3px #000">
-                    StreamLink
-                </div>
-            </div>
+        <div v-if="showBranding !== false" class="absolute z-20 ignore-export" style="bottom: 60px; right: 60px">
+            <AppLogo variant="full" color="blanc" alt="Charmi"
+                style="height: 96px; width: auto; opacity: 0.75; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8))" />
         </div>
     </div>
 </template>

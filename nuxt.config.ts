@@ -67,4 +67,21 @@ export default defineNuxtConfig({
       stripePriceCoinsBig: '',
     }
   },
+  app: {
+    head: {
+      title: 'Charmi',
+      titleTemplate: 'Charmi',
+      meta: [
+        { name: 'description', content: 'La plateforme des streamers Twitch. Centralise tes liens, ton planning et ta visibilité.' },
+        { property: 'og:title', content: 'Charmi' },
+        { property: 'og:description', content: 'La plateforme des streamers Twitch.' },
+        { property: 'og:image', content: '/images/logo/charmi-full-violet.png' },
+        { name: 'theme-color', content: '#6A5AE0' },
+      ],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'apple-touch-icon', href: '/favicon.svg' },
+      ],
+    },
+  },
 })

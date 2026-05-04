@@ -11,7 +11,7 @@ const resend = new Resend(process.env.NUXT_RESEND_API_KEY)
 
 const subjects: Record<string, string> = {
     update: 'Transforme tes raids en récompenses',
-    notVisible: 'Ton profil StreamLink est encore invisible',
+    notVisible: 'Ton profil Charmi est encore invisible',
     notSchedule: 'Ton planning est vide',
 }
 
@@ -43,7 +43,7 @@ export async function sendSegment(client: any, segment: string) {
         try {
             const emails = await Promise.all(
                 batch.map(async (u: any) => ({
-                    from: 'StreamLink <noreply@mail.stream-link.fr>',
+                    from: 'Charmi <noreply@updates.charmi.gg>',
                     to: u.email,
                     subject: subjects[segment],
                     html: await segmentTemplates[segment]({ username: u.username }),

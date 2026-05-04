@@ -1,18 +1,5 @@
 <template>
     <div class="flex flex-col gap-4">
-        <!-- En-tête -->
-        <div class="py-4">
-            <div class="flex flex-col lg:items-start items-center justify-end">
-                <!-- Titre -->
-                <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold text-center lg:text-left">
-                    Modifier ma page de liens
-                </h1>
-                <!-- Sous-titre -->
-                <p class="text-sm sm:text-base text-center lg:text-left max-w-xl text-gray-400">
-                    Crée ta page de liens personnalisée à partager avec ton audience
-                </p>
-            </div>
-        </div>
         <!-- Avatar et bouton de modification -->
         <div class="flex flex-row gap-4 items-center max-w-2xl lg:w-lg xl:w-2xl">
             <AvatarUploader />
@@ -28,67 +15,74 @@
                         <span v-else-if="streamer?.language === 'OTHER'" class="flex items-center">
                             <Icon name="lucide:globe" size="16" />
                         </span>
-                        <span v-else class="text-xs text-gray-400 hover:underline cursor-pointer">
+                        <span v-else class="text-xs text-muted hover:underline cursor-pointer">
                             Choisir une langue
                         </span>
                     </div>
-                    <span class="block text-sm font-medium text-gray-400 hover:underline cursor-pointer truncate">
+                    <span class="block text-sm font-medium text-muted hover:underline cursor-pointer truncate">
                         {{ streamer?.bio || 'Ajouter une description' }}
                     </span>
                 </div>
-                <Dialog v-model:visible="streamerModal" modal dismissableMask header="Modifier le profil"
-                    :style="{ width: '25rem', margin: '1rem' }" :draggable="false">
-                    <div class="flex flex-col space-y-5 mb-2">
+            </div>
+        </div>
+
+        <!-- Modal de modification du profil -->
+        <Dialog v-model:visible="streamerModal" modal dismissableMask :draggable="false"
+            :style="{ width: '25rem', margin: '1rem' }"
+            :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
+            <template #container>
+                <div class="flex flex-col rounded-xl border border-white/8 bg-dark overflow-y-auto max-h-[90vh]">
+
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-5 pt-5 top-0 bg-dark z-10">
+                        <h2 class="font-heading text-xl font-bold text-white">Modifier le profil</h2>
+                        <button @click="streamerModal = false"
+                            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
+                            <Icon name="lucide:x" size="22" />
+                        </button>
+                    </div>
+
+                    <!-- Contenu -->
+                    <div class="flex flex-col gap-5 p-5">
 
                         <!-- Nom -->
                         <div class="flex flex-col gap-2 relative">
-                            <label for="username" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <label for="username" class="text-xs sm:text-sm font-semibold flex items-center gap-2">
                                 <Icon name="lucide:user" size="16" class="shrink-0" />
-                                Nom
-                                <span class="text-red-500">*</span>
+                                Nom <span class="text-red-400">*</span>
                             </label>
                             <InputText id="username" v-model="username" maxlength="30"
-                                placeholder="Entre ton pseudo de streamer" fluid
-                                style="--p-inputtext-focus-border-color : #ffffff" />
-                            <span class="absolute right-2 bottom-1 text-xs text-zinc-500">
-                                {{ username.length }}/30
-                            </span>
+                                placeholder="Ton pseudo de streamer" fluid
+                                style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
+                            <span class="absolute right-2 bottom-1 text-xs text-muted/50">{{ username.length
+                                }}/30</span>
                         </div>
 
-                        <!-- Message d'erreur -->
-                        <span v-if="usernameError" class="text-xs text-red-500">
-                            {{ usernameError }}
-                        </span>
+                        <span v-if="usernameError" class="text-xs text-red-400">{{ usernameError }}</span>
 
                         <!-- Description -->
                         <div class="flex flex-col gap-2 relative">
-                            <label for="description" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <label for="description" class="text-xs sm:text-sm font-semibold flex items-center gap-2">
                                 <Icon name="lucide:align-left" size="16" class="shrink-0" />
                                 Description
                             </label>
                             <Textarea id="description" v-model="bio" rows="4" autoResize maxlength="120"
-                                placeholder="Écris une courte description" fluid
-                                style="--p-textarea-focus-border-color : #ffffff" />
-                            <span class="absolute right-2 bottom-1 text-xs text-zinc-500">
-                                {{ bio.length }}/120
-                            </span>
+                                placeholder="Une courte description" fluid
+                                style="--p-textarea-focus-border-color:#6A5AE0; --p-textarea-background:#18191c" />
+                            <span class="absolute right-2 bottom-1 text-xs text-muted/50">{{ bio.length }}/120</span>
                         </div>
 
-                        <!-- Langue de streaming -->
+                        <!-- Langue -->
                         <div class="flex flex-col gap-2">
-                            <label for="language" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <label for="language" class="text-xs sm:text-sm font-semibold flex items-center gap-2">
                                 <Icon name="lucide:globe" size="16" class="shrink-0" />
                                 Langue
                             </label>
                             <Select id="language" v-model="language" :options="languageOptions" optionLabel="label"
                                 optionValue="value" placeholder="Sélectionne une langue" showClear
-                                :highlightOnSelect="false" fluid style="--p-select-focus-border-color: #ffffff" :pt="{
-                                    pcFilter: {
-                                        root: {
-                                            style: '--p-inputtext-focus-border-color: #ffffff'
-                                        },
-                                    }
-                                }">
+                                :highlightOnSelect="false" fluid
+                                style="--p-select-focus-border-color:#6A5AE0; --p-select-background:#18191c"
+                                :pt="{ pcFilter: { root: { style: '--p-inputtext-focus-border-color:#6A5AE0' } } }">
                                 <template #option="{ option }">
                                     <div class="flex items-center gap-2">
                                         <img v-if="option.value !== 'OTHER'"
@@ -110,35 +104,36 @@
                             </Select>
                         </div>
                     </div>
-                    <template #footer>
-                        <div class="flex gap-2 w-full">
-                            <Button type="button" label="Annuler" severity="secondary" outlined
-                                @click="streamerModal = false" class="flex-1">
-                                <Icon name="lucide:x" size="18" class="shrink-0" />
-                                <span class="text-xs sm:text-base shrink-0">Annuler</span>
-                            </Button>
-                            <Button type="button" label="Mettre à jour" severity="contrast" @click="handleSave"
-                                :disabled="!username || !!usernameError" class="flex-1">
-                                <Icon name="lucide:check" size="18" class="shrink-0" />
-                                <span class="text-xs sm:text-base shrink-0">Mettre à jour</span>
-                            </Button>
-                        </div>
-                    </template>
-                </Dialog>
-            </div>
-        </div>
+
+                    <!-- Footer -->
+                    <div class="flex gap-2 px-5 pb-5 bottom-0 bg-dark">
+                        <button type="button" @click="streamerModal = false"
+                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-sm font-semibold transition-colors">
+                            <Icon name="lucide:x" size="16" class="shrink-0" />
+                            <span>Annuler</span>
+                        </button>
+                        <button type="button" @click="handleSave" :disabled="!username || !!usernameError"
+                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                            <Icon name="lucide:check" size="16" class="shrink-0" />
+                            <span>Mettre à jour</span>
+                        </button>
+                    </div>
+
+                </div>
+            </template>
+        </Dialog>
 
         <!-- Stats rapides -->
         <template v-if="statsPending">
             <div class="animate-pulse h-4 w-24 bg-gray-700 rounded" />
         </template>
         <template v-else>
-            <div class="flex items-center gap-3 text-sm text-gray-400">
+            <div class="flex items-center gap-3 text-sm text-muted">
                 <div class="flex items-center gap-1.5">
                     <Icon name="lucide:eye" size="16" />
                     <span>{{ stats?.total?.views ?? 0 }} vues</span>
                 </div>
-                <span>•</span>
+                <span class="text-white/20">|</span>
                 <div class="flex items-center gap-1.5">
                     <Icon name="lucide:mouse-pointer-click" size="16" />
                     <span>{{ stats?.total?.clicks ?? 0 }} clics</span>
@@ -147,29 +142,32 @@
         </template>
 
         <!-- Bouton Ajouter un lien -->
-        <Button class="w-full" severity="contrast" @click="newlinkModal = true">
-            <Icon name="lucide:plus" size="20" />
-            <span class="font-medium">Ajouter un lien</span>
-        </Button>
+        <button @click="newlinkModal = true"
+            class="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white font-medium text-sm sm:text-base transition-colors">
+            <Icon name="lucide:plus" size="18" />
+            Ajouter un lien
+        </button>
 
         <!-- Gérer les liens -->
         <div>
             <div class="flex flex-col gap-2">
                 <div class="flex flex-col gap-2 w-full ">
                     <!-- Liste des liens -->
-                    <div v-if="links.length === 0" class="text-gray-400 text-sm text-center py-4">
-                        Aucun lien pour l’instant. Cliquez sur "Ajouter un lien" pour commencer
+                    <div v-if="links.length === 0" class="flex flex-col items-center gap-3 py-12 text-center">
+                        <img src="/images/mascotte/charmi-confused-violet.svg" alt="" class="w-16 h-16 opacity-60" />
+                        <p class="text-sm text-muted">Aucun lien pour l'instant</p>
+                        <p class="text-xs text-muted/60">Clique sur "Ajouter un lien" pour commencer</p>
                     </div>
                     <Draggable v-model="links" item-key="id" handle=".drag-handle" @end="saveOrder"
                         class="flex flex-col gap-2">
                         <template #item="{ element }">
-                            <div class="rounded-3xl pt-3 pb-2 px-2 bg-gray-100/10">
+                            <div class="rounded-xl p-3 bg-surface-dark border border-white/8">
                                 <div class="flex flex-row gap-4 items-center">
                                     <!-- Drag handle avec icône GripVertical -->
                                     <div class="drag-handle cursor-grab flex-shrink-0">
-                                        <Icon name="lucide:grip-vertical" size="20" />
+                                        <Icon name="lucide:grip-vertical" size="20" class="text-muted shrink-0" />
                                     </div>
-                                    <div class="flex flex-col flex-grow min-w-0 px-3.5 py-2">
+                                    <div class="flex flex-col flex-grow min-w-0 gap-2">
                                         <div class="flex justify-between items-center">
                                             <div class="flex flex-col flex-grow min-w-0">
                                                 <!-- Titre -->
@@ -177,15 +175,16 @@
                                                     <input :ref="el => inputRefs[`${element.id}-title`] = el"
                                                         v-model="editing.value" @blur="saveEdit(element)"
                                                         @keyup.enter="saveEdit(element)"
-                                                        class="bg-transparent border-none focus:outline-none font-medium w-full mb-2 truncate" />
+                                                        class="bg-transparent border-none focus:outline-none text-sm w-full my-1.5 truncate" />
                                                 </template>
                                                 <template v-else>
-                                                    <div class="flex items-center mb-2 gap-2 hover:cursor-pointer w-full min-w-0"
+                                                    <div class="flex items-center my-1.5 gap-2 hover:cursor-pointer w-full min-w-0"
                                                         @click="editField(element, 'title')">
-                                                        <span class="font-medium truncate max-w-[70%]">
+                                                        <span class="text-sm truncate max-w-[70%]">
                                                             {{ element.title }}
                                                         </span>
-                                                        <Icon name="lucide:pencil" size="16" />
+                                                        <Icon name="lucide:pencil" size="16"
+                                                            class="text-muted shrink-0" />
                                                     </div>
                                                 </template>
                                                 <!-- URL -->
@@ -193,15 +192,16 @@
                                                     <input :ref="el => inputRefs[`${element.id}-url`] = el"
                                                         v-model="editing.value" @blur="saveEdit(element)"
                                                         @keyup.enter="saveEdit(element)"
-                                                        class="bg-transparent border-none focus:outline-none text-sm w-full truncate" />
+                                                        class="bg-transparent border-none focus:outline-none text-sm text-muted w-full truncate" />
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex items-center gap-2 hover:cursor-pointer w-full min-w-0"
                                                         @click="editField(element, 'url')">
-                                                        <span class="text-sm truncate max-w-[70%]">
+                                                        <span class="text-sm truncate max-w-[70%] text-muted">
                                                             {{ element.url }}
                                                         </span>
-                                                        <Icon name="lucide:pencil" size="16" />
+                                                        <Icon name="lucide:pencil" size="16"
+                                                            class="text-muted shrink-0" />
                                                     </div>
                                                 </template>
                                             </div>
@@ -213,32 +213,26 @@
                                         </div>
                                         <!-- Actions -->
                                         <div class="flex justify-between items-center">
-                                            <div class="mt-2 hover:cursor-pointer w-max flex items-center">
-                                                <Button severity="secondary" size="small"
-                                                    v-tooltip.bottom="{ value: 'Modifier l\'icone du lien', pt: { text: '!text-sm' } }"
-                                                    @click="openVignetteModal(element)">
-                                                    <Icon name="lucide:image" size="18"
-                                                        class="shrink-0 text-gray-300/60" />
-                                                </Button>
-                                                <Button severity="secondary" text size="small"
-                                                    v-tooltip.bottom="{ value: 'Nombre de clics', pt: { text: '!text-sm' } }">
+                                            <div class="flex items-center gap-1">
+                                                <button
+                                                    v-tooltip.bottom="{ value: 'Modifier l\'icône', pt: { text: '!text-sm' } }"
+                                                    @click="openVignetteModal(element)"
+                                                    class="w-10 h-10 flex items-center justify-center rounded-md text-muted hover:text-white hover:bg-white/5 transition-colors">
+                                                    <Icon name="lucide:image" size="18" class="shrink-0" />
+                                                </button>
+                                                <span class="text-sm text-muted/60 flex items-center gap-1">
                                                     <Icon name="lucide:mouse-pointer-click" size="18"
-                                                        class="shrink-0 text-gray-300/60" />
-                                                    <span class="text-sm text-gray-300/60">
-                                                        <template v-if="statsPending">-</template>
-                                                        <template v-else>
-                                                            {{stats?.links?.findLast(l => l.link_id ===
-                                                                element.id)?.total_clicks ?? 0}} clics
-                                                        </template>
-                                                    </span>
-                                                </Button>
+                                                        class="shrink-0" />
+                                                    <template v-if="statsPending">—</template>
+                                                    <template v-else>{{stats?.links?.findLast(l => l.link_id ===
+                                                        element.id)?.total_clicks ?? 0}} clics</template>
+                                                </span>
                                             </div>
-                                            <Button severity="secondary" size="small"
+                                            <button @click="slotToDelete = element.id; showDeleteConfirmation = true"
                                                 v-tooltip.bottom="{ value: 'Supprimer', pt: { text: '!text-sm' } }"
-                                                @click="confirmDeletePopup($event, element.id)">
-                                                <Icon name="lucide:trash-2" size="18"
-                                                    class="shrink-0 text-gray-300/60" />
-                                            </Button>
+                                                class="w-10 h-10 flex items-center justify-center rounded-md text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors">
+                                                <Icon name="lucide:trash-2" size="18" />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -246,187 +240,232 @@
                         </template>
                     </Draggable>
 
-                    <Divider v-if="links.length > 0" class="my-4" />
+                    <!-- Modal suppression -->
+                    <Dialog v-model:visible="showDeleteConfirmation" dismissableMask modal :draggable="false"
+                        :style="{ margin: '1rem' }"
+                        :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
+                        <template #container>
+                            <div
+                                class="flex flex-col items-center gap-5 p-6 rounded-xl border border-white/8 bg-dark w-[20rem]">
+                                <div class="flex flex-col items-center gap-2 text-center">
+                                    <h2 class="font-heading text-xl font-bold text-white">Supprimer le lien ?</h2>
+                                    <p class="text-muted text-sm">Cette action est irréversible.</p>
+                                </div>
+                                <div class="flex gap-2 w-full">
+                                    <button @click="showDeleteConfirmation = false"
+                                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-sm font-semibold transition-colors">
+                                        <Icon name="lucide:x" size="16" class="shrink-0" />
+                                        Annuler
+                                    </button>
+                                    <button @click="linkStore.deleteLink(slotToDelete); showDeleteConfirmation = false"
+                                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 hover:border-red-500/50 text-red-400 text-sm font-semibold transition-colors">
+                                        <Icon name="lucide:trash-2" size="16" class="shrink-0" />
+                                        Supprimer
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </Dialog>
 
-                    <div class="rounded-md p-4 bg-gray-100/10">
-                        <!-- Bloc branding -->
-                        <div v-if="!hasFeature('no_branding')"
-                            class="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:items-center justify-between">
-                            <div class="flex flex-col sm:gap-0.5">
-                                <span class="text-sm font-semibold">Masquer le footer</span>
-                                <span class="text-xs text-zinc-400">
-                                    <template v-if="hasFeature('no_branding')">
-                                        {{ getExpiryLabel('no_branding') }}
-                                    </template>
-                                    <template v-else>
-                                        Masque le footer de ta page de liens
-                                    </template>
+                    <div v-if="links.length > 0" class="h-px bg-white/8 my-4" />
+
+                    <div v-if="links.length > 0" class="rounded-xl p-4 bg-surface-dark border border-white/8">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex flex-col gap-0.5">
+                                <span class="text-sm font-semibold text-white">Masquer le logo</span>
+                                <span class="text-xs text-muted">
+                                    <template v-if="isSub">Inclus dans ton abonnement</template>
+                                    <template v-else-if="hasFeature('no_branding')">
+                                        {{ getExpiryLabel('no_branding') }}</template>
+                                    <template v-else>Masque le logo Charmi sur ta page publique et ton planning</template>
                                 </span>
                             </div>
-                            <Button severity="contrast" size="small"
-                                @click="brandingModal = true">
-                                <Icon name="lucide:coins" size="16" class="shrink-0" />
-                                <span class="text-sm">Débloquer</span>
-                            </Button>
-                        </div>
-                        <div v-else class="flex gap-2 items-center justify-between">
-                            <div class="flex flex-col">
-                                <span class="text-sm font-semibold">Masquer le footer</span>
-                                <span class="text-xs text-zinc-400">
-                                    <!-- <template v-if="hasFeature('no_branding')">
-                                        {{ getExpiryLabel('no_branding') }}
-                                    </template> -->
-                                    <template>
-                                        Masque le footer de ta page de liens
-                                    </template>
-                                </span>
-                            </div>
-                            <span v-if="isSub" class="text-sm text-gray-400  font-semibold">Inclus dans
-                                l'abonnement</span>
-                            <span v-else class="text-sm text-emerald-400">{{ getExpiryLabel('no_branding') }}</span>
+
+                            <template v-if="!hasFeature('no_branding') && !isSub">
+                                <button @click="brandingModal = true"
+                                    class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-darker border border-white/8 hover:border-white/20 font-semibold text-white transition-colors shrink-0">
+                                    <img src="/images/assets/charmi-monnaie-blanc.svg" alt="" class="w-3.5 h-3.5" />
+                                    Débloquer
+                                </button>
+                            </template>
+                            <template v-else>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    <Icon name="lucide:check-circle" size="14" class="text-emerald-400" />
+                                    <span class="text-xs text-emerald-400 font-semibold">Actif</span>
+                                </div>
+                            </template>
                         </div>
 
-                        <!-- Modal déblocage branding -->
                         <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
                     </div>
 
                     <!-- Modal Icone ou image -->
-                    <Dialog v-model:visible="thumbnailModal" dismissableMask modal header="Modifier l'icone du lien"
-                        :style="{ width: '30rem', margin: '1rem' }" :draggable="false">
-                        <Stepper value="1">
-                            <StepPanels>
-                                <StepPanel v-slot="{ activateCallback }" value="1">
-                                    <div class="flex flex-col space-y-5 mb-2">
-                                        <!-- Étape 1 : Upload -->
-                                        <div v-if="!imageUrl" class="flex flex-col gap-3">
-                                            <div class="flex flex-row gap-2">
-                                                <FileUpload mode="basic" @select="onFileSelect" auto
-                                                    chooseLabel="Choisir une image" class="p-button-contrast flex-1"
-                                                    accept="image/*" @click="showIcons = false" />
-                                                <Button severity="contrast" variant="outlined" class="flex-1"
-                                                    @click="activateCallback('2')">
-                                                    <Icon name="lucide:layout-grid" size="18" class="shrink-0" />
-                                                    <span class="text-xs sm:text-base">Choisir une icône</span>
-                                                </Button>
-                                            </div>
-                                            <Button severity="danger" @click="deleteIcon"
-                                                :disabled="!currentLinkRef.icon_url">
-                                                <Icon name="lucide:trash-2" size="18" class="shrink-0" />
-                                                <span class="text-xs sm:text-base">Supprimer l'icône</span>
-                                            </Button>
-                                        </div>
-                                        <!-- Étape 2 : Crop -->
-                                        <div v-else class="w-full max-h-[60vh]">
-                                            <div class="relative w-full flex justify-center items-center overflow-hidden"
-                                                style="aspect-ratio: 1 / 1">
-                                                <Cropper :src="imageUrl" :stencil-props="{ aspectRatio: 1 }"
-                                                    @change="onCropChange" image-restriction="fit-area"
-                                                    :stencil-component="CircleStencil"
-                                                    :style="{ width: '100%', height: '100%' }"
-                                                    :default-size="defaultSize" />
-                                            </div>
-                                            <div class="flex w-full mt-4 gap-2">
-                                                <Button severity="secondary" outlined
-                                                    @click="imageUrl = null, croppedImage = null" class="flex-1">
-                                                    <Icon name="lucide:arrow-left" size="18" class="shrink-0" />
-                                                    <span class="text-xs sm:text-base">Retour</span>
-                                                </Button>
-                                                <Button severity="contrast" :disabled="!croppedImage" @click="saveImage"
-                                                    class="flex-1">
-                                                    <Icon name="lucide:check" size="18" class="shrink-0" />
-                                                    <span class="text-xs sm:text-base">Mettre à jour</span>
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </StepPanel>
-                                <StepPanel v-slot="{ activateCallback }" value="2">
-                                    <div class="flex flex-col space-y-5 mb-2">
-                                        <!-- Barre de recherche -->
-                                        <IconField>
-                                            <InputIcon>
-                                                <Icon name="lucide:search" size="16" />
-                                            </InputIcon>
-                                            <InputText v-model="searchIcon" placeholder="Rechercher une icône..." fluid
-                                                style="--p-inputtext-focus-border-color: #ffffff" />
-                                        </IconField>
-                                        <!-- Liste des icônes filtrées -->
-                                        <div class="flex flex-wrap gap-6 overflow-y-auto h-[35vh]">
-                                            <div v-for="(icons, category) in filteredIconsByCategory" :key="category"
-                                                class="flex flex-col gap-3">
-                                                <!-- Titre de la catégorie -->
-                                                <h3 class="font-semibold text-xs sm:text-sm text-left">
-                                                    {{ category }}
-                                                </h3>
+                    <Dialog v-model:visible="thumbnailModal" dismissableMask modal :draggable="false"
+                        :style="{ width: '30rem', margin: '1rem' }"
+                        :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
+                        <template #container>
+                            <div
+                                class="flex flex-col gap-5 p-5 rounded-xl border border-white/8 bg-dark overflow-y-auto max-h-[90vh]">
 
-                                                <!-- Icônes -->
-                                                <div class="flex flex-wrap gap-3 justify-start p-2">
-                                                    <div v-for="icon in icons" :key="icon" class="flex justify-center items-center p-8
-                                                         cursor-pointer hover:bg-gray-400/10 rounded-md transition"
-                                                        :class="selectedIcon === icon ? 'outline outline-2 border-gray-500' : ''"
-                                                        @click="selectIcon(icon)">
-                                                        <Icon :name="icon" size="24" />
+                                <!-- Header -->
+                                <div class="flex items-center justify-between">
+                                    <h2 class="font-heading text-xl font-bold text-white">Modifier l'icône du lien</h2>
+                                    <button @click="thumbnailModal = false"
+                                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
+                                        <Icon name="lucide:x" size="22" />
+                                    </button>
+                                </div>
+
+                                <Stepper value="1" style="--p-stepper-steppanel-background: transparent;">
+                                    <StepPanels>
+                                        <!-- Étape 1 : Upload / Crop -->
+                                        <StepPanel v-slot="{ activateCallback }" value="1">
+                                            <div class="flex flex-col gap-4">
+                                                <div v-if="!imageUrl" class="flex flex-col gap-3">
+                                                    <div class="flex gap-2">
+                                                        <FileUpload mode="basic" @select="onFileSelect" auto
+                                                            chooseLabel="Choisir une image"
+                                                            class="p-button-contrast flex-1" accept="image/*"
+                                                            @click="showIcons = false" />
+                                                        <button @click="activateCallback('2')"
+                                                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-sm font-semibold transition-colors">
+                                                            <Icon name="lucide:layout-grid" size="16"
+                                                                class="shrink-0" />
+                                                            Choisir une icône
+                                                        </button>
+                                                    </div>
+                                                    <button @click="deleteIcon" :disabled="!currentLinkRef?.icon_url"
+                                                        class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-red-500/30 hover:border-red-500/60 hover:bg-red-500/10 text-red-400 text-sm font-semibold transition-colors disabled:opacity-40 disabled:pointer-events-none">
+                                                        <Icon name="lucide:trash-2" size="16" class="shrink-0" />
+                                                        Supprimer l'image
+                                                    </button>
+                                                </div>
+
+                                                <div v-else class="w-full max-h-[60vh]">
+                                                    <div class="relative w-full flex justify-center items-center overflow-hidden"
+                                                        style="aspect-ratio: 1 / 1">
+                                                        <Cropper :src="imageUrl" :stencil-props="{ aspectRatio: 1 }"
+                                                            @change="onCropChange" image-restriction="fit-area"
+                                                            :stencil-component="CircleStencil"
+                                                            :style="{ width: '100%', height: '100%' }"
+                                                            :default-size="defaultSize" />
+                                                    </div>
+                                                    <div class="flex gap-2 mt-4">
+                                                        <button @click="imageUrl = null; croppedImage = null"
+                                                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-sm font-semibold transition-colors">
+                                                            <Icon name="lucide:arrow-left" size="16" class="shrink-0" />
+                                                            Retour
+                                                        </button>
+                                                        <button @click="saveImage" :disabled="!croppedImage"
+                                                            class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed ">
+                                                            <Icon name="lucide:check" size="16" class="shrink-0" />
+                                                            Mettre à jour
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex gap-2 w-full mt-4">
-                                        <Button severity="secondary" outlined @click="activateCallback('1')"
-                                            class="flex-1">
-                                            <Icon name="lucide:arrow-left" size="18" class="shrink-0" />
-                                            <span class="text-xs sm:text-base">Retour</span>
-                                        </Button>
-                                        <Button severity="contrast" :disabled="!selectedIcon" @click="saveImage"
-                                            class="flex-1">
-                                            <Icon name="lucide:check" size="18" class="shrink-0" />
-                                            <span class="text-xs sm:text-base">Mettre à jour</span>
-                                        </Button>
-                                    </div>
-                                </StepPanel>
-                            </StepPanels>
-                        </Stepper>
+                                        </StepPanel>
+
+                                        <!-- Étape 2 : Icônes -->
+                                        <StepPanel v-slot="{ activateCallback }" value="2">
+                                            <div class="flex flex-col gap-4">
+                                                <IconField>
+                                                    <InputIcon>
+                                                        <Icon name="lucide:search" size="15" />
+                                                    </InputIcon>
+                                                    <InputText v-model="searchIcon" placeholder="Rechercher une icône…"
+                                                        fluid
+                                                        style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
+                                                </IconField>
+
+                                                <div class="flex flex-wrap gap-5 overflow-y-auto h-[35vh]">
+                                                    <div v-for="(icons, category) in filteredIconsByCategory"
+                                                        :key="category" class="flex flex-col gap-3 px-1">
+                                                        <h3
+                                                            class="text-xs font-bold text-muted uppercase tracking-wider">
+                                                            {{ category }}</h3>
+                                                        <div class="flex flex-wrap gap-2">
+                                                            <button v-for="icon in icons" :key="icon"
+                                                                class="flex items-center justify-center w-10 h-10 rounded-md transition-colors"
+                                                                :class="selectedIcon === icon
+                                                                    ? 'bg-primary/20 ring-1 ring-primary'
+                                                                    : 'hover:bg-white/5'" @click="selectIcon(icon)">
+                                                                <Icon :name="icon" size="20" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex gap-2">
+                                                    <button @click="activateCallback('1')"
+                                                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-sm font-semibold transition-colors">
+                                                        <Icon name="lucide:arrow-left" size="16" class="shrink-0" />
+                                                        Retour
+                                                    </button>
+                                                    <button @click="saveImage" :disabled="!selectedIcon"
+                                                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed ">
+                                                        <Icon name="lucide:check" size="16" class="shrink-0" />
+                                                        Mettre à jour
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </StepPanel>
+                                    </StepPanels>
+                                </Stepper>
+                            </div>
+                        </template>
                     </Dialog>
 
                     <!-- Modal Ajouter / Modifier -->
-                    <Dialog v-model:visible="newlinkModal" dismissableMask modal header="Ajouter un lien"
-                        :style="{ width: '25rem', margin: '1rem' }" :draggable="false">
-                        <div class="flex flex-col space-y-5 mb-2">
+                    <Dialog v-model:visible="newlinkModal" dismissableMask modal :draggable="false"
+                        :style="{ width: '25rem', margin: '1rem' }"
+                        :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
+                        <template #container>
+                            <div class="flex flex-col gap-5 p-5 rounded-xl border border-white/8 bg-dark">
 
-                            <!-- Titre -->
-                            <div class="flex flex-col gap-2">
-                                <label for="title" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                                    <Icon name="lucide:type" size="16" class="shrink-0" />
-                                    Titre
-                                    <span class="text-red-500">*</span>
-                                </label>
-                                <InputText id="title" v-model="form.title" placeholder="Ex: Twitch, TikTok, Discord..."
-                                    fluid style="--p-inputtext-focus-border-color : #ffffff" />
-                            </div>
+                                <!-- Header -->
+                                <div class="flex items-center justify-between">
+                                    <h2 class="font-heading text-xl font-bold text-white">Ajouter un lien</h2>
+                                    <button @click="newlinkModal = false"
+                                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
+                                        <Icon name="lucide:x" size="22" />
+                                    </button>
+                                </div>
 
-                            <!-- URL -->
-                            <div class="flex flex-col gap-2">
-                                <label for="url" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                                    <Icon name="lucide:link" size="16" class="shrink-0" />
-                                    URL
-                                    <span class="text-red-500">*</span>
-                                </label>
-                                <InputText id="url" v-model="form.url" placeholder="https://..." fluid
-                                    style="--p-inputtext-focus-border-color : #ffffff" />
-                            </div>
-                        </div>
-                        <template #footer>
-                            <div class="flex gap-2 w-full">
-                                <Button type="button" severity="secondary" outlined @click="newlinkModal = false"
-                                    class="flex-1">
-                                    <Icon name="lucide:x" size="18" class="shrink-0" />
-                                    <span class="text-xs sm:text-base shrink-0">Annuler</span>
-                                </Button>
-                                <Button type="button" label="Sauvegarder" severity="contrast"
-                                    :disabled="!form.title || !form.url" @click="saveNewLink()" class="flex-1">
-                                    <Icon name="lucide:save" size="18" class="shrink-0" />
-                                    <span class="text-xs sm:text-base shrink-0">Enregistrer</span>
-                                </Button>
+                                <!-- Titre -->
+                                <div class="flex flex-col gap-2">
+                                    <label for="title" class="text-xs sm:text-sm font-semibold flex items-center gap-2">
+                                        <Icon name="lucide:type" size="16" class="shrink-0" />
+                                        Titre <span class="text-red-400">*</span>
+                                    </label>
+                                    <InputText id="title" v-model="form.title"
+                                        placeholder="Ex : Twitch, TikTok, Discord…" fluid
+                                        style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
+                                </div>
+
+                                <!-- URL -->
+                                <div class="flex flex-col gap-2">
+                                    <label for="url" class="text-xs sm:text-sm font-semibold flex items-center gap-2">
+                                        <Icon name="lucide:link" size="16" class="shrink-0" />
+                                        URL <span class="text-red-400">*</span>
+                                    </label>
+                                    <InputText id="url" v-model="form.url" placeholder="https://…" fluid
+                                        style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="flex gap-2">
+                                    <button type="button" @click="newlinkModal = false"
+                                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-sm font-semibold transition-colors">
+                                        <Icon name="lucide:x" size="16" class="shrink-0" />
+                                        Annuler
+                                    </button>
+                                    <button type="button" @click="saveNewLink()" :disabled="!form.title || !form.url"
+                                        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                                        <Icon name="lucide:save" size="16" class="shrink-0" />
+                                        Enregistrer
+                                    </button>
+                                </div>
                             </div>
                         </template>
                     </Dialog>
@@ -573,28 +612,8 @@ const resetForm = () => {
     newlinkModal.value = false
 }
 
-// Supprimer un lien avec confirmation
-const confirm = useConfirm();
-const confirmDeletePopup = (event, id) => {
-    confirm.require({
-        target: event.currentTarget,
-        message: 'Êtes vous sûr de vouloir supprimer ce lien ?',
-        rejectProps: {
-            label: 'Annuler',
-            severity: 'secondary',
-            outlined: true
-        },
-        acceptProps: {
-            label: 'Supprimer',
-            severity: 'danger'
-        },
-        accept: async () => {
-            linkStore.deleteLink(id)
-        },
-        reject: () => {
-        }
-    });
-};
+const showDeleteConfirmation = ref(false)
+const slotToDelete = ref(null)
 
 // Changer l'icone
 import { Cropper, CircleStencil } from 'vue-advanced-cropper'

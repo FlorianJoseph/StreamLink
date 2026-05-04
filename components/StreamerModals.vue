@@ -1,141 +1,147 @@
 <template>
     <!-- ═══ MODALE PLAYER TWITCH ═══ -->
     <Dialog v-model:visible="playerModal.open" modal
-        :style="{ width: '80vw', maxWidth: '80vw', background: '#18181b', border: '1px solid #3f3f46', borderRadius: '16px', padding: 0, overflow: 'hidden' }"
-        :pt="{ header: { style: 'display:none' }, content: { style: 'padding:0; background:#18181b; border-radius:16px; overflow:hidden' } }">
-        <div class="flex flex-col">
+        :style="{ width: '80vw', maxWidth: '80vw', background: '#1e1f22', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', padding: 0, overflow: 'hidden' }"
+        :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' }, content: { style: 'padding:0;' } }">
+        <template #container>
+            <div class="flex flex-col rounded-xl border border-white/8 bg-dark overflow-hidden">
 
-            <!-- Header -->
-            <div
-                class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 border-b border-zinc-800 flex-shrink-0 gap-3">
-                <div class="flex items-center gap-3">
-                    <img :src="avatarUrl(playerModal.streamer?.avatar_url, 64)"
-                        class="w-9 h-9 rounded-xl object-cover ring-1 ring-zinc-700" />
-                    <div class="flex min-w-0 justify-between w-full">
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm font-semibold text-white">{{ playerModal.streamer?.username
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 border-b border-white/5 flex-shrink-0 gap-3">
+                    <div class="flex items-center gap-3">
+                        <img :src="avatarUrl(playerModal.streamer?.avatar_url, 64)"
+                            class="w-9 h-9 rounded-full object-cover ring-1 ring-white/8" />
+                        <div class="flex min-w-0 justify-between w-full">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-semibold text-white">{{ playerModal.streamer?.username
                                     }}</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-0.5">
+                                    <span class="text-xs text-muted">{{ playerGameLabel }}{{ !playerIsLive ? ' | ' +
+                                        playerWhenLabel : '' }}</span>
+                                    <span v-if="playerIsLive && playerViewerCount !== null"
+                                        class="text-xs text-muted flex items-center gap-1">
+                                        <Icon name="lucide:eye" size="12" class="ml-0.5" /> {{ playerViewerCount }}
+                                    </span>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-2 mt-0.5">
-                                <span class="text-xs text-zinc-400">{{ playerGameLabel }}{{ !playerIsLive ? ' | ' +
-                                    playerWhenLabel : '' }}</span>
-                                <span v-if="playerIsLive && playerViewerCount !== null"
-                                    class="text-xs text-zinc-500 flex items-center gap-1">
-                                    <Icon name="lucide:eye" size="12" class="ml-0.5" /> {{ playerViewerCount }}
-                                </span>
-                            </div>
+                            <button @click="closePlayer()"
+                                class="flex sm:hidden items-center justify-center w-10 h-10 rounded-full hover:bg-white/5 text-muted">
+                                <Icon name="lucide:x" size="22" />
+                            </button>
                         </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center items-center gap-2">
+                        <a :href="`https://twitch.tv/${playerModal.streamer?.username}`" target="_blank"
+                            rel="noopener noreferrer"
+                            class="w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-white/5 hover:bg-white/10 text-muted hover:text-white border border-white/8 transition-colors">
+                            <Icon name="simple-icons:twitch" size="16" />
+                            Voir sur Twitch
+                        </a>
+                        <button @click="triggerRaidFromPlayer" :disabled="!playerCanRaid"
+                            v-tooltip.bottom="{ value: playerRaidTooltip, pt: { text: '!text-sm' } }" :class="[
+                                'w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 rounded-md text-sm font-bold transition-colors',
+                                playerCanRaid
+                                    ? 'bg-primary hover:bg-primary/90 text-white cursor-pointer'
+                                    : 'bg-primary/5 text-muted border border-white/8 cursor-not-allowed'
+                            ]">
+                            <Icon name="lucide:swords" size="16" />
+                            Lancer un raid
+                            <span class="flex items-center gap-0.5 text-[10px]"
+                                :class="playerCanRaid ? 'text-white' : 'text-muted'">
+                                <img v-if="playerCanRaid" src="/images/assets/charmi-monnaie-blanc.svg"
+                                    class="w-2.5 h-2.5" alt="" />
+                                +{{ playerRaidCoins }}
+                            </span>
+                        </button>
                         <button @click="closePlayer()"
-                            class="flex sm:hidden items-center justify-center w-10 h-10 rounded-full hover:bg-zinc-800 text-zinc-400 transition-colors">
+                            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
                             <Icon name="lucide:x" size="22" />
                         </button>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center items-center gap-2">
-                    <a :href="`https://twitch.tv/${playerModal.streamer?.username}`" target="_blank"
-                        rel="noopener noreferrer"
-                        class="w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white border border-zinc-700/60 transition-all duration-150">
-                        <Icon name="simple-icons:twitch" size="16" />
-                        Voir sur Twitch
-                    </a>
-                    <button @click="triggerRaidFromPlayer" :disabled="!playerCanRaid"
-                        v-tooltip.bottom="{ value: playerRaidTooltip, pt: { text: '!text-sm' } }" :class="[
-                        'w-full sm:w-auto flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-150',
-                        playerCanRaid
-                            ? 'bg-white hover:bg-zinc-200 text-zinc-900 cursor-pointer'
-                            : 'bg-zinc-800 text-zinc-600 border border-zinc-700/40 cursor-not-allowed'
-                    ]">
-                        <Icon name="lucide:swords" size="16" />
-                        Lancer un raid
-                        <span class="flex items-center gap-0.5 text-[10px]"
-                            :class="playerCanRaid ? 'text-zinc-500' : 'text-zinc-600'">
-                            <Icon name="lucide:coins" size="10" /> +{{ playerRaidCoins }}
-                        </span>
-                    </button>
-                    <button @click="closePlayer()"
-                        class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full hover:bg-zinc-800 text-zinc-400 transition-colors">
-                        <Icon name="lucide:x" size="22" />
-                    </button>
-                </div>
-            </div>
 
-            <!-- Player + chat -->
-            <div class="flex min-h-0">
-                <div class="flex-1 bg-black min-w-0">
-                    <div v-if="playerModal.open" id="twitch-embed" class="w-full" style="aspect-ratio: 16/9" />
-                </div>
-                <div class="hidden lg:block flex-shrink-0 border-l border-zinc-800"
-                    style="aspect-ratio: unset; width: 340px">
-                    <iframe v-if="playerModal.open"
-                        :src="`https://www.twitch.tv/embed/${playerModal.streamer?.username}/chat?parent=stream-link.fr&parent=www.stream-link.fr&parent=localhost&darkpopout`"
-                        class="w-full h-full" style="min-height: 300px"
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals" />
+                <!-- Player + chat -->
+                <div class="flex min-h-0">
+                    <div class="flex-1 bg-black min-w-0">
+                        <div v-if="playerModal.open" id="twitch-embed" class="w-full" style="aspect-ratio: 16/9" />
+                    </div>
+                    <div class="hidden lg:block flex-shrink-0 border-l border-white/5"
+                        style="aspect-ratio: unset; width: 340px">
+                        <iframe v-if="playerModal.open"
+                            :src="`https://www.twitch.tv/embed/${playerModal.streamer?.username}/chat?parent=charmi.gg&parent=www.charmi.gg&parent=localhost&darkpopout`"
+                            class="w-full h-full" style="min-height: 300px"
+                            sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals" />
+                    </div>
                 </div>
             </div>
-        </div>
+        </template>
     </Dialog>
 
     <!-- ═══ MODALE RAID ═══ -->
-    <Dialog v-model:visible="raidModal.open" modal :draggable="false" :style="{ width: '24rem', margin: '1rem' }">
+    <Dialog v-model:visible="raidModal.open" modal :draggable="false" :style="{ width: '24rem', margin: '1rem' }"
+        :pt="{ root: { style: 'background: transparent; border: none; box-shadow: none;' } }">
         <template #container>
+            <div class="rounded-xl border border-white/8 bg-dark overflow-hidden">
 
-            <!-- État countdown post-raid -->
-            <div v-if="raidModal.confirmed" class="flex flex-col gap-4 p-6">
-                <div class="flex items-center gap-3">
-                    <img :src="avatarUrl(raidModal.streamer?.avatar_url, 64)"
-                        class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
-                    <div>
-                        <p class="font-semibold text-white text-sm">Raid en cours vers {{ raidModal.streamer?.username
+                <!-- État countdown -->
+                <div v-if="raidModal.confirmed" class="flex flex-col gap-4 p-6">
+                    <div class="flex items-center gap-3">
+                        <img :src="avatarUrl(raidModal.streamer?.avatar_url, 64)"
+                            class="w-10 h-10 rounded-xl object-cover ring-1 ring-white/8" />
+                        <div>
+                            <p class="font-semibold text-white text-sm">Raid en cours vers {{
+                                raidModal.streamer?.username
                             }}</p>
-                        <p class="text-xs text-zinc-400">{{ raidModal.countdown }}s restantes</p>
+                            <p class="text-xs text-muted">{{ raidModal.countdown }}s restantes</p>
+                        </div>
                     </div>
+                    <div class="w-full h-1.5 bg-white/8 rounded-full overflow-hidden">
+                        <div class="h-full bg-accent rounded-full transition-all duration-500"
+                            :style="{ width: `${(raidModal.countdown / 15) * 100}%` }" />
+                    </div>
+                    <p class="text-xs text-muted text-center">Tes Charm arrivent dans {{ raidModal.countdown }}s</p>
+                    <button @click="cancelRaid" class="w-full text-xs text-muted hover:text-white transition-colors">
+                        Annuler le raid
+                    </button>
                 </div>
-                <div class="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                    <div class="h-full bg-yellow-500 rounded-full transition-all duration-500"
-                        :style="{ width: `${(raidModal.countdown / 15) * 100}%` }" />
-                </div>
-                <p class="text-xs text-zinc-500 text-center">Tes Coins seront crédités dans {{ raidModal.countdown }}s
-                </p>
-                <button @click="cancelRaid"
-                    class="w-full text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
-                    Annuler le raid
-                </button>
-            </div>
 
-            <!-- État confirmation -->
-            <div v-else class="flex flex-col gap-5 p-6">
-                <div class="flex items-center gap-3">
-                    <img :src="avatarUrl(raidModal.streamer?.avatar_url, 64)"
-                        class="w-10 h-10 rounded-xl object-cover ring-1 ring-zinc-700" />
-                    <div>
-                        <p class="font-semibold text-white text-sm">{{ raidModal.streamer?.username }}</p>
-                        <p class="text-xs text-zinc-400">{{ raidGameLabel }}</p>
+                <!-- État confirmation -->
+                <div v-else class="flex flex-col gap-5 p-6">
+                    <div class="flex items-center gap-3">
+                        <img :src="avatarUrl(raidModal.streamer?.avatar_url, 64)"
+                            class="w-10 h-10 rounded-full object-cover ring-1 ring-white/8" />
+                        <div>
+                            <p class="font-semibold text-white text-sm">{{ raidModal.streamer?.username }}</p>
+                            <p class="text-xs text-muted">{{ raidGameLabel }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <p class="text-sm text-white font-medium">Lancer un raid vers {{ raidModal.streamer?.username }} ?
-                    </p>
-                    <p class="text-xs text-zinc-400">Tes viewers seront redirigés vers sa chaîne Twitch.</p>
-                </div>
-                <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                    <Icon name="lucide:coins" size="16" class="text-yellow-400 flex-shrink-0" />
-                    <span class="text-xs sm:text-sm text-yellow-300 font-medium">+{{ raidCoins }} Coins</span>
-                    <span class="text-xs text-zinc-500 ml-auto">{{ raidStatus.remaining }}/{{ raidStatus.total }}
-                        raids restants cette semaine</span>
-                </div>
-                <div class="flex gap-2">
-                    <button @click="closeRaid()"
-                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all duration-150">
-                        <Icon name="lucide:x" size="16" class="flex-shrink-0" />
-                        Annuler
-                    </button>
-                    <button @click="confirmRaid" :disabled="raidModal.loading"
-                        class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-white hover:bg-zinc-200 text-zinc-900 font-bold text-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
-                        <Icon v-if="!raidModal.loading" name="lucide:swords" size="16" class="flex-shrink-0" />
-                        <Icon v-else name="lucide:loader-circle" size="16" class="flex-shrink-0 animate-spin" />
-                        Raid
-                    </button>
+                    <div class="flex flex-col gap-1">
+                        <p class="text-sm text-white font-medium">Lancer un raid vers {{ raidModal.streamer?.username }}
+                            ?
+                        </p>
+                        <p class="text-xs text-muted">Tes viewers seront redirigés vers sa chaîne Twitch.</p>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20">
+                        <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-4 h-4 flex-shrink-0" alt="" />
+                        <span class="text-sm text-accent font-medium">+{{ raidCoins }} Charm</span>
+                        <span class="text-xs text-muted ml-auto">{{ raidStatus.remaining }}/{{ raidStatus.total }} raids
+                            restants</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button @click="closeRaid()"
+                            class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-md border border-white/8 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm">
+                            <Icon name="lucide:x" size="16" class="flex-shrink-0" />
+                            Annuler
+                        </button>
+                        <button @click="confirmRaid" :disabled="raidModal.loading"
+                            class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-md bg-primary hover:bg-primary/90 text-white font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                            <Icon v-if="!raidModal.loading" name="lucide:swords" size="16" class="flex-shrink-0" />
+                            <Icon v-else name="lucide:loader-circle" size="16" class="flex-shrink-0 animate-spin" />
+                            Raid
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -202,7 +208,7 @@ const playerRaidTooltip = computed(() => {
     if (!raidStatus.value.canRaidToday) return 'Tu as déjà raid aujourd\'hui'
     if (raidStatus.value.remaining === 0) return 'Plus de raids disponibles cette semaine'
     if (raidStatus.value.raidedThisWeek?.includes(s.username?.toLowerCase())) return 'Tu as déjà raid ce streamer cette semaine'
-    return `Raid ${s.username} et gagner ${playerRaidCoins.value} Coins`
+    return `Raid ${s.username} et gagner ${playerRaidCoins.value} Charm`
 })
 
 function triggerRaidFromPlayer() {
@@ -223,7 +229,7 @@ watch(() => playerModal.value.open, (val) => {
                 new (window as any).Twitch.Embed('twitch-embed', {
                     width, height,
                     channel: playerModal.value.streamer?.username,
-                    parent: ['stream-link.fr', 'www.stream-link.fr', 'localhost'],
+                    parent: ['charmi.gg', 'www.charmi.gg', 'localhost'],
                     layout: 'video',
                     autoplay: true,
                     theme: 'dark',

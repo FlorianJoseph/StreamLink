@@ -1,24 +1,18 @@
 <template>
     <div v-if="loading" class="flex justify-center items-center pt-100 w-full">
         <ProgressSpinner
-            style="width: 50px; height: 50px;--p-progressspinner-color-one
-:#FFFFFF;--p-progressspinner-color-two :#F8F9FA;--p-progressspinner-color-three :#E9ECEF;--p-progressspinner-color-four:#DEE2E6 "
-            strokeWidth="6" fill="transparent" animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+            style="width:40px;height:40px;--p-progressspinner-color-one:#6A5AE0;--p-progressspinner-color-two:#8B7FF0;--p-progressspinner-color-three:#6A5AE0;--p-progressspinner-color-four:#4A3AC0"
+            strokeWidth="6" fill="transparent" animationDuration=".5s" />
     </div>
     <div v-else>
         <div
-            class="flex flex-col lg:flex-row sm:max-w-4xl lg:max-w-5xl xl:max-w-full sm:gap-6 lg:gap-12 xl:gap-24 2xl:gap-42 fade-in">
-            <ConfirmPopup></ConfirmPopup>
+            class="flex flex-col lg:flex-row sm:max-w-4xl lg:max-w-5xl xl:max-w-full sm:gap-6 lg:gap-12 xl:gap-24 2xl:gap-42 fade-in py-6">
             <!-- Édition du streamlink -->
             <div class="flex-1 lg:flex-[2] min-w-0">
                 <StreamLinkEdit />
             </div>
-            <div class="hidden lg:block">
-                <Divider layout="vertical" />
-            </div>
-            <div class="lg:hidden block">
-                <Divider />
-            </div>
+            <div class="hidden lg:block w-px bg-white/8 self-stretch" />
+            <div class="lg:hidden h-px bg-white/8 my-8" />
             <!-- Aperçu du streamlink -->
             <div class="sticky top-0 lg:self-start mx-auto">
                 <StreamLinkPreview />

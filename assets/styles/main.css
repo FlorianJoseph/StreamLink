@@ -1,13 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-
+@import './tokens.css';
 @import "tailwindcss";
+
+@theme {
+    --font-heading: 'PilcrowRounded', system-ui, sans-serif;
+    --font-body: 'PlusJakartaSans', system-ui, sans-serif;
+
+    --color-primary: #6A5AE0;
+    --color-accent: #FFC82C;
+    --color-dark: #1E1F22;
+    --color-surface: #F2F3F7;
+    --color-muted: #9A9BA0;
+    --color-surface-dark: #2A2B2F;
+    --color-surface-darker: #18191C;
+}
 
 * {
     box-sizing: border-box;
 }
 
 body {
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
+    background-color: var(--color-dark);
+    color: var(--color-text-dark);
 }
 
 button,
@@ -16,7 +30,7 @@ a {
 }
 
 * {
-    scrollbar-color: #9F9F9F transparent;
+    scrollbar-color: var(--color-text-muted) transparent;
 }
 
 .p-toast-close-button {
@@ -25,4 +39,16 @@ a {
 
 .p-toast-message {
     border-color: transparent !important;
+}
+
+@keyframes charmi-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
