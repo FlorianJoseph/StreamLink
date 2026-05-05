@@ -272,6 +272,8 @@ function animateCountUp(targets: number[], animated: Ref<number[]>) {
   requestAnimationFrame(tick)
 }
 
+const route = useRoute()
+
 onMounted(async () => {
   const [statsResults, recent, raidsData, pageViewsData] = await Promise.all([
     Promise.allSettled([
@@ -283,7 +285,19 @@ onMounted(async () => {
     $fetch<{ count: number }>('/api/stats/raids-weekly').catch(() => ({ count: 0 })),
     $fetch<{ count: number }>('/api/stats/page-views').catch(() => ({ count: 0 })),
   ])
-  console.log(raidsData)
+
+  if (route.query.utm_source && !sessionStorage.getItem('tracked_home_visit')) {
+    $fetch('/api/marketing/event', {
+      method: 'POST',
+      body: {
+        type: 'home_visit',
+        utm_source: route.query.utm_source,
+        utm_campaign: route.query.utm_campaign ?? null,
+        userId: null
+      }
+    })
+    sessionStorage.setItem('tracked_home_visit', 'true')
+  }
 
   recentStreamers.value = recent
   raids.value = raidsData.count
