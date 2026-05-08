@@ -88,6 +88,12 @@
                         Envoyer {{ selectedSegment ? segmentCounts[selectedSegment] : 0 }} emails
                     </button>
                 </div>
+                <button @click="sendEmails" :disabled="!selectedSegment || sending"
+                    class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary hover:bg-primary/80 text-white text-xs font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                    <Icon v-if="sending" name="lucide:loader-circle" size="14" class="animate-spin" />
+                    <Icon v-else name="lucide:send" size="14" />
+                    Envoyer {{ selectedSegment ? segmentCounts[selectedSegment] : 0 }} emails
+                </button>
             </div>
 
             <!-- Historique -->
@@ -126,6 +132,7 @@ const segmentsMeta = [
     { value: 'notVisible', label: 'Non visible', shortLabel: 'Non visible', color: '#6366f1' },
     { value: 'notSchedule', label: 'Sans planning', shortLabel: 'Sans planning', color: '#10b981' },
     { value: 'update', label: 'Mises à jour', shortLabel: 'Mise à jour', color: '#f59e0b' },
+    { value: 'charmiplus', label: 'Charmi+', shortLabel: 'Charmi+', color: '#6A5AE0' },
 ]
 
 // Planning d’envoi : 4 semaines A/B/C/D avec règles différentes

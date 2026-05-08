@@ -16,5 +16,6 @@ export default defineEventHandler(async (event) => {
         notVisible: notVisible.length,
         notSchedule: notSchedule.length,
         update: update.length,
+        charmiplus: update.length, // On utilise la même base que "update" pour le segment "charmiplus"
     }
 })

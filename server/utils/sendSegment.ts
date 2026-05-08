@@ -3,6 +3,7 @@ import { render } from '@react-email/render'
 import { UpdateEmail } from '../api/admin/mail/templates/Update'
 import { NotVisibleEmail } from '../api/admin/mail/templates/NotVisible'
 import { NotScheduleEmail } from '../api/admin/mail/templates/NotSchedule'
+import { CharmiPlusEmail } from '../api/admin/mail/templates/CharmiPlus'
 import { getNotVisibleUsers } from '../api/admin/mail/segments/notVisible'
 import { getNotScheduleUsers } from '../api/admin/mail/segments/notSchedule'
 import { getUpdateUsers } from '../api/admin/mail/segments/update'
@@ -13,18 +14,21 @@ const subjects: Record<string, string> = {
     update: 'Transforme tes raids en récompenses',
     notVisible: 'Ton profil Charmi est encore invisible',
     notSchedule: 'Ton planning est vide',
+    charmiplus: '7 jours gratuits pour essayer Charmi+',
 }
 
 const segmentTemplates: Record<string, Function> = {
     update: ({ username }: any) => render(UpdateEmail({ username })),
     notVisible: ({ username }: any) => render(NotVisibleEmail({ username })),
     notSchedule: ({ username }: any) => render(NotScheduleEmail({ username })),
+    charmiplus: ({ username }: any) => render(CharmiPlusEmail({ username })),
 }
 
 const segmentHandlers: Record<string, Function> = {
     update: getUpdateUsers,
     notVisible: getNotVisibleUsers,
     notSchedule: getNotScheduleUsers,
+    charmiplus: getUpdateUsers,
 }
 
 export async function sendSegment(client: any, segment: string) {
@@ -43,7 +47,7 @@ export async function sendSegment(client: any, segment: string) {
         try {
             const emails = await Promise.all(
                 batch.map(async (u: any) => ({
-                    from: 'Charmi <noreply@updates.charmi.gg>',
+                    from: 'NordiK de Charmi <nordik@updates.charmi.gg>',
                     to: u.email,
                     subject: subjects[segment],
                     html: await segmentTemplates[segment]({ username: u.username }),
