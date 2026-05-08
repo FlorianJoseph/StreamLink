@@ -430,7 +430,7 @@ const openCheckout = async (packPriceId: string, mode: 'payment' | 'subscription
 
 const loading = ref(true)
 onMounted(async () => {
-    const alreadyTracked = sessionStorage.getItem('charmiplus_launch') === 'true'
+    const alreadyTracked = localStorage.getItem('charmiplus_launch') === 'true'
 
     if (route.query.utm_source && !alreadyTracked) {
         $fetch('/api/marketing/event', {
@@ -443,7 +443,7 @@ onMounted(async () => {
             }
         })
 
-        sessionStorage.setItem('charmiplus_launch', 'true')
+        localStorage.setItem('charmiplus_launch', 'true')
     }
     loading.value = false
 })
