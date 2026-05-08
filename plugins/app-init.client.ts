@@ -72,5 +72,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         await fetchBalance()
     })
 
+    usePaymentSuccess()
+
     nuxtApp.provide('profileProgress', profileProgress)
 })

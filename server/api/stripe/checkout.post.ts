@@ -44,6 +44,12 @@ export default defineEventHandler(async (event) => {
         ui_mode: 'embedded',
         mode,
         line_items: [{ price: priceId, quantity: 1 }],
+        allow_promotion_codes: true,
+        ...(mode === 'subscription' ? {
+            subscription_data: {
+                trial_period_days: 7,
+            }
+        } : {}),
         return_url: `${config.public.appUrl}/checkout?session_id={CHECKOUT_SESSION_ID}`,
         metadata: {
             user_id: user.sub,

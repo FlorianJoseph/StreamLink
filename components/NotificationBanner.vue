@@ -14,11 +14,11 @@
                     <p class="text-xs sm:text-base text-white/90 leading-relaxed">
                         <span class="lg:hidden">
                             <NuxtLink :to="destination" class="font-bold underline hover:text-white">
-                                StreamLink devient Charmi ! Nouveau nom, nouveau design, même communauté
+                                Charmi+ est disponible : essaie gratuitement pendant 7 jours
                             </NuxtLink>
                         </span>
                         <span class="hidden lg:inline">
-                            StreamLink devient Charmi ! Nouveau nom, nouveau design, même communauté
+                            Charmi+ est disponible : essaie gratuitement pendant 7 jours
                         </span>
                     </p>
                 </div>
@@ -28,7 +28,7 @@
                     <NuxtLink :to="destination"
                         class="hidden sm:flex items-center gap-2 bg-white text-primary font-semibold px-4 py-1.5 rounded-md hover:bg-white/90 transition-colors whitespace-nowrap">
                         <img src="/images/mascotte/charmi-happy-violet.svg" class="w-5 h-5" alt="" loading="eager" />
-                        Découvrir Charmi
+                        Découvrir Charmi+
                     </NuxtLink>
                     <button @click="closeBanner"
                         class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 text-white transition-colors">
@@ -43,7 +43,7 @@
 <script setup>
 // const streamerStore = useStreamerStore()
 // const { streamer } = storeToRefs(streamerStore)
-const destination = ref('/')
+const destination = ref('/shop')
 
 // watchEffect(() => {
 //     if (streamer.value?.username) {
@@ -53,7 +53,7 @@ const destination = ref('/')
 
 const user = useSupabaseUser()
 
-const STORAGE_KEY = 'branding'
+const STORAGE_KEY = 'charmiplus'
 const visible = ref(false)
 
 const closeBanner = () => {

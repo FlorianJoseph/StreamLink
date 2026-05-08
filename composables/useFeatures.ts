@@ -16,10 +16,8 @@ export const useFeatures = () => {
     const isSub = computed(() => {
         if (!subscription.value) return false
         if (subscription.value.status === 'active') return true
+        if (subscription.value.status === 'trialing') return true
         if (subscription.value.status === 'past_due') return true
-        if (subscription.value.status === 'canceled' && subscription.value.current_period_end) {
-            return new Date(subscription.value.current_period_end) > new Date()
-        }
         return false
     })
 

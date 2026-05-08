@@ -122,6 +122,22 @@
             </div>
         </div>
 
+        <!-- Upsell Charmi+ -->
+        <template v-if="allCompleted && !isSub">
+            <div class="h-px bg-white/5" />
+
+            <button @click="charmiPlusModal = true"
+                class="flex items-center gap-3 p-3 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 w-full text-left">
+                <img src="/images/mascotte/charmi-happy-violet.svg" alt="" class="w-8 h-8 shrink-0 opacity-80" />
+                <div class="flex flex-col gap-0.5 flex-1">
+                    <span class="text-sm font-semibold text-[#a89ff0]">Profil au top, et maintenant ? Essaye Charmi+
+                        gratuitement</span>
+                    <p class="text-xs text-muted">6 Charm/jour auto, badge vérifié, thèmes premium et bien plus</p>
+                </div>
+            </button>
+            <FeatureUnlockModal v-model="charmiPlusModal" />
+        </template>
+
     </div>
 </template>
 
@@ -160,4 +176,15 @@ const getNextStepMessage = () => {
     }
     return "Ton profil est au top !"
 }
+
+const { isSub } = useFeatures()
+
+const allCompleted = computed(() => {
+    const optDone = getOptionalCompletedCount() === getOptionalCount()
+    return stats.value.completedRequired === getRequiredCount()
+        && hasPlanning.value
+        && optDone
+})
+
+const charmiPlusModal = ref(false)
 </script>

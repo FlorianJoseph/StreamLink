@@ -1,5 +1,5 @@
 <template>
-    <header class="relative z-50">
+    <header class="relative z-100">
         <nav class="h-13 bg-surface-darker shadow-sm">
             <div class="flex items-center h-full px-2 sm:px-3">
 
@@ -72,17 +72,94 @@
 
                     <!-- Connecté -->
                     <template v-else>
-                        <!-- Solde Charm -->
-                        <NuxtLink to="/shop" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full
-                                   bg-white/5 hover:bg-white/8 transition-colors">
-                            <img src="/images/assets/charmi-monnaie-jaune.svg"
-                                class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" alt="" loading="eager" />
-                            <span class="text-xs sm:text-sm font-bold text-white">{{ balance }}</span>
-                        </NuxtLink>
+                        <!-- Solde Charm + daily dropdown -->
+                        <div ref="charmRef" class="relative">
+                            <button @click="charmOpen = !charmOpen; avatarOpen = false; maPageOpen = false"
+                                v-tooltip.bottom="{ value: !dailyClaimed && !isSub ? 'Réclamer tes Charm du jour' : 'Solde Charm', pt: { text: '!text-xs' } }"
+                                class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/5 hover:bg-white/8">
+                                <img src="/images/assets/charmi-monnaie-jaune.svg"
+                                    class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" alt="" />
+                                <span class="text-xs sm:text-sm font-bold text-white">{{ balance }}</span>
+                                <Icon name="lucide:chevron-down" size="14"
+                                    class="text-muted transition-transform duration-200"
+                                    :class="charmOpen ? 'rotate-180' : ''" />
+                            </button>
+                            <span v-if="!dailyClaimed && !isSub"
+                                class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-accent animate-pulse" />
+
+                            <Transition name="dropdown">
+                                <div v-if="charmOpen"
+                                    class="absolute top-full right-0 mt-1.5 w-64 bg-surface-darker border border-white/8 rounded-md shadow-xl p-2">
+
+                                    <!-- Solde -->
+                                    <div class="flex items-center justify-between px-3 py-2">
+                                        <span class="text-xs text-muted">Solde actuel</span>
+                                        <div class="flex items-center gap-1">
+                                            <img src="/images/assets/charmi-monnaie-jaune.svg" class="w-3 h-3 shrink-0"
+                                                alt="" />
+                                            <span class="text-sm font-bold text-accent">{{ balance }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="h-px bg-white/8 my-1" />
+
+                                    <!-- Claim daily -->
+                                    <button v-if="!dailyClaimed && !isSub" @click="claimDaily(toast)"
+                                        :disabled="dailyLoading"
+                                        class="flex items-center gap-2 w-full px-3 py-2 rounded-sm hover:bg-white/5 disabled:opacity-50">
+                                        <span class="text-sm text-accent font-semibold">
+                                            {{ dailyLoading ? 'Chargement...' : 'Réclamer + 3 Charm' }}
+                                        </span>
+                                    </button>
+                                    <div v-else class="flex items-center gap-2 px-3 py-2 text-muted">
+                                        <template v-if="isSub">
+                                            <span class="text-xs text-[#a89ff0] font-semibold">6 Charm/jour
+                                                automatique</span>
+                                        </template>
+                                        <template v-else>
+                                            <Icon name="lucide:check" size="16" class="shrink-0 text-primary" />
+                                            <span class="text-xs">
+                                                Déjà réclamé aujourd'hui
+                                            </span>
+                                        </template>
+                                    </div>
+
+                                    <div class="h-px bg-white/8 my-1" />
+
+                                    <!-- Liens -->
+                                    <NuxtLink to="/shop" @click="charmOpen = false"
+                                        class="flex items-center gap-1.5 px-3 py-2 text-muted text-sm hover:text-white hover:bg-white/5 rounded-sm">
+                                        <Icon name="lucide:shopping-bag" size="18" class="shrink-0" />
+                                        Boutique
+                                    </NuxtLink>
+                                    <NuxtLink to="/admin/wallet" @click="charmOpen = false"
+                                        class="flex items-center gap-1.5 px-3 py-2 text-muted text-sm hover:text-white hover:bg-white/5 rounded-sm">
+                                        <Icon name="lucide:wallet" size="18" class="shrink-0" />
+                                        Mes Charm
+                                    </NuxtLink>
+
+                                    <template v-if="!isSub">
+                                        <div class="h-px bg-white/8 my-1" />
+                                        <button @click="charmOpen = false; charmDailyModal = true"
+                                            class="flex items-center gap-2.5 px-3 py-2 rounded-sm hover:bg-primary/15 bg-primary/8 w-full">
+                                            <img src="/images/mascotte/charmi-happy-violet.svg" alt=""
+                                                class="w-5 h-5 shrink-0 opacity-80" />
+                                            <div class="flex flex-col gap-0 text-left">
+                                                <span class="text-xs font-semibold text-[#a89ff0]">Essayer Charmi+
+                                                    gratuitement</span>
+                                                <span class="text-[10px] text-muted">6 Charm/jour auto et bien
+                                                    plus</span>
+                                            </div>
+                                        </button>
+                                    </template>
+                                </div>
+                            </Transition>
+                        </div>
+                        <FeatureUnlockModal v-model="charmDailyModal" featureKey="daily" />
 
                         <!-- Avatar + menu -->
                         <div ref="avatarRef" class="relative">
-                            <button @click="avatarOpen = !avatarOpen; mobileOpen = false"
+                            <button @click="avatarOpen = !avatarOpen; charmOpen = false; mobileOpen = false"
                                 class="flex items-center gap-2 px-2 py-1.5 rounded-md"
                                 :class="avatarOpen ? 'sm:bg-white/8' : 'sm:hover:bg-white/5'">
                                 <Avatar :image="user.user_metadata.avatar_url" shape="circle" size="small" />
@@ -169,7 +246,10 @@
 </template>
 
 <script setup>
-const { balance } = useWallet()
+const { balance, dailyClaimed, dailyLoading, fetchDailyClaimed, claimDaily } = useWallet()
+const { isSub } = useFeatures()
+const charmOpen = ref(false)
+const charmRef = ref(null)
 
 const menuItemsBefore = [
     { label: 'Découverte', route: '/discover' },
@@ -177,7 +257,6 @@ const menuItemsBefore = [
 ]
 const menuItemsAfter = [
     { label: 'Planning', route: '/schedule' },
-    { label: 'Boutique', route: '/shop' },
 ]
 
 const maPageItems = [
@@ -194,11 +273,17 @@ const maPageRef = ref(null)
 const avatarRef = ref(null)
 
 const handleClickOutside = (e) => {
+    if (charmRef.value && !charmRef.value.contains(e.target)) charmOpen.value = false
     if (maPageRef.value && !maPageRef.value.contains(e.target)) maPageOpen.value = false
     if (avatarRef.value && !avatarRef.value.contains(e.target)) avatarOpen.value = false
 }
 
-onMounted(() => document.addEventListener('mousedown', handleClickOutside))
+// Fetch daily au mount
+onMounted(async () => {
+    document.addEventListener('mousedown', handleClickOutside)
+    await fetchDailyClaimed()
+})
+
 onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 // Auth
@@ -233,7 +318,7 @@ const popoverItems = ref([
             { label: 'Mails', icon: 'lucide:mail', route: '/_secret-admin/mails', adminOnly: true },
             { label: 'Toasts', icon: 'lucide:bell', route: '/_secret-admin/toast', adminOnly: true },
             { label: 'Compte', icon: 'lucide:user', route: '/admin/account' },
-            { label: 'Mes Charm', icon: 'lucide:wallet', route: '/admin/wallet' },
+            { label: 'Mon abonnement', icon: 'lucide:credit-card', route: null, command: () => openPortal(), subOnly: true },
             { label: 'Déconnexion', icon: 'lucide:log-out', command: () => logOut() },
         ],
     },
@@ -242,9 +327,23 @@ const popoverItems = ref([
 const filteredPopoverItems = computed(() =>
     popoverItems.value.map(group => ({
         ...group,
-        items: group.items.filter(item => !item.adminOnly || isAdmin.value),
+        items: group.items.filter(item =>
+            (!item.adminOnly || isAdmin.value) &&
+            (!item.subOnly || isSub.value)
+        )
     }))
 )
+
+const charmDailyModal = ref(false)
+const toast = useToast()
+
+const openPortal = async () => {
+    const { url } = await $fetch('/api/stripe/portal', { method: 'POST' })
+    const width = 1000, height = 700
+    const left = window.screenX + (window.outerWidth - width) / 2
+    const top = window.screenY + (window.outerHeight - height) / 2
+    window.open(url, 'stripe-portal', `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes`)
+}
 </script>
 
 <style scoped>

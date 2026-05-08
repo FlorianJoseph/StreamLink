@@ -20,10 +20,19 @@
                         class="w-10 h-10 flex items-center justify-center rounded-md border border-white/8 hover:border-white/20 hover:bg-white/5 text-muted hover:text-white transition-colors disabled:opacity-40 disabled:pointer-events-none">
                         <Icon name="lucide:redo" size="18" />
                     </button>
-                    <button :disabled="!isDirty" @click="handleSave"
-                        class="flex items-center gap-2 px-4 py-2 rounded-md bg-primary hover:bg-primary/80 text-white font-semibold transition-colors disabled:opacity-40 disabled:pointer-events-none">
-                        <Icon name="lucide:save" size="18" />
-                        <span class="hidden sm:inline">Enregistrer</span>
+                    <button @click="handleSave"
+                        class="flex items-center gap-2 px-4 py-2 rounded-md transition-colors font-semibold text-white"
+                        :class="needsPremiumSave
+                            ? 'bg-primary hover:bg-primary/80'
+                            : isDirty ? 'bg-primary hover:bg-primary/80' : 'bg-primary opacity-40 pointer-events-none'">
+                        <template v-if="needsPremiumSave">
+                            <Icon name="lucide:sparkles" size="18" />
+                        </template>
+                        <template v-else>
+                            <Icon name="lucide:save" size="18" />
+                        </template>
+                        <span class="hidden sm:inline">
+                            {{ needsPremiumSave ? 'Débloquer & enregistrer' : 'Enregistrer' }}</span>
                     </button>
                 </div>
             </div>
@@ -51,15 +60,17 @@
                         <div class="flex flex-col gap-2">
                             <p class="text-sm font-semibold text-muted">Taille du pseudo</p>
                             <div class="flex gap-1.5">
-                                <button class="flex-1 px-4 py-2 text-sm sm:text-base rounded-md border transition-all" :class="isUsernameNormal
-                                    ? 'bg-primary/20 border-primary text-white'
-                                    : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
+                                <button class="flex-1 px-4 py-2 text-sm sm:text-base rounded-md border transition-all"
+                                    :class="isUsernameNormal
+                                        ? 'bg-primary/20 border-primary text-white'
+                                        : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
                                     @click="updateSection('username_style', { size: 'normal' })">
                                     Normal
                                 </button>
-                                <button class="flex-1 px-4 py-2 text-sm sm:text-base rounded-md border transition-all" :class="isUsernameMedium
-                                    ? 'bg-primary/20 border-primary text-white'
-                                    : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
+                                <button class="flex-1 px-4 py-2 text-sm sm:text-base rounded-md border transition-all"
+                                    :class="isUsernameMedium
+                                        ? 'bg-primary/20 border-primary text-white'
+                                        : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
                                     @click="updateSection('username_style', { size: 'medium' })">
                                     Moyen
                                 </button>
@@ -222,15 +233,17 @@
                         <div class="flex flex-col gap-2">
                             <p class="text-sm font-semibold text-muted">Style</p>
                             <div class="flex gap-2 w-full">
-                                <button class="flex-1 px-4 py-2 rounded-md text-sm sm:text-base border transition-all" :class="isFilled
-                                    ? 'bg-primary/20 border-primary text-white'
-                                    : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
+                                <button class="flex-1 px-4 py-2 rounded-md text-sm sm:text-base border transition-all"
+                                    :class="isFilled
+                                        ? 'bg-primary/20 border-primary text-white'
+                                        : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
                                     @click="updateSection('button_style', { variant: 'filled' })">
                                     Plein
                                 </button>
-                                <button class="flex-1 px-4 py-2 rounded-md text-sm sm:text-base border transition-all" :class="isOutlined
-                                    ? 'bg-primary/20 border-primary text-white'
-                                    : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
+                                <button class="flex-1 px-4 py-2 rounded-md text-sm sm:text-base border transition-all"
+                                    :class="isOutlined
+                                        ? 'bg-primary/20 border-primary text-white'
+                                        : 'border-white/8 text-muted hover:text-white hover:border-white/20'"
                                     @click="updateSection('button_style', { variant: 'outlined' })">
                                     Bordure
                                 </button>
@@ -335,7 +348,6 @@
                             </div>
                         </template>
                     </div>
-                    <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
                 </section>
                 <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
             </div>
@@ -536,6 +548,12 @@ const { hasFeature, getExpiryLabel, isSub } = useFeatures()
 // Modales de déblocage
 const premiumThemeModal = ref(false)
 const brandingModal = ref(false)
+
+const needsPremiumSave = computed(() => {
+    const activeTheme = Object.values(THEME_PRESETS).find(t => isThemeActive(t).value)
+    const activeFont = FONTS.find(f => f.name === design.value?.font_family)
+    return (activeTheme?.premium || activeFont?.premium) && !hasFeature('premium_theme')
+})
 
 // Remplace saveDesign du store par une version qui vérifie le premium
 const handleSave = async () => {

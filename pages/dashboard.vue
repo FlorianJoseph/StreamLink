@@ -49,105 +49,51 @@
                                 </div>
                             </div>
 
-                            <!-- Charm quotidien -->
-                            <div class="rounded-xl p-5 border flex flex-col gap-4" :class="{
-                                'bg-primary/8 border-primary/20': isSub,
-                                'bg-surface-dark border-white/8': !isSub && dailyClaimed,
-                                'bg-accent/8 border-accent/20': !isSub && !dailyClaimed,
-                            }">
-
-                                <div class="flex items-center justify-between gap-2">
-                                    <p class="text-white text-sm font-bold">Connexion quotidienne</p>
-                                    <img v-if="!isSub" src="/images/assets/charmi-monnaie-jaune.svg"
-                                        class="w-5 h-5 shrink-0" alt="" />
-                                    <img v-else src="/images/assets/charmi-monnaie-violet.svg" class="w-5 h-5 shrink-0"
-                                        alt="" />
-                                </div>
-
-                                <div class="flex flex-col gap-1 sm:justify-between sm:flex-row sm:items-center">
-                                    <div class="flex items-baseline gap-1.5">
-                                        <span class="text-2xl font-bold"
-                                            :class="dailyClaimed && !isSub ? 'text-white/30' : isSub ? 'text-white' : 'text-accent'">
-                                            {{ isSub ? '+6' : '+3' }}
-                                        </span>
-                                        <span class="text-muted text-xs">Charm / jour</span>
-                                    </div>
-                                    <NuxtLink v-if="!isSub" to="/shop"
-                                        class="text-xs text-muted hover:text-white w-fit transition-colors">
-                                        Passe à Charmi+ pour 6/jour auto
-                                    </NuxtLink>
-                                </div>
-                                <template v-if="isSub">
-                                    <div class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md
-                        bg-primary/10 text-primary font-medium">
-                                        Récompense automatique
-                                    </div>
-                                </template>
-
-                                <template v-else-if="dailyClaimed">
-                                    <div disabled class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md
-                            bg-white/5 text-muted font-medium">
-                                        Déjà récupéré
-                                    </div>
-                                </template>
-
-                                <template v-else>
-                                    <button :disabled="dailyLoading"
-                                        class="w-full flex items-center justify-center gap-2 bg-accent text-dark hover:bg-accent/90 font-medium px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                        @click="claimDaily">
-                                        <Icon v-if="dailyLoading" name="lucide:loader-circle" size="16"
-                                            class="animate-spin shrink-0" />
-                                        <span class="font-medium">
-                                            {{ dailyLoading ? 'Chargement...' : 'Réclamer' }}</span>
-                                    </button>
-                                </template>
-                            </div>
+                            <!-- Carte Partage rapide -->
+                            <QRCode />
                         </div>
-
-                        <!-- Carte Partage rapide -->
-                        <QRCode />
-                    </div>
-
-                    <!-- Prochainement -->
-                    <div class="p-4 bg-surface-dark border border-white/8 rounded-xl
+                        <!-- Prochainement -->
+                        <div class="p-4 bg-surface-dark border border-white/8 rounded-xl
                         flex flex-col sm:flex-row sm:items-start gap-5">
 
-                        <!-- Items roadmap -->
-                        <div class="flex-1 flex flex-col gap-3 min-w-0">
-                            <div>
-                                <p class="text-white text-sm font-bold">Prochainement</p>
-                                <p class="text-xs text-muted italic">
-                                    La roadmap évolue selon les retours de la communauté
-                                </p>
-                            </div>
-                            <div class="flex flex-col gap-1.5">
-                                <div v-for="item in roadmapItems" :key="item.label" class="flex items-center gap-1.5">
-                                    <Icon :name="item.icon" size="18" :class="`${item.color} shrink-0`" />
-                                    <span class="text-sm text-muted">{{ item.label }}</span>
+                            <!-- Items roadmap -->
+                            <div class="flex-1 flex flex-col gap-3 min-w-0">
+                                <div>
+                                    <p class="text-white text-sm font-bold">Prochainement</p>
+                                    <p class="text-xs text-muted italic">
+                                        La roadmap évolue selon les retours de la communauté
+                                    </p>
+                                </div>
+                                <div class="flex flex-col gap-1.5">
+                                    <div v-for="item in roadmapItems" :key="item.label"
+                                        class="flex items-center gap-1.5">
+                                        <Icon :name="item.icon" size="18" :class="`${item.color} shrink-0`" />
+                                        <span class="text-sm text-muted">{{ item.label }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- CTAs -->
-                        <div class="flex flex-col gap-2 shrink-0 self-center w-full sm:w-45">
-                            <p class="text-xs text-muted hidden sm:block">Être informé en avant-première</p>
-                            <button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
-                                class="flex items-center gap-2 w-full justify-center px-4 py-2 rounded-md transition-colors"
-                                :class="newsletterStore.subscribed
-                                    ? 'bg-primary/30 text-white/50'
-                                    : 'bg-primary text-white hover:bg-primary/90'"
-                                :style="newsletterStore.subscribed ? { cursor: 'default', pointerEvents: 'auto' } : {}">
-                                <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'" size="18"
-                                    class="shrink-0" />
-                                <span>{{ newsletterStore.subscribed ? 'Activé' : 'Me notifier' }}</span>
-                            </button>
-                            <a href="https://discord.gg/fVFguWc76b" target="_blank">
-                                <button
-                                    class="flex items-center gap-2 w-full justify-center px-4 py-2 rounded-md bg-[#5865f2] text-[#e0e3ff] hover:bg-[#5865f2]/90 transition-colors">
-                                    <Icon name="simple-icons:discord" size="18" />
-                                    <span class="">Discord</span>
+                            <!-- CTAs -->
+                            <div class="flex flex-col gap-2 shrink-0 self-center w-full sm:w-45">
+                                <p class="text-xs text-muted hidden sm:block">Être informé en avant-première</p>
+                                <button @click="subscribeIfNotYet" :disabled="newsletterStore.subscribed"
+                                    class="flex items-center gap-2 w-full justify-center px-4 py-2 rounded-md transition-colors"
+                                    :class="newsletterStore.subscribed
+                                        ? 'bg-primary/30 text-white/50'
+                                        : 'bg-primary text-white hover:bg-primary/90'"
+                                    :style="newsletterStore.subscribed ? { cursor: 'default', pointerEvents: 'auto' } : {}">
+                                    <Icon :name="newsletterStore.subscribed ? 'lucide:check' : 'lucide:mail-plus'"
+                                        size="18" class="shrink-0" />
+                                    <span>{{ newsletterStore.subscribed ? 'Activé' : 'Me notifier' }}</span>
                                 </button>
-                            </a>
+                                <a href="https://discord.gg/fVFguWc76b" target="_blank">
+                                    <button
+                                        class="flex items-center gap-2 w-full justify-center px-4 py-2 rounded-md bg-[#5865f2] text-[#e0e3ff] hover:bg-[#5865f2]/90 transition-colors">
+                                        <Icon name="simple-icons:discord" size="18" />
+                                        <span class="">Discord</span>
+                                    </button>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,7 +113,7 @@ const newsletterStore = useNewsletterStore()
 const loading = ref(true)
 const { uid } = useSupabase()
 const { fetchBalance } = useWallet()
-const { isSub, fetchSubscription } = useFeatures()
+const { isSub } = useFeatures()
 const toast = useToast()
 const dailyClaimed = ref(false)
 const dailyLoading = ref(false)
@@ -257,7 +203,6 @@ const roadmapItems = [
 
 onMounted(async () => {
     loading.value = true
-    await fetchSubscription()
     await newsletterStore.fetchStatus()
     const { data: schedule } = await scheduleStore.fetchSchedule()
     if (schedule?.id) await scheduleSlotStore.fetchSlots(schedule.id)

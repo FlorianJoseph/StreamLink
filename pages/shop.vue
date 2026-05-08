@@ -16,9 +16,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div v-for="pack in subPacks" :key="pack.label"
-                    class="relative flex flex-col gap-5 p-5 rounded-xl border" :class="isSub
-                        ? 'border-primary/20 bg-primary/5'
-                        : 'border-primary/20 bg-primary/5 hover:border-primary/40'">
+                    class="relative flex flex-col gap-5 p-5 border-primary/20 bg-primary/5 rounded-xl border">
 
                     <img src="/images/mascotte/charmi-happy-violet.svg"
                         class="absolute top-4 right-4 w-16 h-16 opacity-10 pointer-events-none" alt="" />
@@ -35,12 +33,10 @@
 
                     <!-- Prix -->
                     <div>
-                        <p class="text-xs text-muted mb-1">{{ pack.label }}</p>
-                        <div class="flex items-baseline gap-1.5">
-                            <span class="text-3xl font-bold text-white">{{ pack.price }}€</span>
-                            <span class="text-sm text-muted">{{ pack.duration }}</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold text-accent">7 jours gratuits</span>
+                            <span class="text-sm text-muted">puis {{ pack.price }}€{{ pack.duration }}</span>
                         </div>
-                        <p class="text-sm text-primary font-bold mt-2">✦ {{ pack.access }}</p>
                     </div>
 
                     <!-- Features -->
@@ -53,24 +49,23 @@
 
                     <!-- CTA -->
                     <div class="flex flex-col gap-2 mt-auto">
-                        <button @click="isSub ? openPortal() : openCheckout(pack.priceId, 'subscription')"
-                            class="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-md font-bold text-sm transition-colors"
-                            :class="isSub
-                                ? 'bg-white/5 text-white border border-white/8 hover:bg-white/10'
-                                : 'bg-primary text-white hover:bg-primary/90'">
-                            {{ isSub ? 'Gérer mon abonnement' : 'Je m\'abonne à Charmi+' }}
-                        </button>
                         <div class="flex flex-wrap justify-center gap-3 text-xs text-muted">
                             <div class="flex items-center gap-1">
                                 <Icon name="lucide:lock" size="11" class="shrink-0" />
                                 <span>Paiement sécurisé Stripe</span>
                             </div>
-                            <span class="hidden sm:block">·</span>
                             <div class="flex items-center gap-1">
                                 <Icon name="lucide:x-circle" size="11" class="shrink-0" />
                                 <span>Annulation à tout moment</span>
                             </div>
                         </div>
+                        <button @click="isSub ? openPortal() : openCheckout(pack.priceId, 'subscription')"
+                            class="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-md font-bold transition-colors"
+                            :class="isSub
+                                ? 'bg-white/5 text-white border border-white/8 hover:bg-white/10'
+                                : 'bg-primary text-white hover:bg-primary/90'">
+                            {{ isSub ? 'Gérer mon abonnement' : 'Essayer Charmi+ gratuitement' }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -280,7 +275,7 @@
 <script setup lang="ts">
 
 const { balance, fetchBalance } = useWallet()
-const { hasFeature, getExpiryLabel, spend, fetchAccess, fetchSubscription, isSub } = useFeatures()
+const { hasFeature, getExpiryLabel, spend, fetchAccess, isSub } = useFeatures()
 const config = useRuntimeConfig()
 const { uid } = useSupabase()
 
@@ -358,11 +353,11 @@ const subPacks = [
         access: 'Tout Charmi, sans limites',
         popular: true,
         features: [
-            'Personnalisation avancée',
-            'Planning au format story',
-            'Masque le branding Charmi',
-            '6 Charm/jour automatiques',
             'Badge vérifié sur la Découverte',
+            '6 Charm/jour automatiques',
+            'Personnalisation avancée',
+            'Planning pour tes stories',
+            'Masque le logo Charmi',
         ]
     },
 ]
@@ -433,28 +428,8 @@ const openCheckout = async (packPriceId: string, mode: 'payment' | 'subscription
     )
 }
 
-const onMessage = async (e: MessageEvent) => {
-    if (e.data.type === 'payment_success') {
-        const { coins, mode } = await $fetch('/api/stripe/session', {
-            query: { session_id: e.data.session_id }
-        })
-        await fetchBalance()
-        await fetchAccess()
-        await fetchSubscription()
-        toast.add({
-            severity: 'secondary',
-            group: 'payment',
-            summary: mode === 'subscription' ? 'Charmi+ activé !' : 'Charm ajoutés à ton solde',
-            detail: mode === 'subscription' ? 'Toutes les fonctionnalités sont débloquées' : String(coins),
-            life: 4000,
-        })
-    }
-}
-
 const loading = ref(true)
 onMounted(async () => {
-    await fetchSubscription()
-
     const alreadyTracked = sessionStorage.getItem('tracked_shop_visit') === 'true'
 
     if (route.query.utm_source && !alreadyTracked) {
@@ -471,11 +446,6 @@ onMounted(async () => {
         sessionStorage.setItem('tracked_shop_visit', 'true')
     }
     loading.value = false
-    window.addEventListener('message', onMessage)
-})
-
-onUnmounted(() => {
-    window.removeEventListener('message', onMessage)
 })
 
 definePageMeta({

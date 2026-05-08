@@ -1,6 +1,5 @@
 import { until } from '@vueuse/core'
 import { PROFILE_QUESTS } from '~/config/profileQuests'
-import { PROFILE_LEVELS } from '~/config/profileLevels'
 import type { Quest } from '~/config/profileQuests'
 
 // Singleton — refs partagées entre toutes les instances
@@ -12,7 +11,6 @@ const stats = ref({
     total: 0,
     completionPercentage: 0,
     profileVisible: false,
-    level: PROFILE_LEVELS[0]
 })
 
 const completedQuestIds = ref<Set<string>>(new Set())
@@ -93,7 +91,6 @@ export const useProfileProgress = () => {
         const completedTotal = completedRequired + completedOptional
         const completionPercentage = total === 0 ? 0 : Math.round((completedTotal / total) * 100)
         const profileVisible = completedRequired === required.length
-        const level = PROFILE_LEVELS.slice().reverse().find(l => completionPercentage >= l.min) || PROFILE_LEVELS[0]
 
         stats.value = {
             completedRequired,
@@ -102,7 +99,6 @@ export const useProfileProgress = () => {
             total,
             completionPercentage,
             profileVisible,
-            level
         }
     }
 

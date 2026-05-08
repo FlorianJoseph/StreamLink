@@ -54,12 +54,31 @@ export default defineEventHandler(async (event) => {
             const sub = await stripe.subscriptions.retrieve(session.subscription as string) as any
             await supabase.from('Subscriptions').upsert({
                 user_id: userId,
-                status: 'active',
+                status: sub.status,
                 stripe_customer_id: session.customer as string,
                 current_period_end: sub.items?.data?.[0]?.current_period_end ? new Date(sub.items.data[0].current_period_end * 1000).toISOString() : null
             }, { onConflict: 'user_id' })
         }
     }
+
+    // if (stripeEvent.type === 'customer.subscription.created') {
+    //     const subscription = stripeEvent.data.object as any
+    //     const customer = await stripe.customers.retrieve(subscription.customer as string)
+    //     const userId = (customer as Stripe.Customer).metadata?.user_id
+
+    //     if (userId) {
+    //         await supabase.from('Subscriptions').upsert({
+    //             user_id: userId,
+    //             status: subscription.status,
+    //             stripe_customer_id: subscription.customer as string,
+    //             current_period_end: subscription.trial_end
+    //                 ? new Date(subscription.trial_end * 1000).toISOString()
+    //                 : subscription.current_period_end
+    //                     ? new Date(subscription.current_period_end * 1000).toISOString()
+    //                     : null
+    //         }, { onConflict: 'user_id' })
+    //     }
+    // }
 
     if (stripeEvent.type === 'customer.subscription.updated') {
         const subscription = stripeEvent.data.object as any
@@ -81,12 +100,37 @@ export default defineEventHandler(async (event) => {
         const customer = await stripe.customers.retrieve(invoice.customer as string)
         const userId = (customer as Stripe.Customer).metadata?.user_id
 
-        if (userId) {
+        if (userId && invoice.subscription) {
+            const sub = await stripe.subscriptions.retrieve(invoice.subscription as string) as any
             await supabase.from('Subscriptions').upsert({
                 user_id: userId,
                 status: 'past_due',
                 stripe_customer_id: invoice.customer as string,
+                current_period_end: sub.current_period_end
+                    ? new Date(sub.current_period_end * 1000).toISOString()
+                    : null
             }, { onConflict: 'user_id' })
+        }
+    }
+
+    if (stripeEvent.type === 'invoice.payment_succeeded') {
+        const invoice = stripeEvent.data.object as Stripe.Invoice
+
+        if (invoice.subscription) {
+            const customer = await stripe.customers.retrieve(invoice.customer as string)
+            const userId = (customer as Stripe.Customer).metadata?.user_id
+
+            if (userId) {
+                const sub = await stripe.subscriptions.retrieve(invoice.subscription as string) as any
+                await supabase.from('Subscriptions').upsert({
+                    user_id: userId,
+                    status: sub.status,
+                    stripe_customer_id: invoice.customer as string,
+                    current_period_end: sub.current_period_end
+                        ? new Date(sub.current_period_end * 1000).toISOString()
+                        : null
+                }, { onConflict: 'user_id' })
+            }
         }
     }
 
@@ -96,11 +140,18 @@ export default defineEventHandler(async (event) => {
         const userId = (customer as Stripe.Customer).metadata?.user_id
 
         if (userId) {
+            const now = Math.floor(Date.now() / 1000)
+            const isTrialExpired = subscription.trial_end !== null
+                && subscription.trial_end <= now
+                && !subscription.default_payment_method
+
             await supabase.from('Subscriptions').upsert({
                 user_id: userId,
                 status: 'deleted',
                 stripe_customer_id: subscription.customer as string,
-                current_period_end: null
+                current_period_end: isTrialExpired || !subscription.current_period_end
+                    ? null
+                    : new Date(subscription.current_period_end * 1000).toISOString()
             }, { onConflict: 'user_id' })
         }
     }
