@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     const { data: subscribers } = await supabase
         .from('Subscriptions')
         .select('user_id')
-        .in('status', ['active', 'past_due'])
+        .in('status', ['active', 'past_due', 'trialing'])
 
     if (!subscribers?.length) return { credited: 0 }
 
