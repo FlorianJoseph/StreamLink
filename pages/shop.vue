@@ -354,9 +354,10 @@ const subPacks = [
         popular: true,
         features: [
             'Badge vérifié sur la Découverte',
-            '6 Charm/jour automatiques',
+            '6 Charm/jour automatique',
+            'Stats avancées par lien',
             'Personnalisation avancée',
-            'Planning pour tes stories',
+            'Planning pour tes story',
             'Masque le logo Charmi',
         ]
     },

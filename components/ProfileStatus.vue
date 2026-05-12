@@ -132,7 +132,7 @@
                 <div class="flex flex-col gap-0.5 flex-1">
                     <span class="text-sm font-semibold text-[#a89ff0]">Profil au top, et maintenant ? Essaye Charmi+
                         gratuitement</span>
-                    <p class="text-xs text-muted">6 Charm/jour auto, badge vérifié, thèmes premium et bien plus</p>
+                    <p class="text-xs text-muted">Badge vérifié, stats avancées, thèmes premium et bien plus</p>
                 </div>
             </button>
             <FeatureUnlockModal v-model="charmiPlusModal" />
