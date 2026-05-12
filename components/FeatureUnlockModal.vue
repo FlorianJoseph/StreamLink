@@ -78,10 +78,11 @@ const props = defineProps<{
 const visible = defineModel<boolean>()
 
 const benefits = [
+    { key: 'badge', icon: 'lucide:badge-check', label: 'Sois reconnu sur la page Découverte' },
     { key: 'daily', icon: 'lucide:coins', label: 'Reçois 6 Charm/jour automatiquement' },
-    { key: 'badge', icon: 'lucide:badge-check', label: 'Sois reconnu sur la Découverte' },
-    { key: 'premium_theme', icon: 'lucide:palette', label: '13 thèmes et 23 polices exclusifs' },
-    { key: 'mobile_export', icon: 'lucide:smartphone', label: 'Planning partageable en story' },
+    { key: 'advanced_stats', icon: 'lucide:chart-no-axes-column-increasing', label: 'Analyse tes stats par lien' },
+    { key: 'premium_theme', icon: 'lucide:palette', label: 'Personnalise avec 13 thèmes et 23 polices' },
+    { key: 'mobile_export', icon: 'lucide:smartphone', label: 'Partage ton planning en story' },
     { key: 'no_branding', icon: 'lucide:eye-off', label: 'Masque le logo Charmi' },
 ]
 

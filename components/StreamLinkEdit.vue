@@ -54,8 +54,9 @@
                             <InputText id="username" v-model="username" maxlength="30"
                                 placeholder="Ton pseudo de streamer" fluid
                                 style="--p-inputtext-focus-border-color:#6A5AE0; --p-inputtext-background:#18191c" />
-                            <span class="absolute right-2 bottom-1 text-xs text-muted/50">{{ username.length
-                                }}/30</span>
+                            <span class="absolute right-2 bottom-1 text-xs text-muted/50">
+                                {{ username.length }}/30
+                            </span>
                         </div>
 
                         <span v-if="usernameError" class="text-xs text-red-400">{{ usernameError }}</span>
@@ -122,24 +123,6 @@
                 </div>
             </template>
         </Dialog>
-
-        <!-- Stats rapides -->
-        <template v-if="statsPending">
-            <div class="animate-pulse h-4 w-24 bg-gray-700 rounded" />
-        </template>
-        <template v-else>
-            <div class="flex items-center gap-3 text-sm text-muted">
-                <div class="flex items-center gap-1.5">
-                    <Icon name="lucide:eye" size="16" />
-                    <span>{{ stats?.total?.views ?? 0 }} vues</span>
-                </div>
-                <span class="text-white/20">|</span>
-                <div class="flex items-center gap-1.5">
-                    <Icon name="lucide:mouse-pointer-click" size="16" />
-                    <span>{{ stats?.total?.clicks ?? 0 }} clics</span>
-                </div>
-            </div>
-        </template>
 
         <!-- Bouton Ajouter un lien -->
         <button @click="newlinkModal = true"
@@ -217,21 +200,182 @@
                                                 <button
                                                     v-tooltip.bottom="{ value: 'Modifier l\'icône', pt: { text: '!text-sm' } }"
                                                     @click="openVignetteModal(element)"
-                                                    class="w-10 h-10 flex items-center justify-center rounded-md text-muted hover:text-white hover:bg-white/5 transition-colors">
-                                                    <Icon name="lucide:image" size="18" class="shrink-0" />
+                                                    class="w-8 h-8 flex items-center justify-center rounded-md text-muted hover:text-white hover:bg-white/5 transition-colors">
+                                                    <Icon name="lucide:image" size="16" class="shrink-0" />
                                                 </button>
-                                                <span class="text-sm text-muted/60 flex items-center gap-1">
-                                                    <Icon name="lucide:mouse-pointer-click" size="18"
+                                                <button @click="toggleStatsPanel(element.id)"
+                                                    class="flex items-center gap-1.5 px-2 py-1.5 rounded-md text-muted hover:text-white hover:bg-white/5 transition-colors text-sm"
+                                                    v-tooltip.bottom="{ value: 'Voir les statistiques', pt: { text: '!text-sm' } }">
+                                                    <Icon name="lucide:chart-no-axes-column-increasing" size="16"
                                                         class="shrink-0" />
-                                                    <template v-if="statsPending">—</template>
-                                                    <template v-else>{{stats?.links?.findLast(l => l.link_id ===
-                                                        element.id)?.total_clicks ?? 0}} clics</template>
-                                                </span>
+                                                    <Icon v-if="getLinkTrend(element.id) !== null"
+                                                        :name="getLinkTrend(element.id) >= 0 ? 'lucide:trending-up' : 'lucide:trending-down'"
+                                                        size="14"
+                                                        :class="getLinkTrend(element.id) >= 0 ? 'text-emerald-400' : 'text-muted'"
+                                                        class="shrink-0" />
+                                                    <span class="text-sm">
+                                                        <template v-if="statsPending">—</template>
+                                                        <template v-else>
+                                                            {{stats?.links?.find((l: any) => l.link_id ===
+                                                                element.id)?.total_clicks ?? 0}} clics
+                                                        </template>
+                                                    </span>
+                                                </button>
                                             </div>
                                             <button @click="slotToDelete = element.id; showDeleteConfirmation = true"
                                                 v-tooltip.bottom="{ value: 'Supprimer', pt: { text: '!text-sm' } }"
-                                                class="w-10 h-10 flex items-center justify-center rounded-md text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors">
-                                                <Icon name="lucide:trash-2" size="18" />
+                                                class="w-8 h-8 flex items-center justify-center rounded-md text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors">
+                                                <Icon name="lucide:trash-2" size="16" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Panneau de stats -->
+                                <div v-if="openStatsId === element.id"
+                                    class="mt-4 rounded-lg bg-surface-darker border border-white/8 overflow-hidden min-h-[230px]">
+
+                                    <!-- Header -->
+                                    <div class="flex items-center justify-between px-3 py-2 border-b border-white/8">
+                                        <span class="text-sm text-white/80">Statistiques</span>
+                                        <button @click="openStatsId = null"
+                                            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/8 text-muted hover:text-white transition-colors">
+                                            <Icon name="lucide:x" size="16" />
+                                        </button>
+                                    </div>
+
+                                    <div v-if="!linkStatDetail" class="flex items-center justify-center py-18">
+                                        <ProgressSpinner
+                                            style="width:30px;height:30px;--p-progressspinner-color-one:#6A5AE0;--p-progressspinner-color-two:#8B7FF0;--p-progressspinner-color-three:#6A5AE0;--p-progressspinner-color-four:#4A3AC0"
+                                            strokeWidth="6" fill="transparent" animationDuration=".5s" />
+                                    </div>
+
+                                    <!-- Contenu -->
+                                    <div v-else class="flex flex-col gap-6 p-3">
+
+                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                            <span class="text-sm text-muted shrink-0">Choisis une période</span>
+                                            <div @click="!isSub ? advancedStatsModal = true : null; !isSub ? openStatsId = null : null"
+                                                :class="!isSub ? 'cursor-pointer pointer-events-auto' : ''">
+                                                <DatePicker v-model="dateRange" selectionMode="range"
+                                                    :manualInput="false" dateFormat="dd/mm/yy"
+                                                    :class="!isSub ? 'pointer-events-none ' : ''" fluid size="small"
+                                                    style="--p-inputtext-focus-border-color:#6A5AE0" :pt="{
+                                                        pcInputText: { root: { style: 'min-width: 205px; cursor: pointer;' } },
+                                                        panel: { style: 'background: #18191c; font-size: 0.875rem;' },
+                                                        dayView: { style: 'font-size: 0.875rem;' },
+                                                        day: ({ context }) => ({
+                                                            style: context.selected
+                                                                ? 'background: #6A5AE0; color: white; border-radius: 9999px;'
+                                                                : context.inRange
+                                                                    ? 'background: rgba(106,90,224,0.2); color: white;'
+                                                                    : 'color: white;'
+                                                        }),
+                                                        month: ({ context }) => ({
+                                                            style: context.selected
+                                                                ? 'background: #6A5AE0; color: white;'
+                                                                : 'color: white;'
+                                                        }),
+                                                        year: ({ context }) => ({
+                                                            style: context.selected
+                                                                ? 'background: #6A5AE0; color: white;'
+                                                                : 'color: white;'
+                                                        }),
+                                                    }" />
+                                            </div>
+                                        </div>
+
+                                        <!-- Texte motivant -->
+                                        <div class="text-center">
+                                            <template v-if="!linkStatDetail?.total">
+                                                <p class="text-sm text-white/80">Partage ton lien pour obtenir tes
+                                                    premiers clics</p>
+                                            </template>
+                                            <template v-else>
+                                                <p class="text-sm text-white/80">
+                                                    Ton lien a été cliqué <span class="text-white font-bold">
+                                                        {{ linkStatDetail?.total }} fois</span>
+                                                </p>
+                                            </template>
+                                        </div>
+
+                                        <!-- Stats -->
+                                        <div class="flex items-center gap-6">
+                                            <!-- Total -->
+                                            <div class="flex flex-col gap-0.5">
+                                                <span
+                                                    class="text-[10px] text-muted uppercase tracking-widest">Total</span>
+                                                <span class="text-white font-bold text-lg">
+                                                    {{ linkStatDetail?.total ?? 0 }}
+                                                </span>
+                                            </div>
+
+                                            <!-- 7j -->
+                                            <div class="flex flex-col gap-0.5">
+                                                <span class="text-[10px] text-muted uppercase tracking-widest">7
+                                                    jours</span>
+                                                <div class="flex items-center gap-1">
+                                                    <span class="text-white font-bold text-lg"
+                                                        :class="!isSub ? 'blur-xs select-none pointer-events-none' : ''">
+                                                        {{ linkStatDetail?.week ?? 0 }}
+                                                    </span>
+                                                    <Icon
+                                                        v-if="linkStatDetail?.weekTrend !== null && linkStatDetail?.weekTrend !== undefined && isSub"
+                                                        :name="linkStatDetail.weekTrend >= 0 ? 'lucide:trending-up' : 'lucide:trending-down'"
+                                                        size="14"
+                                                        :class="linkStatDetail.weekTrend >= 0 ? 'text-emerald-400' : 'text-muted'" />
+                                                </div>
+                                            </div>
+
+                                            <!-- 30j -->
+                                            <div class="flex flex-col gap-0.5">
+                                                <span class="text-[10px] text-muted uppercase tracking-widest">30
+                                                    jours</span>
+                                                <div class="flex items-center gap-1">
+                                                    <span class="text-white font-bold text-lg"
+                                                        :class="!isSub ? 'blur-xs select-none pointer-events-none' : ''">
+                                                        {{ linkStatDetail?.month ?? 0 }}
+                                                    </span>
+                                                    <Icon
+                                                        v-if="linkStatDetail?.monthTrend !== null && linkStatDetail?.monthTrend !== undefined && isSub"
+                                                        :name="linkStatDetail.monthTrend >= 0 ? 'lucide:trending-up' : 'lucide:trending-down'"
+                                                        size="14"
+                                                        :class="linkStatDetail.monthTrend >= 0 ? 'text-emerald-400' : 'text-muted'" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Custom -->
+                                            <div class="flex flex-col gap-0.5">
+                                                <span
+                                                    class="text-[10px] text-muted uppercase tracking-widest">Période</span>
+                                                <span v-if="statsFrom && statsTo" class="text-white font-bold text-lg"
+                                                    :class="!isSub ? 'blur-xs select-none pointer-events-none' : ''">
+                                                    {{ linkStatDetail?.custom ?? 0 }}
+                                                </span>
+                                                <span v-else class="text-muted font-bold text-lg"
+                                                    :class="!isSub ? 'blur-xs select-none pointer-events-none' : ''">
+                                                    -
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- CTA -->
+                                        <div v-if="!isSub"
+                                            class="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 bg-primary rounded-xl">
+                                            <div class="flex items-center gap-2 flex-1">
+                                                <img src="/images/mascotte/charmi-happy-blanc.svg" alt=""
+                                                    class="w-8 h-8" />
+                                                <div class="flex flex-col gap-0.5 text-left flex-1">
+                                                    <span class="text-sm font-bold text-white">
+                                                        Transforme tes stats en plus de clics</span>
+                                                    <span class="text-xs text-white/80">
+                                                        Analyse tes liens en détail et bien plus
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <button @click="advancedStatsModal = true; openStatsId = null"
+                                                class="flex items-center gap-2 px-3 py-2 rounded-full bg-white hover:bg-white/90 text-primary font-semibold text-sm transition-colors">
+                                                Essayer Charmi+ gratuitement
                                             </button>
                                         </div>
                                     </div>
@@ -239,6 +383,8 @@
                             </div>
                         </template>
                     </Draggable>
+
+                    <FeatureUnlockModal v-model="advancedStatsModal" featureKey="advanced_stats" />
 
                     <!-- Modal suppression -->
                     <Dialog v-model:visible="showDeleteConfirmation" dismissableMask modal :draggable="false"
@@ -277,7 +423,10 @@
                                     <template v-if="isSub">Inclus dans ton abonnement</template>
                                     <template v-else-if="hasFeature('no_branding')">
                                         {{ getExpiryLabel('no_branding') }}</template>
-                                    <template v-else>Masque le logo Charmi sur ta page publique et ton planning</template>
+                                    <template v-else>
+                                        Masque le logo Charmi sur ta page publique et ton
+                                        planning
+                                    </template>
                                 </span>
                             </div>
 
@@ -475,9 +624,9 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
-const { data: stats, pending: statsPending } = useFetch('/api/trackingStats/stats')
+const { data: stats, pending: statsPending } = useFetch('/api/trackingStats/totals')
 
 import Draggable from 'vuedraggable'
 
@@ -565,7 +714,7 @@ const editing = ref({
 })
 
 // Editer un champ (titre ou url)
-const editField = (link, field) => {
+const editField = (link: any, field: string) => {
     editing.value.id = link.id
     editing.value.field = field
     editing.value.value = link[field]
@@ -579,7 +728,7 @@ const editField = (link, field) => {
 }
 
 // Sauvegarder les modifications d'un champ
-const saveEdit = async (link) => {
+const saveEdit = async (link: any) => {
     if (!editing.value.id || !editing.value.field) return
 
     const field = editing.value.field
@@ -639,7 +788,7 @@ const {
 } = useVignetteUploader(currentLinkRef)
 
 // Ouvrir le modal de modification de l'icone
-const openVignetteModal = (link) => {
+const openVignetteModal = (link: any) => {
     currentLinkRef.value = link
     thumbnailModal.value = true
     showIcons.value = false
@@ -666,14 +815,63 @@ const deleteIcon = async () => {
 }
 
 // Cropper
-const defaultSize = ({ imageSize, visibleArea }) => {
+const defaultSize = ({ imageSize, visibleArea }: { imageSize: { width: number, height: number }, visibleArea: { width: number, height: number } | null }) => {
     return {
         width: (visibleArea || imageSize).width,
         height: (visibleArea || imageSize).height,
     };
 };
 
+
+// Stats
+const today = new Date()
+const sevenDaysAgo = new Date()
+sevenDaysAgo.setDate(today.getDate() - 7)
+const dateRange = ref<Date[]>([sevenDaysAgo, today])
+
+const statsFrom = ref(sevenDaysAgo.toISOString().slice(0, 10))
+const statsTo = ref(today.toISOString().slice(0, 10))
+const openStatsId = ref<string | null>(null)
+
+const { data: linkStatDetail, refresh: refreshLinkStat } = useFetch('/api/trackingStats/link', {
+    query: computed(() => ({
+        linkId: openStatsId.value,
+        from: statsFrom.value || undefined,
+        to: statsTo.value || undefined,
+    })),
+    watch: [statsFrom, statsTo],
+    immediate: false,
+})
+
+// Déclenche manuellement quand openStatsId change
+watch(openStatsId, (val) => {
+    if (val) {
+        linkStatDetail.value = null  // reset immédiat
+        statsFrom.value = sevenDaysAgo.toISOString().slice(0, 10)
+        statsTo.value = today.toISOString().slice(0, 10)
+        dateRange.value = [sevenDaysAgo, today]
+        refreshLinkStat()
+    }
+})
+
+const toggleStatsPanel = (id: string) => {
+    openStatsId.value = openStatsId.value === id ? null : id
+}
+
+const getLinkTrend = (linkId: string) => {
+    return stats.value?.links?.find((l: any) => l.link_id === linkId)?.trend ?? null
+}
+
+
+watch(dateRange, (val) => {
+    if (val && val[0] && val[1]) {
+        statsFrom.value = val[0].toISOString().slice(0, 10)
+        statsTo.value = val[1].toISOString().slice(0, 10)
+    }
+})
+
 const { hasFeature, getExpiryLabel, isSub } = useFeatures()
 
 const brandingModal = ref(false)
+const advancedStatsModal = ref(false)
 </script>
