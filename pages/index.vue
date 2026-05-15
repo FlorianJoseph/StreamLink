@@ -9,7 +9,7 @@
 
         <h1 class="text-[clamp(2.5rem,5vw,4rem)] text-white leading-[1.1] max-w-xl">
           Ton compagnon pour<br>
-          <span class="text-accent">grandir</span> sur Twitch.
+          <span class="text-accent" style="font-family: inherit;">grandir</span> sur Twitch.
         </h1>
 
         <p class="text-muted text-lg leading-relaxed max-w-md">
