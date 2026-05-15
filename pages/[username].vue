@@ -298,6 +298,7 @@ useSeoMeta({
 defineOgImage('Default', {
     title: user.username,
     description: `Retrouve les liens, le planning et les streams de ${user.username} sur Charmi.`,
+    avatar: user.avatar_url ? user.avatar_url : "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png",
 })
 
 const defaultAvatar =
