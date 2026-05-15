@@ -88,16 +88,6 @@ export default defineNuxtConfig({
   },
 
   robots: {
-    groups: [
-      {
-        userAgent: ['GPTBot', 'ClaudeBot', 'CCBot', 'Google-Extended'],
-        disallow: ['/'],
-      },
-      {
-        userAgent: ['facebookexternalhit', 'Twitterbot', 'Slackbot', 'Discordbot'],
-        allow: ['/'],
-      },
-    ],
     disallow: [
       '/admin',
       '/_secret-admin',
@@ -147,7 +137,6 @@ export default defineNuxtConfig({
         provider: 'local',
         src: '/fonts/PlusJakartaSans-Medium.woff2',
         weight: '500',
-        global: true,
       },
     ],
   },

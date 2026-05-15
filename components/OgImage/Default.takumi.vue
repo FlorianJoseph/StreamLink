@@ -1,8 +1,7 @@
 <script setup lang="ts">
 defineProps<{
     title?: string
-    description?: string,
-    avatar?: string
+    description?: string
 }>()
 </script>
 
@@ -36,8 +35,7 @@ defineProps<{
 
         <!-- Mascotte droite -->
         <div class="flex items-center justify-center w-2/5 z-10">
-            <img v-if="avatar" :src="avatar" class="w-64 h-64 rounded-full object-cover" />
-            <img v-else src="/images/mascotte/charmi-happy-blanc.svg" class="w-72 h-72" />
+            <img src="/images/mascotte/charmi-happy-blanc.svg" class="w-72 h-72" />
         </div>
 
     </div>
