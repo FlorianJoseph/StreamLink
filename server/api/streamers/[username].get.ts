@@ -1,7 +1,6 @@
-import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseServiceRole } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
-    const client = await serverSupabaseClient(event)
     const clientAdmin = serverSupabaseServiceRole(event)
 
     const { username } = event.context.params as { username: string }
@@ -9,7 +8,7 @@ export default defineEventHandler(async (event) => {
     const { data, error } = await clientAdmin
         .from('user_page')
         .select('*')
-        .eq('username', username)
+        .ilike('username', username)
         .limit(1)
         .maybeSingle()
 
@@ -21,7 +20,7 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 404, statusMessage: 'Utilisateur introuvable' })
     }
 
-    const { data: brandingAccess } = await client
+    const { data: brandingAccess } = await clientAdmin
         .from('FeatureAccess')
         .select('id')
         .eq('user_id', data.user_id)
