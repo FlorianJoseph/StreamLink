@@ -289,6 +289,17 @@ const links = publicUser.value?.links ?? []
 const slots = publicUser.value?.slots ?? []
 const noBranding = computed(() => publicUser.value?.noBranding ?? false)
 
+useSeoMeta({
+    title: user ? `${user.username} - Liens & Planning Twitch` : 'Liens & Planning Twitch',
+    description: user ? `Retrouve les liens, le planning et les streams de ${user.username} sur Charmi.`
+        : 'Retrouve les liens, le planning et les streams des streamers sur Charmi.',
+})
+
+defineOgImage('Default', {
+    title: user.username,
+    description: `Retrouve les liens, le planning et les streams de ${user.username} sur Charmi.`,
+})
+
 const defaultAvatar =
     "https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/Avatar/default.png";
 

@@ -62,6 +62,9 @@
 </template>
 
 <script setup lang="ts">
+
+useSeoMeta({ title: 'Notifications Admin' })
+
 const toast = useToast()
 
 definePageMeta({ layout: 'fullscreen' })

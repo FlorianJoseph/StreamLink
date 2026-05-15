@@ -41,6 +41,16 @@
 </template>
 
 <script setup>
+
+useSeoMeta({
+  title: 'Contact',
+  description: 'Une question, un bug, une idée ? L\'équipe Charmi est là. On a pensé à tout… ou presque.',
+})
+defineOgImage('Default', {
+  title: 'On est là.',
+  description: 'Une question, un bug, une idée ? Parle-nous.',
+})
+
 const message = ref('');
 const nom = ref('');
 const email = ref('');

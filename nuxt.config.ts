@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@primevue/nuxt-module', '@nuxtjs/supabase', '@pinia/nuxt', '@nuxt/icon'],
+  modules: ['@primevue/nuxt-module', '@nuxtjs/supabase', '@pinia/nuxt', '@nuxt/icon', '@nuxtjs/seo', '@nuxt/fonts', 'nuxt-og-image'],
   primevue: {
     autoImport: true,
     options: {
@@ -69,20 +69,8 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Charmi',
       titleTemplate: '%s | Charmi',
       meta: [
-        { name: 'description', content: 'Le compagnon des streamers Twitch. Centralise tes liens, ton planning et ta visibilité.' },
-        { property: 'og:title', content: 'Charmi' },
-        { property: 'og:description', content: 'Le compagnon des streamers Twitch.' },
-        { property: 'og:image', content: 'https://charmi.gg/images/logo/charmi-full-violet.png' },
-        { property: 'og:url', content: 'https://charmi.gg' },
-        { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'Charmi' },
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'Charmi' },
-        { name: 'twitter:description', content: 'Le compagnon des streamers Twitch.' },
-        { name: 'twitter:image', content: 'https://charmi.gg/images/logo/charmi-full-violet.png' },
         { name: 'theme-color', content: '#6A5AE0' },
       ],
       link: [
@@ -90,5 +78,67 @@ export default defineNuxtConfig({
         { rel: 'apple-touch-icon', href: '/favicon.svg' },
       ],
     },
+  },
+
+  site: {
+    url: 'https://charmi.gg',
+    name: 'Charmi',
+    description: 'Découverte, raids, planning et page de liens. Charmi accompagne les streamers Twitch au quotidien. Keep on streaming.',
+    defaultLocale: 'fr',
+  },
+
+  robots: {
+    disallow: [
+      '/admin',
+      '/_secret-admin',
+      '/auth',
+      '/dashboard',
+      '/checkout',
+      '/schedule',
+    ],
+  },
+
+  sitemap: {
+    urls: [
+      { loc: '/', priority: 1.0, changefreq: 'weekly' },
+      { loc: '/discover', priority: 0.9, changefreq: 'daily' },
+      { loc: '/shop', priority: 0.7, changefreq: 'weekly' },
+      { loc: '/contact', priority: 0.5, changefreq: 'monthly' },
+      { loc: '/privacy', priority: 0.2, changefreq: 'yearly' },
+    ],
+  },
+
+  schemaOrg: {
+    identity: {
+      type: 'Organization',
+      name: 'Charmi',
+      url: 'https://charmi.gg',
+      logo: 'https://charmi.gg/images/logo/charmi-full-violet.png',
+      sameAs: [
+        'https://discord.gg/fVFguWc76b',
+      ],
+    },
+  },
+  fonts: {
+    families: [
+      {
+        name: 'Pilcrow Rounded',
+        provider: 'local',
+        src: '/fonts/PilcrowRounded-Variable.woff2',
+      },
+      {
+        name: 'Plus Jakarta Sans',
+        provider: 'local',
+        src: '/fonts/PlusJakartaSans-Bold.woff2',
+        weight: '700',
+      },
+      {
+        name: 'Plus Jakarta Sans',
+        provider: 'local',
+        src: '/fonts/PlusJakartaSans-Medium.woff2',
+        weight: '500',
+              global: true,
+      },
+    ],
   },
 })

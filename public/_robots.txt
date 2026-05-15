@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /_secret-admin/
+Disallow: /auth/
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /schedule
+
+Sitemap: https://charmi.gg/sitemap.xml

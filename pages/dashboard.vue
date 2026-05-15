@@ -103,6 +103,9 @@
 </template>
 
 <script setup>
+
+useSeoMeta({ title: 'Tableau de bord' })
+
 const streamerStore = useStreamerStore()
 const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()

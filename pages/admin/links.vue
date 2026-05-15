@@ -22,6 +22,9 @@
 </template>
 
 <script setup>
+
+useSeoMeta({ title: 'Mes liens' })
+
 // Stores
 const streamerStore = useStreamerStore()
 const { loading } = storeToRefs(streamerStore)

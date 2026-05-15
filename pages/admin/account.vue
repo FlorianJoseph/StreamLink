@@ -95,6 +95,9 @@
 </template>
 
 <script setup>
+
+useSeoMeta({ title: 'Mon compte' })
+
 const user = useSupabaseUser()
 const router = useRouter()
 const supabase = useSupabaseClient()

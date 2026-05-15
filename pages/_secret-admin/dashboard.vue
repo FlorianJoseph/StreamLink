@@ -58,6 +58,8 @@
 
 <script setup lang="ts">
 
+useSeoMeta({ title: 'Tableau de bord Admin' })
+
 interface AdminStats {
     total_streamers: number
     streamers_7d: number

@@ -797,6 +797,9 @@
 </template>
 
 <script setup lang="ts">
+
+useSeoMeta({ title: 'Mon planning' })
+
 const scheduleStore = useScheduleStore()
 const scheduleSlotStore = useScheduleSlotStore()
 const { loading, schedule } = storeToRefs(scheduleStore)

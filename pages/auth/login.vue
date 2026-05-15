@@ -79,6 +79,9 @@
 </template>
 
 <script setup>
+
+useSeoMeta({ title: 'Connexion' })
+
 const route = useRoute()
 const router = useRouter()
 const supabase = useSupabaseClient()

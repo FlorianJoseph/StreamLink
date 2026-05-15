@@ -22,6 +22,9 @@
 </template>
 
 <script setup>
+
+useSeoMeta({ title: 'Mon design' })
+
 // Stores
 const streamerStore = useStreamerStore()
 const { loading } = storeToRefs(streamerStore)

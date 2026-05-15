@@ -9,7 +9,7 @@
 
         <h1 class="text-[clamp(2.5rem,5vw,4rem)] text-white leading-[1.1] max-w-xl">
           Ton compagnon pour<br>
-          <span class="text-accent">grandir</span> sur Twitch.
+          <span class="text-accent" style="font-family: inherit;">grandir</span> sur Twitch.
         </h1>
 
         <p class="text-muted text-lg leading-relaxed max-w-md">
@@ -222,6 +222,16 @@
 </template>
 
 <script setup lang="ts">
+
+useSeoMeta({
+  title: 'Le compagnon des streamers Twitch',
+  description: 'T\'as déjà assez à gérer avec ton stream. Charmi connecte les streamers qui partagent les mêmes univers, récompense tes raids et garde ta commu engagée.',
+})
+defineOgImage('Default', {
+  title: 'Le compagnon des streamers Twitch.',
+  description: 'Découverte, raids, planning et page de liens.',
+})
+
 import { usePreferredReducedMotion } from '@vueuse/core'
 definePageMeta({
   layout: 'landing'
