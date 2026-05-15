@@ -2,11 +2,11 @@ import { serverSupabaseClient, serverSupabaseServiceRole } from '#supabase/serve
 
 export default defineEventHandler(async (event) => {
     const client = await serverSupabaseClient(event)
-    const serviceClient = serverSupabaseServiceRole(event)
+    const clientAdmin = serverSupabaseServiceRole(event)
 
     const { username } = event.context.params as { username: string }
 
-    const { data, error } = await client
+    const { data, error } = await clientAdmin
         .from('user_page')
         .select('*')
         .eq('username', username)
@@ -29,15 +29,13 @@ export default defineEventHandler(async (event) => {
         .or('expires_at.is.null,expires_at.gt.' + new Date().toISOString())
         .maybeSingle()
 
-    const { data: subscription } = await serviceClient
+    const { data: subscription } = await clientAdmin
         .from('Subscriptions')
         .select('status, current_period_end')
         .eq('user_id', data.user_id)
         .maybeSingle()
 
-    const isSub = subscription?.status === 'active' ||
-        (subscription?.status === 'canceled' && subscription?.current_period_end &&
-            new Date(subscription.current_period_end) > new Date())
+    const isSub = subscription?.status === 'active' || subscription?.status === 'trialing' || subscription?.status === 'past_due'
 
     const parsedUser = {
         user_id: data?.user_id,
