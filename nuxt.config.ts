@@ -72,6 +72,7 @@ export default defineNuxtConfig({
       titleTemplate: '%s | Charmi',
       meta: [
         { name: 'theme-color', content: '#6A5AE0' },
+        { name: 'google-site-verification', content: 'vdrpOtagJLKsTvKx5TvVfMtZJWajJfJ_IPJBb4C1KEk' },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
