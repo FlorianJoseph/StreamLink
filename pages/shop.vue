@@ -274,6 +274,15 @@
 
 <script setup lang="ts">
 
+useSeoMeta({
+    title: 'Boutique | Charm & Charmi+',
+    description: 'Débloque des fonctionnalités exclusives avec tes Charm ou passe à Charmi+ pour 7,99€/mois. Un compagnon pour chaque streamer.',
+    ogTitle: 'Boutique Charmi',
+    ogDescription: 'Charm, fonctionnalités exclusives, Charmi+… Tout pour booster ton stream.',
+    ogImage: 'https://charmi.gg/images/og/og-shop.png',
+    twitterCard: 'summary_large_image',
+})
+
 const { balance, fetchBalance } = useWallet()
 const { hasFeature, getExpiryLabel, spend, fetchAccess, isSub } = useFeatures()
 const config = useRuntimeConfig()

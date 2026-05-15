@@ -218,6 +218,13 @@
 </template>
 
 <script setup>
+
+useSeoMeta({
+    title: 'Politique de confidentialité',
+    description: 'Politique de confidentialité de Charmi. On prend soin de tes données comme de ta commu.',
+    robots: 'noindex',
+})
+
 const updatedAt = "03 Mai 2026"
 
 import { CURRENT_PRIVACY_VERSION } from '~/constants/legal'

@@ -617,6 +617,16 @@
 </template>
 
 <script setup lang="ts">
+
+useSeoMeta({
+    title: 'Découverte de streamers Twitch',
+    description: 'Trouve des streamers Twitch qui partagent ton univers. Filtres intelligents, suggestions personnalisées. Ton prochain raid est peut-être déjà là.',
+    ogTitle: 'Découverte | Charmi',
+    ogDescription: 'Ton prochain viewer préféré est peut-être déjà là. Explore les streamers Twitch par univers.',
+    ogImage: 'https://charmi.gg/images/og/og-discover.png',
+    twitterCard: 'summary_large_image',
+})
+
 import { getGameCategory } from '~/utils/categories'
 import { languageOptions, getFlag, getLabel } from '~/utils/language'
 import { avatarUrl } from '~/utils/avatar'

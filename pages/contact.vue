@@ -41,6 +41,16 @@
 </template>
 
 <script setup>
+
+useSeoMeta({
+    title: 'Contact',
+    description: 'Une question, un bug, une idée ? L\'équipe Charmi est là. On a pensé à tout... ou presque.',
+    ogTitle: 'Contacte Charmi',
+    ogDescription: 'On est là. Parle-nous.',
+    ogImage: 'https://charmi.gg/images/og/og-home.png',
+    twitterCard: 'summary_large_image',
+})
+
 const message = ref('');
 const nom = ref('');
 const email = ref('');

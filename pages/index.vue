@@ -222,6 +222,16 @@
 </template>
 
 <script setup lang="ts">
+
+useSeoMeta({
+  title: 'Le compagnon des streamers Twitch',
+  description: 'T\'as déjà assez à gérer avec ton stream. Charmi connecte les streamers qui partagent les mêmes univers, récompense tes raids et garde ta commu engagée.',
+  ogTitle: 'Charmi | Keep on streaming.',
+  ogDescription: 'Découverte, raids intelligents, page de liens et planning… On s\'occupe du reste. Rejoins la commu Twitch francophone.',
+  ogImage: 'https://charmi.gg/images/og/og-home.png',
+  twitterCard: 'summary_large_image',
+})
+
 import { usePreferredReducedMotion } from '@vueuse/core'
 definePageMeta({
   layout: 'landing'
