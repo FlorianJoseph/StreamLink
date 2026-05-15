@@ -43,12 +43,12 @@
 <script setup>
 
 useSeoMeta({
-    title: 'Contact',
-    description: 'Une question, un bug, une idée ? L\'équipe Charmi est là. On a pensé à tout... ou presque.',
-    ogTitle: 'Contacte Charmi',
-    ogDescription: 'On est là. Parle-nous.',
-    ogImage: 'https://charmi.gg/images/og/og-home.png',
-    twitterCard: 'summary_large_image',
+  title: 'Contact',
+  description: 'Une question, un bug, une idée ? L\'équipe Charmi est là. On a pensé à tout… ou presque.',
+})
+defineOgImage('Default', {
+  title: 'On est là.',
+  description: 'Une question, un bug, une idée ? Parle-nous.',
 })
 
 const message = ref('');

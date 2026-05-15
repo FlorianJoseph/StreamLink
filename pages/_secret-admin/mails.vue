@@ -127,6 +127,8 @@
 
 <script setup lang="ts">
 
+useSeoMeta({ title: 'Mails Admin' })
+
 // Segments
 const segmentsMeta = [
     { value: 'notVisible', label: 'Non visible', shortLabel: 'Non visible', color: '#6366f1' },

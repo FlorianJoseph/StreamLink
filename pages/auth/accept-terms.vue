@@ -53,6 +53,9 @@
 </template>
 
 <script setup>
+
+useSeoMeta({ title: 'Conditions d\'utilisation' })
+
 const privacy = ref(false)
 const newsletter = ref(false)
 const error = ref(null)

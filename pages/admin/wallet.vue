@@ -85,6 +85,9 @@
 </template>
 
 <script setup lang="ts">
+
+useSeoMeta({ title: 'Mes Charm' })
+
 const { balance } = useWallet()
 
 const loading = ref(true)

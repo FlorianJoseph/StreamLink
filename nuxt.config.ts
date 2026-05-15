@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@primevue/nuxt-module', '@nuxtjs/supabase', '@pinia/nuxt', '@nuxt/icon', '@nuxtjs/seo'],
+  modules: ['@primevue/nuxt-module', '@nuxtjs/supabase', '@pinia/nuxt', '@nuxt/icon', '@nuxtjs/seo', '@nuxt/fonts', 'nuxt-og-image'],
   primevue: {
     autoImport: true,
     options: {
@@ -67,30 +67,6 @@ export default defineNuxtConfig({
       stripePriceCoinsBig: '',
     }
   },
-  // app: {
-  //   head: {
-  //     title: 'Charmi',
-  //     titleTemplate: '%s | Charmi',
-  //     meta: [
-  //       { name: 'description', content: 'Le compagnon des streamers Twitch. Centralise tes liens, ton planning et ta visibilité.' },
-  //       { property: 'og:title', content: 'Charmi' },
-  //       { property: 'og:description', content: 'Le compagnon des streamers Twitch.' },
-  //       { property: 'og:image', content: 'https://charmi.gg/images/logo/charmi-full-violet.png' },
-  //       { property: 'og:url', content: 'https://charmi.gg' },
-  //       { property: 'og:type', content: 'website' },
-  //       { property: 'og:site_name', content: 'Charmi' },
-  //       { name: 'twitter:card', content: 'summary_large_image' },
-  //       { name: 'twitter:title', content: 'Charmi' },
-  //       { name: 'twitter:description', content: 'Le compagnon des streamers Twitch.' },
-  //       { name: 'twitter:image', content: 'https://charmi.gg/images/logo/charmi-full-violet.png' },
-  //       { name: 'theme-color', content: '#6A5AE0' },
-  //     ],
-  //     link: [
-  //       { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-  //       { rel: 'apple-touch-icon', href: '/favicon.svg' },
-  //     ],
-  //   },
-  // },
   app: {
     head: {
       titleTemplate: '%s | Charmi',
@@ -123,9 +99,6 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
-    // Les pages dynamiques [username] ne sont pas auto-détectées
-    // On les exclut pour l'instant, à gérer avec une route API plus tard
-    excludeAppSources: false,
     urls: [
       { loc: '/', priority: 1.0, changefreq: 'weekly' },
       { loc: '/discover', priority: 0.9, changefreq: 'daily' },
@@ -133,12 +106,6 @@ export default defineNuxtConfig({
       { loc: '/contact', priority: 0.5, changefreq: 'monthly' },
       { loc: '/privacy', priority: 0.2, changefreq: 'yearly' },
     ],
-  },
-
-  ogImage: {
-    // Pour Vercel : génère un secret avec `npx nuxt-og-image generate-secret`
-    // et ajoute NUXT_OG_IMAGE_SECRET dans tes env vars Vercel
-    fonts: ['Pilcrow+Rounded:700'],
   },
 
   schemaOrg: {
@@ -151,5 +118,27 @@ export default defineNuxtConfig({
         'https://discord.gg/fVFguWc76b',
       ],
     },
+  },
+  fonts: {
+    families: [
+      {
+        name: 'Pilcrow Rounded',
+        provider: 'local',
+        src: '/fonts/PilcrowRounded-Variable.woff2',
+      },
+      {
+        name: 'Plus Jakarta Sans',
+        provider: 'local',
+        src: '/fonts/PlusJakartaSans-Bold.woff2',
+        weight: '700',
+      },
+      {
+        name: 'Plus Jakarta Sans',
+        provider: 'local',
+        src: '/fonts/PlusJakartaSans-Medium.woff2',
+        weight: '500',
+              global: true,
+      },
+    ],
   },
 })

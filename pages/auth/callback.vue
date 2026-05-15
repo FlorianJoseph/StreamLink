@@ -11,6 +11,9 @@
 </template>
 
 <script setup>
+
+useSeoMeta({ title: 'Connexion en cours…' })
+
 const router = useRouter()
 const route = useRoute()
 const supabase = useSupabaseClient()
