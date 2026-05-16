@@ -54,7 +54,7 @@
                     <!-- Discord -->
                     <a href="https://discord.gg/fVFguWc76b" target="_blank" class="flex items-center justify-center w-8 h-8 rounded-full text-white/90
                                hover:bg-white/5"
-                        v-tooltip.bottom="{ value: 'Rejoindre le Discord', pt: { text: '!text-xs' } }">
+                        v-tooltip.bottom="{ value: 'Rejoindre le Discord', pt: { text: '!text-sm' } }">
                         <Icon name="simple-icons:discord" size="20" />
                         <span class="sr-only">Rejoindre le Discord</span>
                     </a>
@@ -75,7 +75,7 @@
                         <!-- Solde Charm + daily dropdown -->
                         <div ref="charmRef" class="relative">
                             <button @click="charmOpen = !charmOpen; avatarOpen = false; maPageOpen = false"
-                                v-tooltip.bottom="{ value: !dailyClaimed && !isSub ? 'Réclamer tes Charm du jour' : 'Solde Charm', pt: { text: '!text-xs' } }"
+                                v-tooltip.bottom="{ value: !dailyClaimed && !isSub ? 'Réclamer tes Charm du jour' : 'Solde Charm', pt: { text: '!text-sm' } }"
                                 class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/5 hover:bg-white/8">
                                 <img src="/images/assets/charmi-monnaie-jaune.svg"
                                     class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" alt="" />

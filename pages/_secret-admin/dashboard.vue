@@ -95,14 +95,6 @@ interface AdminStats {
 
 const { data: stats } = await useFetch<AdminStats>('/api/admin/admin.stats')
 
-// Date actuelle
-const currentDate = new Date().toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-})
-
 // Sécurisation + fallback global
 const safeStats = computed(() => stats.value ?? {} as AdminStats)
 
