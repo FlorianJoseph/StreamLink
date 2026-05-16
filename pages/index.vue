@@ -224,11 +224,12 @@
 <script setup lang="ts">
 
 useSeoMeta({
-  title: 'Le compagnon des streamers Twitch',
-  description: 'T\'as déjà assez à gérer avec ton stream. Charmi connecte les streamers qui partagent les mêmes univers, récompense tes raids et garde ta commu engagée.',
+  title: 'Le compagnon pour grandir sur Twitch',
+  description: 'Charmi t\'aide à te faire découvrir, te connecte avec des streamers qui partagent ton univers et garde ta commu engagée.',
 })
+
 defineOgImage('Default', {
-  title: 'Le compagnon des streamers Twitch.',
+  title: 'Le compagnon pour grandir sur Twitch',
   description: 'Découverte, raids, planning et page de liens.',
 })
 
