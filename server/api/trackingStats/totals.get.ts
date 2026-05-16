@@ -8,11 +8,19 @@ export default defineEventHandler(async (event) => {
 
     const userId = user.sub
 
-    const { data: linkStats } = await client
-        .from('link_stats')
-        .select('link_id, day, daily_clicks, total_clicks')
-        .eq('user_id', userId)
-        .order('day', { ascending: true })
+    const [{ data: linkStats }, { count: totalViews }] = await Promise.all([
+        client
+            .from('link_stats')
+            .select('link_id, day, daily_clicks, total_clicks')
+            .eq('user_id', userId)
+            .order('day', { ascending: true }),
+
+        client
+            .from('PageEvent')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', userId)
+            .eq('type', 'PAGE_VIEW'),
+    ])
 
     const weekStr = (() => { const d = new Date(); d.setDate(d.getDate() - 7); return d.toISOString().slice(0, 10) })()
     const prevStr = (() => { const d = new Date(); d.setDate(d.getDate() - 14); return d.toISOString().slice(0, 10) })()
@@ -37,5 +45,13 @@ export default defineEventHandler(async (event) => {
         }
     })
 
-    return { links }
+    const totalClicks = links.reduce((sum, l) => sum + l.total_clicks, 0)
+
+    return {
+        links,
+        total: {
+            views: totalViews ?? 0,
+            clicks: totalClicks,
+        }
+    }
 })

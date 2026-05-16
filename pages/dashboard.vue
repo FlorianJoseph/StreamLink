@@ -115,11 +115,6 @@ const { slots } = storeToRefs(scheduleSlotStore)
 const newsletterStore = useNewsletterStore()
 const loading = ref(true)
 const { uid } = useSupabase()
-const { fetchBalance } = useWallet()
-const { isSub } = useFeatures()
-const toast = useToast()
-const dailyClaimed = ref(false)
-const dailyLoading = ref(false)
 
 const greeting = computed(() => {
     const h = new Date().getHours()
@@ -150,32 +145,12 @@ const streamMessage = computed(() => {
 
     const game = next.game?.label
     const time = next.start_at.slice(0, 5)
+    const streamHour = parseInt(next.start_at.slice(0, 2))
+    const momentOfDay = streamHour < 12 ? 'ce matin' : streamHour < 18 ? 'cet après-midi' : 'ce soir'
 
-    if (next.diff === 0) return `${game} ce soir à ${time}... pense au raid rapide sur la`
+    if (next.diff === 0) return `${game} ${momentOfDay} à ${time}... pense au raid rapide sur la`
     return `${game} ${next.day.toLowerCase()} à ${time}... cherche un raid dans ta catégorie sur la`
 })
-
-const claimDaily = async () => {
-    dailyLoading.value = true
-    try {
-        const { credited } = await $fetch('/api/quests/daily', { method: 'POST' })
-        if (credited) {
-            dailyClaimed.value = true
-            await fetchBalance()
-            toast.add({
-                severity: 'secondary',
-                group: 'quest',
-                summary: 'Connexion quotidienne',
-                detail: '3',
-                life: 4000,
-            })
-        } else {
-            dailyClaimed.value = true
-        }
-    } finally {
-        dailyLoading.value = false
-    }
-}
 
 watch(uid, async (val) => {
     if (val) {
@@ -199,9 +174,11 @@ const toolsSections = [
 ]
 
 const roadmapItems = [
-    { icon: 'lucide:chart-column', label: 'Stats avancées', color: 'text-blue-400' },
-    { icon: 'simple-icons:twitch', label: 'Synchronisation Twitch', color: 'text-purple-400' },
-    { icon: 'simple-icons:discord', label: 'Export Discord', color: 'text-indigo-400' },
+    { icon: 'lucide:gift', label: 'Inventaire & items Charm', color: 'text-yellow-400' },
+    { icon: 'lucide:users', label: 'Événements communautaires Discord', color: 'text-green-400' },
+    { icon: 'lucide:chart-column', label: 'Graphiques de statistiques', color: 'text-blue-400' },
+    { icon: 'simple-icons:twitch', label: 'Synchronisation planning Twitch', color: 'text-purple-400' },
+    { icon: 'simple-icons:discord', label: 'Export planning Discord', color: 'text-indigo-400' },
 ]
 
 onMounted(async () => {
@@ -210,8 +187,6 @@ onMounted(async () => {
     const { data: schedule } = await scheduleStore.fetchSchedule()
     if (schedule?.id) await scheduleSlotStore.fetchSlots(schedule.id)
     await linkStore.fetchLinks()
-    const { claimed } = await $fetch('/api/quests/daily')
-    dailyClaimed.value = claimed
     loading.value = false
 })
 

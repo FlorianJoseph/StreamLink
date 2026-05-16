@@ -484,7 +484,8 @@
                                                                                 <div class="absolute top-[-1px] left-[-1px] z-100 px-2 py-1 text-base font-semibold rounded-br-md rounded-tl-sm"
                                                                                     :style="slot.game.cover ? { backgroundColor: `#${slot.color}`, fontFamily: currentFont } : { fontFamily: currentFont }">
                                                                                     {{ formatTime(slot.start_at) }}
-                                                                                    <span v-if="endTimeVisible">
+                                                                                    <span v-if="endTimeVisible"
+                                                                                        :style="{ fontFamily: currentFont, fontWeight: 600 }">
                                                                                         -
                                                                                         {{ formatTime(slot.end_at) }}
                                                                                     </span>

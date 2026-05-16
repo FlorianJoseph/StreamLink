@@ -104,20 +104,20 @@
                                     color: 'white',
                                     fontSize: '24px',
                                     fontWeight: '500',
-                                    opacity: 0.7,
                                     textShadow: '0 1px 3px rgba(0,0,0,0.8)',
                                     textTransform: 'uppercase',
                                     letterSpacing: '0.06em',
                                     fontFamily: schedule?.style?.fontFamily
                                 }">
                                     <Icon name="lucide:clock" size="24" style="flex-shrink: 0" />
-                                    <span :style="{ fontFamily: schedule?.style?.fontFamily }">{{
-                                        formatTime(slot.start_at) }}<span v-if="endTimeVisible"> – {{
-                                            formatTime(slot.end_at) }}</span></span>
+                                    <span :style="{ fontFamily: schedule?.style?.fontFamily, fontWeight: 600 }">{{
+                                        formatTime(slot.start_at) }}<span v-if="endTimeVisible"
+                                            :style="{ fontFamily: schedule?.style?.fontFamily, fontWeight: 600 }"> – {{
+                                                formatTime(slot.end_at) }}</span></span>
                                     <Icon v-if="slot.game?.label" name="lucide:gamepad-2" size="24"
                                         style="flex-shrink: 0" />
                                     <span v-if="slot.game?.label" class="truncate"
-                                        :style="{ fontFamily: schedule?.style?.fontFamily }">.
+                                        :style="{ fontFamily: schedule?.style?.fontFamily, fontWeight: 600 }">
                                         {{ slot.game?.label }}
                                     </span>
                                 </div>

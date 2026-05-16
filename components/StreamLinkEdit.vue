@@ -124,6 +124,24 @@
             </template>
         </Dialog>
 
+        <!-- Stats rapides -->
+        <template v-if="statsPending">
+            <span class="animate-pulse h-4 w-42 bg-white/8 rounded" />
+        </template>
+        <template v-else>
+            <div class="flex items-center gap-3 text-sm text-muted">
+                <div class="flex items-center gap-1.5">
+                    <Icon name="lucide:eye" size="16" />
+                    <span>{{ stats?.total?.views ?? 0 }} vues</span>
+                </div>
+                <span class="text-white/20">|</span>
+                <div class="flex items-center gap-1.5">
+                    <Icon name="lucide:mouse-pointer-click" size="16" />
+                    <span>{{ stats?.total?.clicks ?? 0 }} clics</span>
+                </div>
+            </div>
+        </template>
+
         <!-- Bouton Ajouter un lien -->
         <button @click="newlinkModal = true"
             class="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-primary hover:bg-primary/80 text-white font-medium text-sm sm:text-base transition-colors">
