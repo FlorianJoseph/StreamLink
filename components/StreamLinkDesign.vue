@@ -26,13 +26,13 @@
                             ? 'bg-primary hover:bg-primary/80'
                             : isDirty ? 'bg-primary hover:bg-primary/80' : 'bg-primary opacity-40 pointer-events-none'">
                         <template v-if="needsPremiumSave">
-                            <Icon name="lucide:sparkles" size="18" />
+                            <img src="/images/mascotte/charmi-happy-blanc.svg" class="w-5 h-5" />
                         </template>
                         <template v-else>
                             <Icon name="lucide:save" size="18" />
                         </template>
                         <span class="hidden sm:inline">
-                            {{ needsPremiumSave ? 'Débloquer & enregistrer' : 'Enregistrer' }}</span>
+                            {{ needsPremiumSave ? 'Essayer Charmi+ gratuitement' : 'Enregistrer' }}</span>
                     </button>
                 </div>
             </div>
@@ -542,7 +542,7 @@ const brandingModal = ref(false)
 const needsPremiumSave = computed(() => {
     const activeTheme = Object.values(THEME_PRESETS).find(t => isThemeActive(t).value)
     const activeFont = FONTS.find(f => f.name === design.value?.font_family)
-    return (activeTheme?.premium || activeFont?.premium) && !hasFeature('premium_theme')
+    return (activeTheme?.premium || activeFont?.premium) && !hasFeature('premium_theme') && isDirty.value
 })
 
 // Remplace saveDesign du store par une version qui vérifie le premium
