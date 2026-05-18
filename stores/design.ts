@@ -168,6 +168,14 @@ export const useDesignStore = defineStore('design', () => {
             : false
     )
 
+    // Fonction pour mettre à jour l'affichage du branding
+    const updateShowBranding = async (value: boolean) => {
+        if (!design.value) return
+        design.value.show_branding = value
+        savedDesign.value = structuredClone(toRaw(design.value)) // ← sync savedDesign
+        await repo.update(design.value.id, { show_branding: value })
+    }
+
     return {
         design,
         fetchDesign,
@@ -181,5 +189,6 @@ export const useDesignStore = defineStore('design', () => {
         isDirty,
         history,
         future,
+        updateShowBranding,
     }
 })

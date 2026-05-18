@@ -28,7 +28,7 @@
                     :style="{ maxWidth: hovered ? '60px' : '0px', opacity: hovered ? 1 : 0, marginRight: hovered ? '0' : '-4px' }">
                     Charmi+
                 </span>
-                <Icon name="lucide:sparkles" size="10" class="shrink-0" />
+                <img src="/images/mascotte/charmi-happy-blanc.svg" class="w-2.5 h-2.5 shrink-0" />
             </div>
 
         </div>

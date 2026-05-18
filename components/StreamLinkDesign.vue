@@ -26,13 +26,13 @@
                             ? 'bg-primary hover:bg-primary/80'
                             : isDirty ? 'bg-primary hover:bg-primary/80' : 'bg-primary opacity-40 pointer-events-none'">
                         <template v-if="needsPremiumSave">
-                            <Icon name="lucide:sparkles" size="18" />
+                            <img src="/images/mascotte/charmi-happy-blanc.svg" class="w-5 h-5" />
                         </template>
                         <template v-else>
                             <Icon name="lucide:save" size="18" />
                         </template>
                         <span class="hidden sm:inline">
-                            {{ needsPremiumSave ? 'Débloquer & enregistrer' : 'Enregistrer' }}</span>
+                            {{ needsPremiumSave ? 'Essayer Charmi+ gratuitement' : 'Enregistrer' }}</span>
                     </button>
                 </div>
             </div>
@@ -327,26 +327,16 @@
                         <div class="flex flex-col gap-0.5">
                             <span class="text-sm font-semibold text-white">Masquer le logo</span>
                             <span class="text-xs text-muted">
-                                <template v-if="isSub">Inclus dans ton abonnement</template>
+                                <template v-if="isSub">Inclus dans Charmi+</template>
                                 <template v-else-if="hasFeature('no_branding')">
                                     {{ getExpiryLabel('no_branding') }}</template>
-                                <template v-else>Masque le logo Charmi sur ta page publique et ton planning</template>
+                                <template v-else>Masque le logo Charmi sur ta page de liens et ton planning</template>
                             </span>
                         </div>
 
-                        <template v-if="!hasFeature('no_branding') && !isSub">
-                            <button @click="brandingModal = true"
-                                class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-darker border border-white/8 hover:border-white/20 font-semibold text-white transition-colors shrink-0">
-                                <img src="/images/assets/charmi-monnaie-blanc.svg" alt="" class="w-3.5 h-3.5" />
-                                Débloquer
-                            </button>
-                        </template>
-                        <template v-else>
-                            <div class="flex items-center gap-1.5 shrink-0">
-                                <Icon name="lucide:check-circle" size="14" class="text-emerald-400" />
-                                <span class="text-xs text-emerald-400 font-semibold">Actif</span>
-                            </div>
-                        </template>
+                        <ToggleSwitch :modelValue="brandingToggle"
+                            @click.prevent="onToggleBranding(() => { brandingModal = true })"
+                            style="--p-toggleswitch-checked-background:white;--p-toggleswitch-checked-hover-background:#F2F3F7" />
                     </div>
                 </section>
                 <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
@@ -552,7 +542,7 @@ const brandingModal = ref(false)
 const needsPremiumSave = computed(() => {
     const activeTheme = Object.values(THEME_PRESETS).find(t => isThemeActive(t).value)
     const activeFont = FONTS.find(f => f.name === design.value?.font_family)
-    return (activeTheme?.premium || activeFont?.premium) && !hasFeature('premium_theme')
+    return (activeTheme?.premium || activeFont?.premium) && !hasFeature('premium_theme') && isDirty.value
 })
 
 // Remplace saveDesign du store par une version qui vérifie le premium
@@ -570,4 +560,7 @@ const handleSave = async () => {
 
     await saveDesign()
 }
+
+// Toggle Branding
+const { brandingToggle, onToggleBranding } = useBranding()
 </script>

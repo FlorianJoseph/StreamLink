@@ -35,14 +35,16 @@ export default defineEventHandler(async (event) => {
         .maybeSingle()
 
     const isSub = subscription?.status === 'active' || subscription?.status === 'trialing' || subscription?.status === 'past_due'
+    const hasAccess = !!brandingAccess || isSub
+    const parsedDesign = typeof data?.design === 'string' ? JSON.parse(data.design) : data?.design
 
     const parsedUser = {
         user_id: data?.user_id,
         user: typeof data?.user === 'string' ? JSON.parse(data.user) : data?.user,
-        design: typeof data?.design === 'string' ? JSON.parse(data.design) : data?.design,
+        design: parsedDesign,
         links: typeof data?.links === 'string' ? JSON.parse(data.links) : data?.links,
         slots: typeof data?.slots === 'string' ? JSON.parse(data.slots) : data?.slots,
-        noBranding: !!brandingAccess || isSub
+        noBranding: hasAccess && parsedDesign?.show_branding === false
     }
 
     // Statut live Twitch

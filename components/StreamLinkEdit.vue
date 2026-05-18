@@ -160,7 +160,8 @@
                         <p class="text-xs text-muted/60">Clique sur "Ajouter un lien" pour commencer</p>
                     </div>
                     <Draggable v-model="links" item-key="id" handle=".drag-handle" @end="saveOrder"
-                        class="flex flex-col gap-2">
+                        class="flex flex-col gap-2" ghost-class="drag-ghost" chosen-class="drag-chosen"
+                        :animation="100">
                         <template #item="{ element }">
                             <div class="rounded-xl p-3 bg-surface-dark border border-white/8">
                                 <div class="flex flex-row gap-4 items-center">
@@ -438,31 +439,20 @@
                             <div class="flex flex-col gap-0.5">
                                 <span class="text-sm font-semibold text-white">Masquer le logo</span>
                                 <span class="text-xs text-muted">
-                                    <template v-if="isSub">Inclus dans ton abonnement</template>
+                                    <template v-if="isSub">Inclus dans Charmi+</template>
                                     <template v-else-if="hasFeature('no_branding')">
                                         {{ getExpiryLabel('no_branding') }}</template>
                                     <template v-else>
-                                        Masque le logo Charmi sur ta page publique et ton
+                                        Masque le logo Charmi sur ta page de liens et ton
                                         planning
                                     </template>
                                 </span>
                             </div>
 
-                            <template v-if="!hasFeature('no_branding') && !isSub">
-                                <button @click="brandingModal = true"
-                                    class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-darker border border-white/8 hover:border-white/20 font-semibold text-white transition-colors shrink-0">
-                                    <img src="/images/assets/charmi-monnaie-blanc.svg" alt="" class="w-3.5 h-3.5" />
-                                    Débloquer
-                                </button>
-                            </template>
-                            <template v-else>
-                                <div class="flex items-center gap-1.5 shrink-0">
-                                    <Icon name="lucide:check-circle" size="14" class="text-emerald-400" />
-                                    <span class="text-xs text-emerald-400 font-semibold">Actif</span>
-                                </div>
-                            </template>
+                            <ToggleSwitch :modelValue="brandingToggle"
+                                @click.prevent="onToggleBranding(() => { brandingModal = true })"
+                                style="--p-toggleswitch-checked-background:white;--p-toggleswitch-checked-hover-background:#F2F3F7" />
                         </div>
-
                         <FeatureUnlockModal v-model="brandingModal" featureKey="no_branding" />
                     </div>
 
@@ -661,6 +651,8 @@ const bio = ref('')
 const usernameError = ref('')
 const language = ref(streamer?.value?.language ?? null)
 
+const { hasFeature, getExpiryLabel, isSub } = useFeatures()
+
 // Initialisation des champs du modal avec les données du streamer
 watchEffect(() => {
     username.value = streamer?.value?.username || ''
@@ -744,6 +736,9 @@ const editField = (link: any, field: string) => {
         }
     })
 }
+
+// Toggle Branding
+const { brandingToggle, onToggleBranding } = useBranding()
 
 // Sauvegarder les modifications d'un champ
 const saveEdit = async (link: any) => {
@@ -888,8 +883,19 @@ watch(dateRange, (val) => {
     }
 })
 
-const { hasFeature, getExpiryLabel, isSub } = useFeatures()
 
 const brandingModal = ref(false)
 const advancedStatsModal = ref(false)
 </script>
+
+<style scoped>
+.drag-ghost {
+    background: rgba(106, 90, 224, 0.15);
+    border: 1px dashed #6A5AE0;
+}
+
+.drag-chosen {
+    background: rgba(106, 90, 224, 0.15);
+    border: 1px dashed #6A5AE0;
+}
+</style>
