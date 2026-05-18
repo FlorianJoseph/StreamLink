@@ -43,6 +43,6 @@ export default defineEventHandler(async (event) => {
             raidCount: map.get(s.id)?.count ?? 0,
             coinsEarned: map.get(s.id)?.coins ?? 0,
         }))
-        .sort((a, b) => b.raidCount - a.raidCount)
+        .sort((a, b) => b.raidCount - a.raidCount || b.coinsEarned - a.coinsEarned)
         .slice(0, 10)
 })
