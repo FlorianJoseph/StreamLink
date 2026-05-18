@@ -160,7 +160,8 @@
                         <p class="text-xs text-muted/60">Clique sur "Ajouter un lien" pour commencer</p>
                     </div>
                     <Draggable v-model="links" item-key="id" handle=".drag-handle" @end="saveOrder"
-                        class="flex flex-col gap-2">
+                        class="flex flex-col gap-2" ghost-class="drag-ghost" chosen-class="drag-chosen"
+                        :animation="100">
                         <template #item="{ element }">
                             <div class="rounded-xl p-3 bg-surface-dark border border-white/8">
                                 <div class="flex flex-row gap-4 items-center">
@@ -893,3 +894,15 @@ const { hasFeature, getExpiryLabel, isSub } = useFeatures()
 const brandingModal = ref(false)
 const advancedStatsModal = ref(false)
 </script>
+
+<style scoped>
+.drag-ghost {
+    background: rgba(106, 90, 224, 0.15);
+    border: 1px dashed #6A5AE0;
+}
+
+.drag-chosen {
+    background: rgba(106, 90, 224, 0.15);
+    border: 1px dashed #6A5AE0;
+}
+</style>
