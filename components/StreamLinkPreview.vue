@@ -236,8 +236,8 @@ function isColorDark(hex) {
 // Couleur du texte basée sur la luminosité du wallpaper
 const textColor = computed(() => isColorDark(wallpaperColor.value) ? '#FFFFFF' : '#000000')
 
-const { hasFeature } = useFeatures()
-const noBranding = computed(() => hasFeature('no_branding'))
+const { noBranding } = useBranding()
+
 </script>
 
 <style scoped>
