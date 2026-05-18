@@ -29,24 +29,26 @@ export const NotVisibleEmail = ({ username }: { username: string }) => (
                         colors: {
                             discordBg: "#5865f2",
                             discordText: "#e0e3ff",
-                            buttonBg: "#7c3aed",
+                            buttonBg: "#6A5AE0",
                         },
                     },
                 },
             }}
         >
-            <Body className="font-sans m-0 p-0">
+            <Body className="font-sans m-0 p-0 bg-[#141416]">
                 <Container className="mx-auto max-w-[560px] border border-zinc-800">
 
                     {/* Header */}
-                    <Section className="bg-zinc-900 border-b border-zinc-800 px-8 py-5">
-                        <Text className="text-white text-xl font-bold tracking-tight m-0">
-                            StreamLink
-                        </Text>
+                    <Section className="bg-[#1E1F22] px-8 py-5">
+                        <Img
+                            src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/logo.png"
+                            width="120"
+                            alt=""
+                        />
                     </Section>
 
                     {/* Hero */}
-                    <Section className="bg-zinc-900 p-7">
+                    <Section className="bg-[#2A2B2F] p-7">
                         <Text className="text-white text-sm font-semibold mt-0 mb-1">
                             Salut {username},
                         </Text>
@@ -54,9 +56,7 @@ export const NotVisibleEmail = ({ username }: { username: string }) => (
                             Ton profil est encore invisible
                         </Heading>
                         <Text className="text-zinc-400 text-sm leading-relaxed mt-0 mb-6">
-                            Tu es inscrit sur StreamLink, mais ton profil n'apparaît pas encore sur la page Découverte.
-                            <br /><br />
-                            Résultat : les viewers et autres streamers ne peuvent pas te trouver. C'est dommage, surtout quand ça ne prend que <strong>moins de 2 minutes</strong> à changer.
+                            T'es sur Charmi, c'est déjà le bon endroit. Il te reste juste une chose à faire : activer ta visibilité pour que les autres streamers et viewers puissent te trouver. <strong>Moins de 2 minutes</strong>, et t'es visible de tous.
                         </Text>
                         <table width="100%">
                             <tr>
@@ -89,9 +89,9 @@ export const NotVisibleEmail = ({ username }: { username: string }) => (
                     <Hr className="border-zinc-800 m-0" />
 
                     {/* Pourquoi être visible */}
-                    <Section className="px-8 py-7" style={{ backgroundColor: "#121212" }}>
+                    <Section className="px-8 py-7" style={{ backgroundColor: "#1E1F22" }}>
                         <Text className="text-zinc-400 text-xs font-semibold uppercase tracking-widest mt-0 mb-5">
-                            Pourquoi activer la visibilité ?
+                            Pourquoi activer ma visibilité ?
                         </Text>
 
                         {/* Raison 1 */}
@@ -105,10 +105,10 @@ export const NotVisibleEmail = ({ username }: { username: string }) => (
                             </Column>
                             <Column className="align-top">
                                 <Text className="text-white text-sm font-semibold m-0 mb-1">
-                                    Apparaître sur la page Découverte
+                                    Apparaît sur la page Découverte
                                 </Text>
                                 <Text className="text-zinc-400 text-xs leading-relaxed m-0">
-                                    Chaque jour, des streamers et des viewers découvrent de nouveaux streamers sur cette page. Sans visibilité, tu n'y es tout simplement pas.
+                                    Sans visibilité, tu n'apparais pas sur la page Découverte. Les autres streamers et viewers ne peuvent pas te trouver.
                                 </Text>
                             </Column>
                         </Row>
@@ -124,10 +124,10 @@ export const NotVisibleEmail = ({ username }: { username: string }) => (
                             </Column>
                             <Column className="align-top">
                                 <Text className="text-white text-sm font-semibold m-0 mb-1">
-                                    Partager un seul lien pour tout
+                                    Partage un seul lien pour tout
                                 </Text>
                                 <Text className="text-zinc-400 text-xs leading-relaxed m-0">
-                                    Ton profil StreamLink regroupe tous tes liens, ton planning et ton identité. Un seul lien à donner, partout.
+                                    Tous tes liens, ton planning et ton identité en un seul lien à partager partout.
                                 </Text>
                             </Column>
                         </Row>
@@ -136,38 +136,20 @@ export const NotVisibleEmail = ({ username }: { username: string }) => (
                     <Hr className="border-zinc-800 m-0" />
 
                     {/* Discord */}
-                    <Section className="bg-zinc-900 px-8 py-7 text-center">
-                        <table width="100%">
-                            <tr>
-                                <td align="center" style={{ verticalAlign: "middle" }}>
-                                    <table>
-                                        <tr>
-                                            <td className="pr-[4px]" style={{ verticalAlign: "middle" }}>
-                                                <Img
-                                                    src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/users.png"
-                                                    width="20"
-                                                    alt=""
-                                                />
-                                            </td>
-                                            <td style={{ verticalAlign: "middle" }}>
-                                                <Text className="text-discordText text-base font-semibold m-0">
-                                                    Rejoins la communauté
-                                                </Text>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                        <Text className="text-zinc-400 text-sm leading-relaxed mt-3 mb-5">
-                            Des questions sur StreamLink ? Viens en parler directement avec l'équipe et les autres streamers sur Discord.
+                    <Section className="px-8 py-7 text-center" style={{ backgroundColor: "#2A2B2F" }}>
+                        <Text className="text-white text-sm font-semibold m-0 mb-2">
+                            Des streamers t'attendent sur Discord
+                        </Text>
+                        <Text className="text-zinc-400 text-sm leading-relaxed mt-2 mb-5">
+                            Viens te présenter et trouver tes prochains partenaires de raid.
                         </Text>
                         <table width="100%">
                             <tr>
                                 <td align="center">
                                     <Button
                                         className="box-border w-full rounded-[8px] bg-discordBg px-[16px] py-[8px]"
-                                        href="https://discord.gg/fVFguWc76b">
+                                        href="https://discord.gg/fVFguWc76b"
+                                    >
                                         <table>
                                             <tr>
                                                 <td className="pr-[4px] pt-[2px]">
@@ -193,10 +175,7 @@ export const NotVisibleEmail = ({ username }: { username: string }) => (
                     <Hr className="border-zinc-800 m-0" />
 
                     {/* Footer */}
-                    <Section className="px-8 py-6 text-center" style={{ backgroundColor: "#121212" }}>
-                        <Text className="text-zinc-600 text-xs m-0 mb-2">
-                            Charmi · charmi.gg
-                        </Text>
+                    <Section className="px-8 py-6 text-center" style={{ backgroundColor: "#1E1F22" }}>
                         <Text className="text-zinc-600 text-xs m-0">
                             Tu reçois cet email car tu as activé les notifications sur Charmi.{" "}
                             <Link href={`${baseUrl}/admin/account`} className="text-zinc-500 underline">

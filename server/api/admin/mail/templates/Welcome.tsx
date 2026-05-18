@@ -33,8 +33,8 @@ export const Welcome = ({ username }: { username: string }) => (
                 },
             }}
         >
-            <Body className="font-sans m-0 p-0">
-                <Container className="mx-auto max-w-[560px]">
+            <Body className="font-sans m-0 p-0 bg-[#141416]">
+                <Container className="mx-auto max-w-[560px] border border-zinc-800">
 
                     {/* Header */}
                     <Section className="bg-[#1E1F22] px-8 py-5">
@@ -51,9 +51,7 @@ export const Welcome = ({ username }: { username: string }) => (
                             Bienvenue sur Charmi {username}
                         </Heading>
                         <Text className="text-[#9A9BA0] text-sm leading-relaxed mt-0 mb-6">
-                            On t'a préparé un espace pour centraliser tes liens, afficher ton planning et te rendre visible auprès d'autres streamers et viewers.
-                            <br /><br />
-                            Complète ton profil pour apparaître sur la Découverte et commence à te faire connaître.
+                            Ton espace est prêt : liens, planning, visibilité. Complète ton profil pour apparaître sur la Découverte et commencer à te faire connaître.
                         </Text>
                         <table width="100%">
                             <tr>
@@ -103,7 +101,7 @@ export const Welcome = ({ username }: { username: string }) => (
                                     Ajoute tes liens
                                 </Text>
                                 <Text className="text-[#9A9BA0] text-xs leading-relaxed m-0">
-                                    Twitch, YouTube, Discord, réseaux... tout au même endroit, prêt à partager.
+                                    Twitch, TikTok, Discord... tout au même endroit, prêt à partager.
                                 </Text>
                             </Column>
                         </Row>
@@ -129,38 +127,20 @@ export const Welcome = ({ username }: { username: string }) => (
                     </Section>
 
                     {/* Discord */}
-                    <Section className="bg-[#2A2B2F] px-8 py-7 text-center">
-                        <table width="100%">
-                            <tr>
-                                <td align="center" style={{ verticalAlign: "middle" }}>
-                                    <table>
-                                        <tr>
-                                            <td className="pr-[4px]" style={{ verticalAlign: "middle" }}>
-                                                <Img
-                                                    src="https://vcvwxwhiltffzmojiinc.supabase.co/storage/v1/object/public/Streamlink/NewsletterIcon/users.png"
-                                                    width="20"
-                                                    alt=""
-                                                />
-                                            </td>
-                                            <td style={{ verticalAlign: "middle" }}>
-                                                <Text className="text-discordText text-base font-semibold m-0">
-                                                    Rejoins la communauté
-                                                </Text>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                        <Text className="text-[#9A9BA0] text-sm leading-relaxed mt-3 mb-5">
-                            Faire des streams, c'est mieux à plusieurs non ? Viens influencer les prochaines features, échanger avec d'autres streamers et suivre la roadmap en direct.
+                    <Section className="px-8 py-7 text-center" style={{ backgroundColor: "#2A2B2F" }}>
+                        <Text className="text-white text-sm font-semibold m-0 mb-2">
+                            Faire des streams, c'est mieux à plusieurs
+                        </Text>
+                        <Text className="text-zinc-400 text-sm leading-relaxed mt-2 mb-5">
+                            Viens te présenter, échanger avec d'autres streamers et influencer les prochaines fonctionnalités.
                         </Text>
                         <table width="100%">
                             <tr>
                                 <td align="center">
                                     <Button
                                         className="box-border w-full rounded-[8px] bg-discordBg px-[16px] py-[8px]"
-                                        href="https://discord.gg/fVFguWc76b">
+                                        href="https://discord.gg/fVFguWc76b"
+                                    >
                                         <table>
                                             <tr>
                                                 <td className="pr-[4px] pt-[2px]">
@@ -185,10 +165,7 @@ export const Welcome = ({ username }: { username: string }) => (
 
                     {/* Footer */}
                     <Section className="px-8 py-6 text-center" style={{ backgroundColor: "#1E1F22" }}>
-                        <Text className="text-[#9A9BA0] text-xs m-0 mb-2">
-                            Keep on streaming.
-                        </Text>
-                        <Text className="text-[#9A9BA0] text-xs m-0">
+                        <Text className="text-zinc-600 text-xs m-0">
                             Tu reçois cet email car tu as créé un compte sur Charmi.
                         </Text>
                     </Section>

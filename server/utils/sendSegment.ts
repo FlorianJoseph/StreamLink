@@ -12,7 +12,7 @@ const resend = new Resend(process.env.NUXT_RESEND_API_KEY)
 
 const subjects: Record<string, string> = {
     update: 'Transforme tes raids en récompenses',
-    notVisible: 'Ton profil Charmi est encore invisible',
+    notVisible: 'Ton profil est encore invisible',
     notSchedule: 'Ton planning est vide',
     charmiplus: '7 jours gratuits pour essayer Charmi+',
 }
@@ -47,7 +47,7 @@ export async function sendSegment(client: any, segment: string) {
         try {
             const emails = await Promise.all(
                 batch.map(async (u: any) => ({
-                    from: 'NordiK de Charmi <nordik@updates.charmi.gg>',
+                    from: 'Charmi <charmi@updates.charmi.gg>',
                     to: u.email,
                     subject: subjects[segment],
                     html: await segmentTemplates[segment]({ username: u.username }),
