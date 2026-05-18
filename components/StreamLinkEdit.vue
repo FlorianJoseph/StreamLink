@@ -450,7 +450,7 @@
 
                             <template v-if="!hasFeature('no_branding') && !isSub">
                                 <button @click="brandingModal = true"
-                                    class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-darker border border-white/8 hover:border-white/20 font-semibold text-white transition-colors shrink-0">
+                                    class="flex items-center gap-2 px-4 py-2 rounded-md bg-surface-darker border border-white/8 hover:border-white/20 font-semibold text-white transition-colors shrink-0">
                                     <img src="/images/assets/charmi-monnaie-blanc.svg" alt="" class="w-3.5 h-3.5" />
                                     Débloquer
                                 </button>
